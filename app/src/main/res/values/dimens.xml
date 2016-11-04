@@ -12,5 +12,8 @@
     <dimen name="vip_top_image_size">50dp</dimen>
     <dimen name="text_size">35dp</dimen>
 
+    <!--购物车尺寸-->
+    <dimen name="cart_top">60dp</dimen>
+
 
 </resources>

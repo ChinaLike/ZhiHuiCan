@@ -16,6 +16,10 @@
     <color name="FF602708">#602708</color>
     <!--会员界面字体颜色-->
     <color name="FF303537">#303537</color>
+    <!--系统主要背景颜色-->
+    <color name="main">#545B61</color>
+    <!--系统主要背景颜色-->
+    <color name="cart_top">#F5F5F5</color>
 
     <color name="black_overlay">#66000000</color>
 
