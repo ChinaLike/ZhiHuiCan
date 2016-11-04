@@ -9,6 +9,9 @@
     <string name="password">密码</string>
     <string name="vipPasswordHint">会员密码</string>
     <string name="toast_net">请检查网络是否链接</string>
+    <string name="userNameHint">卡号未填写</string>
+    <string name="passwordHint">密码未填写</string>
+    <string name="overTime">请求超时</string>
 
 
     <string name="title_activity_base_activvity">BaseActivvity</string>

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.zhihuican.order"
+        applicationId "cn.sczhckg.order"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
@@ -26,7 +26,10 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.jakewharton:butterknife:7.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
     compile 'com.android.support:support-v4:23.4.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.1.0'
+    compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.1.0'
+
 }
