@@ -14,7 +14,8 @@ import cn.sczhckg.order.R;
  * @Email: 572919350@qq.com
  */
 
-public class PotTypeFagment extends BaseFragment{
+public class PotTypeFagment extends BaseFragment {
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -28,6 +29,6 @@ public class PotTypeFagment extends BaseFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pot_type,null,false);
+        return inflater.inflate(R.layout.fragment_pot_type, null, false);
     }
 }

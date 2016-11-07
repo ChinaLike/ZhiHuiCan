@@ -2,10 +2,10 @@ package cn.sczhckg.order.data.network;
 
 import java.util.Map;
 
-import cn.sczhckg.order.data.bean.CommonBean;
+import cn.sczhckg.order.data.bean.UserLoginBean;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**
@@ -17,6 +17,6 @@ import retrofit2.http.QueryMap;
 public interface RetrofitService {
 
     @GET("android/test/login")
-    Call<CommonBean> vip(@QueryMap Map<String, String> options);
+    Call<String> vip(@QueryMap Map<String, String> options);
 
 }
