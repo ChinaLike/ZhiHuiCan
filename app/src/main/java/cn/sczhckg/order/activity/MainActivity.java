@@ -18,7 +18,7 @@ import cn.sczhckg.order.fragment.PotTypeFagment;
 import cn.sczhckg.order.until.AppSystemUntil;
 
 /**
- * @ Describe:主界面
+ * @ Describe:主界面,ceshi
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
