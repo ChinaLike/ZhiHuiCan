@@ -6,7 +6,7 @@ import cn.sczhckg.order.BaseActivity;
 import cn.sczhckg.order.R;
 
 /**
- * @ Describe:主界面,ceshi
+ * @ Describe:主界面
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
