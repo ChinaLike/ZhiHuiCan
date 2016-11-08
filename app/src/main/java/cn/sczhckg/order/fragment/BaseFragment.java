@@ -29,4 +29,9 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
+
+    public abstract void setData(Object object);
+
+    public abstract void init();
+
 }

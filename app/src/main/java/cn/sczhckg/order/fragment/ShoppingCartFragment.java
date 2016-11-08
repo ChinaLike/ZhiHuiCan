@@ -30,4 +30,14 @@ public class ShoppingCartFragment extends BaseFragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
+
+    @Override
+    public void setData(Object object) {
+
+    }
+
+    @Override
+    public void init() {
+
+    }
 }

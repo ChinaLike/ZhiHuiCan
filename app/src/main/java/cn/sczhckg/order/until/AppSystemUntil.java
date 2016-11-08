@@ -3,6 +3,8 @@ package cn.sczhckg.order.until;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
 /**
  * @ Describe:获取系统有关数据
@@ -26,4 +28,14 @@ public class AppSystemUntil {
         }
         return false;
     }
+
+    /**
+     * 获取收设备唯一标识
+     * @param mContext
+     * @return
+     */
+    public static String getAndroidID(Context mContext){
+        return Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
+    }
+
 }

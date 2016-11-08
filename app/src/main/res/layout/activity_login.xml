@@ -1,263 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/first_background"
-    tools:context="cn.sczhckg.order.LoginActivity">
+    android:background="@drawable/login_bg">
 
     <RelativeLayout
-        android:id="@+id/vip_login"
+        android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/login_bg"
-        android:visibility="gone">
+        android:layout_height="@dimen/vip_top"
+        android:gravity="center_vertical">
 
-        <RelativeLayout
-            android:id="@+id/top"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/vip_top"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:padding="@dimen/vip_top_padding"
-                android:src="@drawable/back" />
-
-            <ImageView
-                android:id="@+id/login"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:padding="@dimen/vip_top_padding"
-                android:src="@drawable/login" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/hint_line"
-                android:layout_alignParentBottom="true"
-                android:background="@color/hint_color" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_below="@id/top"
-            android:layout_marginTop="50dp"
-            android:orientation="vertical">
+            android:layout_alignParentLeft="true"
+            android:padding="@dimen/vip_top_padding"
+            android:src="@drawable/back" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:paddingLeft="150dp"
-                android:paddingRight="150dp">
+        <ImageView
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/vip_top_padding"
+            android:src="@drawable/login" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/password_bg"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
-                    android:weightSum="10">
-
-                    <TextView
-                        android:id="@+id/cardNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_weight="1"
-                        android:text="@string/cardNumber"
-                        android:textSize="@dimen/text_size" />
-
-                    <EditText
-                        android:id="@+id/inputCard"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:background="@null"
-                        android:hint="@string/vipCardNumberHint"
-                        android:textColor="@color/text_hint_color"
-                        android:textColorHint="@color/text_hint_color"
-                        android:textSize="@dimen/text_size" />
-
-                    <ImageView
-                        android:id="@+id/vip_card_close"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_weight="1"
-                        android:src="@drawable/vip_close" />
-
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:paddingLeft="150dp"
-                android:paddingRight="150dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/password_bg"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
-                    android:weightSum="10">
-
-                    <TextView
-                        android:id="@+id/password"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_weight="1"
-                        android:text="@string/password"
-                        android:textSize="@dimen/text_size" />
-
-                    <EditText
-                        android:id="@+id/inputPassword"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:background="@null"
-                        android:hint="@string/vipPasswordHint"
-                        android:inputType="textPassword"
-                        android:textColor="@color/text_hint_color"
-                        android:textColorHint="@color/text_hint_color"
-                        android:textSize="@dimen/text_size" />
-
-                    <ImageView
-                        android:id="@+id/vip_password_close"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_weight="1"
-                        android:src="@drawable/vip_close" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:paddingLeft="150dp"
-                android:paddingRight="150dp">
-
-                <Button
-                    android:id="@+id/confir"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/confir_bg"
-                    android:text="确认"
-                    android:textColor="@color/FF602708"
-                    android:textSize="@dimen/text_size" />
-            </RelativeLayout>
-
-        </LinearLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hint_line"
+            android:layout_alignParentBottom="true"
+            android:background="@color/hint_color" />
 
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_below="@id/top"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="30dp"
-            android:paddingTop="50dp">
+            android:paddingLeft="150dp"
+            android:paddingRight="150dp">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/open_logo" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/password_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/cardNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="1"
+                    android:text="@string/cardNumber"
+                    android:textSize="@dimen/text_size" />
+
+                <EditText
+                    android:id="@+id/inputCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:background="@null"
+                    android:hint="@string/vipCardNumberHint"
+                    android:textColor="@color/text_hint_color"
+                    android:textColorHint="@color/text_hint_color"
+                    android:textSize="@dimen/text_size" />
+
+                <ImageView
+                    android:id="@+id/vip_card_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1"
+                    android:src="@drawable/vip_close" />
+
+
+            </LinearLayout>
 
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="@string/firstPage"
-                android:textColor="@color/FF693D0A"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal|bottom"
-                android:text="@string/isVip"
-                android:textColor="@color/FF5f3507"
-                android:textSize="35sp" />
+            android:gravity="center"
+            android:paddingLeft="150dp"
+            android:paddingRight="150dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/password_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:weightSum="10">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:text="@string/password"
+                    android:textSize="@dimen/text_size" />
 
-                    <Button
-                        android:id="@+id/right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/button_white_first_page"
-                        android:text="是"
-                        android:textColor="@color/white"
-                        android:textSize="25sp" />
-                </RelativeLayout>
+                <EditText
+                    android:id="@+id/inputPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:background="@null"
+                    android:hint="@string/vipPasswordHint"
+                    android:inputType="textPassword"
+                    android:textColor="@color/text_hint_color"
+                    android:textColorHint="@color/text_hint_color"
+                    android:textSize="@dimen/text_size" />
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                <ImageView
+                    android:id="@+id/vip_password_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:layout_weight="1"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/deny"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/button_white_first_page"
-                        android:text="否"
-                        android:textColor="@color/white"
-                        android:textSize="25sp" />
-                </RelativeLayout>
+                    android:src="@drawable/vip_close" />
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:paddingLeft="150dp"
+            android:paddingRight="150dp">
+
+            <Button
+                android:id="@+id/confir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/confir_bg"
+                android:text="确认"
+                android:textColor="@color/FF602708"
+                android:textSize="@dimen/text_size" />
+        </RelativeLayout>
+
     </LinearLayout>
+
 </RelativeLayout>

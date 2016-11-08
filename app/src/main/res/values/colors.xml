@@ -12,15 +12,29 @@
     <color name="FF693D0A">#693D0A</color>
     <!--是否会员-->
     <color name="FF5f3507">#5f3507</color>
-    <!--会员登录界面  确认颜色-->
+    <!--购物车按钮文字颜色-->
     <color name="FF602708">#602708</color>
-    <!--会员界面字体颜色-->
-    <color name="FF303537">#303537</color>
+    <!--字体颜色-->
+    <color name="text_color_m">#303537</color>
+    <color name="text_color_red">#fb4f45</color>
+    <color name="text_color_gray">#cdcfcf</color>
+    <color name="text_color_dishes_name">#3a3634</color>
+    <color name="text_color_person">#7a8081</color>
+
+    <!--分割线-->
+    <color name="line_s">#E9E9E9</color>
+
     <!--系统主要背景颜色-->
     <color name="main">#545B61</color>
-    <!--系统主要背景颜色-->
+    <!---->
     <color name="cart_top">#F5F5F5</color>
+    <!---->
+    <color name="FFE8ECED">#FFE8ECED</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <color name="table_item_line">#F3D355</color>
+
+    <color name="FFF9F9F9">#F9F9F9</color>
 
 </resources>
