@@ -20,9 +20,12 @@
     <color name="text_color_gray">#cdcfcf</color>
     <color name="text_color_dishes_name">#3a3634</color>
     <color name="text_color_person">#7a8081</color>
+    <color name="text_color_cart_price_m">#7e8283</color>
+    <color name="text_color_cart_price_s">#c4cbce</color>
 
     <!--分割线-->
     <color name="line_s">#E9E9E9</color>
+    <color name="line_yellow">#f4d452</color>
 
     <!--系统主要背景颜色-->
     <color name="main">#545B61</color>

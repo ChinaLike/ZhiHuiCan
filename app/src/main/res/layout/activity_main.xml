@@ -6,9 +6,8 @@
     android:background="@color/main"
     android:orientation="horizontal">
 
-    <fragment
+    <android.support.v4.view.ViewPager
         android:id="@+id/cart"
-        android:name="cn.sczhckg.order.fragment.ShoppingCartFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />

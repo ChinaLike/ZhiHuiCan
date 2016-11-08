@@ -22,6 +22,7 @@ import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.fragment.PotTypeFagment;
+import cn.sczhckg.order.fragment.ShoppingCartFragment;
 import cn.sczhckg.order.until.AppSystemUntil;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +45,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     ImageView noLogin;
     @Bind(R.id.has_login)
     LinearLayout hasLogin;
+    @Bind(R.id.cart)
+    ViewPager cart;
     /**
      * 事物管理器
      */
@@ -64,6 +67,10 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      * 锅底选择，推荐菜品
      */
     private PotTypeFagment mPotTypeFagment;
+    /**
+     * 购物车
+     */
+    private ShoppingCartFragment mShoppingCartFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +79,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         ButterKnife.bind(this);
         isLogin();
         init();
+        initLeftFragment();
     }
 
     /**
@@ -101,6 +109,19 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         adapter = new ViewPagerAdapter(mFm);
         adapter.setList(initFragment());
         viewPager.setAdapter(adapter);
+    }
+
+    /**
+     * 初始化左侧数据
+     */
+    private void initLeftFragment() {
+        List<Fragment> mList = new ArrayList<>();
+        mFm = getSupportFragmentManager();
+        adapter = new ViewPagerAdapter(mFm);
+        mShoppingCartFragment = new ShoppingCartFragment();
+        mList.add(mShoppingCartFragment);
+        adapter.setList(mList);
+        cart.setAdapter(adapter);
     }
 
 

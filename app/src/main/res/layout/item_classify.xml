@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/classify_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:textSize="@dimen/text_size_mediu"
+        android:gravity="center"
+        android:text="素菜类"
+        android:textColor="@color/text_color_person"/>
+
+    <View
+        android:id="@+id/classify_line"
+        android:layout_alignParentLeft="true"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:background="@color/line_yellow"/>
+
+
+</RelativeLayout>
