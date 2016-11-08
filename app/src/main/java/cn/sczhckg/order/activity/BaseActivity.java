@@ -12,4 +12,6 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected abstract void init();
 
+    protected abstract void initNetData();
+
 }

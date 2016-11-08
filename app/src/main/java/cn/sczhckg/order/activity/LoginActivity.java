@@ -3,7 +3,6 @@ package cn.sczhckg.order.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +18,8 @@ import butterknife.OnClick;
 import cn.sczhckg.order.Config;
 import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
-import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.bean.Constant;
+import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +30,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class LoginActivity extends Activity implements Callback<String> {
+public class LoginActivity extends Activity implements Callback<UserLoginBean> {
 
     @Bind(R.id.inputCard)
     EditText inputCard;
@@ -91,7 +90,7 @@ public class LoginActivity extends Activity implements Callback<String> {
         Map<String, String> vipMap = new HashMap<>();
         vipMap.put(Constant.USERNAME, userName);
         vipMap.put(Constant.PASSWORD, password);
-        Call<String> vipCallBack = RetrofitRequest.GET(Config.HOST).vip(vipMap);
+        Call<UserLoginBean> vipCallBack = RetrofitRequest.service(Config.HOST).vipLogin(vipMap);
         vipCallBack.enqueue(this);
 
     }
@@ -99,25 +98,26 @@ public class LoginActivity extends Activity implements Callback<String> {
     /**
      * 进入主界面
      */
-    private void into() {
+    private void into(UserLoginBean bean) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("userInfo",bean);
         startActivity(intent);
     }
 
     @Override
-    public void onResponse(Call<String> call, Response<String> response) {
-//        final UserLoginBean bean = response.body();
-//        if (bean.getCode() == 0) {
-//            Toast.makeText(this, bean.getResult().getMsg(), Toast.LENGTH_SHORT).show();
-//            MyApplication.isLogin = true;
-//            into();
-//        } else {
-//            Toast.makeText(this,  bean.getResult().getMsg(), Toast.LENGTH_SHORT).show();
-//        }
+    public void onResponse(Call<UserLoginBean> call, Response<UserLoginBean> response) {
+        final UserLoginBean bean = response.body();
+        if (bean.getCode() == 0) {
+            Toast.makeText(this, bean.getMsg(), Toast.LENGTH_SHORT).show();
+            MyApplication.isLogin = true;
+            into(bean);
+        } else {
+            Toast.makeText(this, bean.getMsg(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void onFailure(Call<String> call, Throwable t) {
+    public void onFailure(Call<UserLoginBean> call, Throwable t) {
         Toast.makeText(this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 }

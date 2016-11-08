@@ -13,10 +13,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class RetrofitRequest {
 
     /**
-     * GET 请求
+     * service 请求
      * @param url 请求地址
      */
-    public static RetrofitService GET(String url){
+    public static RetrofitService service(String url){
         Retrofit retrofit = new Retrofit.Builder().baseUrl(url)
                 //增加返回值为String的支持
                 .addConverterFactory(ScalarsConverterFactory.create())

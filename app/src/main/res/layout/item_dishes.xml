@@ -1,55 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beyole="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="188dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical">
 
-            <ImageView
-                android:layout_width="144dp"
-                android:layout_height="144dp"
-                android:layout_margin="20dp"
-                android:src="@drawable/xianmaodu_delete" />
+        <cn.sczhckg.order.overwrite.RoundImageView
+            android:id="@+id/dishes_image"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:scaleType="matrix"
+            beyole:borderRadius="5dip"
+            beyole:imageType="round"
+            android:src="@drawable/xianmaodu_delete" />
 
-        </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="188dp"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:paddingBottom="20dp"
-            android:paddingRight="10dp"
-            android:paddingTop="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/dishes_name"
                     android:layout_width="wrap_content"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:text="鲜牛肉"
+                    android:lines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/text_color_dishes_name"
                     android:textSize="@dimen/text_size_mediu" />
 
                 <TextView
                     android:id="@+id/dishes_price"
+                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -59,9 +61,10 @@
 
             </LinearLayout>
 
+
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -72,6 +75,7 @@
                     android:textColor="@color/text_color_gray" />
 
                 <TextView
+                    android:id="@+id/dishes_sales"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -79,13 +83,14 @@
                     android:textColor="@color/text_color_gray" />
 
                 <ImageView
-                    android:id="@+id/dishes_collect"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:id="@+id/dishes_collect_icon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_marginLeft="20dp"
                     android:src="@drawable/dishes_collect_off" />
 
                 <TextView
+                    android:id="@+id/dishes_collect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -94,55 +99,56 @@
 
             </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginRight="10dp">
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/dishes_stockout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
                     android:src="@drawable/dishes_guqing_off" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
+                    android:gravity="right|bottom"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/dishes_minus"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:src="@drawable/dishes_minus" />
-
 
                     <TextView
                         android:id="@+id/dishes_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
                         android:text="0"
                         android:textColor="@color/text_color_m" />
 
                     <ImageView
                         android:id="@+id/dishes_add"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_alignParentRight="true"
                         android:src="@drawable/dishes_add" />
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
+
+
         </LinearLayout>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dishes_favorable_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </LinearLayout>
