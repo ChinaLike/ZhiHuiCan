@@ -24,7 +24,7 @@ import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ShoppingCartAdapter;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
-import cn.sczhckg.order.data.bean.NainPagerShow;
+import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnShoppingCartListener;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
@@ -40,7 +40,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<NainPagerShow>{
+public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<MainPagerShow>{
 
 
     @Bind(R.id.nothing)
@@ -131,7 +131,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @OnClick(R.id.shoppingcart_button)
     public void onClick() {
         /**开桌*/
-        Call<NainPagerShow> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table,Constant.OPEN_TABLE,mList.toString(),MainActivity.person);
+        Call<MainPagerShow> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table,Constant.OPEN_TABLE,mList.toString(),MainActivity.person);
         openTable.enqueue(this);
 
     }
@@ -148,12 +148,12 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     }
 
     @Override
-    public void onResponse(Call<NainPagerShow> call, Response<NainPagerShow> response) {
+    public void onResponse(Call<MainPagerShow> call, Response<MainPagerShow> response) {
 
     }
 
     @Override
-    public void onFailure(Call<NainPagerShow> call, Throwable t) {
+    public void onFailure(Call<MainPagerShow> call, Throwable t) {
 
     }
 }
