@@ -10,8 +10,7 @@
     <color name="text_hint_color">#D0D3D5</color>
     <!--首页欢迎语-->
     <color name="FF693D0A">#693D0A</color>
-    <!--是否会员-->
-    <color name="FF5f3507">#5f3507</color>
+
     <!--购物车按钮文字颜色-->
     <color name="FF602708">#602708</color>
     <!--字体颜色-->
@@ -22,6 +21,8 @@
     <color name="text_color_person">#7a8081</color>
     <color name="text_color_cart_price_m">#7e8283</color>
     <color name="text_color_cart_price_s">#c4cbce</color>
+    <color name="text_color_main_normal">#6d7172</color>
+    <color name="text_color_main_select">#5f3507</color>
 
     <!--分割线-->
     <color name="line_s">#E9E9E9</color>

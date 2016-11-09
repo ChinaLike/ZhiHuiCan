@@ -9,7 +9,7 @@ import java.util.List;
  * @Email: 572919350@qq.com
  */
 
-public class MainPagerShow implements Serializable{
+public class NainPagerShow implements Serializable{
 
     private int status;
 

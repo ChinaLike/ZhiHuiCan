@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,7 +24,7 @@ import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ShoppingCartAdapter;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
-import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.NainPagerShow;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnShoppingCartListener;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
@@ -43,7 +40,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<MainPagerShow>{
+public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<NainPagerShow>{
 
 
     @Bind(R.id.nothing)
@@ -134,7 +131,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @OnClick(R.id.shoppingcart_button)
     public void onClick() {
         /**开桌*/
-        Call<MainPagerShow> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table,Constant.OPEN_TABLE,mList.toString(),MainActivity.person);
+        Call<NainPagerShow> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table,Constant.OPEN_TABLE,mList.toString(),MainActivity.person);
         openTable.enqueue(this);
 
     }
@@ -151,12 +148,12 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     }
 
     @Override
-    public void onResponse(Call<MainPagerShow> call, Response<MainPagerShow> response) {
+    public void onResponse(Call<NainPagerShow> call, Response<NainPagerShow> response) {
 
     }
 
     @Override
-    public void onFailure(Call<MainPagerShow> call, Throwable t) {
+    public void onFailure(Call<NainPagerShow> call, Throwable t) {
 
     }
 }

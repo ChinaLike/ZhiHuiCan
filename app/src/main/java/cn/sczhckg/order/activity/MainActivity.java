@@ -19,7 +19,7 @@ import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
-import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.NainPagerShow;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
@@ -37,7 +37,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnDishesChooseListener, OnShoppingCartListener, OnButtonClickListener {
+public class MainActivity extends BaseActivity implements Callback<NainPagerShow>, OnDishesChooseListener, OnShoppingCartListener, OnButtonClickListener {
 
     @Bind(R.id.viewPager)
     ViewPager viewPager;
@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      */
     @Override
     protected void initNetData() {
-        Call<MainPagerShow> mainShow = RetrofitRequest.service(Config.HOST).potDataShow(userId, deviceId);
+        Call<NainPagerShow> mainShow = RetrofitRequest.service(Config.HOST).potDataShow(userId, deviceId);
         mainShow.enqueue(this);
     }
 
@@ -160,8 +160,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     }
 
     @Override
-    public void onResponse(Call<MainPagerShow> call, Response<MainPagerShow> response) {
-        MainPagerShow bean = response.body();
+    public void onResponse(Call<NainPagerShow> call, Response<NainPagerShow> response) {
+        NainPagerShow bean = response.body();
         /**获取数据成功*/
         if (bean.getStatus() == 0 && bean != null) {
             table = bean.getTableNumber();
@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     }
 
     @Override
-    public void onFailure(Call<MainPagerShow> call, Throwable t) {
+    public void onFailure(Call<NainPagerShow> call, Throwable t) {
         Toast.makeText(this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 

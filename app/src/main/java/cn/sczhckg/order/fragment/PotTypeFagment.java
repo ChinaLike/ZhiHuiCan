@@ -19,7 +19,7 @@ import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.DishesAdapter;
 import cn.sczhckg.order.adapter.PersonChooseAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
-import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.NainPagerShow;
 import cn.sczhckg.order.data.bean.PersonBean;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
@@ -92,7 +92,7 @@ public class PotTypeFagment extends BaseFragment {
     public void setData(Object object) {
         potParent.setClickable(true);
         dishesParent.setClickable(true);
-        MainPagerShow bean = (MainPagerShow) object;
+        NainPagerShow bean = (NainPagerShow) object;
         DEFAULT_PERSON = bean.getPerson().size();
         /**========初始化人数========*/
         personChoose.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -145,7 +145,7 @@ public class PotTypeFagment extends BaseFragment {
      * @param bean
      * @return
      */
-    private List<PersonBean> initPerson(MainPagerShow bean) {
+    private List<PersonBean> initPerson(NainPagerShow bean) {
         /**添加人数选择*/
         PersonBean mPersonBean = new PersonBean();
         mPersonBean.setNumber(bean.getDefaultNumber());

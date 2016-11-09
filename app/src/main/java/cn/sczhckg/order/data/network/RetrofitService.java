@@ -2,11 +2,10 @@ package cn.sczhckg.order.data.network;
 
 import java.util.Map;
 
-import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.NainPagerShow;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import retrofit2.Call;
 import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -26,10 +25,10 @@ public interface RetrofitService {
     /**主页锅底选择*/
     @FormUrlEncoded
     @POST("android/test/openReady")
-    Call<MainPagerShow> potDataShow(@Field("id") String id,@Field("deviceId") String deviceId);
+    Call<NainPagerShow> potDataShow(@Field("id") String id, @Field("deviceId") String deviceId);
     /**请求开桌*/
     @FormUrlEncoded
     @POST("android/test/cart/open")
-    Call<MainPagerShow> openTable(@Field("table") String table,@Field("type") int type,@Field("params") String params,@Field("person") int person);
+    Call<NainPagerShow> openTable(@Field("table") String table, @Field("type") int type, @Field("params") String params, @Field("person") int person);
 
 }
