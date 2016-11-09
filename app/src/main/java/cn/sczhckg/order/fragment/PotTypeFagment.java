@@ -15,11 +15,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.DishesAdapter;
 import cn.sczhckg.order.adapter.PersonChooseAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.PersonBean;
+import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
 
 /**
@@ -58,6 +60,8 @@ public class PotTypeFagment extends BaseFragment {
     private List<DishesBean> dishesList;
 
     private List<DishesBean> potList;
+
+    private OnDishesChooseListener onDishesChooseListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,9 +104,39 @@ public class PotTypeFagment extends BaseFragment {
         dishesChoose.setLayoutManager(new LinearLayoutManager(getActivity()));
         dishesList = bean.getDishesList();
         potList = bean.getPotList();
-        dishesAdapter = new DishesAdapter(getActivity(), potList);
+        dishesAdapter = new DishesAdapter(getActivity(), potList,onDishesChooseListener);
         dishesChoose.setAdapter(dishesAdapter);
         dishesChoose.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
+    }
+
+    /**
+     * 刷新数据
+     * @param bean
+     */
+    public void upData(DishesBean bean){
+        String id=bean.getId();
+        String dishesName=bean.getName();
+        for (DishesBean item:potList) {
+            if (item.getId().equals(id)&&item.getName().equals(dishesName)){
+                item.setNumber(bean.getNumber());
+                dishesAdapter.notifyDataSetChanged();
+            }
+        }
+        for (DishesBean item:dishesList) {
+            if (item.getId().equals(id)&&item.getName().equals(dishesName)){
+                item.setNumber(bean.getNumber());
+                dishesAdapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
+    /**
+     * 监听传递
+     * @param onDishesChooseListener
+     */
+    public void onDishesChooseListenner(OnDishesChooseListener onDishesChooseListener){
+        this.onDishesChooseListener =onDishesChooseListener;
     }
 
     /**
@@ -116,6 +150,8 @@ public class PotTypeFagment extends BaseFragment {
         PersonBean mPersonBean = new PersonBean();
         mPersonBean.setNumber(bean.getDefaultNumber());
         mPersonBean.setTableName(bean.getTableNumber());
+        /**初始化默认人数，避免消费者未选择时此数为0*/
+        MainActivity.person=bean.getDefaultNumber();
         personList = bean.getPerson();
         personList.add(mPersonBean);
         return personList;

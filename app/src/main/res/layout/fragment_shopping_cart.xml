@@ -10,13 +10,14 @@
         android:id="@+id/nothing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:src="@drawable/nothing" />
 
     <LinearLayout
         android:id="@+id/has_thing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@drawable/cart_bg"
         android:orientation="vertical">
 
@@ -105,9 +106,10 @@
                         android:textSize="@dimen/text_size_mediu" />
 
                     <TextView
+                        android:id="@+id/shoppingcart_total_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="¥ 156"
+                        android:text="¥ 0"
                         android:textColor="@color/text_color_red"
                         android:textSize="@dimen/text_size_mediu" />
 
@@ -138,9 +140,10 @@
                             android:textColor="@color/text_color_gray" />
 
                         <TextView
+                            android:id="@+id/shoppingcart_part_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2"
+                            android:text="0"
                             android:textColor="@color/text_color_m" />
 
                     </LinearLayout>
@@ -159,9 +162,10 @@
                             android:textColor="@color/text_color_gray" />
 
                         <TextView
+                            android:id="@+id/shoppingcart_dishes_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="5"
+                            android:text="0"
                             android:textColor="@color/text_color_m" />
                     </LinearLayout>
 
@@ -176,6 +180,7 @@
                 android:gravity="center">
 
                 <Button
+                    android:id="@+id/shoppingcart_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"

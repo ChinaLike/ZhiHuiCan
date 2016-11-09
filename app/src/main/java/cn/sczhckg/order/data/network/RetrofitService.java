@@ -27,5 +27,9 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("android/test/openReady")
     Call<MainPagerShow> potDataShow(@Field("id") String id,@Field("deviceId") String deviceId);
+    /**请求开桌*/
+    @FormUrlEncoded
+    @POST("android/test/cart/open")
+    Call<MainPagerShow> openTable(@Field("table") String table,@Field("type") int type,@Field("params") String params,@Field("person") int person);
 
 }

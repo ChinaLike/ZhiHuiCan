@@ -7,7 +7,9 @@
     <dimen name="hint_line">1dp</dimen>
     <dimen name="text_size_largr">25sp</dimen>
     <dimen name="text_size_mediu">20sp</dimen>
+    <dimen name="text_size_mediu_s">17sp</dimen>
     <dimen name="text_size_smart">15sp</dimen>
+    <dimen name="text_size_smart_s">12sp</dimen>
 
     <!--vip界面尺寸-->
     <dimen name="vip_top">90dp</dimen>

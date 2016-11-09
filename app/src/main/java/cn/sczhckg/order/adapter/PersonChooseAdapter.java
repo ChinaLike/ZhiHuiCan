@@ -1,11 +1,14 @@
 package cn.sczhckg.order.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.data.bean.PersonBean;
 import cn.sczhckg.order.fragment.PotTypeFagment;
 
@@ -46,15 +50,45 @@ public class PersonChooseAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position)==0){
-            ((PersonCommonViewHolder)holder).itemPerson.setText(mList.get(position).getNumber()+"");
-        }else {
-            if (mList.size()>PotTypeFagment.DEFAULT_PERSON+1){
-                ((PersonChooseViewHolder)holder).table.setVisibility(View.VISIBLE);
-                ((PersonChooseViewHolder)holder).table.setText(mList.get(position).getTableName());
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (getItemViewType(position) == 0) {
+            ((PersonCommonViewHolder) holder).itemPerson.setText(mList.get(position).getNumber() + "");
+            /**设置点击默认人数*/
+            ((PersonCommonViewHolder) holder).default_person_parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mList.get(PotTypeFagment.DEFAULT_PERSON).setNumber(mList.get(position).getNumber());
+                    notifyDataSetChanged();
+                }
+            });
+        } else {
+            if (mList.size() > PotTypeFagment.DEFAULT_PERSON + 1) {
+                ((PersonChooseViewHolder) holder).table.setVisibility(View.VISIBLE);
+                ((PersonChooseViewHolder) holder).table.setText(mList.get(position).getTableName());
             }
-            ((PersonChooseViewHolder)holder).person.setText(mList.get(position).getNumber()+"");
+            ((PersonChooseViewHolder) holder).person.setText(mList.get(position).getNumber() + "");
+            /**人数减*/
+            ((PersonChooseViewHolder) holder).minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int number = Integer.parseInt(((PersonChooseViewHolder) holder).person.getText().toString());
+                    if (number > 1) {
+                        number--;
+                        ((PersonChooseViewHolder) holder).person.setText(number + "");
+                        MainActivity.person=number;
+                    }
+                }
+            });
+            /**人数加*/
+            ((PersonChooseViewHolder) holder).add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int number = Integer.parseInt(((PersonChooseViewHolder) holder).person.getText().toString());
+                    number++;
+                    ((PersonChooseViewHolder) holder).person.setText(number + "");
+                    MainActivity.person=number;
+                }
+            });
         }
     }
 
@@ -85,6 +119,8 @@ public class PersonChooseAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Bind(R.id.item_person)
         TextView itemPerson;
+        @Bind(R.id.item_default_person_parent)
+        LinearLayout default_person_parent;
 
         public PersonCommonViewHolder(View view) {
             super(view);

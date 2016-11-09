@@ -11,11 +11,13 @@ import java.util.List;
 
 public class DishesBean implements Serializable{
 
+    private int type;//菜品分类
+
     private String id;//菜品ID
 
     private String name;// 菜品名称
 
-    private String price;//菜品价格
+    private int price;//菜品价格
 
     private String url;//菜品图片链接地址
 
@@ -27,7 +29,17 @@ public class DishesBean implements Serializable{
 
     private int number;//初始数量
 
+    private int totalPrice;//总价
+
     private List<PriceTypeBean> priceType;//优惠价格类型
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;
@@ -45,11 +57,11 @@ public class DishesBean implements Serializable{
         this.name = name;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -99,5 +111,30 @@ public class DishesBean implements Serializable{
 
     public void setPriceType(List<PriceTypeBean> priceType) {
         this.priceType = priceType;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "type=" + type +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", url='" + url + '\'' +
+                ", sales=" + sales +
+                ", collect=" + collect +
+                ", stockout=" + stockout +
+                ", number=" + number +
+                ", totalPrice=" + totalPrice +
+                ", priceType=" + priceType +
+                '}';
     }
 }

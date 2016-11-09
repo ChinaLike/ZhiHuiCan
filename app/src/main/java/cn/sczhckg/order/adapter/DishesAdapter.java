@@ -10,12 +10,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 
 /**
  * @describe: 菜品适配
@@ -29,9 +31,14 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
 
     private List<DishesBean> mList;
 
-    public DishesAdapter(Context mContext, List<DishesBean> mList) {
+    private OnDishesChooseListener onDishesChooseListener;
+
+    private List<DishesBean> cartList = new ArrayList<>();
+
+    public DishesAdapter(Context mContext, List<DishesBean> mList, OnDishesChooseListener onDishesChooseListener) {
         this.mContext = mContext;
         this.mList = mList;
+        this.onDishesChooseListener = onDishesChooseListener;
     }
 
     @Override
@@ -41,10 +48,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
 
     /**
      * 刷新数据
+     *
      * @param mList
      */
-    public void notifyDataSetChanged(List<DishesBean> mList){
-        this.mList=mList;
+    public void notifyDataSetChanged(List<DishesBean> mList) {
+        this.mList = mList;
         notifyDataSetChanged();
     }
 
@@ -74,6 +82,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
                     number--;
                     bean.setNumber(number);
                     holder.dishesNumber.setText(number + "");
+                    onDishesChooseListener.dishesChoose(upDataCart(bean));
                 }
             }
         });
@@ -84,8 +93,29 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
                 number++;
                 bean.setNumber(number);
                 holder.dishesNumber.setText(number + "");
+                onDishesChooseListener.dishesChoose(upDataCart(bean));
             }
         });
+
+
+    }
+
+    /**
+     * 更新购物车数据
+     *
+     * @return
+     */
+    private List<DishesBean> upDataCart(DishesBean bean) {
+        if (cartList.contains(bean)) {
+            int postion = cartList.indexOf(bean);
+            cartList.remove(bean);
+            if (bean.getNumber()!=0) {
+                cartList.add(postion, bean);
+            }
+        } else {
+            cartList.add(bean);
+        }
+        return cartList;
     }
 
     @Override

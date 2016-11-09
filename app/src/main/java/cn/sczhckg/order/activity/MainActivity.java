@@ -18,8 +18,12 @@ import cn.sczhckg.order.Config;
 import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
+import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.UserLoginBean;
+import cn.sczhckg.order.data.listener.OnButtonClickListener;
+import cn.sczhckg.order.data.listener.OnDishesChooseListener;
+import cn.sczhckg.order.data.listener.OnShoppingCartListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.fragment.PotTypeFagment;
 import cn.sczhckg.order.fragment.ShoppingCartFragment;
@@ -33,7 +37,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements Callback<MainPagerShow> {
+public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnDishesChooseListener, OnShoppingCartListener, OnButtonClickListener {
 
     @Bind(R.id.viewPager)
     ViewPager viewPager;
@@ -72,11 +76,25 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      */
     private ShoppingCartFragment mShoppingCartFragment;
 
+    private OnDishesChooseListener onDishesChooseListener;
+
+    private OnShoppingCartListener onShoppingCartListener;
+    /**
+     * 用餐人数
+     */
+    public static int person;
+    /**
+     * 桌号
+     */
+    public static String table;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setOnDishesChooseListener(this);
+        setOnShoppingCartListener(this);
         isLogin();
         init();
         initLeftFragment();
@@ -105,6 +123,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
 
     @Override
     protected void init() {
+        person = 0;
         mFm = getSupportFragmentManager();
         adapter = new ViewPagerAdapter(mFm);
         adapter.setList(initFragment());
@@ -119,6 +138,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         mFm = getSupportFragmentManager();
         adapter = new ViewPagerAdapter(mFm);
         mShoppingCartFragment = new ShoppingCartFragment();
+        mShoppingCartFragment.setOnShoppingCartListener(onShoppingCartListener);
+        mShoppingCartFragment.setOnButtonClickListener(this);
         mList.add(mShoppingCartFragment);
         adapter.setList(mList);
         cart.setAdapter(adapter);
@@ -133,6 +154,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     private List<Fragment> initFragment() {
         List<Fragment> mList = new ArrayList<>();
         mPotTypeFagment = new PotTypeFagment();
+        mPotTypeFagment.onDishesChooseListenner(onDishesChooseListener);
         mList.add(mPotTypeFagment);
         return mList;
     }
@@ -142,7 +164,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         MainPagerShow bean = response.body();
         /**获取数据成功*/
         if (bean.getStatus() == 0 && bean != null) {
-            tableNumber.setText("桌号：" + bean.getTableNumber());
+            table = bean.getTableNumber();
+            tableNumber.setText("桌号：" + table);
             waitress.setText("服务员：" + bean.getWaitress());
             if (mPotTypeFagment != null) {
                 mPotTypeFagment.setData(bean);
@@ -153,5 +176,32 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     @Override
     public void onFailure(Call<MainPagerShow> call, Throwable t) {
         Toast.makeText(this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+    }
+
+    public void setOnDishesChooseListener(OnDishesChooseListener onDishesChooseListener) {
+        this.onDishesChooseListener = onDishesChooseListener;
+    }
+
+    public void setOnShoppingCartListener(OnShoppingCartListener onShoppingCartListener) {
+        this.onShoppingCartListener = onShoppingCartListener;
+    }
+
+    @Override
+    public void dishesChoose(List<DishesBean> bean) {
+        if (mShoppingCartFragment != null) {
+            mShoppingCartFragment.setData(bean);
+        }
+    }
+
+    @Override
+    public void shoppingCart(DishesBean bean) {
+        if (mPotTypeFagment != null) {
+            mPotTypeFagment.upData(bean);
+        }
+    }
+
+    @Override
+    public void onClick(int type) {
+
     }
 }

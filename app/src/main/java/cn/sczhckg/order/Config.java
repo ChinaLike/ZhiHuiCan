@@ -8,6 +8,6 @@ package cn.sczhckg.order;
 
 public class Config {
 
-    public static String HOST="http://192.168.0.8:8080/xwechat/";
+    public static String HOST="http://192.168.0.3:8080/xwechat/";
 
 }

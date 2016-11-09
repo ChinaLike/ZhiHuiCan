@@ -2,18 +2,18 @@ package cn.sczhckg.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * @describe:
- * @author: Like on 2016/11/4.
+ * @describe: 服务界面
+ * @author: Like on 2016/11/9.
  * @Email: 572919350@qq.com
  */
 
-public abstract class BaseFragment extends Fragment {
+public class ServiceFragment extends BaseFragment{
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +30,13 @@ public abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public abstract void setData(Object object);
+    @Override
+    public void setData(Object object) {
 
-    public abstract void init();
+    }
+
+    @Override
+    public void init() {
+
+    }
 }

@@ -12,7 +12,7 @@ public class PriceTypeBean implements Serializable {
 
     private int type;//优惠类型
 
-    private String price;//优惠价格
+    private int price;//优惠价格
 
     public int getType() {
         return type;
@@ -22,11 +22,19 @@ public class PriceTypeBean implements Serializable {
         this.type = type;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "type=" + type +
+                ", price=" + price +
+                '}';
     }
 }

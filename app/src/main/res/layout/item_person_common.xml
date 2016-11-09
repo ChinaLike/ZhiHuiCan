@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:padding="20dp"
+    android:id="@+id/item_default_person_parent"
     android:orientation="horizontal">
 
     <TextView
