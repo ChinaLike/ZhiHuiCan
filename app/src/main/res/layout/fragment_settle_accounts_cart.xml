@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cart_bg"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/pay_type"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hint_line"
+        android:background="@color/hint_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="应支付："
+                    android:textColor="@color/text_color_m"
+                    android:textSize="@dimen/text_size_mediu" />
+
+                <TextView
+                    android:id="@+id/shoppingcart_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¥ 0"
+                    android:textColor="@color/text_color_red"
+                    android:textSize="@dimen/text_size_mediu" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/hint_line"
+                android:layout_height="20dp"
+                android:background="@color/hint_color" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/favorable_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="优惠  "
+                        android:textColor="@color/text_color_gray" />
+
+                    <TextView
+                        android:id="@+id/favorable_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/text_color_red" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/exceptional_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="打赏  "
+                        android:textColor="@color/text_color_gray" />
+
+                    <TextView
+                        android:id="@+id/exceptional_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/text_color_red" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/shoppingcart_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@drawable/confir_bg"
+                android:text="@string/settle_accounts"
+                android:textColor="@color/button_text"
+                android:textSize="@dimen/text_size_largr" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
