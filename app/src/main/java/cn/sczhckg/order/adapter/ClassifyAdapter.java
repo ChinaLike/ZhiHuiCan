@@ -93,9 +93,8 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
     private void upData(ClassifyItemBean bean) {
         int postion = mList.indexOf(bean);
         for (ClassifyItemBean item : mList) {
-            if (item.isSelect()) {
-                item.setSelect(false);
-            }
+            if (item.isSelect()){
+            item.setSelect(false);
         }
         bean.setSelect(true);
         notifyDataSetChanged();
