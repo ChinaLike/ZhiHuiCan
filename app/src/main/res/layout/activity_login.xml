@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/confir_bg"
                 android:text="确认"
-                android:textColor="@color/FF602708"
+                android:textColor="@color/button_text"
                 android:textSize="@dimen/text_size" />
         </RelativeLayout>
 

@@ -27,5 +27,11 @@
     <string name="openTable">开桌</string>
     <string name="order">点菜</string>
     <string name="settle_accounts">结账</string>
+    <string name="order_type_text_hint">请选择一种点菜方式</string>
+    <string name="order_one">如果您是独自就餐，没有选择选择与其他餐桌合并；或者您已与其他餐桌合并，但想要各自点餐，请选择</string>
+    <string name="order_more">如果您是与其它餐桌合且想要一起点餐，请选择</string>
+    <string name="one_order">单桌点餐</string>
+    <string name="more_order">并桌点餐</string>
+    <string name="choose_order_type">点菜方式选择</string>
 
 </resources>

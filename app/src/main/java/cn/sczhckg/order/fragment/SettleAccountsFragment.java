@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cn.sczhckg.order.R;
+
 /**
  * @describe: 结账界面
  * @author: Like on 2016/11/9.
@@ -22,7 +24,8 @@ public class SettleAccountsFragment  extends BaseFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view=inflater.inflate(R.layout.fragment_settle_accounts,null,false);
+        return view;
     }
 
     @Override

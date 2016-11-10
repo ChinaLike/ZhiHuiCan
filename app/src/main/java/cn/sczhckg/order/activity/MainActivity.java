@@ -3,7 +3,7 @@ package cn.sczhckg.order.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,10 +14,12 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.sczhckg.order.Config;
 import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
+import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.UserLoginBean;
@@ -25,8 +27,10 @@ import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.data.listener.OnShoppingCartListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.fragment.MainFragment;
 import cn.sczhckg.order.fragment.PotTypeFagment;
 import cn.sczhckg.order.fragment.ShoppingCartFragment;
+import cn.sczhckg.order.overwrite.NoScrollViewPager;
 import cn.sczhckg.order.until.AppSystemUntil;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,8 +43,11 @@ import retrofit2.Response;
  */
 public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnDishesChooseListener, OnShoppingCartListener, OnButtonClickListener {
 
+    /**
+     * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
+     */
     @Bind(R.id.viewPager)
-    ViewPager viewPager;
+    NoScrollViewPager viewPager;
     @Bind(R.id.table_number)
     TextView tableNumber;
     @Bind(R.id.waitress)
@@ -50,7 +57,13 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     @Bind(R.id.has_login)
     LinearLayout hasLogin;
     @Bind(R.id.cart)
-    ViewPager cart;
+    NoScrollViewPager cart;
+    @Bind(R.id.parent_show_table)
+    LinearLayout parentShowTable;
+    @Bind(R.id.back)
+    ImageView back;
+    @Bind(R.id.parent_show_back)
+    LinearLayout parentShowBack;
     /**
      * 事物管理器
      */
@@ -71,6 +84,11 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      * 锅底选择，推荐菜品
      */
     private PotTypeFagment mPotTypeFagment;
+    /**
+     * 主要导航界面
+     */
+    private MainFragment mMainFragment;
+
     /**
      * 购物车
      */
@@ -155,7 +173,9 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         List<Fragment> mList = new ArrayList<>();
         mPotTypeFagment = new PotTypeFagment();
         mPotTypeFagment.onDishesChooseListenner(onDishesChooseListener);
+        mMainFragment = new MainFragment();
         mList.add(mPotTypeFagment);
+        mList.add(mMainFragment);
         return mList;
     }
 
@@ -201,7 +221,26 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     }
 
     @Override
-    public void onClick(int type) {
+    public void onClick(int type, int isShow) {
+        /**开桌成功后回调*/
+        if (type == Constant.ORDER) {
+            viewPager.setCurrentItem(1);
+            if (isShow == 0) {
+                mMainFragment.showOrderType();
+                parentShowBack.setVisibility(View.VISIBLE);
+                parentShowTable.setVisibility(View.GONE);
+            } else {
+                mMainFragment.getData(MainFragment.ALONE_ORDER);
+                parentShowBack.setVisibility(View.GONE);
+                parentShowTable.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
+    @OnClick(R.id.back)
+    public void onClick() {
+        mMainFragment.getData(MainFragment.ALONE_ORDER);
+        parentShowBack.setVisibility(View.GONE);
+        parentShowTable.setVisibility(View.VISIBLE);
     }
 }

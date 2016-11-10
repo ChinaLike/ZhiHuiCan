@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ShoppingCartAdapter;
+import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
@@ -40,7 +42,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<MainPagerShow>{
+public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<CommonBean> {
 
 
     @Bind(R.id.nothing)
@@ -88,7 +90,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @Override
     public void setData(Object object) {
         List<DishesBean> bean = (List<DishesBean>) object;
-        mList=bean;
+        mList = bean;
         isHaveData(bean);
         mShoppingCartAdapter.notifyDataSetChanged(bean);
     }
@@ -96,7 +98,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @Override
     public void init() {
         isHaveData(mList);
-        mShoppingCartAdapter = new ShoppingCartAdapter(mList, getActivity(),onShoppingCartListener);
+        mShoppingCartAdapter = new ShoppingCartAdapter(mList, getActivity(), onShoppingCartListener);
         mShoppingCartAdapter.setOnTotalNumberListener(this);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         cartRecyclerView.setAdapter(mShoppingCartAdapter);
@@ -115,7 +117,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
             nothing.setVisibility(View.VISIBLE);
             hasThing.setVisibility(View.GONE);
         } else {
-            if (nothing.getVisibility()==View.VISIBLE&&hasThing.getVisibility()==View.GONE) {
+            if (nothing.getVisibility() == View.VISIBLE && hasThing.getVisibility() == View.GONE) {
                 nothing.setVisibility(View.GONE);
                 hasThing.setVisibility(View.VISIBLE);
             }
@@ -131,16 +133,16 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @OnClick(R.id.shoppingcart_button)
     public void onClick() {
         /**开桌*/
-        Call<MainPagerShow> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table,Constant.OPEN_TABLE,mList.toString(),MainActivity.person);
+        Call<CommonBean> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table, Constant.OPEN_TABLE, mList.toString(), MainActivity.person);
         openTable.enqueue(this);
 
     }
 
     @Override
     public void totalNumber(int totalPrice, int potNumber, int dishesNumber) {
-        shoppingcartTotalPrice.setText("¥  "+totalPrice);
-        shoppingcartPartNumber.setText(potNumber+"");
-        shoppingcartDishesNumber.setText(dishesNumber+"");
+        shoppingcartTotalPrice.setText("¥  " + totalPrice);
+        shoppingcartPartNumber.setText(potNumber + "");
+        shoppingcartDishesNumber.setText(dishesNumber + "");
     }
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
@@ -148,12 +150,15 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     }
 
     @Override
-    public void onResponse(Call<MainPagerShow> call, Response<MainPagerShow> response) {
-
+    public void onResponse(Call<CommonBean> call, Response<CommonBean> response) {
+        CommonBean bean=response.body();
+        if (bean.getStatus()==0&&onButtonClickListener!=null){
+            onButtonClickListener.onClick(Constant.ORDER,bean.getShowType());
+        }
     }
 
     @Override
-    public void onFailure(Call<MainPagerShow> call, Throwable t) {
-
+    public void onFailure(Call<CommonBean> call, Throwable t) {
+        Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
  * @Email: 572919350@qq.com
  */
 
-public class DishesBean implements Serializable{
+public class DishesBean implements Serializable {
 
     private int type;//菜品分类
 
@@ -30,6 +30,8 @@ public class DishesBean implements Serializable{
     private int number;//初始数量
 
     private int totalPrice;//总价
+
+    private int permiss;//菜品可点属性，0-消费者可选择， 1-消费者不可选择
 
     private List<PriceTypeBean> priceType;//优惠价格类型
 
@@ -121,6 +123,14 @@ public class DishesBean implements Serializable{
         this.totalPrice = totalPrice;
     }
 
+    public int getPermiss() {
+        return permiss;
+    }
+
+    public void setPermiss(int permiss) {
+        this.permiss = permiss;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -134,6 +144,7 @@ public class DishesBean implements Serializable{
                 ", stockout=" + stockout +
                 ", number=" + number +
                 ", totalPrice=" + totalPrice +
+                ", permiss=" + permiss +
                 ", priceType=" + priceType +
                 '}';
     }

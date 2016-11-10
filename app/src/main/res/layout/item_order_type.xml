@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_hint_choose"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingBottom="30dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F5F5F5"
+        android:paddingBottom="15dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp"
+        android:text="@string/order_type_text_hint"
+        android:textColor="@color/text_color_m"
+        android:textSize="@dimen/text_size_mediu" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="@string/order_one" />
+
+    <Button
+        android:id="@+id/main_alone_order"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_weight="1"
+        android:background="@drawable/confir_bg"
+        android:text="@string/one_order"
+        android:textColor="@color/button_text"
+        android:textSize="@dimen/text_size_largr" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="@string/order_more" />
+
+    <Button
+        android:id="@+id/main_merger_order"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_weight="1"
+        android:background="@drawable/confir_bg"
+        android:text="@string/more_order"
+        android:textColor="@color/button_text"
+        android:textSize="@dimen/text_size_largr" />
+
+
+</LinearLayout>

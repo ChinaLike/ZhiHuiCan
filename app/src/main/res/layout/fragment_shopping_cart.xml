@@ -186,7 +186,7 @@
                     android:layout_margin="15dp"
                     android:background="@drawable/confir_bg"
                     android:text="@string/openTable"
-                    android:textColor="@color/FF602708"
+                    android:textColor="@color/button_text"
                     android:textSize="@dimen/text_size_largr" />
             </RelativeLayout>
 

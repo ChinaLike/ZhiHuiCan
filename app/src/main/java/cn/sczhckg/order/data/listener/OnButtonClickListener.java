@@ -7,5 +7,5 @@ package cn.sczhckg.order.data.listener;
  */
 
 public interface OnButtonClickListener {
-    void onClick(int type);
+    void onClick(int type,int isShow);
 }
