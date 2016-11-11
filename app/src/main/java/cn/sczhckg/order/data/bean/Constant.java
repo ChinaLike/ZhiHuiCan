@@ -8,6 +8,9 @@ package cn.sczhckg.order.data.bean;
 
 public class Constant {
 
+    /**购物车数量加减时发布的事件标识*/
+    public static final int CART_NUMBER_EVENT=0;
+
     /**开桌*/
     public final static int OPEN_TABLE=0;
     /**点菜*/

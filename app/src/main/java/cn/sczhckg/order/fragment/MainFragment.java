@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
+import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 
 /**
  * @describe: 开桌后主界面
@@ -90,11 +91,9 @@ public class MainFragment extends BaseFragment {
     private List<Fragment> fragmentList = new ArrayList<>();
 
     private ViewPagerAdapter adapter;
-    /**
-     * 点餐类型 0-单桌点餐  1-并桌点餐
-     */
-    public static final int ALONE_ORDER = 0;
-    public static final int MERGER_ORDER = 1;
+
+
+    private OnDishesChooseListener onDishesChooseListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,6 +142,7 @@ public class MainFragment extends BaseFragment {
      */
     private void initOrderFragment() {
         mOrderFragment = new OrderFragment();
+        mOrderFragment.setOnDishesChooseListener(onDishesChooseListener);
     }
 
     /**
@@ -189,7 +189,7 @@ public class MainFragment extends BaseFragment {
         mainHintChoose.setVisibility(View.GONE);
         mainBottomViewPager.setVisibility(View.VISIBLE);
         if (mOrderFragment != null) {
-            mOrderFragment.loadingDishes(orderType);
+            mOrderFragment.loadingClassify(orderType);
         }
     }
 
@@ -212,9 +212,11 @@ public class MainFragment extends BaseFragment {
                 index = 2;
                 break;
             case R.id.main_alone_order:
+                orderType=ALONE_ORDER;
                 getData(ALONE_ORDER);
                 break;
             case R.id.main_merger_order:
+                orderType=MERGER_ORDER;
                 getData(MERGER_ORDER);
                 break;
         }
@@ -230,5 +232,7 @@ public class MainFragment extends BaseFragment {
 
     }
 
-
+    public void setOnDishesChooseListener(OnDishesChooseListener onDishesChooseListener) {
+        this.onDishesChooseListener = onDishesChooseListener;
+    }
 }

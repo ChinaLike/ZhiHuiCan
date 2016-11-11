@@ -7,18 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.PriceTypeBean;
-import cn.sczhckg.order.data.listener.OnShoppingCartListener;
+import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
 import cn.sczhckg.order.overwrite.SlantTextView;
+import de.greenrobot.event.EventBus;
 
 /**
  * @describe: 购物车数据适配
@@ -32,15 +33,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     private Context mContext;
 
-    private OnShoppingCartListener onShoppingCartListener;
-
     private OnTotalNumberListener onTotalNumberListener;
 
 
-    public ShoppingCartAdapter(List<DishesBean> mList, Context mContext,OnShoppingCartListener onShoppingCartListener) {
+    public ShoppingCartAdapter(List<DishesBean> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
-        this.onShoppingCartListener=onShoppingCartListener;
     }
 
     @Override
@@ -69,7 +67,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                 number++;
                 bean.setNumber(number);
                 notifyDataSetChanged();
-                onShoppingCartListener.shoppingCart(bean);
+                EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT,0,bean));
                 countTotal();
             }
         });
@@ -85,7 +83,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                         mList.remove(bean);
                     }
                     notifyDataSetChanged();
-                    onShoppingCartListener.shoppingCart(bean);
+                    EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT,1,bean));
                     countTotal();
                 }
 

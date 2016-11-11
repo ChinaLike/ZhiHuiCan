@@ -120,7 +120,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if (mList==null){
+            return 0;
+        }else {
+            return mList.size();
+        }
     }
 
     static class DishesHolder extends RecyclerView.ViewHolder {

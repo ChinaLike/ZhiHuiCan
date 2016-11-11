@@ -3,9 +3,20 @@ package cn.sczhckg.order.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.sczhckg.order.R;
+import cn.sczhckg.order.adapter.DishesAdapter;
+import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.listener.OnDishesChooseListener;
+import cn.sczhckg.order.overwrite.DashlineItemDivider;
 
 /**
  * @describe:
@@ -14,6 +25,19 @@ import android.view.ViewGroup;
  */
 
 public abstract class BaseFragment extends Fragment {
+
+    protected static DishesAdapter mDishesAdapter = null;
+
+    protected List<DishesBean> parentDishesList = new ArrayList<>();
+
+    /**
+     * 点餐类型 0-单桌点餐  1-并桌点餐
+     */
+    public static final int ALONE_ORDER = 0;
+    public static final int MERGER_ORDER = 1;
+
+    protected int orderType=ALONE_ORDER;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,4 +57,20 @@ public abstract class BaseFragment extends Fragment {
     public abstract void setData(Object object);
 
     public abstract void init();
+
+    /**
+     * 菜品适配
+     *
+     * @param mRecyclerView
+     * @param onDishesChooseListener
+     */
+    protected void initDishesAdapter(RecyclerView mRecyclerView, OnDishesChooseListener onDishesChooseListener) {
+        if (mDishesAdapter == null) {
+            mDishesAdapter = new DishesAdapter(getContext(), parentDishesList, onDishesChooseListener);
+        }
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
+        mRecyclerView.setAdapter(mDishesAdapter);
+    }
+
 }

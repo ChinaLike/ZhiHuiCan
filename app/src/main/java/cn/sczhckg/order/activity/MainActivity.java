@@ -25,8 +25,8 @@ import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
-import cn.sczhckg.order.data.listener.OnShoppingCartListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.fragment.BaseFragment;
 import cn.sczhckg.order.fragment.MainFragment;
 import cn.sczhckg.order.fragment.PotTypeFagment;
 import cn.sczhckg.order.fragment.ShoppingCartFragment;
@@ -41,7 +41,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnDishesChooseListener, OnShoppingCartListener, OnButtonClickListener {
+public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnDishesChooseListener, OnButtonClickListener {
 
     /**
      * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
@@ -96,7 +96,6 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
 
     private OnDishesChooseListener onDishesChooseListener;
 
-    private OnShoppingCartListener onShoppingCartListener;
     /**
      * 用餐人数
      */
@@ -112,7 +111,6 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setOnDishesChooseListener(this);
-        setOnShoppingCartListener(this);
         isLogin();
         init();
         initLeftFragment();
@@ -156,7 +154,6 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         mFm = getSupportFragmentManager();
         adapter = new ViewPagerAdapter(mFm);
         mShoppingCartFragment = new ShoppingCartFragment();
-        mShoppingCartFragment.setOnShoppingCartListener(onShoppingCartListener);
         mShoppingCartFragment.setOnButtonClickListener(this);
         mList.add(mShoppingCartFragment);
         adapter.setList(mList);
@@ -174,6 +171,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         mPotTypeFagment = new PotTypeFagment();
         mPotTypeFagment.onDishesChooseListenner(onDishesChooseListener);
         mMainFragment = new MainFragment();
+        mMainFragment.setOnDishesChooseListener(onDishesChooseListener);
         mList.add(mPotTypeFagment);
         mList.add(mMainFragment);
         return mList;
@@ -202,21 +200,11 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         this.onDishesChooseListener = onDishesChooseListener;
     }
 
-    public void setOnShoppingCartListener(OnShoppingCartListener onShoppingCartListener) {
-        this.onShoppingCartListener = onShoppingCartListener;
-    }
 
     @Override
     public void dishesChoose(List<DishesBean> bean) {
         if (mShoppingCartFragment != null) {
             mShoppingCartFragment.setData(bean);
-        }
-    }
-
-    @Override
-    public void shoppingCart(DishesBean bean) {
-        if (mPotTypeFagment != null) {
-            mPotTypeFagment.upData(bean);
         }
     }
 
@@ -230,7 +218,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
                 parentShowBack.setVisibility(View.VISIBLE);
                 parentShowTable.setVisibility(View.GONE);
             } else {
-                mMainFragment.getData(MainFragment.ALONE_ORDER);
+                mMainFragment.getData(BaseFragment.ALONE_ORDER);
                 parentShowBack.setVisibility(View.GONE);
                 parentShowTable.setVisibility(View.VISIBLE);
             }
@@ -239,7 +227,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
 
     @OnClick(R.id.back)
     public void onClick() {
-        mMainFragment.getData(MainFragment.ALONE_ORDER);
+        mMainFragment.getData(BaseFragment.ALONE_ORDER);
         parentShowBack.setVisibility(View.GONE);
         parentShowTable.setVisibility(View.VISIBLE);
     }

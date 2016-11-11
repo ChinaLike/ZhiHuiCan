@@ -26,12 +26,14 @@ import cn.sczhckg.order.adapter.ShoppingCartAdapter;
 import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
-import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
-import cn.sczhckg.order.data.listener.OnShoppingCartListener;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,13 +66,16 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
 
     private List<DishesBean> mList = new ArrayList<>();
 
-    private OnShoppingCartListener onShoppingCartListener;
-
     private OnButtonClickListener onButtonClickListener;
+    /**
+     * Button按钮类型 0-开桌 1-选菜 3- 4-
+     */
+    private int buttonType = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -89,6 +94,8 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
 
     @Override
     public void setData(Object object) {
+        shoppingcartButton.setClickable(true);
+        shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
         List<DishesBean> bean = (List<DishesBean>) object;
         mList = bean;
         isHaveData(bean);
@@ -98,15 +105,11 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @Override
     public void init() {
         isHaveData(mList);
-        mShoppingCartAdapter = new ShoppingCartAdapter(mList, getActivity(), onShoppingCartListener);
+        mShoppingCartAdapter = new ShoppingCartAdapter(mList, getActivity());
         mShoppingCartAdapter.setOnTotalNumberListener(this);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         cartRecyclerView.setAdapter(mShoppingCartAdapter);
         cartRecyclerView.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
-    }
-
-    public void setOnShoppingCartListener(OnShoppingCartListener onShoppingCartListener) {
-        this.onShoppingCartListener = onShoppingCartListener;
     }
 
     /**
@@ -128,13 +131,22 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @OnClick(R.id.shoppingcart_button)
     public void onClick() {
-        /**开桌*/
-        Call<CommonBean> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table, Constant.OPEN_TABLE, mList.toString(), MainActivity.person);
-        openTable.enqueue(this);
+        if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.openTable))) {
+            /**开桌*/
+            buttonType = 0;
+            Call<CommonBean> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table, Constant.OPEN_TABLE, mList.toString(), MainActivity.person);
+            openTable.enqueue(this);
+        } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
+            /**选好了*/
+            buttonType = 1;
+            Call<CommonBean> chooseGood = RetrofitRequest.service(Config.HOST).chooseGood(MainActivity.table, orderType, Constant.ORDER, mList.toString());
+            chooseGood.enqueue(this);
+        }
 
     }
 
@@ -151,9 +163,19 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
 
     @Override
     public void onResponse(Call<CommonBean> call, Response<CommonBean> response) {
-        CommonBean bean=response.body();
-        if (bean.getStatus()==0&&onButtonClickListener!=null){
-            onButtonClickListener.onClick(Constant.ORDER,bean.getShowType());
+        CommonBean bean = response.body();
+        if (buttonType == 0) {
+            shoppingcartButton.setText(R.string.choose_good);
+            if (bean.getStatus() == 0 && onButtonClickListener != null) {
+                onButtonClickListener.onClick(Constant.ORDER, bean.getShowType());
+            }
+        } else if (buttonType == 1) {
+            Toast.makeText(getContext(), bean.getMsg(), Toast.LENGTH_SHORT).show();
+            if (bean.getStatus() == 0) {
+                /**如果状态是0，则是提交数据成功，此时把按钮变成灰色，当有加菜时，再次亮起*/
+                shoppingcartButton.setClickable(false);
+                shoppingcartButton.setTextColor(getResources().getColor(R.color.white));
+            }
         }
     }
 
@@ -161,4 +183,14 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void onFailure(Call<CommonBean> call, Throwable t) {
         Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * 当购物车数据有变化返回
+     */
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void cartEventBus(CartNumberEvent event) {
+        shoppingcartButton.setClickable(true);
+        shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
+    }
+
 }

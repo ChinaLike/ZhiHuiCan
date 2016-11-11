@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -21,8 +22,12 @@ import cn.sczhckg.order.adapter.PersonChooseAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.PersonBean;
+import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * @describe: 锅底选择和推荐菜品
@@ -53,19 +58,17 @@ public class PotTypeFagment extends BaseFragment {
 
     private PersonChooseAdapter personAdapter;
 
-    private DishesAdapter dishesAdapter;
-
     private List<PersonBean> personList;
 
     private List<DishesBean> dishesList;
-
-    private List<DishesBean> potList;
 
     private OnDishesChooseListener onDishesChooseListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /**注册事件监听*/
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -86,6 +89,7 @@ public class PotTypeFagment extends BaseFragment {
     public void init() {
         potParent.setClickable(false);
         dishesParent.setClickable(false);
+        initDishesAdapter(dishesChoose, onDishesChooseListener);
     }
 
     @Override
@@ -101,31 +105,29 @@ public class PotTypeFagment extends BaseFragment {
         /**设置分割线*/
         personChoose.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 5, 1, DEFAULT_PERSON));
         /**========初始化菜品========*/
-        dishesChoose.setLayoutManager(new LinearLayoutManager(getActivity()));
         dishesList = bean.getDishesList();
-        potList = bean.getPotList();
-        dishesAdapter = new DishesAdapter(getActivity(), potList,onDishesChooseListener);
-        dishesChoose.setAdapter(dishesAdapter);
-        dishesChoose.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
+        parentDishesList = bean.getPotList();
+        mDishesAdapter.notifyDataSetChanged(parentDishesList);
     }
 
     /**
-     * 刷新数据
+     * 购物车数据变化后选择栏的数据同步刷新
+     *
      * @param bean
      */
-    public void upData(DishesBean bean){
-        String id=bean.getId();
-        String dishesName=bean.getName();
-        for (DishesBean item:potList) {
-            if (item.getId().equals(id)&&item.getName().equals(dishesName)){
+    public void upData(DishesBean bean) {
+        String id = bean.getId();
+        String dishesName = bean.getName();
+        for (DishesBean item : dishesList) {
+            if (item.getId().equals(id) && item.getName().equals(dishesName)) {
                 item.setNumber(bean.getNumber());
-                dishesAdapter.notifyDataSetChanged();
+                mDishesAdapter.notifyDataSetChanged();
             }
         }
-        for (DishesBean item:dishesList) {
-            if (item.getId().equals(id)&&item.getName().equals(dishesName)){
+        for (DishesBean item : parentDishesList) {
+            if (item.getId().equals(id) && item.getName().equals(dishesName)) {
                 item.setNumber(bean.getNumber());
-                dishesAdapter.notifyDataSetChanged();
+                mDishesAdapter.notifyDataSetChanged();
             }
         }
 
@@ -133,10 +135,11 @@ public class PotTypeFagment extends BaseFragment {
 
     /**
      * 监听传递
+     *
      * @param onDishesChooseListener
      */
-    public void onDishesChooseListenner(OnDishesChooseListener onDishesChooseListener){
-        this.onDishesChooseListener =onDishesChooseListener;
+    public void onDishesChooseListenner(OnDishesChooseListener onDishesChooseListener) {
+        this.onDishesChooseListener = onDishesChooseListener;
     }
 
     /**
@@ -151,7 +154,7 @@ public class PotTypeFagment extends BaseFragment {
         mPersonBean.setNumber(bean.getDefaultNumber());
         mPersonBean.setTableName(bean.getTableNumber());
         /**初始化默认人数，避免消费者未选择时此数为0*/
-        MainActivity.person=bean.getDefaultNumber();
+        MainActivity.person = bean.getDefaultNumber();
         personList = bean.getPerson();
         personList.add(mPersonBean);
         return personList;
@@ -161,6 +164,13 @@ public class PotTypeFagment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        /**取消事件监听*/
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void cartEventBus(CartNumberEvent event) {
+        upData(event.getBean());
     }
 
     @OnClick({R.id.pot_parent, R.id.dishes_parent})
@@ -169,12 +179,12 @@ public class PotTypeFagment extends BaseFragment {
             case R.id.pot_parent:
                 potLine.setVisibility(View.VISIBLE);
                 dishesLine.setVisibility(View.GONE);
-                dishesAdapter.notifyDataSetChanged(potList);
+                mDishesAdapter.notifyDataSetChanged(parentDishesList);
                 break;
             case R.id.dishes_parent:
                 potLine.setVisibility(View.GONE);
                 dishesLine.setVisibility(View.VISIBLE);
-                dishesAdapter.notifyDataSetChanged(dishesList);
+                mDishesAdapter.notifyDataSetChanged(dishesList);
                 break;
         }
     }

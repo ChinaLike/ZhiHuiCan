@@ -1,7 +1,6 @@
 package cn.sczhckg.order.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,8 +30,7 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
 
     private List<ClassifyItemBean> mList;
 
-    private LinearLayoutManager manager;
-
+    private OnItemClickListener mOnItemClickListener;
 
     public ClassifyAdapter(Context mContext, List<ClassifyItemBean> mList) {
         this.mContext = mContext;
@@ -43,7 +43,8 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
     }
 
     @Override
-    public void onBindViewHolder(ClassifyViewHolder holder, final int position) {
+    public void onBindViewHolder(final ClassifyViewHolder holder, final int position) {
+
         final ClassifyItemBean bean = mList.get(position);
         holder.classifyText.setText(bean.getName());
         if (bean.isSelect()) {
@@ -55,11 +56,13 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
             holder.classifyText.setTextColor(mContext.getResources().getColor(R.color.text_color_person));
             holder.classiftItem.setBackgroundColor(mContext.getResources().getColor(R.color.background_gray_m));
         }
-
         holder.classiftItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upData(bean);
+
+                int n = holder.getLayoutPosition();
+                upData(bean,n);
+                mOnItemClickListener.onItemClick(v,n);
             }
         });
 
@@ -82,23 +85,26 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
         public ClassifyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
         }
     }
 
-    public void setManager(LinearLayoutManager manager) {
-        this.manager = manager;
+    public void addOnItemClickListener(OnItemClickListener listener){
+        mOnItemClickListener = listener;
     }
 
-    private void upData(ClassifyItemBean bean) {
-        int postion = mList.indexOf(bean);
+    private void upData(ClassifyItemBean bean,int n) {
         for (ClassifyItemBean item : mList) {
-            if (item.isSelect()){
-            item.setSelect(false);
+            if (item.isSelect()) {
+                item.setSelect(false);
+            }
+            bean.setSelect(true);
+            notifyDataSetChanged();
         }
-        bean.setSelect(true);
-        notifyDataSetChanged();
+    }
 
+
+    public interface OnItemClickListener{
+        void onItemClick(View view,int position);
     }
 
 }
