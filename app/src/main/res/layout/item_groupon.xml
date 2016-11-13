@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_groupon"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp"
+    android:gravity="center_vertical"
+    android:layout_marginRight="30dp"
+    android:layout_marginLeft="30dp"
+    android:id="@+id/item_groupon_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/groupon_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1234 5268 2562"
+        android:lines="1"
+        android:ellipsize="end"
+        android:visibility="visible"
+        android:layout_alignParentLeft="true" />
+
+    <EditText
+        android:id="@+id/group_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@null"/>
+
+    <ImageView
+        android:id="@+id/groupon_close"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/close_round"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

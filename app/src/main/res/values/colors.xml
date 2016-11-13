@@ -41,4 +41,6 @@
 
     <color name="background_gray_m">#F9F9F9</color>
 
+    <color name="btn_side">#F8F8F8</color>
+
 </resources>

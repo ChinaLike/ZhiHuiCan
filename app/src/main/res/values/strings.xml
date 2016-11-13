@@ -40,5 +40,13 @@
     <string name="favorable_type">优惠方式</string>
     <string name="pay_type">支付方式</string>
     <string name="group_add_text">点击添加多张团购券</string>
+    <string name="pay_finish_title">恭喜你已完成支付！</string>
+    <string name="evaluate_go">去评价>></string>
+    <string name="evaluate_no">不了，谢谢</string>
+    <string name="evaluate_title">感谢您来本店就餐！请您对本次就餐做出评价</string>
+    <string name="evaluate_data1">服务态度</string>
+    <string name="evaluate_data2">菜品质量</string>
+    <string name="evaluate_data3">上菜速度</string>
+    <string name="evaluate_data4">其他评价</string>
 
 </resources>
