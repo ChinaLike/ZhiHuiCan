@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -17,7 +20,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
-import cn.sczhckg.order.adapter.DishesAdapter;
 import cn.sczhckg.order.adapter.PersonChooseAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
@@ -25,9 +27,6 @@ import cn.sczhckg.order.data.bean.PersonBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 
 /**
  * @describe: 锅底选择和推荐菜品
@@ -168,7 +167,7 @@ public class PotTypeFagment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
         upData(event.getBean());
     }

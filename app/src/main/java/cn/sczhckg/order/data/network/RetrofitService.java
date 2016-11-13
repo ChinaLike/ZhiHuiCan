@@ -7,6 +7,7 @@ import cn.sczhckg.order.data.bean.ClassifyBean;
 import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.SettleAccountsBean;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -47,5 +48,8 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("android/test/cart/order")
     Call<CommonBean> chooseGood(@Field("table") String table, @Field("orderType") int orderType,@Field("type") int type,@Field("params") String params);
-
+    /**结账清单数据请求*/
+    @FormUrlEncoded
+    @POST("android/test/payTheBills/show")
+    Call<SettleAccountsBean> settleAccountsList(@Field("table") String table);
 }

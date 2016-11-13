@@ -210,6 +210,9 @@ public class MainFragment extends BaseFragment {
                 break;
             case R.id.main_settle_accounts:
                 index = 2;
+                if (mSettleAccountsFragment!=null) {
+                    mSettleAccountsFragment.getData();
+                }
                 break;
             case R.id.main_alone_order:
                 orderType=ALONE_ORDER;

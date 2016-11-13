@@ -13,6 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +35,6 @@ import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -187,7 +188,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     /**
      * 当购物车数据有变化返回
      */
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
         shoppingcartButton.setClickable(true);
         shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));

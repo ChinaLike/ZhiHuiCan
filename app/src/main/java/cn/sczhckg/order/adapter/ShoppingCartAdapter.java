@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -19,7 +21,6 @@ import cn.sczhckg.order.data.bean.PriceTypeBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
 import cn.sczhckg.order.overwrite.SlantTextView;
-import de.greenrobot.event.EventBus;
 
 /**
  * @describe: 购物车数据适配
