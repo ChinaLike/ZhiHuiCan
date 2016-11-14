@@ -5,12 +5,8 @@
     <solid android:color="@color/line_yellow" />
     <!-- 设置按钮的四个角为弧形 -->
     <!-- android:radius 弧形的半径 -->
-    <corners android:radius="35dp" />
+    <corners android:radius="60dp" />
     <!-- padding：Button里面的文字与Button边界的间隔 -->
-    <padding
-        android:bottom="10dp"
-        android:left="100dp"
-        android:right="100dp"
-        android:top="10dp" />
+
 
 </shape>

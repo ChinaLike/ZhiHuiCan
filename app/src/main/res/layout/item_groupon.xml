@@ -1,39 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:background="@drawable/bg_groupon"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:paddingRight="20dp"
-    android:paddingLeft="20dp"
-    android:gravity="center_vertical"
-    android:layout_marginRight="30dp"
-    android:layout_marginLeft="30dp"
     android:id="@+id/item_groupon_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/bg_groupon"
+    android:gravity="center_vertical"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp">
+
 
     <TextView
         android:id="@+id/groupon_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1234 5268 2562"
-        android:lines="1"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:ellipsize="end"
-        android:visibility="visible"
-        android:layout_alignParentLeft="true" />
+        android:lines="1"
+        android:text="1234 5268 2562"
+        android:visibility="visible" />
 
-    <EditText
-        android:id="@+id/group_input"
+    <LinearLayout
+        android:id="@+id/input_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:background="@null"/>
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/groupon_finish"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/confirm" />
+
+        <EditText
+            android:id="@+id/group_input"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:visibility="visible" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/groupon_close"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/close_round"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/close_round" />
 
 </RelativeLayout>

@@ -32,7 +32,7 @@ public class PayTypeBean implements Serializable {
 
     @Override
     public String toString() {
-        return "PayTypeBean{" +
+        return "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

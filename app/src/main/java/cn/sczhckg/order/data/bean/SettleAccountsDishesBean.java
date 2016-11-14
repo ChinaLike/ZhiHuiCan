@@ -63,7 +63,7 @@ public class SettleAccountsDishesBean implements Serializable{
 
     @Override
     public String toString() {
-        return "SettleAccountsDishesBean{" +
+        return "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", totalNumber=" + totalNumber +

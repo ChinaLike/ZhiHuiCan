@@ -23,6 +23,7 @@
     <color name="text_color_cart_price_s">#c4cbce</color>
     <color name="text_color_main_normal">#6d7172</color>
     <color name="text_color_main_select">#5f3507</color>
+    <color name="text_color_price">#c5cccf</color>
 
     <!--分割线-->
     <color name="line_s">#E9E9E9</color>
@@ -42,5 +43,8 @@
     <color name="background_gray_m">#F9F9F9</color>
 
     <color name="btn_side">#F8F8F8</color>
+    <color name="btn_side_gray">#E8ECED</color>
+    <color name="btn_solder_yellow">#FDF5D7</color>
+    <color name="btn_side_yellow">#E7B76D</color>
 
 </resources>

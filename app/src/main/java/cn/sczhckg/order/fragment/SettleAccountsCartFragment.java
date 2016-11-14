@@ -2,11 +2,31 @@ package cn.sczhckg.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.adapter.SettleAountsFavorableAdapter;
+import cn.sczhckg.order.adapter.SettleAountsPayAdapter;
+import cn.sczhckg.order.data.bean.FavorableTypeBean;
+import cn.sczhckg.order.data.bean.PayTypeBean;
+import cn.sczhckg.order.data.event.SettleAountsCartEvent;
 
 /**
  * @describe: 结账购物车界面
@@ -14,23 +34,55 @@ import cn.sczhckg.order.R;
  * @Email: 572919350@qq.com
  */
 
-public class SettleAccountsCartFragment extends BaseFragment{
+public class SettleAccountsCartFragment extends BaseFragment {
+
+    @Bind(R.id.shoppingcart_total_price)
+    TextView shoppingcartTotalPrice;
+    @Bind(R.id.favorable_price)
+    TextView favorablePrice;
+    @Bind(R.id.favorable_parent)
+    LinearLayout favorableParent;
+    @Bind(R.id.exceptional_price)
+    TextView exceptionalPrice;
+    @Bind(R.id.exceptional_parent)
+    LinearLayout exceptionalParent;
+    @Bind(R.id.shoppingcart_button)
+    Button shoppingcartButton;
+    @Bind(R.id.cart_favorable)
+    RecyclerView cartFavorable;
+    @Bind(R.id.cart_gift)
+    Button cartGift;
+    @Bind(R.id.cart_pay)
+    RecyclerView cartPay;
+
+    private List<FavorableTypeBean> favorableList = new ArrayList<>();
+
+    private List<PayTypeBean> payList = new ArrayList<>();
+
+    private SettleAountsFavorableAdapter favorableAdapter;
+
+    private SettleAountsPayAdapter payAdapter;
+
+    private static int i=0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_settle_accounts_cart,null,false);
+        View view = inflater.inflate(R.layout.fragment_settle_accounts_cart, null, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        init();
     }
 
     @Override
@@ -40,6 +92,58 @@ public class SettleAccountsCartFragment extends BaseFragment{
 
     @Override
     public void init() {
+        favorableAdapter = new SettleAountsFavorableAdapter(getContext(), favorableList);
+        cartFavorable.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        cartFavorable.setAdapter(favorableAdapter);
 
+        payAdapter = new SettleAountsPayAdapter(getContext(), payList);
+        cartPay.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        cartPay.setAdapter(payAdapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 事件接收
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void settleAountsCartEvent(SettleAountsCartEvent event) {
+        /**刷新数据，布局界面*/
+        if (event.getType() == SettleAountsCartEvent.LOADING) {
+            i=0;
+            cartGift.setSelected(false);
+            favorableList = event.getFavorableTypeList();
+            payList = event.getPayTypeList();
+            favorableAdapter.notifyDataSetChanged(favorableList);
+            payAdapter.notifyDataSetChanged(payList);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick({R.id.cart_gift, R.id.shoppingcart_button})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.cart_gift:
+                i++;
+                if (i%2==0){
+                    cartGift.setSelected(false);
+                }else {
+                    cartGift.setSelected(true);
+                }
+                break;
+            case R.id.shoppingcart_button:
+                break;
+        }
     }
 }

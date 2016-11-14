@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -39,29 +41,41 @@ public class GrouponAdapter extends RecyclerView.Adapter<GrouponAdapter.GrouponV
     }
 
     @Override
-    public void onBindViewHolder(GrouponViewHolder holder, int position) {
-
+    public void onBindViewHolder(GrouponViewHolder holder, final int position) {
+        holder.inputParent.setVisibility(View.GONE);
+        holder.grouponNumber.setVisibility(View.VISIBLE);
+        holder.grouponNumber.setText(mList.get(position));
+        holder.grouponClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        if (mList != null) {
+        if (mList == null) {
             return 0;
         } else {
             return mList.size();
         }
     }
 
+    public void notifyDataSetChanged(List<String> mList) {
+        this.mList = mList;
+        notifyDataSetChanged();
+    }
+
     static class GrouponViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.groupon_number)
         TextView grouponNumber;
-        @Bind(R.id.group_input)
-        EditText groupInput;
+        @Bind(R.id.input_parent)
+        LinearLayout inputParent;
         @Bind(R.id.groupon_close)
         ImageView grouponClose;
-        @Bind(R.id.item_groupon_parent)
-        RelativeLayout itemGrouponParent;
 
         public GrouponViewHolder(View itemView) {
             super(itemView);

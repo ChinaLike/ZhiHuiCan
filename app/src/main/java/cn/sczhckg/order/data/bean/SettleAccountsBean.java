@@ -53,7 +53,7 @@ public class SettleAccountsBean implements Serializable {
 
     @Override
     public String toString() {
-        return "SettleAccountsBean{" +
+        return "{" +
                 "table='" + table + '\'' +
                 ", favorableType=" + favorableType +
                 ", payTypeBeen=" + payTypeBeen +

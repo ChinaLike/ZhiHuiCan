@@ -6,11 +6,88 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/pay_type"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7" />
+        android:layout_weight="7">
+
+        <LinearLayout
+            android:id="@+id/pay_type"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="优惠方式"
+                    android:textColor="@color/text_color_m"
+                    android:textSize="@dimen/text_size_mediu"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <cn.sczhckg.order.overwrite.NoScrollRecyclerview
+                android:id="@+id/cart_favorable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/cart_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="支付方式"
+                    android:textColor="@color/text_color_m"
+                    android:textSize="@dimen/text_size_mediu"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/cart_gift"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_gray"
+                        android:text="打赏"
+                        android:textColor="@color/text_color_person" />
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <cn.sczhckg.order.overwrite.NoScrollRecyclerview
+                android:id="@+id/cart_pay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
     <View
         android:layout_width="match_parent"

@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
+import cn.sczhckg.order.data.bean.Constant;
+import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 
 /**
@@ -204,15 +208,18 @@ public class MainFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.main_order:
                 index = 0;
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_ORDER));
                 break;
             case R.id.main_service:
                 index = 1;
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_SERVICE));
                 break;
             case R.id.main_settle_accounts:
                 index = 2;
                 if (mSettleAccountsFragment!=null) {
                     mSettleAccountsFragment.getData();
                 }
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_SETTLE_ACCOUNTS));
                 break;
             case R.id.main_alone_order:
                 orderType=ALONE_ORDER;

@@ -2,13 +2,13 @@ package cn.sczhckg.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.SettleAccountsAdapter;
 import cn.sczhckg.order.data.bean.SettleAccountsBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesBean;
+import cn.sczhckg.order.data.event.SettleAountsCartEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,6 +68,8 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
 
     @Override
     public void init() {
+        //设置 属性 GroupIndicator 去掉默认向下的箭头
+        dishesDetails.setGroupIndicator(null);
         mSettleAccountsAdapter=new SettleAccountsAdapter(getContext(),mList);
         dishesDetails.setAdapter(mSettleAccountsAdapter);
     }
@@ -75,7 +78,6 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
      * 获取清单数据
      */
     public void getData(){
-        Log.d("数据执行1","================");
         Call<SettleAccountsBean> settleAccountsBeanCall= RetrofitRequest.service(Config.HOST).settleAccountsList(MainActivity.table);
         settleAccountsBeanCall.enqueue(this);
     }
@@ -91,7 +93,9 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
         SettleAccountsBean bean=response.body();
         if (bean!=null){
             mList = bean.getSettleAccountsDishesBeen();
-            mSettleAccountsAdapter.notifyDataSetChanged();
+            mSettleAccountsAdapter.notifyDataSetChanged(mList);
+            /**更新左侧结账方式*/
+            EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.LOADING,bean.getFavorableType(),bean.getPayTypeBeen()));
         }
 
     }

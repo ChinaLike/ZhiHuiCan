@@ -32,7 +32,7 @@ public class FavorableTypeBean implements Serializable {
 
     @Override
     public String toString() {
-        return "FavorableTypeBean{" +
+        return "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

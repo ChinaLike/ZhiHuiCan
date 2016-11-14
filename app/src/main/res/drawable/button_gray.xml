@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <shape>
+            <!-- 填充的颜色：这里设置背景透明 -->
+            <solid android:color="@android:color/transparent" />
+            <!-- 边框的颜色 ：不能和窗口背景色一样-->
+            <stroke android:width="0.8dp" android:color="@color/btn_side_gray" />
+            <!-- 设置按钮的四个角为弧形 -->
+            <!-- android:radius 弧形的半径 -->
+            <corners android:radius="35dip" />
+        </shape>
+
+    </item>
+
+    <item  android:state_selected="true">
+        <shape>
+            <!-- 填充的颜色：这里设置背景透明 -->
+            <solid android:color="@color/btn_solder_yellow" />
+            <!-- 边框的颜色 ：不能和窗口背景色一样-->
+            <stroke android:width="0.8dp" android:color="@color/btn_side_yellow" />
+            <!-- 设置按钮的四个角为弧形 -->
+            <!-- android:radius 弧形的半径 -->
+            <corners android:radius="35dip" />
+        </shape>
+    </item>
+
+</selector>

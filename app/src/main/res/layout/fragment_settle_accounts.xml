@@ -15,6 +15,7 @@
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:gravity="center"
+            android:textColor="@color/text_color_m"
             android:text="菜品" />
 
         <TextView
@@ -22,6 +23,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:textColor="@color/text_color_m"
             android:text="数量" />
 
         <TextView
@@ -29,6 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
+            android:textColor="@color/text_color_m"
             android:text="单价" />
 
         <TextView
@@ -36,6 +39,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
+            android:textColor="@color/text_color_m"
             android:text="总价" />
 
     </LinearLayout>

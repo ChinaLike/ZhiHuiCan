@@ -8,9 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,12 @@ public class GrouponFragment extends BaseFragment {
     RecyclerView groupCard;
     @Bind(R.id.item_groupon_parent)
     RelativeLayout itemGrouponParent;
+    @Bind(R.id.group_add_parent)
+    LinearLayout groupAddParent;
+    @Bind(R.id.input_parent)
+    LinearLayout inputParent;
 
-    private List<String> grouponList=new ArrayList<>();
+    private List<String> grouponList = new ArrayList<>();
 
     private GrouponAdapter mGrouponAdapter;
 
@@ -68,20 +73,24 @@ public class GrouponFragment extends BaseFragment {
 
     @Override
     public void init() {
+        /**首先把输入框设置为隐藏，当点击添加时显示*/
+        itemGrouponParent.setVisibility(View.GONE);
+
         grouponNumber.setVisibility(View.GONE);
-        groupInput.setVisibility(View.VISIBLE);
-        mGrouponAdapter = new GrouponAdapter(getContext(),grouponList);
+        inputParent.setVisibility(View.VISIBLE);
+        mGrouponAdapter = new GrouponAdapter(getContext(), grouponList);
         groupCard.setLayoutManager(new LinearLayoutManager(getContext()));
         groupCard.setAdapter(mGrouponAdapter);
     }
 
     /**
      * 刷新数据，增加团购券
+     *
      * @param number
      */
-    private void updata(String number){
-        grouponList.add(0,number);
-        mGrouponAdapter.notifyDataSetChanged();
+    private void updata(String number) {
+        grouponList.add(number);
+        mGrouponAdapter.notifyDataSetChanged(grouponList);
     }
 
     @Override
@@ -90,14 +99,22 @@ public class GrouponFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.group_add, R.id.groupon_close})
+    @OnClick({R.id.groupon_close, R.id.group_add_parent, R.id.groupon_finish})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.group_add:
-                itemGrouponParent.setVisibility(View.VISIBLE);
-                break;
             case R.id.groupon_close:
                 itemGrouponParent.setVisibility(View.GONE);
+                break;
+            case R.id.group_add_parent:
+                if (itemGrouponParent.getVisibility() == View.GONE) {
+                    itemGrouponParent.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.groupon_finish:
+
+                if (!(groupInput.getText().toString().equals(""))) {
+                    updata(groupInput.getText().toString());
+                }
                 break;
         }
     }
