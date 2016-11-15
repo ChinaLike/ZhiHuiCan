@@ -24,9 +24,13 @@ import butterknife.OnClick;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.SettleAountsFavorableAdapter;
 import cn.sczhckg.order.adapter.SettleAountsPayAdapter;
+import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.bean.PayTypeBean;
 import cn.sczhckg.order.data.event.SettleAountsCartEvent;
+import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
+import cn.sczhckg.order.data.listener.OnGiftListenner;
+import cn.sczhckg.order.data.listener.OnPayTypeListenner;
 
 /**
  * @describe: 结账购物车界面
@@ -34,7 +38,7 @@ import cn.sczhckg.order.data.event.SettleAountsCartEvent;
  * @Email: 572919350@qq.com
  */
 
-public class SettleAccountsCartFragment extends BaseFragment {
+public class SettleAccountsCartFragment extends BaseFragment implements OnGiftListenner, OnPayTypeListenner {
 
     @Bind(R.id.shoppingcart_total_price)
     TextView shoppingcartTotalPrice;
@@ -63,12 +67,20 @@ public class SettleAccountsCartFragment extends BaseFragment {
 
     private SettleAountsPayAdapter payAdapter;
 
-    private static int i=0;
+    private static int i = 0;
+
+    private PayTypeBean payTypeBean;
+
+    /**
+     * 打赏金额
+     */
+    private int giftMoney = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        setOnGiftListenner(this);
     }
 
     @Nullable
@@ -98,6 +110,7 @@ public class SettleAccountsCartFragment extends BaseFragment {
 
         payAdapter = new SettleAountsPayAdapter(getContext(), payList);
         cartPay.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        payAdapter.setOnPayTypeListenner(this);
         cartPay.setAdapter(payAdapter);
     }
 
@@ -116,7 +129,7 @@ public class SettleAccountsCartFragment extends BaseFragment {
     public void settleAountsCartEvent(SettleAountsCartEvent event) {
         /**刷新数据，布局界面*/
         if (event.getType() == SettleAountsCartEvent.LOADING) {
-            i=0;
+            i = 0;
             cartGift.setSelected(false);
             favorableList = event.getFavorableTypeList();
             payList = event.getPayTypeList();
@@ -136,14 +149,39 @@ public class SettleAccountsCartFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.cart_gift:
                 i++;
-                if (i%2==0){
+                if (i % 2 == 0) {
                     cartGift.setSelected(false);
-                }else {
+                } else {
                     cartGift.setSelected(true);
+                    EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.GTYPE));
                 }
                 break;
             case R.id.shoppingcart_button:
+                if (payTypeBean != null) {
+                    int type = payTypeBean.getId();
+                    EventBus.getDefault().post(new SettleAountsTypeEvent(payTypeBean, SettleAountsTypeEvent.PTYPE));
+                }
                 break;
         }
+    }
+
+    @Override
+    public void money(int money) {
+        giftMoney = money;
+        exceptionalPrice.setText("¥ " + money);
+    }
+
+    @Override
+    public void payType(PayTypeBean bean) {
+        payTypeBean = bean;
+    }
+
+    /**
+     * 获取打赏金额
+     *
+     * @return
+     */
+    public int getGiftMoney() {
+        return giftMoney;
     }
 }

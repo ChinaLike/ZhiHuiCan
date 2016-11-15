@@ -51,4 +51,13 @@ public class Constant {
     public final static int BOTTOM_SERVICE = 0x502;
     public final static int BOTTOM_SETTLE_ACCOUNTS = 0x503;
 
+    /**
+     * 支付方式
+     */
+    public final static int CASH = 0;
+    public final static int WEIXIN = 1;
+    public final static int BANK_CART = 2;
+    public final static int ALIPAY = 3;
+
+
 }

@@ -40,6 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:background="@drawable/button_gray_white"
+            android:textColor="@color/white"
             android:text="¥ 2" />
 
         <Button
@@ -47,6 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:background="@drawable/button_gray_white"
+            android:textColor="@color/white"
+
             android:text="¥ 5" />
 
         <Button
@@ -54,6 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:background="@drawable/button_gray_white"
+            android:textColor="@color/white"
             android:text="¥ 10" />
 
         <Button
@@ -61,6 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:background="@drawable/button_gray_white"
+            android:textColor="@color/white"
             android:text="¥ 15" />
 
     </LinearLayout>

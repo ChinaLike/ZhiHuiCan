@@ -16,6 +16,7 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.DishesAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
+import cn.sczhckg.order.data.listener.OnGiftListenner;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
 
 /**
@@ -29,6 +30,10 @@ public abstract class BaseFragment extends Fragment {
     protected static DishesAdapter mDishesAdapter = null;
 
     protected List<DishesBean> parentDishesList = new ArrayList<>();
+    /**
+     * 打赏接口
+     */
+    protected static OnGiftListenner onGiftListenner;
 
     /**
      * 点餐类型 0-单桌点餐  1-并桌点餐
@@ -36,7 +41,7 @@ public abstract class BaseFragment extends Fragment {
     public static final int ALONE_ORDER = 0;
     public static final int MERGER_ORDER = 1;
 
-    protected int orderType=ALONE_ORDER;
+    protected int orderType = ALONE_ORDER;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,4 +78,7 @@ public abstract class BaseFragment extends Fragment {
         mRecyclerView.setAdapter(mDishesAdapter);
     }
 
+    public void setOnGiftListenner(OnGiftListenner onGiftListenner) {
+        this.onGiftListenner = onGiftListenner;
+    }
 }

@@ -5,8 +5,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.data.event.EvaluateListEvent;
 
 /**
  * @describe: 评价界面
@@ -19,6 +25,7 @@ public class EvaluateFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -42,4 +49,21 @@ public class EvaluateFragment extends BaseFragment {
     public void init() {
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 根据对应评价菜品选择对应的参数
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void listEvent(EvaluateListEvent event){
+        Toast.makeText(getContext(),event.getBean().getName(),Toast.LENGTH_SHORT).show();
+    }
+
+
 }

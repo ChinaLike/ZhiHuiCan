@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.PayTypeBean;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
+import cn.sczhckg.order.data.listener.OnPayTypeListenner;
 
 /**
  * @describe: 结账方式适配
@@ -32,6 +33,8 @@ public class SettleAountsPayAdapter extends RecyclerView.Adapter<SettleAountsPay
     private List<PayTypeBean> mList;
 
     private Map<Integer,Button> mMap=new HashMap<>();
+
+    private OnPayTypeListenner onPayTypeListenner;
 
     public SettleAountsPayAdapter(Context mContext, List<PayTypeBean> mList) {
         this.mContext = mContext;
@@ -57,7 +60,7 @@ public class SettleAountsPayAdapter extends RecyclerView.Adapter<SettleAountsPay
                     mMap.get(btn).setSelected(false);
                 }
                 holder.cartType.setSelected(true);
-                EventBus.getDefault().post(new SettleAountsTypeEvent(mList.get(position),SettleAountsTypeEvent.PTYPE));
+                onPayTypeListenner.payType(mList.get(position));
             }
         });
     }
@@ -86,5 +89,9 @@ public class SettleAountsPayAdapter extends RecyclerView.Adapter<SettleAountsPay
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void setOnPayTypeListenner(OnPayTypeListenner onPayTypeListenner) {
+        this.onPayTypeListenner = onPayTypeListenner;
     }
 }

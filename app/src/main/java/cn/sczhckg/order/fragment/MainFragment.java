@@ -245,4 +245,8 @@ public class MainFragment extends BaseFragment {
     public void setOnDishesChooseListener(OnDishesChooseListener onDishesChooseListener) {
         this.onDishesChooseListener = onDishesChooseListener;
     }
+
+    public SettleAccountsFragment getmSettleAccountsFragment() {
+        return mSettleAccountsFragment;
+    }
 }

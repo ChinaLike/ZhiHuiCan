@@ -21,6 +21,7 @@ import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.SettleAccountsAdapter;
 import cn.sczhckg.order.data.bean.SettleAccountsBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesBean;
+import cn.sczhckg.order.data.bean.SettleAccountsDishesItemBean;
 import cn.sczhckg.order.data.event.SettleAountsCartEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import retrofit2.Call;
@@ -33,12 +34,12 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class SettleAccountsFragment extends BaseFragment implements Callback<SettleAccountsBean>{
+public class SettleAccountsFragment extends BaseFragment implements Callback<SettleAccountsBean> {
 
     @Bind(R.id.dishes_details)
     ExpandableListView dishesDetails;
 
-    private List<SettleAccountsDishesBean> mList=new ArrayList<>();
+    private List<SettleAccountsDishesBean> mList = new ArrayList<>();
 
     private SettleAccountsAdapter mSettleAccountsAdapter;
 
@@ -70,15 +71,15 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
     public void init() {
         //设置 属性 GroupIndicator 去掉默认向下的箭头
         dishesDetails.setGroupIndicator(null);
-        mSettleAccountsAdapter=new SettleAccountsAdapter(getContext(),mList);
+        mSettleAccountsAdapter = new SettleAccountsAdapter(getContext(), mList);
         dishesDetails.setAdapter(mSettleAccountsAdapter);
     }
 
     /**
      * 获取清单数据
      */
-    public void getData(){
-        Call<SettleAccountsBean> settleAccountsBeanCall= RetrofitRequest.service(Config.HOST).settleAccountsList(MainActivity.table);
+    public void getData() {
+        Call<SettleAccountsBean> settleAccountsBeanCall = RetrofitRequest.service(Config.HOST).settleAccountsList(MainActivity.table);
         settleAccountsBeanCall.enqueue(this);
     }
 
@@ -90,12 +91,12 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
 
     @Override
     public void onResponse(Call<SettleAccountsBean> call, Response<SettleAccountsBean> response) {
-        SettleAccountsBean bean=response.body();
-        if (bean!=null){
+        SettleAccountsBean bean = response.body();
+        if (bean != null) {
             mList = bean.getSettleAccountsDishesBeen();
             mSettleAccountsAdapter.notifyDataSetChanged(mList);
             /**更新左侧结账方式*/
-            EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.LOADING,bean.getFavorableType(),bean.getPayTypeBeen()));
+            EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.LOADING, bean.getFavorableType(), bean.getPayTypeBeen()));
         }
 
     }
@@ -103,5 +104,14 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
     @Override
     public void onFailure(Call<SettleAccountsBean> call, Throwable t) {
         Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 获取菜品信息
+     *
+     * @return
+     */
+    public List<SettleAccountsDishesBean> getmList() {
+        return mList;
     }
 }

@@ -49,4 +49,9 @@
     <string name="evaluate_data3">上菜速度</string>
     <string name="evaluate_data4">其他评价</string>
 
+    <string name="weixin_pay_title">扫描二维码进行微信支付</string>
+    <string name="aliPay_title">扫描二维码进行支付宝支付</string>
+    <string name="cash_title">现金支付请到前台完成支付</string>
+    <string name="bank_card_title">请到前台完成刷卡支付</string>
+
 </resources>

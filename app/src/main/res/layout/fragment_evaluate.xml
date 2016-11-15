@@ -4,71 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <LinearLayout
-        android:id="@+id/evaluate_choose_parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-
-            android:text="@string/pay_finish_title" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/evaluate_go"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_yellow"
-                android:text="@string/evaluate_go"
-                android:textColor="@color/button_text" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/evaluate_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_yellow"
-                android:text="@string/evaluate_no"
-                android:textColor="@color/button_text" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/evaluate_dishes_choose_parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-
-    </LinearLayout>
-
     <ScrollView
         android:id="@+id/evaluate_parent"
         android:layout_width="match_parent"
@@ -85,15 +20,16 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lines="1"
                 android:text="@string/evaluate_title"
                 android:textColor="@color/text_color_m"
-                android:textSize="@dimen/text_size_largr" />
+                android:textSize="@dimen/text_size_mediu" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <TextView
@@ -103,9 +39,11 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar1"
+                    style="@style/roomRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:numStars="5"
+                    android:rating="4"
                     android:stepSize="0.5" />
 
             </LinearLayout>
@@ -114,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <TextView
@@ -124,9 +62,12 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar2"
+                    style="@style/roomRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:numStars="5"
+                    android:rating="4"
+
                     android:stepSize="0.5" />
 
             </LinearLayout>
@@ -135,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <TextView
@@ -145,9 +86,11 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar3"
+                    style="@style/roomRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:numStars="5"
+                    android:rating="4"
                     android:stepSize="0.5" />
 
             </LinearLayout>
@@ -156,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <TextView
@@ -166,9 +109,11 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar4"
+                    style="@style/roomRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:numStars="5"
+                    android:rating="4"
                     android:stepSize="0.5" />
 
             </LinearLayout>
@@ -181,10 +126,14 @@
 
             <Button
                 android:id="@+id/evaluate_finish"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/button_yellow"
+                android:padding="15dp"
                 android:text="完成" />
 
         </LinearLayout>

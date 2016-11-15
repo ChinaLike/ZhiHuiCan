@@ -19,8 +19,15 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.GrouponAdapter;
+import cn.sczhckg.order.data.bean.GrouponBean;
+import cn.sczhckg.order.data.network.RetrofitRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @describe: 团购券号输入界面
@@ -28,7 +35,7 @@ import cn.sczhckg.order.adapter.GrouponAdapter;
  * @Email: 572919350@qq.com
  */
 
-public class GrouponFragment extends BaseFragment {
+public class GrouponFragment extends BaseFragment implements Callback<GrouponBean>{
 
     @Bind(R.id.groupon_number)
     TextView grouponNumber;
@@ -111,11 +118,44 @@ public class GrouponFragment extends BaseFragment {
                 }
                 break;
             case R.id.groupon_finish:
-
                 if (!(groupInput.getText().toString().equals(""))) {
-                    updata(groupInput.getText().toString());
+                    Toast.makeText(getContext(),"团购券验证中...",Toast.LENGTH_SHORT).show();
+                    postData(groupInput.getText().toString());
+                 }else {
+                    Toast.makeText(getContext(),"输入团购券不能为空",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
     }
+
+    private void postData(String group){
+        Call<GrouponBean> grouponCall= RetrofitRequest.service(Config.HOST).verifyGroup(MainActivity.table,group);
+        grouponCall.enqueue(this);
+    }
+
+    @Override
+    public void onResponse(Call<GrouponBean> call, Response<GrouponBean> response) {
+        GrouponBean bean=response.body();
+        if (bean.getStatus()==0){
+            updata(groupInput.getText().toString());
+            itemGrouponParent.setVisibility(View.GONE);
+            groupInput.setText("");
+        }else {
+            Toast.makeText(getContext(), bean.getMsg()+"", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<GrouponBean> call, Throwable t) {
+        Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 获取团购券组
+     * @return
+     */
+    public List<String> getGrouponList() {
+        return grouponList;
+    }
+
 }

@@ -6,7 +6,9 @@ import java.util.Map;
 import cn.sczhckg.order.data.bean.ClassifyBean;
 import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.bean.GrouponBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.QRCodeBean;
 import cn.sczhckg.order.data.bean.SettleAccountsBean;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import retrofit2.Call;
@@ -52,4 +54,12 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("android/test/payTheBills/show")
     Call<SettleAccountsBean> settleAccountsList(@Field("table") String table);
+    /**团购券验证*/
+    @FormUrlEncoded
+    @POST("android/test/payTheBills/groupon")
+    Call<GrouponBean> verifyGroup(@Field("table") String table, @Field("groupon") String groupon);
+    /**结账*/
+    @FormUrlEncoded
+    @POST("android/test/payTheBills/pay")
+    Call<QRCodeBean> pay(@Field("table") String table, @Field("favorableType") int favorableType, @Field("userNmae") String userNmae, @Field("coupon") String coupon, @Field("payType") int payType, @Field("giftMoney") int giftMoney);
 }

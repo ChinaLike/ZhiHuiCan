@@ -12,6 +12,8 @@ public class MyApplication extends Application{
 
     public static boolean isLogin=false;
 
+    public static String userName;
+
     @Override
     public void onCreate() {
         super.onCreate();

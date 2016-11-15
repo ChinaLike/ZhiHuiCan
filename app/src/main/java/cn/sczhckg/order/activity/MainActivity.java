@@ -36,10 +36,14 @@ import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.fragment.BaseFragment;
+import cn.sczhckg.order.fragment.EvaluateFragment;
+import cn.sczhckg.order.fragment.EvaluateListFragment;
+import cn.sczhckg.order.fragment.GiftFragment;
 import cn.sczhckg.order.fragment.GrouponFragment;
 import cn.sczhckg.order.fragment.LoginFragment;
 import cn.sczhckg.order.fragment.MainFragment;
 import cn.sczhckg.order.fragment.PotTypeFagment;
+import cn.sczhckg.order.fragment.QRCodeFragment;
 import cn.sczhckg.order.fragment.SettleAccountsCartFragment;
 import cn.sczhckg.order.fragment.ShoppingCartFragment;
 import cn.sczhckg.order.overwrite.NoScrollViewPager;
@@ -102,6 +106,11 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     private MainFragment mMainFragment;
 
     /**
+     * 菜品评价列表
+     */
+    private EvaluateListFragment mEvaluateListFragment;
+
+    /**
      * 购物车
      */
     private ShoppingCartFragment mShoppingCartFragment;
@@ -124,6 +133,18 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     private LoginFragment mLoginFragment;
 
     /**
+     * 打赏界面
+     */
+    private GiftFragment mGiftFragment;
+    /**
+     * 二维码支付界面
+     */
+    private QRCodeFragment mQrCodeFragment;
+    /**
+     * 评价
+     */
+    private EvaluateFragment mEvaluateFragment;
+    /**
      * 用餐人数
      */
     public static int person;
@@ -131,6 +152,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      * 桌号
      */
     public static String table;
+
+    private int favorableType = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +211,9 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         /**结账*/
         mSettleAccountsCartFragment = new SettleAccountsCartFragment();
         mList.add(mSettleAccountsCartFragment);
+        /**评价列表*/
+        mEvaluateListFragment = new EvaluateListFragment();
+        mList.add(mEvaluateListFragment);
 
         adapter.setList(mList);
         cart.setAdapter(adapter);
@@ -211,11 +237,23 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         mLoginFragment = new LoginFragment();
         /**团购券*/
         mGrouponFragment = new GrouponFragment();
+        /**打赏*/
+        mGiftFragment = new GiftFragment();
+        /**二维码*/
+        mQrCodeFragment = new QRCodeFragment();
+        /**评价*/
+        mEvaluateFragment = new EvaluateFragment();
 
         mList.add(mPotTypeFagment);
         mList.add(mMainFragment);
         mList.add(mLoginFragment);
         mList.add(mGrouponFragment);
+        mList.add(mGiftFragment);
+        mList.add(mQrCodeFragment);
+        mList.add(mEvaluateFragment);
+
+        viewPager.setOffscreenPageLimit(mList.size());
+
         return mList;
     }
 
@@ -312,26 +350,44 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
                 if (!MyApplication.isLogin) {
                     viewPager.setCurrentItem(2);
                 } else {
-
+                    favorableType = favorableTypeBean.getId();
                 }
             } else if (id == 1) {
                 /**店内促销*/
+                favorableType = favorableTypeBean.getId();
+
             } else if (id == 2) {
                 /**团购券*/
+                favorableType = favorableTypeBean.getId();
                 viewPager.setCurrentItem(3);
             }
         } else if (event.getType() == SettleAountsTypeEvent.PTYPE) {
             PayTypeBean payTypeBean = event.getPayTypeBean();
             int id = payTypeBean.getId();
+            viewPager.setCurrentItem(5);
+            mQrCodeFragment.getCode(id, favorableType, mGrouponFragment.getGrouponList(), mSettleAccountsCartFragment.getGiftMoney());
             if (id == 0) {
                 /**现金*/
+                mQrCodeFragment.setData(getResources().getString(R.string.cash_title));
             } else if (id == 1) {
                 /**微信*/
+                mQrCodeFragment.setData(getResources().getString(R.string.weixin_pay_title));
             } else if (id == 2) {
                 /**银行卡*/
+                mQrCodeFragment.setData(getResources().getString(R.string.bank_card_title));
             } else if (id == 3) {
                 /**支付宝*/
+                mQrCodeFragment.setData(getResources().getString(R.string.aliPay_title));
             }
+        } else if (event.getType() == SettleAountsTypeEvent.GTYPE) {
+            /**打赏*/
+            viewPager.setCurrentItem(4);
+        } else if (event.getType() == SettleAountsTypeEvent.TTYPE) {
+            viewPager.setCurrentItem(1);
+        } else if (event.getType() == SettleAountsTypeEvent.ETYPE) {
+            viewPager.setCurrentItem(6);
+            cart.setCurrentItem(2);
+            mEvaluateListFragment.setData(mMainFragment.getmSettleAccountsFragment().getmList());
         }
     }
 

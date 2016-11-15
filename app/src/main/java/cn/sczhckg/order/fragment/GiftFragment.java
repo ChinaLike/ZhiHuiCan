@@ -3,15 +3,19 @@ package cn.sczhckg.order.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 
 /**
  * @describe: 打赏界面
@@ -19,7 +23,7 @@ import cn.sczhckg.order.R;
  * @Email: 572919350@qq.com
  */
 
-public class GiftFragment extends BaseFragment {
+public class GiftFragment extends BaseFragment{
 
     @Bind(R.id.gift_close)
     ImageView giftClose;
@@ -33,6 +37,14 @@ public class GiftFragment extends BaseFragment {
     Button giftPrice4;
     @Bind(R.id.gift_button)
     Button giftButton;
+
+    private int money=0;
+
+    private Button[] mButtons;
+
+    private int current=0;
+
+    private int index=0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +62,7 @@ public class GiftFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        init();
     }
 
     @Override
@@ -59,7 +72,7 @@ public class GiftFragment extends BaseFragment {
 
     @Override
     public void init() {
-
+        mButtons=new Button[]{giftPrice1,giftPrice2,giftPrice3,giftPrice4};
     }
 
     @Override
@@ -72,17 +85,34 @@ public class GiftFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.gift_close:
+                EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.TTYPE));
                 break;
             case R.id.gift_price1:
+                money=2;
+                current=0;
                 break;
             case R.id.gift_price2:
+                money=5;
+                current=1;
                 break;
             case R.id.gift_price3:
+                money=10;
+                current=2;
                 break;
             case R.id.gift_price4:
+                money=15;
+                current=3;
                 break;
             case R.id.gift_button:
+                if (onGiftListenner!=null){
+                    onGiftListenner.money(money);
+                }
                 break;
         }
+        mButtons[index].setSelected(false);
+        mButtons[index].setTextColor(getContext().getResources().getColor(R.color.white));
+        mButtons[current].setSelected(true);
+        mButtons[current].setTextColor(getContext().getResources().getColor(R.color.text_color_red));
+        index=current;
     }
 }
