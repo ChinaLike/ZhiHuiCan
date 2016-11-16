@@ -22,7 +22,7 @@ import cn.sczhckg.order.data.bean.PersonBean;
 import cn.sczhckg.order.fragment.PotTypeFagment;
 
 /**
- * @describe:
+ * @describe: 锅底必选和推荐菜品界面人数适配
  * @author: Like on 2016/11/8.
  * @Email: 572919350@qq.com
  */

@@ -45,11 +45,13 @@ public class Constant {
     public final static String PERSON = "person";
 
     /**
-     * 主菜单底部按钮
+     * 主菜单底部按钮和详情界面
      */
     public final static int BOTTOM_ORDER = 0x501;
     public final static int BOTTOM_SERVICE = 0x502;
     public final static int BOTTOM_SETTLE_ACCOUNTS = 0x503;
+    public final static int DISHES_DETAILS_IN = 0x504;
+    public final static int DISHES_DETAILS_OUT = 0x505;
 
     /**
      * 支付方式

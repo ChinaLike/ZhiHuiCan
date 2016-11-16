@@ -15,7 +15,6 @@ import java.util.List;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.DishesAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
-import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.data.listener.OnGiftListenner;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
 
@@ -43,6 +42,11 @@ public abstract class BaseFragment extends Fragment {
 
     protected int orderType = ALONE_ORDER;
 
+    /**
+     * 界面标识  0-锅底必选  1-点菜界面
+     */
+    public static int flag = 0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,11 +71,10 @@ public abstract class BaseFragment extends Fragment {
      * 菜品适配
      *
      * @param mRecyclerView
-     * @param onDishesChooseListener
      */
-    protected void initDishesAdapter(RecyclerView mRecyclerView, OnDishesChooseListener onDishesChooseListener) {
+    protected void initDishesAdapter(RecyclerView mRecyclerView) {
         if (mDishesAdapter == null) {
-            mDishesAdapter = new DishesAdapter(getContext(), parentDishesList, onDishesChooseListener);
+            mDishesAdapter = new DishesAdapter(getContext(), parentDishesList);
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
@@ -80,5 +83,9 @@ public abstract class BaseFragment extends Fragment {
 
     public void setOnGiftListenner(OnGiftListenner onGiftListenner) {
         this.onGiftListenner = onGiftListenner;
+    }
+
+    public int getFlag() {
+        return flag;
     }
 }

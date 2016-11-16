@@ -3,11 +3,13 @@ package cn.sczhckg.order.adapter;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -132,7 +134,9 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         holder.favorablePrice.setVisibility(View.INVISIBLE);
         holder.price.setVisibility(View.INVISIBLE);
         holder.image.setVisibility(View.INVISIBLE);
-
+        if (isExpanded){
+            holder.tag.setImageResource(R.drawable.accounts_btn_details_sel);
+        }
         return convertView;
     }
 
@@ -201,6 +205,12 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         @Nullable
         @Bind(R.id.el1_total_price)
         TextView totalPrice;
+        @Nullable
+        @Bind(R.id.tag)
+        ImageView tag;
+        @Nullable
+        @Bind(R.id.parent)
+        LinearLayout parent;
 
         ParentViewHolder(View view) {
             ButterKnife.bind(this, view);

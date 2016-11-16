@@ -6,9 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +19,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
-import cn.sczhckg.order.data.listener.OnDishesChooseListener;
+import cn.sczhckg.order.data.event.BottomChooseEvent;
+import cn.sczhckg.order.data.event.RefreshCartEvent;
 
 /**
  * @describe: 菜品适配
@@ -31,14 +36,10 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
 
     private List<DishesBean> mList;
 
-    private OnDishesChooseListener onDishesChooseListener;
 
-    private List<DishesBean> cartList = new ArrayList<>();
-
-    public DishesAdapter(Context mContext, List<DishesBean> mList, OnDishesChooseListener onDishesChooseListener) {
+    public DishesAdapter(Context mContext, List<DishesBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
-        this.onDishesChooseListener = onDishesChooseListener;
     }
 
     @Override
@@ -82,7 +83,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
                     number--;
                     bean.setNumber(number);
                     holder.dishesNumber.setText(number + "");
-                    onDishesChooseListener.dishesChoose(upDataCart(bean));
+                    EventBus.getDefault().post(new RefreshCartEvent(bean));
                 }
             }
         });
@@ -93,29 +94,17 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
                 number++;
                 bean.setNumber(number);
                 holder.dishesNumber.setText(number + "");
-                onDishesChooseListener.dishesChoose(upDataCart(bean));
+                EventBus.getDefault().post(new RefreshCartEvent(bean));
+            }
+        });
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN,bean));
             }
         });
 
 
-    }
-
-    /**
-     * 更新购物车数据
-     *
-     * @return
-     */
-    private List<DishesBean> upDataCart(DishesBean bean) {
-        if (cartList.contains(bean)) {
-            int postion = cartList.indexOf(bean);
-            cartList.remove(bean);
-            if (bean.getNumber()!=0) {
-                cartList.add(postion, bean);
-            }
-        } else {
-            cartList.add(bean);
-        }
-        return cartList;
     }
 
     @Override
@@ -151,6 +140,9 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         ImageView dishesAdd;
         @Bind(R.id.dishes_favorable_recyclerView)
         RecyclerView dishesFavorableRecyclerView;
+        @Bind(R.id.dishes_parent)
+        LinearLayout parent;
+
 
         public DishesHolder(View itemView) {
             super(itemView);

@@ -31,7 +31,6 @@ import cn.sczhckg.order.data.bean.ClassifyItemBean;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.TabBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
-import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
 import retrofit2.Call;
@@ -79,8 +78,6 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
      */
     private Map<String, List<DishesBean>> dishesMap = new HashMap<>();
 
-    private OnDishesChooseListener onDishesChooseListener;
-
     /**
      * 头部导航栏数据
      */
@@ -122,7 +119,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
     @Override
     public void init() {
         parentDishesList = null;
-        initDishesAdapter(dishesShow, onDishesChooseListener);
+        initDishesAdapter(dishesShow);
         initTabAdapter();
     }
 
@@ -277,10 +274,6 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
             dishesClassify.scrollToPosition(n);
         }
 
-    }
-
-    public void setOnDishesChooseListener(OnDishesChooseListener onDishesChooseListener) {
-        this.onDishesChooseListener = onDishesChooseListener;
     }
 
     /**

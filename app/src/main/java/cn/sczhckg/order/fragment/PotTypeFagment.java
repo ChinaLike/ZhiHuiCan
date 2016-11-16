@@ -25,7 +25,6 @@ import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.PersonBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
-import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
 
 /**
@@ -61,8 +60,6 @@ public class PotTypeFagment extends BaseFragment {
 
     private List<DishesBean> dishesList;
 
-    private OnDishesChooseListener onDishesChooseListener;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +85,7 @@ public class PotTypeFagment extends BaseFragment {
     public void init() {
         potParent.setClickable(false);
         dishesParent.setClickable(false);
-        initDishesAdapter(dishesChoose, onDishesChooseListener);
+        initDishesAdapter(dishesChoose);
     }
 
     @Override
@@ -130,15 +127,6 @@ public class PotTypeFagment extends BaseFragment {
             }
         }
 
-    }
-
-    /**
-     * 监听传递
-     *
-     * @param onDishesChooseListener
-     */
-    public void onDishesChooseListenner(OnDishesChooseListener onDishesChooseListener) {
-        this.onDishesChooseListener = onDishesChooseListener;
     }
 
     /**

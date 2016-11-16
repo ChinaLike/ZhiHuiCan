@@ -5,7 +5,9 @@ import java.util.Map;
 
 import cn.sczhckg.order.data.bean.ClassifyBean;
 import cn.sczhckg.order.data.bean.CommonBean;
+import cn.sczhckg.order.data.bean.DetailsBean;
 import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.bean.EvaluateBean;
 import cn.sczhckg.order.data.bean.GrouponBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.QRCodeBean;
@@ -46,6 +48,10 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("android/test/order/dishes")
     Call<List<DishesBean>> dishes(@Field("id") int id, @Field("table") String table, @Field("type") int type);
+    /**菜品详情*/
+    @FormUrlEncoded
+    @POST("android/test/order/show/details")
+    Call<DetailsBean> dishesDeatails(@Field("id") String id, @Field("name") String name);
     /**菜品选择好后数据提交*/
     @FormUrlEncoded
     @POST("android/test/cart/order")
@@ -62,4 +68,12 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("android/test/payTheBills/pay")
     Call<QRCodeBean> pay(@Field("table") String table, @Field("favorableType") int favorableType, @Field("userNmae") String userNmae, @Field("coupon") String coupon, @Field("payType") int payType, @Field("giftMoney") int giftMoney);
+    /**评价请求数据*/
+    @FormUrlEncoded
+    @POST("android/test/payTheBills/evaluate")
+    Call<EvaluateBean> getEvaluate(@Field("id") String id);
+    /**评价发送数据*/
+    @FormUrlEncoded
+    @POST("android/test/payTheBills/evaluatePost")
+    Call<CommonBean> postEvaluate(@Field("id") String id,@Field("attitude") float attitude,@Field("quality") float quality,@Field("speed") float speed,@Field("other") float other,@Field("hotword") String hotword,@Field("opinion") String opinion);
 }

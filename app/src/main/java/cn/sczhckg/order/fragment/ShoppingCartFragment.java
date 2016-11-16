@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
+import cn.sczhckg.order.data.event.RefreshCartEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
@@ -95,12 +97,36 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
 
     @Override
     public void setData(Object object) {
+
+    }
+
+    /**
+     * 刷新购物车
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshCart(RefreshCartEvent event) {
         shoppingcartButton.setClickable(true);
         shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
-        List<DishesBean> bean = (List<DishesBean>) object;
-        mList = bean;
-        isHaveData(bean);
-        mShoppingCartAdapter.notifyDataSetChanged(bean);
+        List<DishesBean> list=initList(event.getBean());
+        isHaveData(list);
+        mShoppingCartAdapter.notifyDataSetChanged(list);
+    }
+
+    /**
+     * 通过菜品信息来判断是否已经添加次菜品，如果已经添加刷新数量
+     * @param bean
+     */
+    private List<DishesBean> initList(DishesBean bean){
+        if (mList.contains(bean)) {
+            int postion = mList.indexOf(bean);
+            mList.remove(bean);
+            if (bean.getNumber()!=0) {
+                mList.add(postion, bean);
+            }
+        } else {
+            mList.add(bean);
+        }
+        return mList;
     }
 
     @Override
@@ -168,6 +194,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         if (buttonType == 0) {
             shoppingcartButton.setText(R.string.choose_good);
             if (bean.getStatus() == 0 && onButtonClickListener != null) {
+                flag = 1;
                 onButtonClickListener.onClick(Constant.ORDER, bean.getShowType());
             }
         } else if (buttonType == 1) {

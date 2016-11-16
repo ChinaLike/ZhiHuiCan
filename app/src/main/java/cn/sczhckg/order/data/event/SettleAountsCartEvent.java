@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.bean.PayTypeBean;
+import cn.sczhckg.order.data.bean.SettleAccountsBean;
 
 /**
  * @describe: 结账方式
@@ -17,15 +18,11 @@ public class SettleAountsCartEvent {
 
     private int type;
 
-    private List<FavorableTypeBean> favorableTypeList;
+    private SettleAccountsBean bean;
 
-    private List<PayTypeBean> payTypeList;
-
-
-    public SettleAountsCartEvent(int type, List<FavorableTypeBean> favorableTypeList, List<PayTypeBean> payTypeList) {
+    public SettleAountsCartEvent(int type, SettleAccountsBean bean) {
         this.type = type;
-        this.favorableTypeList = favorableTypeList;
-        this.payTypeList = payTypeList;
+        this.bean = bean;
     }
 
     public int getType() {
@@ -36,19 +33,11 @@ public class SettleAountsCartEvent {
         this.type = type;
     }
 
-    public List<FavorableTypeBean> getFavorableTypeList() {
-        return favorableTypeList;
+    public SettleAccountsBean getBean() {
+        return bean;
     }
 
-    public void setFavorableTypeList(List<FavorableTypeBean> favorableTypeList) {
-        this.favorableTypeList = favorableTypeList;
-    }
-
-    public List<PayTypeBean> getPayTypeList() {
-        return payTypeList;
-    }
-
-    public void setPayTypeList(List<PayTypeBean> payTypeList) {
-        this.payTypeList = payTypeList;
+    public void setBean(SettleAccountsBean bean) {
+        this.bean = bean;
     }
 }

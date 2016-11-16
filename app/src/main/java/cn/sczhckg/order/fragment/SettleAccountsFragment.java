@@ -96,7 +96,7 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
             mList = bean.getSettleAccountsDishesBeen();
             mSettleAccountsAdapter.notifyDataSetChanged(mList);
             /**更新左侧结账方式*/
-            EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.LOADING, bean.getFavorableType(), bean.getPayTypeBeen()));
+            EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.LOADING, bean));
         }
 
     }

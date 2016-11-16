@@ -3,7 +3,6 @@ package cn.sczhckg.order.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +24,6 @@ import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
 import cn.sczhckg.order.data.bean.Constant;
-import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.PayTypeBean;
@@ -33,9 +31,9 @@ import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
-import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.fragment.BaseFragment;
+import cn.sczhckg.order.fragment.DetailsFragment;
 import cn.sczhckg.order.fragment.EvaluateFragment;
 import cn.sczhckg.order.fragment.EvaluateListFragment;
 import cn.sczhckg.order.fragment.GiftFragment;
@@ -57,7 +55,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnDishesChooseListener, OnButtonClickListener {
+public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnButtonClickListener {
 
     /**
      * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
@@ -80,6 +78,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     ImageView back;
     @Bind(R.id.parent_show_back)
     LinearLayout parentShowBack;
+    @Bind(R.id.table_info_parent)
+    LinearLayout tableInfoParent;
     /**
      * 事物管理器
      */
@@ -115,8 +115,6 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      */
     private ShoppingCartFragment mShoppingCartFragment;
 
-    private OnDishesChooseListener onDishesChooseListener;
-
     /**
      * 结账
      */
@@ -145,6 +143,10 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      */
     private EvaluateFragment mEvaluateFragment;
     /**
+     * 菜品详情
+     */
+    private DetailsFragment mDetailsFragment;
+    /**
      * 用餐人数
      */
     public static int person;
@@ -161,7 +163,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
-        setOnDishesChooseListener(this);
+//        setOnDishesChooseListener(this);
         isLogin();
         init();
         initLeftFragment();
@@ -229,10 +231,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         List<Fragment> mList = new ArrayList<>();
         /**锅底必选*/
         mPotTypeFagment = new PotTypeFagment();
-        mPotTypeFagment.onDishesChooseListenner(onDishesChooseListener);
         /**菜品选择主页*/
         mMainFragment = new MainFragment();
-        mMainFragment.setOnDishesChooseListener(onDishesChooseListener);
         /**登录界面*/
         mLoginFragment = new LoginFragment();
         /**团购券*/
@@ -243,6 +243,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         mQrCodeFragment = new QRCodeFragment();
         /**评价*/
         mEvaluateFragment = new EvaluateFragment();
+        /**评价详情*/
+        mDetailsFragment = new DetailsFragment();
 
         mList.add(mPotTypeFagment);
         mList.add(mMainFragment);
@@ -251,6 +253,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         mList.add(mGiftFragment);
         mList.add(mQrCodeFragment);
         mList.add(mEvaluateFragment);
+        mList.add(mDetailsFragment);
 
         viewPager.setOffscreenPageLimit(mList.size());
 
@@ -276,23 +279,12 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         Toast.makeText(this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 
-    public void setOnDishesChooseListener(OnDishesChooseListener onDishesChooseListener) {
-        this.onDishesChooseListener = onDishesChooseListener;
-    }
-
-
-    @Override
-    public void dishesChoose(List<DishesBean> bean) {
-        if (mShoppingCartFragment != null) {
-            mShoppingCartFragment.setData(bean);
-        }
-    }
 
     @Override
     public void onClick(int type, int isShow) {
         /**开桌成功后回调*/
         if (type == Constant.ORDER) {
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(1,false);
             if (isShow == 0) {
                 mMainFragment.showOrderType();
                 parentShowBack.setVisibility(View.VISIBLE);
@@ -316,6 +308,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        /**重置界面标识*/
+        BaseFragment.flag = 0;
     }
 
     /**
@@ -325,13 +319,25 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void bottomEventBus(BottomChooseEvent event) {
-        Log.d("底部按钮广播", event.getType() + "");
+        tableInfoParent.setVisibility(View.VISIBLE);
         if (event.getType() == Constant.BOTTOM_ORDER) {
-            cart.setCurrentItem(0);
+            cart.setCurrentItem(0,false);
         } else if (event.getType() == Constant.BOTTOM_SERVICE) {
 
         } else if (event.getType() == Constant.BOTTOM_SETTLE_ACCOUNTS) {
-            cart.setCurrentItem(1);
+            cart.setCurrentItem(1,false);
+        } else if (event.getType() == Constant.DISHES_DETAILS_IN) {
+            /**进入菜品详情*/
+            tableInfoParent.setVisibility(View.GONE);
+            viewPager.setCurrentItem(7,false);
+            mDetailsFragment.setData(event.getBean());
+        } else if (event.getType() == Constant.DISHES_DETAILS_OUT) {
+            /**退出菜品详情*/
+            if (BaseFragment.flag == 0) {
+                viewPager.setCurrentItem(0,false);
+            } else {
+                viewPager.setCurrentItem(1,false);
+            }
         }
     }
 
@@ -348,7 +354,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
             if (id == 0) {
                 /**会员*/
                 if (!MyApplication.isLogin) {
-                    viewPager.setCurrentItem(2);
+                    viewPager.setCurrentItem(2,false);
                 } else {
                     favorableType = favorableTypeBean.getId();
                 }
@@ -359,12 +365,12 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
             } else if (id == 2) {
                 /**团购券*/
                 favorableType = favorableTypeBean.getId();
-                viewPager.setCurrentItem(3);
+                viewPager.setCurrentItem(3,false);
             }
         } else if (event.getType() == SettleAountsTypeEvent.PTYPE) {
             PayTypeBean payTypeBean = event.getPayTypeBean();
             int id = payTypeBean.getId();
-            viewPager.setCurrentItem(5);
+            viewPager.setCurrentItem(5,false);
             mQrCodeFragment.getCode(id, favorableType, mGrouponFragment.getGrouponList(), mSettleAccountsCartFragment.getGiftMoney());
             if (id == 0) {
                 /**现金*/
@@ -381,14 +387,15 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
             }
         } else if (event.getType() == SettleAountsTypeEvent.GTYPE) {
             /**打赏*/
-            viewPager.setCurrentItem(4);
+            viewPager.setCurrentItem(4,false);
         } else if (event.getType() == SettleAountsTypeEvent.TTYPE) {
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(1,false);
         } else if (event.getType() == SettleAountsTypeEvent.ETYPE) {
-            viewPager.setCurrentItem(6);
-            cart.setCurrentItem(2);
+            viewPager.setCurrentItem(6,false);
+            cart.setCurrentItem(2,false);
             mEvaluateListFragment.setData(mMainFragment.getmSettleAccountsFragment().getmList());
         }
     }
+
 
 }

@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
-import cn.sczhckg.order.data.listener.OnDishesChooseListener;
 
 /**
  * @describe: 开桌后主界面
@@ -97,8 +95,6 @@ public class MainFragment extends BaseFragment {
     private ViewPagerAdapter adapter;
 
 
-    private OnDishesChooseListener onDishesChooseListener;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,7 +142,6 @@ public class MainFragment extends BaseFragment {
      */
     private void initOrderFragment() {
         mOrderFragment = new OrderFragment();
-        mOrderFragment.setOnDishesChooseListener(onDishesChooseListener);
     }
 
     /**
@@ -240,10 +235,6 @@ public class MainFragment extends BaseFragment {
             current = index;
         }
 
-    }
-
-    public void setOnDishesChooseListener(OnDishesChooseListener onDishesChooseListener) {
-        this.onDishesChooseListener = onDishesChooseListener;
     }
 
     public SettleAccountsFragment getmSettleAccountsFragment() {

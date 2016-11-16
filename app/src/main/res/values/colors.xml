@@ -48,4 +48,7 @@
     <color name="btn_solder_yellow">#FDF5D7</color>
     <color name="btn_side_yellow">#E7B76D</color>
 
+
+    <color name="progress_background">#DFDFDF</color>
+
 </resources>

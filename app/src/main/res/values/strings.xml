@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZhiHuiCan</string>
+    <string name="app_name">智汇餐</string>
 
     <!--进入页面-->
     <string name="firstPage">欢迎来到本店就餐，点击开桌开始就餐！</string>
