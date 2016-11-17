@@ -17,6 +17,16 @@ public class UserLoginBean implements Serializable {
     private String name;
     private String url;
     private int vip;
+    private String table;
+    private String vipUrl;
+
+    public String getVipUrl() {
+        return vipUrl;
+    }
+
+    public void setVipUrl(String vipUrl) {
+        this.vipUrl = vipUrl;
+    }
 
     public int getCode() {
         return code;
@@ -64,5 +74,13 @@ public class UserLoginBean implements Serializable {
 
     public void setVip(int vip) {
         this.vip = vip;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
     }
 }

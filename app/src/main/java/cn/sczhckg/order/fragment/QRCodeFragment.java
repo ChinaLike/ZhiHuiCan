@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
@@ -30,6 +28,7 @@ import cn.sczhckg.order.data.bean.ListBean;
 import cn.sczhckg.order.data.bean.QRCodeBean;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.image.GlideLoading;
 import cn.sczhckg.order.overwrite.NoScrollRecyclerview;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -163,7 +162,7 @@ public class QRCodeFragment extends BaseFragment implements Callback<QRCodeBean>
             if (type == Constant.ALIPAY || type == Constant.WEIXIN) {
                 code.setVisibility(View.VISIBLE);
                 evaluateChooseParent.setVisibility(View.GONE);
-                Picasso.with(getContext()).load(bean.getUrl()).into(code);
+                GlideLoading.loadingDishes(getContext(),bean.getUrl(),code);
             }
         }
     }

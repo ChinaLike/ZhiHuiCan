@@ -27,10 +27,10 @@ public class Constant {
     public final static int SETTLE_ACCOUNTS = 2;
 
     /**
-     * VIP判断请求常量
+     * 用户登录信息传递
      */
-    public final static String USERNAME = "userName";
-    public final static String PASSWORD = "password";
+    public final static String USER_INFO = "userInfo";
+
     /**
      * 首页锅底，推荐菜品等
      */
@@ -61,5 +61,21 @@ public class Constant {
     public final static int BANK_CART = 2;
     public final static int ALIPAY = 3;
 
+    /**
+     * 界面间传递Flag
+     */
+    public final static int LEAD_TO_LOGIN = 0x100;
+    public final static int MAIN_TO_LOGIN = 0x101;
+
+    /**
+     * 请求码，返回码requestCode, resultCode
+     */
+    public final static int MAIN_REQUEST_CODE = 0x200;
+    public final static int LOGIN_RESULT_CODE = 0x201;
+    /**
+     * 点菜权限
+     */
+    public final static int PREMISS_AGREE = 0;
+    public final static int PREMISS_DISAGREE = 1;
 
 }

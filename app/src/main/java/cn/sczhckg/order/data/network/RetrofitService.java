@@ -30,8 +30,9 @@ import retrofit2.http.QueryMap;
 public interface RetrofitService {
 
     /**会员登录*/
-    @GET("android/test/login")
-    Call<UserLoginBean> vipLogin(@QueryMap Map<String, String> options);
+    @FormUrlEncoded
+    @POST("android/test/login")
+    Call<UserLoginBean> vipLogin(@Field("username") String username, @Field("password") String password);
     /**主页锅底选择*/
     @FormUrlEncoded
     @POST("android/test/openReady")
@@ -76,4 +77,8 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("android/test/payTheBills/evaluatePost")
     Call<CommonBean> postEvaluate(@Field("id") String id,@Field("attitude") float attitude,@Field("quality") float quality,@Field("speed") float speed,@Field("other") float other,@Field("hotword") String hotword,@Field("opinion") String opinion);
+    /**服务呼叫*/
+    @FormUrlEncoded
+    @POST("android/test/sercive")
+    Call<CommonBean> service(@Field("table") String table, @Field("type") int type);
 }

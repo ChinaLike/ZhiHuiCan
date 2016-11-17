@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1.5"
+        android:src="@drawable/serviec_icon_calling" />
 
     <TextView
+        android:id="@+id/service_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:layout_weight="0.5"
+        android:text="服务员呼叫中..."
+        android:textColor="@color/text_color_m"
+        android:textSize="@dimen/text_size_mediu" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="50sp"
-        android:text="服务"/>
+        android:layout_height="0dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/service_request"
+            android:layout_width="480dp"
+            android:textSize="@dimen/text_size_largr"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:background="@drawable/service_btn_cancel"
+            android:text="呼叫"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
 
 </LinearLayout>

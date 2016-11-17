@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -35,6 +33,7 @@ import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.event.RefreshCartEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.image.GlideLoading;
 import cn.sczhckg.order.overwrite.CarouselView;
 import cn.sczhckg.order.until.ConvertUtils;
 import retrofit2.Call;
@@ -137,7 +136,7 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
         if (bean != null) {
             bannerAdapter(bean.getUrls());
             favorableAdapter(bean.getPriceType());
-            initProgress(bean.getGoodEvaluate(),bean.getTotalEvaluate());
+            initProgress(bean.getGoodEvaluate(), bean.getTotalEvaluate());
         }
     }
 
@@ -146,11 +145,11 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
 
     }
 
-    private void initProgress(int curr,int total){
-        likeNumber.setText(total+"");
-        float progress= (float) (curr*1.0/total);
-        detailsPrecent.setText((int)(progress*100)+"%");
-        detailsProgress.setProgress((int) (progress*100));
+    private void initProgress(int curr, int total) {
+        likeNumber.setText(total + "");
+        float progress = (float) (curr * 1.0 / total);
+        detailsPrecent.setText((int) (progress * 100) + "%");
+        detailsProgress.setProgress((int) (progress * 100));
     }
 
     @Override
@@ -165,7 +164,8 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
         int number = dishesBean.getNumber();
         switch (view.getId()) {
             case R.id.details_add:
-                if (!detailsDishesNumber.getText().toString().trim().equals("")) {
+                /**判断数量是否为0且本桌可以点菜*/
+                if (!detailsDishesNumber.getText().toString().trim().equals("0") && dishesBean.getPermiss() == Constant.PREMISS_AGREE) {
                     EventBus.getDefault().post(new RefreshCartEvent(dishesBean));
                 }
                 break;
@@ -203,7 +203,7 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
             public View getView(int position) {
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.item_image, null);
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
-                Picasso.with(getContext()).load(urlList.get(position)).into(imageView);
+                GlideLoading.loadingDishes(getContext(), urlList.get(position), imageView);
                 return view;
             }
 
@@ -216,16 +216,18 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
 
     /**
      * 优惠价适配
+     *
      * @param mList
      */
-    private void favorableAdapter(List<PriceTypeBean> mList){
-        adapter = new DetailsAdapter(getContext(),mList);
-        detailsFavorableRecycler.setLayoutManager(new GridLayoutManager(getContext(),2));
+    private void favorableAdapter(List<PriceTypeBean> mList) {
+        adapter = new DetailsAdapter(getContext(), mList);
+        detailsFavorableRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
         detailsFavorableRecycler.setAdapter(adapter);
     }
 
     /**
      * 购物车添加数据变动
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)

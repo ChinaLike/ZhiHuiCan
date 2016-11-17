@@ -29,7 +29,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/main_order_img"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
                 android:text="点菜"
                 android:textColor="@drawable/text_order" />
 
@@ -55,7 +54,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/main_service_img"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
                 android:text="服务"
                 android:textColor="@drawable/text_order" />
 
@@ -81,7 +79,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/main_settle_accounts_img"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
                 android:text="结账"
                 android:textColor="@drawable/text_order" />
 
