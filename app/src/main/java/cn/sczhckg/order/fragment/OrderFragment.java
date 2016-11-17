@@ -43,7 +43,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class OrderFragment extends BaseFragment implements Callback<ClassifyBean>, ClassifyAdapter.OnItemClickListener {
+public class OrderFragment extends BaseFragment implements Callback<ClassifyBean> , ClassifyAdapter.OnItemClickListener {
 
 
     @Bind(R.id.dishes_tab)
@@ -69,10 +69,6 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
     private int mIndex = 0;
 
     private List<ClassifyItemBean> classifyList;
-//    /**
-//     * 点餐类型
-//     */
-//    private int orderType = 0;
     /**
      * 装菜品容器，如果有数据，直接刷新，如果没有重新请求数据
      */
@@ -178,6 +174,11 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
         EventBus.getDefault().unregister(this);
     }
 
+    /**
+     * 一级分类被点击
+     * @param view
+     * @param position
+     */
     @Override
     public void onItemClick(View view, int position) {
         defaultItem = position;

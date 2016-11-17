@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import cn.sczhckg.order.R;
 
 /**
- * @describe: 自定义圆形的ImageView
+ * @describe: 自定义圆形,圆角的ImageView
  * @author: Like on 2016/11/7.
  * @Email: 572919350@qq.com
  */

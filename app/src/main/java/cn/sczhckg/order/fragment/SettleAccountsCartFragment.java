@@ -29,6 +29,7 @@ import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.bean.PayTypeBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesItemBean;
+import cn.sczhckg.order.data.event.LoginEvent;
 import cn.sczhckg.order.data.event.SettleAountsCartEvent;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.listener.OnGiftListenner;
@@ -73,7 +74,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
 
     private PayTypeBean payTypeBean;
 
-    private List<SettleAccountsDishesBean> dishesBeen=new ArrayList<>();
+    private List<SettleAccountsDishesBean> dishesBeen = new ArrayList<>();
 
     /**
      * 打赏金额
@@ -135,7 +136,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         if (event.getType() == SettleAountsCartEvent.LOADING) {
             i = 0;
             cartGift.setSelected(false);
-            dishesBeen=event.getBean().getSettleAccountsDishesBeen();
+            dishesBeen = event.getBean().getSettleAccountsDishesBeen();
             favorableList = event.getBean().getFavorableType();
             payList = event.getBean().getPayTypeBeen();
             favorableAdapter.notifyDataSetChanged(favorableList);
@@ -148,26 +149,26 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
     /**
      * 计算总价
      */
-    private void countTotalPrice(){
-        int total=0;
-        for (SettleAccountsDishesBean bean:dishesBeen) {
-            total=total+bean.getTotalPrice();
+    private void countTotalPrice() {
+        int total = 0;
+        for (SettleAccountsDishesBean bean : dishesBeen) {
+            total = total + bean.getTotalPrice();
         }
-        shoppingcartTotalPrice.setText("¥  "+(total+giftMoney));
+        shoppingcartTotalPrice.setText("¥  " + (total + giftMoney));
     }
 
     /**
      * 计算总优惠价
      */
-    private void countTotalFavorable(){
-        int total=0;
-        for (SettleAccountsDishesBean bean:dishesBeen) {
-            List<SettleAccountsDishesItemBean> list=bean.getItemDishes();
-            for (SettleAccountsDishesItemBean item:list) {
-                total=total+(item.getPrice()-item.getPriceTypeBean().getPrice())*item.getNumber();
+    private void countTotalFavorable() {
+        int total = 0;
+        for (SettleAccountsDishesBean bean : dishesBeen) {
+            List<SettleAccountsDishesItemBean> list = bean.getItemDishes();
+            for (SettleAccountsDishesItemBean item : list) {
+                total = total + (item.getPrice() - item.getPriceTypeBean().getPrice()) * item.getNumber();
             }
         }
-        favorablePrice.setText("¥  "+total);
+        favorablePrice.setText("¥  " + total);
     }
 
     @Override
@@ -217,4 +218,13 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
     public int getGiftMoney() {
         return giftMoney;
     }
+
+    /**
+     * 登陆成功，通知价格刷新
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginEvent(LoginEvent event) {
+
+    }
+
 }

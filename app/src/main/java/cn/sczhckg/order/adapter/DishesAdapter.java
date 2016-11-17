@@ -1,6 +1,7 @@
 package cn.sczhckg.order.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -23,6 +21,7 @@ import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.RefreshCartEvent;
+import cn.sczhckg.order.image.GlideLoading;
 
 /**
  * @describe: 菜品适配
@@ -60,7 +59,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
     @Override
     public void onBindViewHolder(final DishesHolder holder, int position) {
         final DishesBean bean = mList.get(position);
-        Picasso.with(mContext).load(bean.getUrl()).into(holder.dishesImage);
+        GlideLoading.loadingDishes(mContext, bean.getUrl(), holder.dishesImage);
         holder.dishesName.setText(bean.getName());
         holder.dishesPrice.setText("¥  " + bean.getPrice() + "");
         holder.dishesSales.setText(bean.getSales() + "");
@@ -78,40 +77,51 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         holder.dishesMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int number = bean.getNumber();
-                if (number > 0) {
-                    number--;
-                    bean.setNumber(number);
-                    holder.dishesNumber.setText(number + "");
-                    EventBus.getDefault().post(new RefreshCartEvent(bean));
+                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
+                    int number = bean.getNumber();
+                    if (number > 0) {
+                        number--;
+                        bean.setNumber(number);
+                        holder.dishesNumber.setText(number + "");
+                        EventBus.getDefault().post(new RefreshCartEvent(bean));
+                    }
                 }
             }
         });
         holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int number = bean.getNumber();
-                number++;
-                bean.setNumber(number);
-                holder.dishesNumber.setText(number + "");
-                EventBus.getDefault().post(new RefreshCartEvent(bean));
+                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
+                    int number = bean.getNumber();
+                    number++;
+                    bean.setNumber(number);
+                    holder.dishesNumber.setText(number + "");
+                    EventBus.getDefault().post(new RefreshCartEvent(bean));
+                }
             }
         });
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN,bean));
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean));
             }
         });
 
+        /**判断优惠类型,并显示*/
+        if (bean.getPriceType()!=null&&bean.getPriceType().size()!=0){
+            holder.dishesFavorableRecyclerView.setVisibility(View.VISIBLE);
+            DetailsAdapter adapter=new DetailsAdapter(mContext,bean.getPriceType());
+            holder.dishesFavorableRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
+            holder.dishesFavorableRecyclerView.setAdapter(adapter);
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        if (mList==null){
+        if (mList == null) {
             return 0;
-        }else {
+        } else {
             return mList.size();
         }
     }

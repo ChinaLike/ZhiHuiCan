@@ -3,11 +3,14 @@ package cn.sczhckg.order.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,13 +23,14 @@ import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.UserLoginBean;
+import cn.sczhckg.order.data.event.LoginEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * @ Describe:首页欢迎界面和VIP登录
+ * @ Describe:用户登录界面
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
@@ -63,12 +67,15 @@ public class LoginActivity extends Activity implements Callback<UserLoginBean> {
             case R.id.login:
                 break;
             case R.id.vip_card_close:
+                /**清空卡号*/
                 inputCard.setText("");
                 break;
             case R.id.vip_password_close:
+                /**清空密码*/
                 inputPassword.setText("");
                 break;
             case R.id.confir:
+                /**验证*/
                 login(inputCard.getText().toString(), inputPassword.getText().toString());
                 break;
         }
@@ -87,21 +94,27 @@ public class LoginActivity extends Activity implements Callback<UserLoginBean> {
             return;
         }
         /**进行数据校验*/
-        Map<String, String> vipMap = new HashMap<>();
-        vipMap.put(Constant.USERNAME, userName);
-        vipMap.put(Constant.PASSWORD, password);
-        Call<UserLoginBean> vipCallBack = RetrofitRequest.service(Config.HOST).vipLogin(vipMap);
+        Call<UserLoginBean> vipCallBack = RetrofitRequest.service(Config.HOST).vipLogin(userName, password);
         vipCallBack.enqueue(this);
 
     }
 
     /**
-     * 进入主界面
+     * 根据标识类型判断登录方式，如果是后期进行登录应关闭
+     * @param bean
      */
     private void into(UserLoginBean bean) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("userInfo",bean);
-        startActivity(intent);
+        intent.putExtra(Constant.USER_INFO, bean);
+        if (getIntent().getFlags() == Constant.LEAD_TO_LOGIN) {
+            startActivity(intent);
+        } else if (getIntent().getFlags() == Constant.MAIN_TO_LOGIN) {
+            setResult(Constant.LOGIN_RESULT_CODE,intent);
+        }
+        /**发布消息*/
+        EventBus.getDefault().post(new LoginEvent(LoginEvent.LOGIN_SUCCESS,bean));
+
+        finish();
     }
 
     @Override

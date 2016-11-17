@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.ClassifyItemBean;
 
 /**
- * @describe:
+ * @describe: 一级标题分类
  * @author: Like on 2016/11/10.
  * @Email: 572919350@qq.com
  */
@@ -31,6 +32,8 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
     private List<ClassifyItemBean> mList;
 
     private OnItemClickListener mOnItemClickListener;
+
+    private Map<Integer,TextView> textViewMap=new HashMap<>();
 
     public ClassifyAdapter(Context mContext, List<ClassifyItemBean> mList) {
         this.mContext = mContext;
@@ -45,8 +48,10 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
     @Override
     public void onBindViewHolder(final ClassifyViewHolder holder, final int position) {
 
-        final ClassifyItemBean bean = mList.get(position);
+
+         final ClassifyItemBean bean = mList.get(position);
         holder.classifyText.setText(bean.getName());
+
         if (bean.isSelect()) {
             holder.classifyLine.setVisibility(View.VISIBLE);
             holder.classifyText.setTextColor(mContext.getResources().getColor(R.color.text_color_m));
@@ -101,6 +106,7 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
             notifyDataSetChanged();
         }
     }
+
 
 
     public interface OnItemClickListener{

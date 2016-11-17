@@ -64,30 +64,35 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.cartAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int number=bean.getNumber();
-                number++;
-                bean.setNumber(number);
-                notifyDataSetChanged();
-                EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT,0,bean));
-                countTotal();
+                /**首先判断权限*/
+                if (bean.getPermiss()==Constant.PREMISS_AGREE) {
+                    int number = bean.getNumber();
+                    number++;
+                    bean.setNumber(number);
+                    notifyDataSetChanged();
+                    EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 0, bean));
+                    countTotal();
+                }
             }
         });
         /**减菜*/
         holder.cartMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int number=bean.getNumber();
-                if (number>0){
-                    number--;
-                    bean.setNumber(number);
-                    if (number==0){
-                        mList.remove(bean);
+                /**首先判断权限*/
+                if (bean.getPermiss()==Constant.PREMISS_AGREE) {
+                    int number = bean.getNumber();
+                    if (number > 0) {
+                        number--;
+                        bean.setNumber(number);
+                        if (number == 0) {
+                            mList.remove(bean);
+                        }
+                        notifyDataSetChanged();
+                        EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 1, bean));
+                        countTotal();
                     }
-                    notifyDataSetChanged();
-                    EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT,1,bean));
-                    countTotal();
                 }
-
             }
         });
         countTotal();
@@ -106,7 +111,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     /**
      * 计算锅底数量，菜品数量，总价
      */
-    private void countTotal(){
+    public void countTotal(){
         /**锅底数量*/
         int potNumber=0;
         /**菜品数量*/
@@ -120,7 +125,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             }else {
                 dishesNumber=dishesNumber+bean.getNumber();
             }
-           totalPrice = totalPrice+bean.getTotalPrice();
+           totalPrice = totalPrice+bean.getNumber()*bean.getPrice();
         }
         onTotalNumberListener.totalNumber(totalPrice,potNumber,dishesNumber);
     }
