@@ -10,39 +10,14 @@ import java.io.Serializable;
 
 public class UserLoginBean implements Serializable {
 
-    private int code;//返回字节码
-
-    private String msg;
-    private String id;
-    private String name;
-    private String url;
-    private int vip;
-    private String table;
-    private String vipUrl;
-
-    public String getVipUrl() {
-        return vipUrl;
-    }
-
-    public void setVipUrl(String vipUrl) {
-        this.vipUrl = vipUrl;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+    private String id;//用户ID
+    private String name;//用户名字
+    private String password;//用户密码
+    private String url;//用户头像地址
+    private int vip;//用户VIP等级
+    private String table;//如果主桌已经登录，返回主桌桌号
+    private String vipUrl;//会员身份标识地址
+    private String msg;//消息提醒
 
     public String getId() {
         return id;
@@ -58,6 +33,14 @@ public class UserLoginBean implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUrl() {
@@ -82,5 +65,35 @@ public class UserLoginBean implements Serializable {
 
     public void setTable(String table) {
         this.table = table;
+    }
+
+    public String getVipUrl() {
+        return vipUrl;
+    }
+
+    public void setVipUrl(String vipUrl) {
+        this.vipUrl = vipUrl;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", url='" + url + '\'' +
+                ", vip=" + vip +
+                ", table='" + table + '\'' +
+                ", vipUrl='" + vipUrl + '\'' +
+                ", msg='" + msg + '\'' +
+                '}';
     }
 }

@@ -81,7 +81,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:orientation="vertical">
 
             <LinearLayout
@@ -181,13 +181,13 @@
 
                 <Button
                     android:id="@+id/shoppingcart_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:background="@drawable/confir_bg"
+                    android:layout_margin="@dimen/margin_left"
+                    android:background="@drawable/button_yellow"
                     android:text="@string/openTable"
                     android:textColor="@color/button_text"
-                    android:textSize="@dimen/text_size_largr" />
+                    android:textSize="@dimen/button_size" />
             </RelativeLayout>
 
         </LinearLayout>

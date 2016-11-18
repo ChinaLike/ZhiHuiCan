@@ -12,19 +12,23 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.sczhckg.order.Config;
 import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.Constant;
+import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.event.LoginEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.RestResponse;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +38,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class LoginActivity extends Activity implements Callback<UserLoginBean> {
+public class LoginActivity extends Activity implements Callback<Bean<UserLoginBean>> {
 
     @Bind(R.id.inputCard)
     EditText inputCard;
@@ -42,7 +46,7 @@ public class LoginActivity extends Activity implements Callback<UserLoginBean> {
     EditText inputPassword;
     @Bind(R.id.back)
     ImageView back;
-    @Bind(R.id.login)
+    @Bind(R.id.login_set)
     ImageView login;
     @Bind(R.id.vip_card_close)
     ImageView vipCardClose;
@@ -58,13 +62,13 @@ public class LoginActivity extends Activity implements Callback<UserLoginBean> {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.back, R.id.login, R.id.vip_card_close, R.id.vip_password_close, R.id.confir})
+    @OnClick({R.id.back, R.id.login_set, R.id.vip_card_close, R.id.vip_password_close, R.id.confir})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
-            case R.id.login:
+            case R.id.login_set:
                 break;
             case R.id.vip_card_close:
                 /**清空卡号*/
@@ -93,8 +97,16 @@ public class LoginActivity extends Activity implements Callback<UserLoginBean> {
             Toast.makeText(this, getString(R.string.passwordHint), Toast.LENGTH_SHORT).show();
             return;
         }
+
+        UserLoginBean bean=new UserLoginBean();
+        bean.setName(userName);
+        bean.setPassword(password);
+        RestRequest<UserLoginBean> restRequest= JSONRestRequest.Builder.build(UserLoginBean.class)
+                .op(OP.LOGIN)
+                .time()
+                .bean(bean);
         /**进行数据校验*/
-        Call<UserLoginBean> vipCallBack = RetrofitRequest.service().vipLogin(userName, password);
+        Call<Bean<UserLoginBean>> vipCallBack = RetrofitRequest.service().login(restRequest.toRequestString());
         vipCallBack.enqueue(this);
 
     }
@@ -118,19 +130,21 @@ public class LoginActivity extends Activity implements Callback<UserLoginBean> {
     }
 
     @Override
-    public void onResponse(Call<UserLoginBean> call, Response<UserLoginBean> response) {
-        final UserLoginBean bean = response.body();
+    public void onResponse(Call<Bean<UserLoginBean>> call, Response<Bean<UserLoginBean>> response) {
+//        RestResponse<UserLoginBean> resp = JSONRestResponse.Parser.parse(body, UserLoginBean.class);
+//        UserLoginBean user = resp.getBean();
+        Bean<UserLoginBean> bean=response.body();
         if (bean.getCode() == 0) {
-            Toast.makeText(this, bean.getMsg(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, bean.getMessage(), Toast.LENGTH_SHORT).show();
             MyApplication.isLogin = true;
-            into(bean);
+            into(bean.getResult());
         } else {
-            Toast.makeText(this, bean.getMsg(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, bean.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onFailure(Call<UserLoginBean> call, Throwable t) {
+    public void onFailure(Call<Bean<UserLoginBean>> call, Throwable t) {
         Toast.makeText(this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 }

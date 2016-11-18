@@ -5,14 +5,14 @@
 
     <!--通用尺寸-->
     <dimen name="hint_line">1dp</dimen>
-    <dimen name="text_size_largr">25sp</dimen>
+    <dimen name="text_size_largr">22sp</dimen>
     <dimen name="text_size_mediu">20sp</dimen>
     <dimen name="text_size_mediu_s">17sp</dimen>
     <dimen name="text_size_smart">15sp</dimen>
     <dimen name="text_size_smart_s">12sp</dimen>
 
     <!--vip界面尺寸-->
-    <dimen name="vip_top">90dp</dimen>
+    <dimen name="vip_top">65dp</dimen>
     <dimen name="vip_top_padding">20dp</dimen>
     <dimen name="vip_top_image_size">50dp</dimen>
     <dimen name="text_size">28sp</dimen>
@@ -21,9 +21,17 @@
     <dimen name="cart_top">60dp</dimen>
 
     <!--桌面信息及个人信息栏    px*0.8=sp-->
-    <dimen name="table_info_height">80dp</dimen>
+    <dimen name="table_info_height">60dp</dimen>
     <dimen name="table_info_text_size">20sp</dimen>
     <dimen name="table_item_text_size">25sp</dimen>
+
+    <!--登录界面外边距，原边距为245px-->
+    <dimen name="margin_login">180dp</dimen>
+    <dimen name="margin_right">95dp</dimen>
+    <dimen name="margin_left">10dp</dimen>
+
+    <!--Button字体大小-->
+    <dimen name="button_size">22sp</dimen>
 
 
 

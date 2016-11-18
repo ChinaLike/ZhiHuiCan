@@ -126,6 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥ 0"
+                    android:lines="1"
                     android:textColor="@color/text_color_red"
                     android:textSize="@dimen/text_size_mediu" />
 
@@ -197,13 +198,13 @@
 
             <Button
                 android:id="@+id/shoppingcart_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:background="@drawable/confir_bg"
+                android:layout_margin="@dimen/margin_left"
+                android:background="@drawable/button_yellow"
                 android:text="@string/settle_accounts"
                 android:textColor="@color/button_text"
-                android:textSize="@dimen/text_size_largr" />
+                android:textSize="@dimen/button_size" />
         </RelativeLayout>
 
     </LinearLayout>

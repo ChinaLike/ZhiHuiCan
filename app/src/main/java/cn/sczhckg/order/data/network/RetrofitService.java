@@ -3,6 +3,7 @@ package cn.sczhckg.order.data.network;
 import java.util.List;
 import java.util.Map;
 
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.ClassifyBean;
 import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.DetailsBean;
@@ -31,8 +32,8 @@ public interface RetrofitService {
 
     /**会员登录*/
     @FormUrlEncoded
-    @POST("android/test/login")
-    Call<UserLoginBean> vipLogin(@Field("username") String username, @Field("password") String password);
+    @POST("rest/user/login")
+    Call<Bean<UserLoginBean>> login(@Field("parames") String parames);
     /**主页锅底选择*/
     @FormUrlEncoded
     @POST("android/test/openReady")

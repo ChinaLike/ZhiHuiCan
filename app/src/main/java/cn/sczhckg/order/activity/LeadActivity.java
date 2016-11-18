@@ -34,7 +34,7 @@ public class LeadActivity extends Activity {
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
 
-        Log.d("单位转换：","px2dip="+ ConvertUtils.px2dip(this,100));
+        Log.d("单位转换：","px2dip="+ ConvertUtils.px2dip(this,245));
         Log.d("单位转换：","dip2px="+ ConvertUtils.dip2px(this,100));
         Log.d("单位转换：","sp2px="+ ConvertUtils.sp2px(this,100));
         Log.d("单位转换：","px2sp="+ ConvertUtils.px2sp(this,100));

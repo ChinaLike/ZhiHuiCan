@@ -26,19 +26,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
         android:layout_weight="1">
 
         <Button
             android:id="@+id/service_request"
-            android:layout_width="480dp"
-            android:textSize="@dimen/text_size_largr"
-            android:textColor="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/service_btn_cancel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/margin_right"
+            android:layout_marginRight="@dimen/margin_right"
+            android:background="@drawable/button_full_red_service"
             android:text="呼叫"
-            android:layout_centerHorizontal="true" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/button_size" />
     </RelativeLayout>
 
 
