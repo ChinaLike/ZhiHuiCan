@@ -166,12 +166,12 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.openTable))) {
             /**开桌*/
             buttonType = 0;
-            Call<CommonBean> openTable = RetrofitRequest.service(Config.HOST).openTable(MainActivity.table, Constant.OPEN_TABLE, mList.toString(), MainActivity.person);
+            Call<CommonBean> openTable = RetrofitRequest.service().openTable(MainActivity.table, Constant.OPEN_TABLE, mList.toString(), MainActivity.person);
             openTable.enqueue(this);
         } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
             /**选好了*/
             buttonType = 1;
-            Call<CommonBean> chooseGood = RetrofitRequest.service(Config.HOST).chooseGood(MainActivity.table, orderType, Constant.ORDER, mList.toString());
+            Call<CommonBean> chooseGood = RetrofitRequest.service().chooseGood(MainActivity.table, orderType, Constant.ORDER, mList.toString());
             chooseGood.enqueue(this);
         }
 

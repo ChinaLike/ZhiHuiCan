@@ -94,7 +94,7 @@ public class LoginActivity extends Activity implements Callback<UserLoginBean> {
             return;
         }
         /**进行数据校验*/
-        Call<UserLoginBean> vipCallBack = RetrofitRequest.service(Config.HOST).vipLogin(userName, password);
+        Call<UserLoginBean> vipCallBack = RetrofitRequest.service().vipLogin(userName, password);
         vipCallBack.enqueue(this);
 
     }

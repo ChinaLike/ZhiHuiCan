@@ -126,7 +126,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
      */
     public void loadingClassify(int type) {
         this.orderType = type;
-        Call<ClassifyBean> classify = RetrofitRequest.service(Config.HOST).classify(MainActivity.table, type);
+        Call<ClassifyBean> classify = RetrofitRequest.service().classify(MainActivity.table, type);
         classify.enqueue(this);
     }
 
@@ -209,7 +209,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
      * @param id
      */
     private void loadingDishes(String url, int id) {
-        Call<List<DishesBean>> dishesBeanCall = RetrofitRequest.service(Config.HOST).dishes(id, MainActivity.table, orderType);
+        Call<List<DishesBean>> dishesBeanCall = RetrofitRequest.service().dishes(id, MainActivity.table, orderType);
         dishesBeanCall.enqueue(new Callback<List<DishesBean>>() {
             @Override
             public void onResponse(Call<List<DishesBean>> call, Response<List<DishesBean>> response) {

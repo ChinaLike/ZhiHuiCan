@@ -91,7 +91,7 @@ public class ServiceFragment extends BaseFragment implements Callback<CommonBean
     }
 
     private void postService(int type) {
-        Call<CommonBean> call = RetrofitRequest.service(Config.HOST).service(MainActivity.table, type);
+        Call<CommonBean> call = RetrofitRequest.service().service(MainActivity.table, type);
         call.enqueue(this);
     }
 

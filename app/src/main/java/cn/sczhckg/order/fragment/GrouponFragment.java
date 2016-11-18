@@ -129,7 +129,7 @@ public class GrouponFragment extends BaseFragment implements Callback<GrouponBea
     }
 
     private void postData(String group){
-        Call<GrouponBean> grouponCall= RetrofitRequest.service(Config.HOST).verifyGroup(MainActivity.table,group);
+        Call<GrouponBean> grouponCall= RetrofitRequest.service().verifyGroup(MainActivity.table,group);
         grouponCall.enqueue(this);
     }
 

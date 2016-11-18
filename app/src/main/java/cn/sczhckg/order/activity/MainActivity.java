@@ -189,7 +189,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     @Override
     protected void initNetData() {
         deviceId = AppSystemUntil.getAndroidID(this);
-        Call<MainPagerShow> mainShow = RetrofitRequest.service(Config.HOST).potDataShow(userId, deviceId);
+        Call<MainPagerShow> mainShow = RetrofitRequest.service().potDataShow(userId, deviceId);
         mainShow.enqueue(this);
     }
 
