@@ -11,6 +11,7 @@
         android:textColor="@color/text_color_person"
         android:lines="1"
         android:ellipsize="end"
+        style="?android:attr/borderlessButtonStyle"
         android:background="@drawable/button_slide_yellow"
         android:layout_height="wrap_content" />
 

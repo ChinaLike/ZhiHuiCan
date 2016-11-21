@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ public class PotTypeFagment extends BaseFragment {
     RecyclerView dishesChoose;
     @Bind(R.id.pot_parent)
     RelativeLayout potParent;
-    @Bind(R.id.dishes_parent)
+    @Bind(R.id.order_dishes_parent)
     RelativeLayout dishesParent;
 
     /**
@@ -83,6 +84,7 @@ public class PotTypeFagment extends BaseFragment {
 
     @Override
     public void init() {
+        Log.d("=========","222222222222222");
         potParent.setClickable(false);
         dishesParent.setClickable(false);
         initDishesAdapter(dishesChoose);
@@ -90,6 +92,7 @@ public class PotTypeFagment extends BaseFragment {
 
     @Override
     public void setData(Object object) {
+        Log.d("=========","1111111111111111111");
         potParent.setClickable(true);
         dishesParent.setClickable(true);
         MainPagerShow bean = (MainPagerShow) object;
@@ -160,7 +163,7 @@ public class PotTypeFagment extends BaseFragment {
         upData(event.getBean());
     }
 
-    @OnClick({R.id.pot_parent, R.id.dishes_parent})
+    @OnClick({R.id.pot_parent, R.id.order_dishes_parent})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.pot_parent:
@@ -168,7 +171,7 @@ public class PotTypeFagment extends BaseFragment {
                 dishesLine.setVisibility(View.GONE);
                 mDishesAdapter.notifyDataSetChanged(parentDishesList);
                 break;
-            case R.id.dishes_parent:
+            case R.id.order_dishes_parent:
                 potLine.setVisibility(View.GONE);
                 dishesLine.setVisibility(View.VISIBLE);
                 mDishesAdapter.notifyDataSetChanged(dishesList);

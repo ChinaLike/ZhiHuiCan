@@ -32,6 +32,7 @@ import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
+import cn.sczhckg.order.data.event.MoreDishesHintEvent;
 import cn.sczhckg.order.data.event.RefreshCartEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
@@ -182,6 +183,8 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         shoppingcartTotalPrice.setText("¥  " + totalPrice);
         shoppingcartPartNumber.setText(potNumber + "");
         shoppingcartDishesNumber.setText(dishesNumber + "");
+        /**发送消息，点菜界面收到后判断数量与提示数量是否相符合*/
+        EventBus.getDefault().post(new MoreDishesHintEvent(dishesNumber));
     }
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {

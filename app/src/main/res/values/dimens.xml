@@ -7,6 +7,7 @@
     <dimen name="hint_line">1dp</dimen>
     <dimen name="text_size_largr">22sp</dimen>
     <dimen name="text_size_mediu">20sp</dimen>
+    <dimen name="text_size_s_m">18sp</dimen>
     <dimen name="text_size_mediu_s">17sp</dimen>
     <dimen name="text_size_smart">15sp</dimen>
     <dimen name="text_size_smart_s">12sp</dimen>
@@ -32,6 +33,8 @@
 
     <!--Button字体大小-->
     <dimen name="button_size">22sp</dimen>
+
+
 
 
 

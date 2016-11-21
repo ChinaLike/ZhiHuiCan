@@ -18,7 +18,7 @@
             android:gravity="center"
             android:text="就餐人数"
             android:textColor="@color/black"
-            android:textSize="@dimen/table_info_text_size" />
+            android:textSize="@dimen/text_size_mediu_s" />
 
         <View
             android:layout_width="@dimen/hint_line"
@@ -37,7 +37,7 @@
                 android:gravity="center"
                 android:text="@string/potMustChoose"
                 android:textColor="@color/black"
-                android:textSize="@dimen/table_info_text_size" />
+                android:textSize="@dimen/text_size_mediu_s" />
 
             <View
                 android:id="@+id/pot_line"
@@ -48,7 +48,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/dishes_parent"
+            android:id="@+id/order_dishes_parent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.6">
@@ -59,7 +59,7 @@
                 android:gravity="center"
                 android:text="@string/recommendingDishes"
                 android:textColor="@color/black"
-                android:textSize="@dimen/table_info_text_size" />
+                android:textSize="@dimen/text_size_mediu_s" />
 
             <View
                 android:id="@+id/dishes_line"
@@ -72,6 +72,11 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hint_line"
+        android:background="@color/hint_color"/>
 
     <LinearLayout
         android:layout_width="match_parent"

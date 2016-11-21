@@ -1,45 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_weight="1.5"
-        android:src="@drawable/serviec_icon_calling" />
-
-    <TextView
-        android:id="@+id/service_text"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true"
-        android:layout_weight="0.5"
-        android:text="服务员呼叫中..."
-        android:textColor="@color/text_color_m"
-        android:textSize="@dimen/text_size_mediu" />
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/call_parent"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-        <Button
-            android:id="@+id/service_request"
+
+        <RelativeLayout
+            android:id="@+id/calling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/margin_right"
             android:layout_marginRight="@dimen/margin_right"
-            android:background="@drawable/button_full_red_service"
-            android:text="呼叫"
-            android:textColor="@color/white"
-            android:textSize="@dimen/button_size" />
+            android:background="@drawable/button_green">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/serviec_btn_call" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/calling"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:text="点击呼叫"
+            android:textSize="@dimen/text_size_largr" />
+
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/cancel_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1.5"
+            android:src="@drawable/serviec_icon_calling" />
+
+        <TextView
+            android:id="@+id/service_text"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:layout_weight="0.5"
+            android:text="服务员呼叫中..."
+            android:textColor="@color/text_color_m"
+            android:textSize="@dimen/text_size_largr" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <RelativeLayout
+                android:id="@+id/cancel_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_right"
+                android:layout_marginRight="@dimen/margin_right"
+                android:background="@drawable/button_full_red_service">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/serviec_btn_call" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

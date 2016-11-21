@@ -123,6 +123,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_full_yellow_login"
             android:text="确认"
+            style="?android:attr/borderlessButtonStyle"
             android:textColor="@color/button_text"
             android:textSize="22sp" />
     </RelativeLayout>

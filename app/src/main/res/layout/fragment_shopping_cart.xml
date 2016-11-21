@@ -32,6 +32,7 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="@string/dishes"
+                android:textSize="@dimen/text_size_mediu_s"
                 android:textColor="@color/text_color_m" />
 
             <TextView
@@ -40,6 +41,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/numbers"
+                android:textSize="@dimen/text_size_mediu_s"
                 android:textColor="@color/text_color_m" />
 
             <TextView
@@ -48,6 +50,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/price"
+                android:textSize="@dimen/text_size_mediu_s"
                 android:textColor="@color/text_color_m" />
 
             <TextView
@@ -56,6 +59,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/totalPrice"
+                android:textSize="@dimen/text_size_mediu_s"
                 android:textColor="@color/text_color_m" />
 
         </LinearLayout>
@@ -81,7 +85,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:orientation="vertical">
 
             <LinearLayout
@@ -103,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:text="合计："
                         android:textColor="@color/text_color_m"
-                        android:textSize="@dimen/text_size_mediu" />
+                        android:textSize="@dimen/text_size_mediu_s" />
 
                     <TextView
                         android:id="@+id/shoppingcart_total_price"
@@ -111,7 +115,7 @@
                         android:layout_height="wrap_content"
                         android:text="¥ 0"
                         android:textColor="@color/text_color_red"
-                        android:textSize="@dimen/text_size_mediu" />
+                        android:textSize="@dimen/text_size_mediu_s" />
 
                 </LinearLayout>
 
@@ -184,6 +188,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_left"
+                    style="?android:attr/borderlessButtonStyle"
                     android:background="@drawable/button_yellow"
                     android:text="@string/openTable"
                     android:textColor="@color/button_text"

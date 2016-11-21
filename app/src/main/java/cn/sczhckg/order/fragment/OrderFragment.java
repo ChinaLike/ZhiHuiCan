@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +24,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ClassifyAdapter;
@@ -31,8 +33,11 @@ import cn.sczhckg.order.data.bean.ClassifyItemBean;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.TabBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
+import cn.sczhckg.order.data.event.MoreDishesHintEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import cn.sczhckg.order.until.AppSystemUntil;
+import cn.sczhckg.order.until.ConvertUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,7 +48,10 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class OrderFragment extends BaseFragment implements Callback<ClassifyBean> , ClassifyAdapter.OnItemClickListener {
+public class OrderFragment extends BaseFragment implements Callback<ClassifyBean>, ClassifyAdapter.OnItemClickListener {
+
+
+    private final String TAG = getClass().getSimpleName();
 
 
     @Bind(R.id.dishes_tab)
@@ -86,6 +94,35 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
 
     public static int tabOrderType = 0;
 
+    /**
+     * 菜品过多温馨提示界线
+     */
+    private int warmPromptNumber = 15;
+
+    /**
+     * 是否显示提示
+     */
+    private boolean isHint = true;
+
+    private PopupWindow mPopupWindow = null;
+    /**
+     * Pop视图
+     */
+    private View popView;
+    /**
+     * Pop的宽高
+     */
+    private static final float POP_WIDTH = 400;
+    private static final float POP_HEIGHT = 230;
+    /**
+     * pop的X轴坐标
+     */
+    private float X = 0;
+    /**
+     * pop的Y轴坐标
+     */
+    private float Y = 0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +141,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initRect();
         init();
     }
 
@@ -112,11 +150,23 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
 
     }
 
+    /**
+     * 初始化Pop的位置
+     */
+    private void initRect() {
+        int screenHeight = AppSystemUntil.height(getContext());
+        int screenWidth = AppSystemUntil.width(getContext());
+        Y = (screenHeight-ConvertUtils.dip2px(getContext(),POP_HEIGHT)) / 2;
+        X = screenWidth*18/26-ConvertUtils.dip2px(getContext(),POP_WIDTH)/2;
+    }
+
     @Override
     public void init() {
         parentDishesList = null;
         initDishesAdapter(dishesShow);
         initTabAdapter();
+        /**初始化PopWindow*/
+        initPop();
     }
 
     /**
@@ -143,7 +193,8 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
             initDishesRequest(itemBeen.get(defaultItem));
             /**初始化头部导航栏数据*/
             initTab(bean.getTabList());
-
+            /**菜品过多提示数量*/
+            warmPromptNumber = bean.getOrderMoreHint();
         }
     }
 
@@ -176,6 +227,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
 
     /**
      * 一级分类被点击
+     *
      * @param view
      * @param position
      */
@@ -304,5 +356,65 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
         dishesTab.setLayoutManager(mLayoutManager);
         dishesTab.setAdapter(mTabAdapter);
     }
+
+    /**
+     * 菜品数量比较，如果过多，显示提示框
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void moreDishesHintEventBus(MoreDishesHintEvent event) {
+        int number = event.getNumber();
+        if (isHint) {
+            if (number > warmPromptNumber) {
+                mPopupWindow.showAtLocation(popView, Gravity.NO_GRAVITY, (int)X, (int)Y);
+                backgroundAlpha(0.6f);
+            }
+        }
+    }
+
+    /**
+     * 初始化PopWindow
+     */
+    private void initPop() {
+        popView = LayoutInflater.from(getContext()).inflate(R.layout.pop_more_dishes, null);
+        mPopupWindow = new PopupWindow(popView, ConvertUtils.dip2px(getContext(), POP_WIDTH), ConvertUtils.dip2px(getContext(), POP_HEIGHT), true);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        popView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+                isHint = false;
+            }
+        });
+        popView.findViewById(R.id.ikonw).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
+
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+            }
+        });
+
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha)
+    {
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getActivity().getWindow().setAttributes(lp);
+    }
+
 
 }

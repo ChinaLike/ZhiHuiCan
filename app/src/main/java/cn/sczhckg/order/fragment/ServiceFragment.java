@@ -5,13 +5,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.data.bean.CommonBean;
@@ -28,10 +28,6 @@ import retrofit2.Response;
 
 public class ServiceFragment extends BaseFragment implements Callback<CommonBean> {
 
-    @Bind(R.id.service_request)
-    Button serviceRequest;
-
-    private int selectFlag = 0;
 
     /**
      * 呼叫
@@ -41,6 +37,10 @@ public class ServiceFragment extends BaseFragment implements Callback<CommonBean
      * 取消呼叫
      */
     private final static int CANCEL = 1;
+    @Bind(R.id.call_parent)
+    RelativeLayout callParent;
+    @Bind(R.id.cancel_parent)
+    LinearLayout cancelParent;
 
 
     @Override
@@ -59,6 +59,7 @@ public class ServiceFragment extends BaseFragment implements Callback<CommonBean
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        init();
     }
 
     @Override
@@ -68,26 +69,14 @@ public class ServiceFragment extends BaseFragment implements Callback<CommonBean
 
     @Override
     public void init() {
-
+        callParent.setVisibility(View.VISIBLE);
+        cancelParent.setVisibility(View.GONE);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        selectFlag = 0;
-    }
-
-    @OnClick(R.id.service_request)
-    public void onClick() {
-        selectFlag++;
-        if (selectFlag % 2 == 0) {
-            serviceRequest.setText("呼叫");
-            postService(CALL);
-        } else {
-            serviceRequest.setText("取消呼叫");
-            postService(CANCEL);
-        }
     }
 
     private void postService(int type) {
@@ -99,12 +88,28 @@ public class ServiceFragment extends BaseFragment implements Callback<CommonBean
     public void onResponse(Call<CommonBean> call, Response<CommonBean> response) {
         CommonBean bean = response.body();
         if (bean.getStatus() == 0) {
-            Toast.makeText(getContext(),bean.getMsg(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), bean.getMsg(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onFailure(Call<CommonBean> call, Throwable t) {
 
+    }
+
+    @OnClick({R.id.calling, R.id.cancel_call})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.calling:
+                postService(CALL);
+                callParent.setVisibility(View.GONE);
+                cancelParent.setVisibility(View.VISIBLE);
+                break;
+            case R.id.cancel_call:
+                postService(CANCEL);
+                callParent.setVisibility(View.VISIBLE);
+                cancelParent.setVisibility(View.GONE);
+                break;
+        }
     }
 }

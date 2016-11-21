@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/button_full_yellow_login"
+        style="?android:attr/borderlessButtonStyle"
         android:text="取消评价" />
 
     <LinearLayout
