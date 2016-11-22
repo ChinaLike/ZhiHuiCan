@@ -128,6 +128,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
         super.onCreate(savedInstanceState);
         /**注册事件监听*/
         EventBus.getDefault().register(this);
+
     }
 
     @Nullable
@@ -148,6 +149,11 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
     @Override
     public void setData(Object object) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     /**
@@ -382,14 +388,14 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
         mPopupWindow.setFocusable(true);
         mPopupWindow.setTouchable(true);
         mPopupWindow.setOutsideTouchable(true);
-        popView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        popView.findViewById(R.id.pop_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPopupWindow.dismiss();
                 isHint = false;
             }
         });
-        popView.findViewById(R.id.ikonw).setOnClickListener(new View.OnClickListener() {
+        popView.findViewById(R.id.pop_ikonw).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPopupWindow.dismiss();

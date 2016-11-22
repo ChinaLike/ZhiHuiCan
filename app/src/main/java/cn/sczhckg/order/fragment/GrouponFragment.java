@@ -63,6 +63,7 @@ public class GrouponFragment extends BaseFragment implements Callback<GrouponBea
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initLoadingPop();
     }
 
     @Nullable
@@ -119,7 +120,6 @@ public class GrouponFragment extends BaseFragment implements Callback<GrouponBea
                 break;
             case R.id.groupon_finish:
                 if (!(groupInput.getText().toString().equals(""))) {
-                    Toast.makeText(getContext(),"团购券验证中...",Toast.LENGTH_SHORT).show();
                     postData(groupInput.getText().toString());
                  }else {
                     Toast.makeText(getContext(),"输入团购券不能为空",Toast.LENGTH_SHORT).show();
@@ -131,6 +131,7 @@ public class GrouponFragment extends BaseFragment implements Callback<GrouponBea
     private void postData(String group){
         Call<GrouponBean> grouponCall= RetrofitRequest.service().verifyGroup(MainActivity.table,group);
         grouponCall.enqueue(this);
+        showProgress("团购券验证中...");
     }
 
     @Override
@@ -140,14 +141,25 @@ public class GrouponFragment extends BaseFragment implements Callback<GrouponBea
             updata(groupInput.getText().toString());
             itemGrouponParent.setVisibility(View.GONE);
             groupInput.setText("");
+            dismissProgress();
         }else {
-            Toast.makeText(getContext(), bean.getMsg()+"", Toast.LENGTH_SHORT).show();
+            loadingFail(bean.getMsg() + "", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    postData(groupInput.getText().toString());
+                }
+            });
         }
     }
 
     @Override
     public void onFailure(Call<GrouponBean> call, Throwable t) {
-        Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+        loadingFail(getString(R.string.overTime), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postData(groupInput.getText().toString());
+            }
+        });
     }
 
     /**

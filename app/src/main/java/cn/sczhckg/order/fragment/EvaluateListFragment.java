@@ -35,7 +35,7 @@ public class EvaluateListFragment extends BaseFragment {
 
     @Bind(R.id.title)
     TextView title;
-    @Bind(R.id.recyclerview)
+    @Bind(R.id.list_recyclerview)
     RecyclerView recyclerview;
     private EvaluateListAdapter adapter;
 
@@ -94,10 +94,10 @@ public class EvaluateListFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.cancel, R.id.title})
+    @OnClick({R.id.list_cancel, R.id.title})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.cancel:
+            case R.id.list_cancel:
                 getActivity().finish();
                 break;
             case R.id.title:

@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,7 +26,13 @@ import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.PersonBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
+import cn.sczhckg.order.data.listener.OnTableListenner;
+import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import cn.sczhckg.order.until.AppSystemUntil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @describe: 锅底选择和推荐菜品
@@ -34,7 +40,7 @@ import cn.sczhckg.order.overwrite.DashlineItemDivider;
  * @Email: 572919350@qq.com
  */
 
-public class PotTypeFagment extends BaseFragment {
+public class PotTypeFagment extends BaseFragment implements Callback<MainPagerShow> {
 
 
     @Bind(R.id.pot_line)
@@ -45,9 +51,9 @@ public class PotTypeFagment extends BaseFragment {
     RecyclerView personChoose;
     @Bind(R.id.dishes_choose)
     RecyclerView dishesChoose;
-    @Bind(R.id.pot_parent)
+    @Bind(R.id.rl_pot_parent)
     RelativeLayout potParent;
-    @Bind(R.id.order_dishes_parent)
+    @Bind(R.id.rl_order_dishes_parent)
     RelativeLayout dishesParent;
 
     /**
@@ -61,11 +67,19 @@ public class PotTypeFagment extends BaseFragment {
 
     private List<DishesBean> dishesList;
 
+    private OnTableListenner mOnTableListenner;
+
+    /**
+     * 用户ID
+     */
+    private String userId = "";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /**注册事件监听*/
         EventBus.getDefault().register(this);
+        initLoadingPop();
     }
 
     @Nullable
@@ -80,22 +94,48 @@ public class PotTypeFagment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
-    }
+     }
 
     @Override
     public void init() {
-        Log.d("=========","222222222222222");
         potParent.setClickable(false);
         dishesParent.setClickable(false);
         initDishesAdapter(dishesChoose);
     }
 
+    /**
+     * 获取网络数据
+     */
+    private void initNet() {
+        deviceId = AppSystemUntil.getAndroidID(getContext());
+        Call<MainPagerShow> mainShow = RetrofitRequest.service().potDataShow(userId, deviceId);
+        mainShow.enqueue(this);
+        showProgress();
+    }
+
     @Override
     public void setData(Object object) {
-        Log.d("=========","1111111111111111111");
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initNet();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    /**
+     * 初始化界面
+     */
+    private void initView(MainPagerShow bean) {
         potParent.setClickable(true);
         dishesParent.setClickable(true);
-        MainPagerShow bean = (MainPagerShow) object;
+
         DEFAULT_PERSON = bean.getPerson().size();
         /**========初始化人数========*/
         personChoose.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -107,7 +147,9 @@ public class PotTypeFagment extends BaseFragment {
         dishesList = bean.getDishesList();
         parentDishesList = bean.getPotList();
         mDishesAdapter.notifyDataSetChanged(parentDishesList);
+        dismissProgress();
     }
+
 
     /**
      * 购物车数据变化后选择栏的数据同步刷新
@@ -163,19 +205,48 @@ public class PotTypeFagment extends BaseFragment {
         upData(event.getBean());
     }
 
-    @OnClick({R.id.pot_parent, R.id.order_dishes_parent})
+    @OnClick({R.id.rl_pot_parent, R.id.rl_order_dishes_parent})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.pot_parent:
+            case R.id.rl_pot_parent:
                 potLine.setVisibility(View.VISIBLE);
                 dishesLine.setVisibility(View.GONE);
                 mDishesAdapter.notifyDataSetChanged(parentDishesList);
                 break;
-            case R.id.order_dishes_parent:
+            case R.id.rl_order_dishes_parent:
                 potLine.setVisibility(View.GONE);
                 dishesLine.setVisibility(View.VISIBLE);
                 mDishesAdapter.notifyDataSetChanged(dishesList);
                 break;
         }
+    }
+
+    public void setOnTableListenner(OnTableListenner mOnTableListenner) {
+        this.mOnTableListenner = mOnTableListenner;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public void onResponse(Call<MainPagerShow> call, Response<MainPagerShow> response) {
+        MainPagerShow bean = response.body();
+        /**获取数据成功*/
+        if (bean.getStatus() == 0 && bean != null) {
+            initView(bean);
+            mOnTableListenner.table(bean.getTableNumber(),bean.getWaitress());
+        }
+    }
+
+    @Override
+    public void onFailure(Call<MainPagerShow> call, Throwable t) {
+        Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+        loadingFail("加载失败", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initNet();
+            }
+        });
     }
 }

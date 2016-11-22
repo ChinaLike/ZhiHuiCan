@@ -34,8 +34,8 @@
     <!--Button字体大小-->
     <dimen name="button_size">22sp</dimen>
 
-
-
+    <!--进度提示框-->
+    <dimen name="loading_progress">100dp</dimen>
 
 
 </resources>

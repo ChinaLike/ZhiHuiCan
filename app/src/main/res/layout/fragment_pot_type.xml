@@ -26,7 +26,7 @@
             android:background="@color/FFE8ECED" />
 
         <RelativeLayout
-            android:id="@+id/pot_parent"
+            android:id="@+id/rl_pot_parent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.6">
@@ -48,7 +48,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/order_dishes_parent"
+            android:id="@+id/rl_order_dishes_parent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.6">

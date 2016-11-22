@@ -32,7 +32,7 @@
     <color name="line_yellow">#f4d452</color>
 
     <!--系统主要背景颜色-->
-    <color name="main">#545B61</color>
+    <color name="main">#ECECEC</color>
     <!---->
     <color name="cart_top">#F5F5F5</color>
     <!---->
