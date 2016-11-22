@@ -13,6 +13,8 @@ public class SettleAccountsBean implements Serializable {
 
     private String table;
 
+    private List<VipFavorableBean> vipFavorable;
+
     private List<FavorableTypeBean> favorableType;
 
     private List<PayTypeBean> payTypeBeen;
@@ -51,10 +53,19 @@ public class SettleAccountsBean implements Serializable {
         this.settleAccountsDishesBeen = settleAccountsDishesBeen;
     }
 
+    public List<VipFavorableBean> getVipFavorable() {
+        return vipFavorable;
+    }
+
+    public void setVipFavorable(List<VipFavorableBean> vipFavorable) {
+        this.vipFavorable = vipFavorable;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "table='" + table + '\'' +
+                ", vipFavorable=" + vipFavorable +
                 ", favorableType=" + favorableType +
                 ", payTypeBeen=" + payTypeBeen +
                 ", settleAccountsDishesBeen=" + settleAccountsDishesBeen +

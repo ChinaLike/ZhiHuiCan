@@ -8,6 +8,8 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +49,7 @@
                     android:lines="1"
                     android:ellipsize="end"
                     android:textColor="@color/text_color_dishes_name"
-                    android:textSize="@dimen/text_size_mediu" />
+                    android:textSize="@dimen/text_size_mediu_s" />
 
                 <TextView
                     android:id="@+id/dishes_price"
@@ -57,7 +59,7 @@
                     android:layout_marginLeft="20dp"
                     android:text="¥  38"
                     android:textColor="@color/text_color_red"
-                    android:textSize="@dimen/text_size_mediu" />
+                    android:textSize="@dimen/text_size_mediu_s" />
 
             </LinearLayout>
 

@@ -54,4 +54,7 @@
     <string name="cash_title">现金支付请到前台完成支付</string>
     <string name="bank_card_title">请到前台完成刷卡支付</string>
 
+    <!--温馨提示-->
+    <string name="warm_prompt">尊敬的顾客您好！\n您点的菜品过多，可根据情况适当点餐，避免食物浪费。</string>
+
 </resources>

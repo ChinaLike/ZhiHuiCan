@@ -126,7 +126,7 @@ public class EvaluateFragment extends BaseFragment {
      */
     private void getEvaluate(String id) {
         Log.d("====","=====");
-        Call<EvaluateBean> getEvaluateCall = RetrofitRequest.service(Config.HOST).getEvaluate(id);
+        Call<EvaluateBean> getEvaluateCall = RetrofitRequest.service().getEvaluate(id);
         getEvaluateCall.enqueue(new Callback<EvaluateBean>() {
             @Override
             public void onResponse(Call<EvaluateBean> call, Response<EvaluateBean> response) {
@@ -148,7 +148,7 @@ public class EvaluateFragment extends BaseFragment {
      * 上传评价信息
      */
     private void postEvaluate() {
-        Call<CommonBean> postEvaluateCall = RetrofitRequest.service(Config.HOST).postEvaluate(id, ratingBar1.getRating(), ratingBar2.getRating(), ratingBar3.getRating(), ratingBar4.getRating(), hotWordId, opinion);
+        Call<CommonBean> postEvaluateCall = RetrofitRequest.service().postEvaluate(id, ratingBar1.getRating(), ratingBar2.getRating(), ratingBar3.getRating(), ratingBar4.getRating(), hotWordId, opinion);
         postEvaluateCall.enqueue(new Callback<CommonBean>() {
             @Override
             public void onResponse(Call<CommonBean> call, Response<CommonBean> response) {

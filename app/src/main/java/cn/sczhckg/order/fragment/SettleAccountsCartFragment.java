@@ -1,14 +1,19 @@
 package cn.sczhckg.order.fragment;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,16 +29,20 @@ import butterknife.OnClick;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.SettleAountsFavorableAdapter;
 import cn.sczhckg.order.adapter.SettleAountsPayAdapter;
-import cn.sczhckg.order.data.bean.Constant;
+import cn.sczhckg.order.adapter.VipFavorableAdapter;
 import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.bean.PayTypeBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesItemBean;
+import cn.sczhckg.order.data.bean.VipFavorableBean;
 import cn.sczhckg.order.data.event.LoginEvent;
 import cn.sczhckg.order.data.event.SettleAountsCartEvent;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
+import cn.sczhckg.order.data.listener.OnAccountsListenner;
 import cn.sczhckg.order.data.listener.OnGiftListenner;
-import cn.sczhckg.order.data.listener.OnPayTypeListenner;
+import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import cn.sczhckg.order.until.AppSystemUntil;
+import cn.sczhckg.order.until.ConvertUtils;
 
 /**
  * @describe: 结账购物车界面
@@ -41,14 +50,12 @@ import cn.sczhckg.order.data.listener.OnPayTypeListenner;
  * @Email: 572919350@qq.com
  */
 
-public class SettleAccountsCartFragment extends BaseFragment implements OnGiftListenner, OnPayTypeListenner {
+public class SettleAccountsCartFragment extends BaseFragment implements OnGiftListenner, OnAccountsListenner {
 
     @Bind(R.id.shoppingcart_total_price)
     TextView shoppingcartTotalPrice;
     @Bind(R.id.favorable_price)
     TextView favorablePrice;
-    @Bind(R.id.favorable_parent)
-    LinearLayout favorableParent;
     @Bind(R.id.exceptional_price)
     TextView exceptionalPrice;
     @Bind(R.id.exceptional_parent)
@@ -61,6 +68,10 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
     Button cartGift;
     @Bind(R.id.cart_pay)
     RecyclerView cartPay;
+    @Bind(R.id.list_flag)
+    ImageView listFlag;
+    @Bind(R.id.list_view_line)
+    View listViewLine;
 
     private List<FavorableTypeBean> favorableList = new ArrayList<>();
 
@@ -80,6 +91,24 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
      * 打赏金额
      */
     private int giftMoney = 0;
+    /**
+     * 卡种类型
+     */
+    private PopupWindow mPopupWindow;
+
+    private VipFavorableAdapter mVipFavorableAdapter;
+
+    private List<VipFavorableBean> vipFavorableBeanList = new ArrayList<>();
+
+    private int vipClick = 0;
+    /**
+     * Pop的高
+     */
+    private int HEIGHT = 0;
+    /**
+     * Pop的宽
+     */
+    private int WIDTH = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,14 +138,15 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
 
     @Override
     public void init() {
-        favorableAdapter = new SettleAountsFavorableAdapter(getContext(), favorableList);
-        cartFavorable.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        favorableAdapter = new SettleAountsFavorableAdapter(getContext(), favorableList,this);
+        cartFavorable.setLayoutManager(new GridLayoutManager(getContext(), 3));
         cartFavorable.setAdapter(favorableAdapter);
 
-        payAdapter = new SettleAountsPayAdapter(getContext(), payList);
-        cartPay.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        payAdapter.setOnPayTypeListenner(this);
+        payAdapter = new SettleAountsPayAdapter(getContext(), payList,this);
+        cartPay.setLayoutManager(new GridLayoutManager(getContext(), 3));
         cartPay.setAdapter(payAdapter);
+        /**初始化Pop*/
+        initPop();
     }
 
     @Override
@@ -136,6 +166,9 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         if (event.getType() == SettleAountsCartEvent.LOADING) {
             i = 0;
             cartGift.setSelected(false);
+            /**刷新会员优惠类型*/
+            mVipFavorableAdapter.notifyDataSetChanged(event.getBean().getVipFavorable());
+
             dishesBeen = event.getBean().getSettleAccountsDishesBeen();
             favorableList = event.getBean().getFavorableType();
             payList = event.getBean().getPayTypeBeen();
@@ -177,7 +210,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.cart_gift, R.id.shoppingcart_button})
+    @OnClick({R.id.cart_gift, R.id.shoppingcart_button, R.id.list_flag})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cart_gift:
@@ -195,6 +228,18 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
                     EventBus.getDefault().post(new SettleAountsTypeEvent(payTypeBean, SettleAountsTypeEvent.PTYPE));
                 }
                 break;
+            case R.id.list_flag:
+                vipClick++;
+                if (vipClick % 2 == 0) {
+                    mPopupWindow.dismiss();
+                    listFlag.setImageResource(R.drawable.accounts_btn_way_packup);
+                } else {
+                    int[] location = new int[2];
+                    listViewLine.getLocationOnScreen(location);
+                    mPopupWindow.showAtLocation(listViewLine, Gravity.NO_GRAVITY, 0, AppSystemUntil.height(getContext())-location[1]-listFlag.getHeight()/2);
+                    listFlag.setImageResource(R.drawable.accounts_btn_way_fold);
+                }
+                break;
         }
     }
 
@@ -203,6 +248,11 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         giftMoney = money;
         exceptionalPrice.setText("¥ " + money);
         countTotalPrice();
+    }
+
+    @Override
+    public void favorableType(FavorableTypeBean bean) {
+        EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.FTYPE,bean));
     }
 
     @Override
@@ -225,6 +275,37 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void loginEvent(LoginEvent event) {
 
+    }
+
+    /**
+     * 初始化Pop
+     */
+    private void initPop() {
+        initRect();
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.pop_vip_favorable, null);
+        mPopupWindow = new PopupWindow(view, WIDTH, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
+        RecyclerView vipRecyclerView = (RecyclerView) view.findViewById(R.id.vip_favorable_recyclerview);
+        mVipFavorableAdapter = new VipFavorableAdapter(vipFavorableBeanList, getContext());
+        vipRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        vipRecyclerView.setAdapter(mVipFavorableAdapter);
+        vipRecyclerView.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                listFlag.setImageResource(R.drawable.accounts_btn_way_packup);
+            }
+        });
+    }
+
+    /**
+     * 初始化Pop的宽高
+     */
+    private void initRect() {
+        WIDTH = AppSystemUntil.width(getContext()) * 10 / 26 - ConvertUtils.dip2px(getContext(), 5) / 2;
     }
 
 }

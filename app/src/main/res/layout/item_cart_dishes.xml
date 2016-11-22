@@ -29,8 +29,8 @@
             android:lines="2"
             android:textColor="@color/text_color_m"
             android:lineSpacingExtra="2dp"
-            android:lineSpacingMultiplier="1.2"
-            android:textSize="@dimen/text_size_mediu_s" />
+            android:textStyle="bold"
+            android:lineSpacingMultiplier="1.2" />
 
     </LinearLayout>
 

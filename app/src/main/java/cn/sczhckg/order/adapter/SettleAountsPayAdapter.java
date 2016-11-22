@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.PayTypeBean;
-import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
-import cn.sczhckg.order.data.listener.OnPayTypeListenner;
+import cn.sczhckg.order.data.listener.OnAccountsListenner;
 
 /**
  * @describe: 结账方式适配
@@ -32,13 +29,14 @@ public class SettleAountsPayAdapter extends RecyclerView.Adapter<SettleAountsPay
 
     private List<PayTypeBean> mList;
 
-    private Map<Integer,Button> mMap=new HashMap<>();
+    private Map<Integer, Button> mMap = new HashMap<>();
 
-    private OnPayTypeListenner onPayTypeListenner;
+    private OnAccountsListenner onAccountsListenner;
 
-    public SettleAountsPayAdapter(Context mContext, List<PayTypeBean> mList) {
+    public SettleAountsPayAdapter(Context mContext, List<PayTypeBean> mList, OnAccountsListenner onAccountsListenner) {
         this.mContext = mContext;
         this.mList = mList;
+        this.onAccountsListenner = onAccountsListenner;
     }
 
     @Override
@@ -49,18 +47,18 @@ public class SettleAountsPayAdapter extends RecyclerView.Adapter<SettleAountsPay
 
     @Override
     public void onBindViewHolder(final SettleAountsPayAdapter.ContextViewHolder holder, final int position) {
-        if (!mMap.containsKey(holder.getLayoutPosition())){
-            mMap.put(holder.getLayoutPosition(),holder.cartType);
+        if (!mMap.containsKey(holder.getLayoutPosition())) {
+            mMap.put(holder.getLayoutPosition(), holder.cartType);
         }
         holder.cartType.setText(mList.get(position).getName());
         holder.cartType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Integer btn:mMap.keySet()) {
+                for (Integer btn : mMap.keySet()) {
                     mMap.get(btn).setSelected(false);
                 }
                 holder.cartType.setSelected(true);
-                onPayTypeListenner.payType(mList.get(position));
+                onAccountsListenner.payType(mList.get(position));
             }
         });
     }
@@ -91,7 +89,4 @@ public class SettleAountsPayAdapter extends RecyclerView.Adapter<SettleAountsPay
         }
     }
 
-    public void setOnPayTypeListenner(OnPayTypeListenner onPayTypeListenner) {
-        this.onPayTypeListenner = onPayTypeListenner;
-    }
 }

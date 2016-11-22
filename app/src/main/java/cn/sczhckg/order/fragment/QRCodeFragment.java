@@ -137,7 +137,7 @@ public class QRCodeFragment extends BaseFragment implements Callback<QRCodeBean>
         for (int i = 0; i < groupons.size(); i++) {
             grouponStr = grouponStr + groupons.get(i) + ",";
         }
-        Call<QRCodeBean> codeCall = RetrofitRequest.service(Config.HOST).pay(MainActivity.table, favorableType, MyApplication.userName, grouponStr, type, giftMoney);
+        Call<QRCodeBean> codeCall = RetrofitRequest.service().pay(MainActivity.table, favorableType, MyApplication.userName, grouponStr, type, giftMoney);
         codeCall.enqueue(this);
     }
 

@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:textColor="@color/black"
-            android:text="3"
+            android:text="4"
             android:textSize="@dimen/text_size_largr" />
 
         <TextView
@@ -43,8 +43,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignBaseline="@id/person"
             android:text="人"
+            android:layout_centerVertical="true"
             android:textColor="@color/text_color_person"
-            android:textSize="@dimen/text_size_mediu" />
+            android:textSize="13sp" />
 
     </RelativeLayout>
 

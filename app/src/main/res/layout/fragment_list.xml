@@ -2,20 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cart_bg"
     android:padding="10dp">
 
     <Button
-        android:id="@+id/cancel"
+        android:id="@+id/list_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/button_full_yellow_login"
+        style="?android:attr/borderlessButtonStyle"
         android:text="取消评价" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/cancel"
+        android:layout_above="@id/list_cancel"
         android:orientation="vertical">
 
         <TextView
@@ -35,7 +36,7 @@
             android:textSize="@dimen/text_size_mediu" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
+            android:id="@+id/list_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

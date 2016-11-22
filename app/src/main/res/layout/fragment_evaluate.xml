@@ -133,6 +133,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
+                style="?android:attr/borderlessButtonStyle"
                 android:background="@drawable/button_yellow"
                 android:padding="15dp"
                 android:text="完成" />

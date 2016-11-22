@@ -23,7 +23,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.sczhckg.order.Config;
 import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.ViewPagerAdapter;
@@ -35,7 +34,7 @@ import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
-import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.listener.OnTableListenner;
 import cn.sczhckg.order.fragment.BaseFragment;
 import cn.sczhckg.order.fragment.DetailsFragment;
 import cn.sczhckg.order.fragment.EvaluateFragment;
@@ -50,9 +49,7 @@ import cn.sczhckg.order.fragment.ShoppingCartFragment;
 import cn.sczhckg.order.image.GlideLoading;
 import cn.sczhckg.order.overwrite.NoScrollViewPager;
 import cn.sczhckg.order.overwrite.RoundImageView;
-import cn.sczhckg.order.until.AppSystemUntil;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -60,7 +57,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements Callback<MainPagerShow>, OnButtonClickListener {
+public class MainActivity extends BaseActivity implements  OnButtonClickListener ,OnTableListenner {
 
     /**
      * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
@@ -95,10 +92,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      * 适配Adapter
      */
     private ViewPagerAdapter adapter;
-    /**
-     * 设备ID
-     */
-    private String deviceId = "";
+
     /**
      * 用户ID
      */
@@ -163,8 +157,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         isLogin();
         init();
         initLeftFragment();
@@ -180,7 +174,6 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
             userId = bean.getId();
             login(bean);
         }
-        initNetData();
     }
 
     /**
@@ -188,9 +181,7 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
      */
     @Override
     protected void initNetData() {
-        deviceId = AppSystemUntil.getAndroidID(this);
-        Call<MainPagerShow> mainShow = RetrofitRequest.service(Config.HOST).potDataShow(userId, deviceId);
-        mainShow.enqueue(this);
+
     }
 
     @Override
@@ -234,6 +225,8 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         List<Fragment> mList = new ArrayList<>();
         /**锅底必选*/
         mPotTypeFagment = new PotTypeFagment();
+        mPotTypeFagment.setOnTableListenner(this);
+        mPotTypeFagment.setUserId(userId);
         /**菜品选择主页*/
         mMainFragment = new MainFragment();
         /**团购券*/
@@ -260,24 +253,6 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
         return mList;
     }
 
-    @Override
-    public void onResponse(Call<MainPagerShow> call, Response<MainPagerShow> response) {
-        MainPagerShow bean = response.body();
-        /**获取数据成功*/
-        if (bean.getStatus() == 0 && bean != null) {
-            table = bean.getTableNumber();
-            tableNumber.setText("桌号：" + table);
-            waitress.setText("服务员：" + bean.getWaitress());
-            if (mPotTypeFagment != null) {
-                mPotTypeFagment.setData(bean);
-            }
-        }
-    }
-
-    @Override
-    public void onFailure(Call<MainPagerShow> call, Throwable t) {
-        Toast.makeText(this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
-    }
 
 
     @Override
@@ -438,5 +413,13 @@ public class MainActivity extends BaseActivity implements Callback<MainPagerShow
                 startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
                 break;
         }
+    }
+
+
+    @Override
+    public void table(String tableNumber, String waitress) {
+        table = tableNumber;
+        this.tableNumber.setText("桌号：" + table);
+        this.waitress.setText("服务员：" +waitress);
     }
 }

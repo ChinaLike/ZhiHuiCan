@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
+import cn.sczhckg.order.data.listener.OnAccountsListenner;
 
 /**
  * @describe: 结账优惠方式适配
@@ -33,9 +34,13 @@ public class SettleAountsFavorableAdapter extends RecyclerView.Adapter<SettleAou
 
     private Map<Integer,Button> mMap=new HashMap<>();
 
-    public SettleAountsFavorableAdapter(Context mContext, List<FavorableTypeBean> mList) {
+    private OnAccountsListenner onAccountsListenner;
+
+
+    public SettleAountsFavorableAdapter(Context mContext, List<FavorableTypeBean> mList,OnAccountsListenner onAccountsListenner) {
         this.mContext = mContext;
         this.mList = mList;
+        this.onAccountsListenner=onAccountsListenner;
     }
 
     @Override
@@ -59,7 +64,8 @@ public class SettleAountsFavorableAdapter extends RecyclerView.Adapter<SettleAou
                     mMap.get(btn).setSelected(false);
                 }
                 holder.cartType.setSelected(true);
-                EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.FTYPE,mList.get(position)));
+                onAccountsListenner.favorableType(mList.get(position));
+
             }
         });
     }

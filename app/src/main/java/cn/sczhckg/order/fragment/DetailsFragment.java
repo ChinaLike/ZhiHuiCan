@@ -121,7 +121,7 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
             detailsDishesMinus.setClickable(false);
             detailsDishesAdd.setClickable(false);
         }
-        Call<DetailsBean> detailsBeanCall = RetrofitRequest.service(Config.HOST).dishesDeatails(bean.getId(), bean.getName());
+        Call<DetailsBean> detailsBeanCall = RetrofitRequest.service().dishesDeatails(bean.getId(), bean.getName());
         detailsBeanCall.enqueue(this);
     }
 

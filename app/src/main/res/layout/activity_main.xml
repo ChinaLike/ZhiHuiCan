@@ -10,6 +10,7 @@
         android:id="@+id/cart"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:background="@drawable/both_bg_left"
         android:layout_weight="1" />
 
     <LinearLayout

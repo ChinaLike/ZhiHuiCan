@@ -1,5 +1,6 @@
 package cn.sczhckg.order.data.network;
 
+import cn.sczhckg.order.Config;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -14,10 +15,9 @@ public class RetrofitRequest {
 
     /**
      * service 请求
-     * @param url 请求地址
      */
-    public static RetrofitService service(String url){
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(url)
+    public static RetrofitService service(){
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(Config.HOST)
                 //增加返回值为String的支持
                 .addConverterFactory(ScalarsConverterFactory.create())
                 //增加返回值为Gson的支持(以实体类返回)

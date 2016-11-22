@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="40dp"
-    android:layout_marginLeft="40dp"
-    android:layout_marginRight="40dp"
+    android:layout_marginLeft="@dimen/margin_login"
+    android:layout_marginRight="@dimen/margin_login"
+    android:layout_marginTop="65dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -14,9 +14,9 @@
         android:gravity="center">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/password_bg"
+            android:background="@drawable/button_slide_gray_login"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="30dp"
@@ -30,7 +30,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_weight="1"
                 android:text="@string/cardNumber"
-                android:textSize="@dimen/text_size" />
+                android:textSize="22sp" />
 
             <EditText
                 android:id="@+id/inputCard"
@@ -41,7 +41,7 @@
                 android:hint="@string/vipCardNumberHint"
                 android:textColor="@color/text_hint_color"
                 android:textColorHint="@color/text_hint_color"
-                android:textSize="@dimen/text_size" />
+                android:textSize="22sp" />
 
             <ImageView
                 android:id="@+id/vip_card_close"
@@ -63,9 +63,9 @@
         android:gravity="center">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/password_bg"
+            android:background="@drawable/button_slide_gray_login"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="30dp"
@@ -79,7 +79,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_weight="1"
                 android:text="@string/password"
-                android:textSize="@dimen/text_size" />
+                android:textSize="22sp" />
 
             <EditText
                 android:id="@+id/inputPassword"
@@ -91,7 +91,7 @@
                 android:inputType="textPassword"
                 android:textColor="@color/text_hint_color"
                 android:textColorHint="@color/text_hint_color"
-                android:textSize="@dimen/text_size" />
+                android:textSize="22sp" />
 
             <ImageView
                 android:id="@+id/vip_password_close"
@@ -103,22 +103,28 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/forget_password"
+        android:layout_width="match_parent"
+        android:textColor="@color/text_hint_color"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="忘记密码？" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-
         android:gravity="center">
 
         <Button
             android:id="@+id/confir"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_yellow"
+            android:background="@drawable/button_full_yellow_login"
             android:text="确认"
+            style="?android:attr/borderlessButtonStyle"
             android:textColor="@color/button_text"
-            android:textSize="@dimen/text_size" />
+            android:textSize="22sp" />
     </RelativeLayout>
 </LinearLayout>

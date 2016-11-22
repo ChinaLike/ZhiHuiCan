@@ -79,7 +79,7 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
      * 获取清单数据
      */
     public void getData() {
-        Call<SettleAccountsBean> settleAccountsBeanCall = RetrofitRequest.service(Config.HOST).settleAccountsList(MainActivity.table);
+        Call<SettleAccountsBean> settleAccountsBeanCall = RetrofitRequest.service().settleAccountsList(MainActivity.table);
         settleAccountsBeanCall.enqueue(this);
     }
 

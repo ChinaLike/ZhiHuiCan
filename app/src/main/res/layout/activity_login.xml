@@ -21,12 +21,12 @@
             android:src="@drawable/back" />
 
         <ImageView
-            android:id="@+id/login"
+            android:id="@+id/login_set"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:padding="@dimen/vip_top_padding"
-            android:src="@drawable/login" />
+            android:src="@drawable/open_btn_set" />
 
         <View
             android:layout_width="match_parent"
