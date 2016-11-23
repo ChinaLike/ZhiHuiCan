@@ -215,7 +215,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
      * @param itemBeen
      */
     private void initClassify(List<ClassifyItemBean> itemBeen) {
-        mClassifyAdapter = new ClassifyAdapter(getContext(), itemBeen);
+        mClassifyAdapter = new ClassifyAdapter(getContext(), itemBeen,defaultItem);
         mClassifyAdapter.addOnItemClickListener(this);
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         dishesClassify.setLayoutManager(mLinearLayoutManager);

@@ -33,11 +33,17 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
 
     private OnItemClickListener mOnItemClickListener;
 
-    private Map<Integer,TextView> textViewMap=new HashMap<>();
 
-    public ClassifyAdapter(Context mContext, List<ClassifyItemBean> mList) {
+    private Map<Integer, View> viewMap = new HashMap<>();
+    private Map<Integer, TextView> textMap = new HashMap<>();
+    private Map<Integer, LinearLayout> layoutMap = new HashMap<>();
+
+    private int current = 0;
+
+    public ClassifyAdapter(Context mContext, List<ClassifyItemBean> mList, int current) {
         this.mContext = mContext;
         this.mList = mList;
+        this.current = current;
     }
 
     @Override
@@ -47,27 +53,23 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
 
     @Override
     public void onBindViewHolder(final ClassifyViewHolder holder, final int position) {
-
-
-         final ClassifyItemBean bean = mList.get(position);
+        final ClassifyItemBean bean = mList.get(position);
         holder.classifyText.setText(bean.getName());
+        viewMap.put(position, holder.classifyLine);
+        textMap.put(position, holder.classifyText);
+        layoutMap.put(position, holder.classiftItem);
 
-        if (bean.isSelect()) {
-            holder.classifyLine.setVisibility(View.VISIBLE);
-            holder.classifyText.setTextColor(mContext.getResources().getColor(R.color.text_color_m));
-            holder.classiftItem.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-        } else {
-            holder.classifyLine.setVisibility(View.INVISIBLE);
-            holder.classifyText.setTextColor(mContext.getResources().getColor(R.color.text_color_person));
-            holder.classiftItem.setBackgroundColor(mContext.getResources().getColor(R.color.background_gray_m));
+        if (position == current) {
+            holder.classifyLine.setSelected(true);
+            holder.classifyText.setSelected(true);
+            holder.classiftItem.setSelected(true);
         }
         holder.classiftItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int n = holder.getLayoutPosition();
-                upData(bean,n);
-                mOnItemClickListener.onItemClick(v,n);
+                upData(n);
+                mOnItemClickListener.onItemClick(v, n);
             }
         });
 
@@ -93,24 +95,22 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
         }
     }
 
-    public void addOnItemClickListener(OnItemClickListener listener){
+    public void addOnItemClickListener(OnItemClickListener listener) {
         mOnItemClickListener = listener;
     }
 
-    private void upData(ClassifyItemBean bean,int n) {
-        for (ClassifyItemBean item : mList) {
-            if (item.isSelect()) {
-                item.setSelect(false);
-            }
-            bean.setSelect(true);
-            notifyDataSetChanged();
-        }
+    private void upData(int n) {
+        viewMap.get(current).setSelected(false);
+        textMap.get(current).setSelected(false);
+        layoutMap.get(current).setSelected(false);
+        viewMap.get(n).setSelected(true);
+        textMap.get(n).setSelected(true);
+        layoutMap.get(n).setSelected(true);
+        current = n;
     }
 
-
-
-    public interface OnItemClickListener{
-        void onItemClick(View view,int position);
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 
 }

@@ -99,20 +99,21 @@
             android:id="@+id/list_view_line"
             android:layout_width="match_parent"
             android:layout_height="@dimen/hint_line"
-            android:layout_centerInParent="true"
             android:background="@color/hint_color" />
 
         <ImageView
             android:id="@+id/list_flag"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@id/list_view_line"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/accounts_btn_way_packup"/>
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/image_favorable_price_unfold"/>
 
     </RelativeLayout>
 
 
     <LinearLayout
+        android:id="@+id/accounts_bottom"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"

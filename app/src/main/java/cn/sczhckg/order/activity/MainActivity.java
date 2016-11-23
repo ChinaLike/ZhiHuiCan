@@ -31,10 +31,12 @@ import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.PayTypeBean;
 import cn.sczhckg.order.data.bean.UserLoginBean;
+import cn.sczhckg.order.data.event.ApplyForVipCardEvent;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnTableListenner;
+import cn.sczhckg.order.fragment.ApplyForVipCardFragment;
 import cn.sczhckg.order.fragment.BaseFragment;
 import cn.sczhckg.order.fragment.DetailsFragment;
 import cn.sczhckg.order.fragment.EvaluateFragment;
@@ -57,7 +59,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements  OnButtonClickListener ,OnTableListenner {
+public class MainActivity extends BaseActivity implements OnButtonClickListener, OnTableListenner {
 
     /**
      * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
@@ -142,6 +144,10 @@ public class MainActivity extends BaseActivity implements  OnButtonClickListener
      * 菜品详情
      */
     private DetailsFragment mDetailsFragment;
+    /**
+     * 申请办理VIP
+     */
+    private ApplyForVipCardFragment mApplyForVipCardFragment;
     /**
      * 用餐人数
      */
@@ -239,6 +245,8 @@ public class MainActivity extends BaseActivity implements  OnButtonClickListener
         mEvaluateFragment = new EvaluateFragment();
         /**评价详情*/
         mDetailsFragment = new DetailsFragment();
+        /**申请办理VIP*/
+        mApplyForVipCardFragment = new ApplyForVipCardFragment();
 
         mList.add(mPotTypeFagment);
         mList.add(mMainFragment);
@@ -247,12 +255,12 @@ public class MainActivity extends BaseActivity implements  OnButtonClickListener
         mList.add(mQrCodeFragment);
         mList.add(mEvaluateFragment);
         mList.add(mDetailsFragment);
+        mList.add(mApplyForVipCardFragment);
 
         viewPager.setOffscreenPageLimit(mList.size());
 
         return mList;
     }
-
 
 
     @Override
@@ -302,6 +310,7 @@ public class MainActivity extends BaseActivity implements  OnButtonClickListener
 
         } else if (event.getType() == Constant.BOTTOM_SETTLE_ACCOUNTS) {
             cart.setCurrentItem(CART_SETTLT_AOUNTS, false);
+            mSettleAccountsCartFragment.showPop();
         } else if (event.getType() == Constant.DISHES_DETAILS_IN) {
             /**进入菜品详情*/
             tableInfoParent.setVisibility(View.GONE);
@@ -375,6 +384,28 @@ public class MainActivity extends BaseActivity implements  OnButtonClickListener
         }
     }
 
+    /**
+     * 申请办理会员卡
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void applyForVipEventBus(ApplyForVipCardEvent event) {
+        if (event.getType() == event.APPLY) {
+            /**申请办理VIP*/
+            viewPager.setCurrentItem(APPLY_FOR_VIP_CARD, false);
+            if (mApplyForVipCardFragment != null) {
+                mApplyForVipCardFragment.setData(event.getmList());
+            }
+        } else if (event.getType() == event.CANCEL_APPLY) {
+            /**取消办理VIP*/
+            viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+        } else if (event.getType() == event.CLOSE) {
+            /**取消办理VIP*/
+            viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -420,6 +451,6 @@ public class MainActivity extends BaseActivity implements  OnButtonClickListener
     public void table(String tableNumber, String waitress) {
         table = tableNumber;
         this.tableNumber.setText("桌号：" + table);
-        this.waitress.setText("服务员：" +waitress);
+        this.waitress.setText("服务员：" + waitress);
     }
 }

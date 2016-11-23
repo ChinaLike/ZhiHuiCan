@@ -136,6 +136,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:background="@drawable/button_yellow"
                 android:padding="15dp"
+                android:textColor="@color/button_text"
                 android:text="完成" />
 
         </LinearLayout>

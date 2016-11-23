@@ -52,4 +52,9 @@
 
     <color name="progress_background">#DFDFDF</color>
 
+    <!--EditText提示语颜色-->
+    <color name="edit_text_hint_color">#BBBBBB</color>
+
+
+
 </resources>

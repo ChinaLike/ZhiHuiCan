@@ -133,6 +133,7 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
     public void onResponse(Call<Bean<UserLoginBean>> call, Response<Bean<UserLoginBean>> response) {
 //        RestResponse<UserLoginBean> resp = JSONRestResponse.Parser.parse(body, UserLoginBean.class);
 //        UserLoginBean user = resp.getBean();
+        Log.d("登录回调：",response.body().toString());
         Bean<UserLoginBean> bean=response.body();
         if (bean.getCode() == 0) {
             Toast.makeText(this, bean.getMessage(), Toast.LENGTH_SHORT).show();

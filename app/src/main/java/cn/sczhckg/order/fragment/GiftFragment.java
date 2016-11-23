@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -23,7 +24,7 @@ import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
  * @Email: 572919350@qq.com
  */
 
-public class GiftFragment extends BaseFragment{
+public class GiftFragment extends BaseFragment {
 
     @Bind(R.id.gift_close)
     ImageView giftClose;
@@ -35,16 +36,18 @@ public class GiftFragment extends BaseFragment{
     Button giftPrice3;
     @Bind(R.id.gift_price4)
     Button giftPrice4;
+    @Bind(R.id.gift_price5)
+    Button giftPrice5;
     @Bind(R.id.gift_button)
     Button giftButton;
 
-    private int money=0;
+    private int money = 0;
 
     private Button[] mButtons;
 
-    private int current=0;
+    private int current = 0;
 
-    private int index=0;
+    private int index = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class GiftFragment extends BaseFragment{
 
     @Override
     public void init() {
-        mButtons=new Button[]{giftPrice1,giftPrice2,giftPrice3,giftPrice4};
+        mButtons = new Button[]{giftPrice1, giftPrice2, giftPrice3, giftPrice4,giftPrice5};
     }
 
     @Override
@@ -81,38 +84,48 @@ public class GiftFragment extends BaseFragment{
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.gift_close, R.id.gift_price1, R.id.gift_price2, R.id.gift_price3, R.id.gift_price4, R.id.gift_button})
+    @OnClick({R.id.gift_close, R.id.gift_price1, R.id.gift_price2, R.id.gift_price3, R.id.gift_price4, R.id.gift_button,R.id.gift_price5})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.gift_close:
                 EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.TTYPE));
                 break;
             case R.id.gift_price1:
-                money=2;
-                current=0;
+                /**两元打赏*/
+                money = 2;
+                current = 0;
                 break;
             case R.id.gift_price2:
-                money=5;
-                current=1;
+                /**5元打赏*/
+                money = 5;
+                current = 1;
                 break;
             case R.id.gift_price3:
-                money=10;
-                current=2;
+                /**10元打赏*/
+                money = 10;
+                current = 2;
                 break;
             case R.id.gift_price4:
-                money=15;
-                current=3;
+                /**15元打赏*/
+                money = 15;
+                current = 3;
+                break;
+            case R.id.gift_price5:
+                /**自定义打赏*/
+                current = 4;
                 break;
             case R.id.gift_button:
-                if (onGiftListenner!=null){
+                /**确认金额*/
+                if (onGiftListenner != null) {
                     onGiftListenner.money(money);
+                    EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.TTYPE));
                 }
                 break;
         }
         mButtons[index].setSelected(false);
-        mButtons[index].setTextColor(getContext().getResources().getColor(R.color.white));
+        mButtons[index].setTextColor(getContext().getResources().getColor(R.color.text_color_red));
         mButtons[current].setSelected(true);
-        mButtons[current].setTextColor(getContext().getResources().getColor(R.color.text_color_red));
-        index=current;
+        mButtons[current].setTextColor(getContext().getResources().getColor(R.color.white));
+        index = current;
     }
 }

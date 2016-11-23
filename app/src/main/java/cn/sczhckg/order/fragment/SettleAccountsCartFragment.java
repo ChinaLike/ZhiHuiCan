@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,11 +82,11 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
 
     private SettleAountsPayAdapter payAdapter;
 
-    private static int i = 0;
-
     private PayTypeBean payTypeBean;
 
     private List<SettleAccountsDishesBean> dishesBeen = new ArrayList<>();
+
+    private int POP_HEIGHT=310;
 
     /**
      * 打赏金额
@@ -100,7 +101,6 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
 
     private List<VipFavorableBean> vipFavorableBeanList = new ArrayList<>();
 
-    private int vipClick = 0;
     /**
      * Pop的高
      */
@@ -164,7 +164,6 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
     public void settleAountsCartEvent(SettleAountsCartEvent event) {
         /**刷新数据，布局界面*/
         if (event.getType() == SettleAountsCartEvent.LOADING) {
-            i = 0;
             cartGift.setSelected(false);
             /**刷新会员优惠类型*/
             mVipFavorableAdapter.notifyDataSetChanged(event.getBean().getVipFavorable());
@@ -210,37 +209,55 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.cart_gift, R.id.shoppingcart_button, R.id.list_flag})
+    @OnClick({R.id.cart_gift, R.id.shoppingcart_button, R.id.list_flag,R.id.accounts_bottom})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cart_gift:
-                i++;
-                if (i % 2 == 0) {
+                /**进入打赏界面*/
+                if (cartGift.isSelected()){
                     cartGift.setSelected(false);
-                } else {
-                    cartGift.setSelected(true);
+                    money(0);
+                }else {
                     EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.GTYPE));
                 }
                 break;
             case R.id.shoppingcart_button:
+                /**结账*/
                 if (payTypeBean != null) {
                     int type = payTypeBean.getId();
                     EventBus.getDefault().post(new SettleAountsTypeEvent(payTypeBean, SettleAountsTypeEvent.PTYPE));
                 }
                 break;
             case R.id.list_flag:
-                vipClick++;
-                if (vipClick % 2 == 0) {
+                /**显示不同VIP优惠价格*/
+                if (listFlag.isSelected()){
+                    listFlag.setSelected(false);
                     mPopupWindow.dismiss();
-                    listFlag.setImageResource(R.drawable.accounts_btn_way_packup);
-                } else {
-                    int[] location = new int[2];
-                    listViewLine.getLocationOnScreen(location);
-                    mPopupWindow.showAtLocation(listViewLine, Gravity.NO_GRAVITY, 0, AppSystemUntil.height(getContext())-location[1]-listFlag.getHeight()/2);
-                    listFlag.setImageResource(R.drawable.accounts_btn_way_fold);
+                }else {
+                    showPop();
+                }
+                break;
+            case R.id.accounts_bottom:
+                /**显示不同VIP优惠价格*/
+                if (listFlag.isSelected()){
+                    listFlag.setSelected(false);
+                    mPopupWindow.dismiss();
+                }else {
+                    showPop();
                 }
                 break;
         }
+    }
+
+    /**
+     * 显示Pop
+     */
+    public void showPop(){
+        listFlag.setSelected(true);
+        int[] location = new int[2];
+        listViewLine.getLocationOnScreen(location);
+//                    mPopupWindow.showAtLocation(listViewLine, Gravity.NO_GRAVITY, 0, AppSystemUntil.height(getContext())-location[1]);
+        mPopupWindow.showAtLocation(listViewLine, Gravity.NO_GRAVITY, 0, location[1]-POP_HEIGHT);
     }
 
     @Override
@@ -248,6 +265,10 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         giftMoney = money;
         exceptionalPrice.setText("¥ " + money);
         countTotalPrice();
+        /**有价格回调时，才把打赏点亮*/
+        if (money!=0) {
+            cartGift.setSelected(true);
+        }
     }
 
     @Override
@@ -283,7 +304,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
     private void initPop() {
         initRect();
         View view = LayoutInflater.from(getContext()).inflate(R.layout.pop_vip_favorable, null);
-        mPopupWindow = new PopupWindow(view, WIDTH, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        mPopupWindow = new PopupWindow(view, WIDTH, POP_HEIGHT, true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setTouchable(true);
         mPopupWindow.setOutsideTouchable(true);
@@ -296,9 +317,15 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                listFlag.setImageResource(R.drawable.accounts_btn_way_packup);
+                listFlag.setSelected(false);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     /**

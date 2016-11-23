@@ -32,7 +32,7 @@ public interface RetrofitService {
 
     /**会员登录*/
     @FormUrlEncoded
-    @POST("rest/user/login")
+    @POST("android/test/login")
     Call<Bean<UserLoginBean>> login(@Field("parames") String parames);
     /**主页锅底选择*/
     @FormUrlEncoded
@@ -82,4 +82,9 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("android/test/sercive")
     Call<CommonBean> service(@Field("table") String table, @Field("type") int type);
+    /**申请办理VIP*/
+    @FormUrlEncoded
+    @POST("android/test/applyForVip")
+    Call<Bean<CommonBean>> applyForVip(@Field("parames") String parames);
+
 }

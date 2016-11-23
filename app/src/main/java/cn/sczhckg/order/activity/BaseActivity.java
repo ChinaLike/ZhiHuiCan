@@ -34,6 +34,10 @@ public abstract class BaseActivity extends FragmentActivity {
      */
     protected final int FRAGMENT_DETAILS = 6;
     /**
+     * 申请办理VIP界面
+     */
+    protected final int APPLY_FOR_VIP_CARD = 7;
+    /**
      * 购物车商品界面
      */
     protected final int CART_DISHES = 0;

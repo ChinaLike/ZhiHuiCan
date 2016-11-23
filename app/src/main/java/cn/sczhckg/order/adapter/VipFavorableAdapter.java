@@ -9,15 +9,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.VipFavorableBean;
+import cn.sczhckg.order.data.event.ApplyForVipCardEvent;
 
 /**
- * @describe:
+ * @describe: 这种会员优惠价格一览表显示，并实现办理卡片
  * @author: Like on 2016/11/21.
  * @Email: 572919350@qq.com
  */
@@ -39,8 +43,8 @@ public class VipFavorableAdapter extends RecyclerView.Adapter<VipFavorableAdapte
     }
 
     @Override
-    public void onBindViewHolder(VipFavorableHolder holder, int position) {
-        VipFavorableBean bean=mList.get(position);
+    public void onBindViewHolder(final VipFavorableHolder holder, int position) {
+        final VipFavorableBean bean=mList.get(position);
         holder.vipName.setText(bean.getName());
         holder.vipPrice.setText("¥ "+bean.getPrice());
         holder.vipFavorablePrice.setText("¥ "+bean.getFavorablePrice());
@@ -51,6 +55,32 @@ public class VipFavorableAdapter extends RecyclerView.Adapter<VipFavorableAdapte
             holder.vipChoose.setVisibility(View.GONE);
             holder.transactionVip.setVisibility(View.VISIBLE);
         }
+        if (bean.isSelect()){
+            holder.transactionVip.setSelected(true);
+            holder.transactionVip.setText(mContext.getResources().getString(R.string.button_vip_select));
+        }else {
+            holder.transactionVip.setSelected(false);
+            holder.transactionVip.setText(mContext.getResources().getString(R.string.button_vip_no_select));
+        }
+        /**办理会员卡*/
+        holder.transactionVip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (VipFavorableBean item:mList) {
+                    item.setSelect(false);
+                }
+                if (holder.transactionVip.isSelected()){
+                    /**取消办卡*/
+                    EventBus.getDefault().post(new ApplyForVipCardEvent(ApplyForVipCardEvent.CANCEL_APPLY,bean.getId()));
+                }else {
+                    /**申请办卡*/
+                    bean.setSelect(true);
+                    EventBus.getDefault().post(new ApplyForVipCardEvent(ApplyForVipCardEvent.APPLY,bean.getId(),mList));
+                }
+                notifyDataSetChanged();
+            }
+        });
+
     }
 
     public void notifyDataSetChanged(List<VipFavorableBean> mList) {

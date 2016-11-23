@@ -12,6 +12,8 @@ public class VipFavorableBean implements Serializable{
 
     private int id;
 
+    private boolean isSelect;
+
     private String name;
 
     private int price;
@@ -59,6 +61,14 @@ public class VipFavorableBean implements Serializable{
     public void setIsThis(int isThis) {
         this.isThis = isThis;
 
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
     }
 
     @Override

@@ -3,7 +3,6 @@
     android:id="@+id/item_groupon_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
     android:background="@drawable/bg_groupon"
     android:gravity="center_vertical"
     android:paddingBottom="20dp"
@@ -20,7 +19,6 @@
         android:layout_centerVertical="true"
         android:ellipsize="end"
         android:lines="1"
-        android:text="1234 5268 2562"
         android:visibility="visible" />
 
     <LinearLayout
@@ -44,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:hint="请输入团购券号码"
             android:background="@null"
             android:visibility="visible" />
 

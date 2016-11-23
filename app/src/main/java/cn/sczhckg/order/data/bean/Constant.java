@@ -45,6 +45,13 @@ public class Constant {
     public final static String PERSON = "person";
 
     /**
+     * VIP申请
+     */
+    public final static String APPLY_FOR_VIP_NAME = "name";
+    public final static String APPLY_FOR_VIP_PHONE = "phone";
+    public final static String APPLY_FOR_VIP_TYPE = "type";
+
+    /**
      * 主菜单底部按钮和详情界面
      */
     public final static int BOTTOM_ORDER = 0x501;

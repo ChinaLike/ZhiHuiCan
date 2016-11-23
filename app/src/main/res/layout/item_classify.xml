@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:id="@+id/classift_item"
     android:orientation="horizontal"
+    android:background="@drawable/classify_parent_bg"
     android:layout_height="wrap_content">
 
     <View
@@ -10,8 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_width="10dp"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:background="@color/line_yellow"/>
+        android:background="@drawable/classify_view_bg"/>
 
     <TextView
         android:id="@+id/classify_text"
@@ -20,7 +20,7 @@
         android:padding="20dp"
         android:gravity="center"
         android:text="素菜类"
-        android:textColor="@color/text_color_person"/>
+        android:textColor="@drawable/classify_text_color"/>
 
 
 
