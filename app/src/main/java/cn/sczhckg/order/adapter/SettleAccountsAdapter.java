@@ -158,7 +158,6 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         holder.number.setText("×"+getChild(groupPosition,childPosition).getNumber());
         holder.favorablePrice.setText("¥  "+getChild(groupPosition,childPosition).getPriceTypeBean().getPrice());
         holder.price.setText("¥  "+getChild(groupPosition,childPosition).getPrice());
-        holder.price.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG); //中划线
         holder.totalPrice.setText("¥  "+(getChild(groupPosition,childPosition).getNumber()*getChild(groupPosition,childPosition).getPriceTypeBean().getPrice()));
         if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null){
             holder.image.setVisibility(View.VISIBLE);

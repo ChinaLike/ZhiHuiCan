@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        android:src="@drawable/nothing" />
+        android:src="@drawable/order_status_blank" />
 
     <LinearLayout
         android:id="@+id/has_thing"

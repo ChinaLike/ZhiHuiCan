@@ -2,6 +2,7 @@ package cn.sczhckg.order.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,11 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
 
     private List<TabBean> mList;
 
-    private Map<Integer,LinearLayout> layouts=new HashMap<>();
+    private Map<Integer, LinearLayout> layouts = new HashMap<>();
 
-    private Map<Integer,View> views=new HashMap<>();
+    private Map<Integer, View> views = new HashMap<>();
+
+    private int current = 0;
 
     public TabAdapter(Context mContext, List<TabBean> mList) {
         this.mContext = mContext;
@@ -47,20 +50,20 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
 
     @Override
     public void onBindViewHolder(final TabViewHolder holder, final int position) {
-        if (!layouts.containsKey(position)){
-            layouts.put(position,holder.tabParent);
-            views.put(position,holder.tabLine);
-        }
-        views.get(0).setBackgroundColor(mContext.getResources().getColor(R.color.line_yellow));
+
+        layouts.put(position, holder.tabParent);
+        views.put(position, holder.tabLine);
+
+        views.get(current).setSelected(true);
         holder.tabName.setText(mList.get(position).getName());
         holder.tabParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < views.size(); i++) {
-                    views.get(i).setBackgroundColor(mContext.getResources().getColor(R.color.cart_top));
-                }
-                views.get(holder.getLayoutPosition()).setBackgroundColor(mContext.getResources().getColor(R.color.line_yellow));
-                OrderFragment.tabOrderType=mList.get(position).getId();
+                Log.d("Tab", "onBindViewHolder: "+mList.get(position).toString());
+                views.get(position).setSelected(true);
+                views.get(current).setSelected(false);
+                current = position;
+                OrderFragment.tabOrderType = mList.get(position).getId();
             }
         });
     }

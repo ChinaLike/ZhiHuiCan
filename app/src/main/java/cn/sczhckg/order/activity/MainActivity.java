@@ -265,6 +265,9 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     @Override
     public void onClick(int type, int isShow) {
+        if (tableInfoParent.getVisibility() == View.GONE){
+            tableInfoParent.setVisibility(View.VISIBLE);
+        }
         /**开桌成功后回调*/
         if (type == Constant.ORDER) {
             viewPager.setCurrentItem(FRAGMENT_MAIN, false);

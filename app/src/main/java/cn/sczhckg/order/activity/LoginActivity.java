@@ -118,14 +118,17 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
     private void into(UserLoginBean bean) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra(Constant.USER_INFO, bean);
+        Log.d("登录回调：","11111="+getIntent().getFlags());
         if (getIntent().getFlags() == Constant.LEAD_TO_LOGIN) {
+            Log.d("登录回调：","22222");
             startActivity(intent);
         } else if (getIntent().getFlags() == Constant.MAIN_TO_LOGIN) {
+            Log.d("登录回调：","333333");
             setResult(Constant.LOGIN_RESULT_CODE,intent);
         }
         /**发布消息*/
         EventBus.getDefault().post(new LoginEvent(LoginEvent.LOGIN_SUCCESS,bean));
-
+        Log.d("登录回调：","444444");
         finish();
     }
 

@@ -3,7 +3,7 @@
     android:id="@+id/activity_lead"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/first_background"
+    android:background="@drawable/open_bg"
     android:orientation="vertical">
 
 
@@ -18,7 +18,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/open_logo" />
+            android:src="@drawable/open_icon" />
 
     </RelativeLayout>
 

@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:padding="@dimen/vip_top_padding"
-            android:src="@drawable/back" />
+            android:src="@drawable/open_btn_back" />
 
         <ImageView
             android:id="@+id/login_set"

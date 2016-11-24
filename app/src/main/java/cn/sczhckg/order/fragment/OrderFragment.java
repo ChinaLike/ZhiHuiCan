@@ -91,7 +91,7 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
      * 导航栏适配器
      */
     private TabAdapter mTabAdapter;
-
+    /**点菜桌选择类型，0-主桌*/
     public static int tabOrderType = 0;
 
     /**

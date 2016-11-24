@@ -35,6 +35,7 @@ import cn.sczhckg.order.data.event.RefreshCartEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.image.GlideLoading;
 import cn.sczhckg.order.overwrite.CarouselView;
+import cn.sczhckg.order.until.AppSystemUntil;
 import cn.sczhckg.order.until.ConvertUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -112,7 +113,8 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
         dishesSales.setText("月销量  " + bean.getSales());
         dishesLike.setText("  " + bean.getCollect());
         detailsDishesNumber.setText(bean.getNumber() + "");
-        if (bean.getPermiss() == 0) {
+        /**判断权限是否可以点餐*/
+        if (bean.getPermiss() == Constant.PREMISS_AGREE) {
             detailsAdd.setClickable(true);
             detailsDishesMinus.setClickable(true);
             detailsDishesAdd.setClickable(true);
@@ -127,7 +129,7 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
 
     @Override
     public void init() {
-        detailsBanner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ConvertUtils.dip2px(getContext(), 300)));
+        detailsBanner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppSystemUntil.height(getContext())*2/3));
     }
 
     @Override

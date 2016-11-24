@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:ellipsize="end"
-            android:padding="5dp"
+            android:paddingLeft="5dp"
             android:gravity="center_vertical|left"
             android:lines="2"
             android:textColor="@color/text_color_m"
@@ -90,17 +90,19 @@
 
                 <ImageView
                     android:id="@+id/cart_add"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/dishes_add" />
+                    android:scaleType="fitXY"
+                    android:src="@drawable/open_btn_dishes_add" />
 
                 <ImageView
                     android:id="@+id/cart_minus"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:scaleType="fitXY"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/dishes_minus" />
+                    android:src="@drawable/open_btn_dishes_reduce" />
 
             </RelativeLayout>
 

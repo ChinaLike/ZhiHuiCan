@@ -32,7 +32,7 @@ public interface RetrofitService {
 
     /**会员登录*/
     @FormUrlEncoded
-    @POST("android/test/login")
+    @POST("rest/user/login")
     Call<Bean<UserLoginBean>> login(@Field("parames") String parames);
     /**主页锅底选择*/
     @FormUrlEncoded

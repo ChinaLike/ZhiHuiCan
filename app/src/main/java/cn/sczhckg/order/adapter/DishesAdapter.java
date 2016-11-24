@@ -21,6 +21,7 @@ import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.RefreshCartEvent;
+import cn.sczhckg.order.fragment.OrderFragment;
 import cn.sczhckg.order.image.GlideLoading;
 
 /**
@@ -65,7 +66,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         holder.dishesSales.setText(bean.getSales() + "");
         holder.dishesCollect.setText(bean.getCollect() + "");
         if (bean.getStockout() == 0) {
-            holder.dishesStockout.setVisibility(View.VISIBLE);
+            holder.dishesStockout.setVisibility(View.INVISIBLE);
             holder.dishesMinus.setClickable(false);
             holder.dishesAdd.setClickable(false);
         } else {
@@ -74,6 +75,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
             holder.dishesAdd.setClickable(true);
         }
         holder.dishesNumber.setText(bean.getNumber() + "");
+        /**菜品减少*/
         holder.dishesMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,11 +85,13 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
                         number--;
                         bean.setNumber(number);
                         holder.dishesNumber.setText(number + "");
+                        bean.setTableId(OrderFragment.tabOrderType);
                         EventBus.getDefault().post(new RefreshCartEvent(bean));
                     }
                 }
             }
         });
+        /**菜品添加*/
         holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,10 +100,12 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
                     number++;
                     bean.setNumber(number);
                     holder.dishesNumber.setText(number + "");
+                    bean.setTableId(OrderFragment.tabOrderType);
                     EventBus.getDefault().post(new RefreshCartEvent(bean));
                 }
             }
         });
+        /**点击进入详情*/
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +119,17 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
             DetailsAdapter adapter=new DetailsAdapter(mContext,bean.getPriceType());
             holder.dishesFavorableRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
             holder.dishesFavorableRecyclerView.setAdapter(adapter);
+        }
+
+        /**权限判定,该桌是否可以点餐*/
+        if (bean.getPermiss()==Constant.PREMISS_AGREE){
+            /**可以点菜*/
+            holder.dishesAdd.setClickable(true);
+            holder.dishesMinus.setClickable(true);
+        }else {
+            /**不可以点菜*/
+            holder.dishesAdd.setClickable(false);
+            holder.dishesMinus.setClickable(false);
         }
 
     }

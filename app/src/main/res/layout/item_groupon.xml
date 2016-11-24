@@ -34,7 +34,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/confirm" />
+            android:src="@drawable/accounts_btn_confirm" />
 
         <EditText
             android:id="@+id/group_input"

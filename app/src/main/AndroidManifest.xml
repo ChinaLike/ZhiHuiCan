@@ -14,9 +14,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/NotitleTheme">
-        <activity android:name=".activity.LoginActivity"></activity>
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.LeadActivity">
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".activity.LeadActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

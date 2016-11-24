@@ -33,6 +33,8 @@ public class DishesBean implements Serializable {
 
     private int permiss;//菜品可点属性，0-消费者可选择， 1-消费者不可选择
 
+    private int tableId;//归属那桌点餐
+
     private List<PriceTypeBean> priceType;//优惠价格类型
 
     public int getType() {
@@ -131,6 +133,14 @@ public class DishesBean implements Serializable {
         this.permiss = permiss;
     }
 
+    public int getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -145,6 +155,7 @@ public class DishesBean implements Serializable {
                 ", number=" + number +
                 ", totalPrice=" + totalPrice +
                 ", permiss=" + permiss +
+                ", tableId=" + tableId +
                 ", priceType=" + priceType +
                 '}';
     }

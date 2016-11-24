@@ -1,6 +1,7 @@
 package cn.sczhckg.order.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.PriceTypeBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
+import cn.sczhckg.order.image.GlideLoading;
 import cn.sczhckg.order.overwrite.SlantTextView;
 
 /**
@@ -36,7 +38,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     private OnTotalNumberListener onTotalNumberListener;
 
-
     public ShoppingCartAdapter(List<DishesBean> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
@@ -52,20 +53,21 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         final DishesBean bean = mList.get(position);
         holder.cartName.setText(bean.getName());
         holder.cartNumber.setText("×" + bean.getNumber());
-        if (bean.getPriceType()==null) {
+        /**设置优惠之前的价格，以及优惠图标*/
+        if (bean.getPriceType() == null || bean.getPriceType().size() == 0) {
             holder.cartPrice.setText("¥" + bean.getPrice());
-        }else {
+        } else {
             holder.cartFavorablePrice.setText("¥" + bean.getPrice());
-            countFavorable(bean.getPriceType(),holder.cartPrice,holder.cartFavorable);
+            countFavorable(bean.getPriceType(), holder.cartPrice, holder.cartFavorable);
         }
-        bean.setTotalPrice(countPrice(bean.getNumber(),  holder.cartPrice));
+        bean.setTotalPrice(countPrice(bean.getNumber(), holder.cartPrice));
         holder.cartTotalPrice.setText("¥" + bean.getTotalPrice());
         /**加菜*/
         holder.cartAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /**首先判断权限*/
-                if (bean.getPermiss()==Constant.PREMISS_AGREE) {
+                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
                     int number = bean.getNumber();
                     number++;
                     bean.setNumber(number);
@@ -80,7 +82,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             @Override
             public void onClick(View v) {
                 /**首先判断权限*/
-                if (bean.getPermiss()==Constant.PREMISS_AGREE) {
+                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
                     int number = bean.getNumber();
                     if (number > 0) {
                         number--;
@@ -111,43 +113,74 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     /**
      * 计算锅底数量，菜品数量，总价
      */
-    public void countTotal(){
+    public void countTotal() {
         /**锅底数量*/
-        int potNumber=0;
+        int potNumber = 0;
         /**菜品数量*/
-        int dishesNumber=0;
+        int dishesNumber = 0;
         /**总价*/
-        int totalPrice=0;
+        int totalPrice = 0;
         for (int i = 0; i < mList.size(); i++) {
-            DishesBean bean=mList.get(i);
-            if (bean.getType()==0){
-                potNumber=potNumber+bean.getNumber();
-            }else {
-                dishesNumber=dishesNumber+bean.getNumber();
+            DishesBean bean = mList.get(i);
+            if (bean.getType() == 0) {
+                potNumber = potNumber + bean.getNumber();
+            } else {
+                dishesNumber = dishesNumber + bean.getNumber();
             }
-           totalPrice = totalPrice+bean.getNumber()*bean.getPrice();
+            if (bean.getPriceType()!=null&&bean.getPriceType().size()!=0) {
+                totalPrice = totalPrice + bean.getNumber() * getFavortablePrice(bean.getPriceType());
+            }else {
+                totalPrice = totalPrice + bean.getNumber() * bean.getPrice();
+            }
         }
-        onTotalNumberListener.totalNumber(totalPrice,potNumber,dishesNumber);
+        onTotalNumberListener.totalNumber(totalPrice, potNumber, dishesNumber);
     }
 
     /**
      * 计算折扣
      */
-    private void countFavorable(List<PriceTypeBean> priceTypeBeen,TextView textView,ImageView image) {
+    private void countFavorable(List<PriceTypeBean> priceTypeBeen, TextView textView, ImageView image) {
+        int price = getFavortablePrice(priceTypeBeen);
+        int type = getFavorableType(priceTypeBeen);
+        textView.setText("¥" + price);
+        for (int i = 0; i < priceTypeBeen.size(); i++) {
+            if(priceTypeBeen.get(i).getType()==type){
+                GlideLoading.loadingDishes(mContext,priceTypeBeen.get(i).getUrl(),image);
+            }
+        }
+    }
+
+    /**
+     * 获取优惠的ID
+     * @param priceTypeBeen
+     * @return
+     */
+    private int getFavorableType(List<PriceTypeBean> priceTypeBeen){
         int price = priceTypeBeen.get(0).getPrice();
-        int type= priceTypeBeen.get(0).getType();
+        int type = priceTypeBeen.get(0).getType();
         for (int i = 0; i < priceTypeBeen.size(); i++) {
             if (priceTypeBeen.get(i).getPrice() < price) {
                 price = priceTypeBeen.get(i).getPrice();
                 type = priceTypeBeen.get(i).getType();
             }
         }
-        textView.setText("¥"+price);
-        if (type == 0){
-            image.setImageResource(R.drawable.vip);
-        }else if (type == 1){
-            image.setImageResource(R.drawable.zhekou);
+
+        return type;
+    }
+
+    /**
+     * 获取优惠价格
+     * @param priceTypeBeen
+     * @return
+     */
+    private int getFavortablePrice(List<PriceTypeBean> priceTypeBeen){
+        int price = priceTypeBeen.get(0).getPrice();
+        for (int i = 0; i < priceTypeBeen.size(); i++) {
+            if (priceTypeBeen.get(i).getPrice() < price) {
+                price = priceTypeBeen.get(i).getPrice();
+            }
         }
+        return price;
     }
 
     /**
@@ -156,7 +189,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
      * @return
      */
     private int countPrice(int number, TextView text) {
-        int price=Integer.parseInt(text.getText().toString().replace("¥",""));
+        int price = Integer.parseInt(text.getText().toString().replace("¥", ""));
         return number * price;
     }
 

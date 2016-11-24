@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/person_minus" />
+            android:src="@drawable/open_btn_number_reduce" />
 
         <ImageView
             android:id="@+id/person_add"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
-            android:src="@drawable/person_add" />
+            android:src="@drawable/open_btn_number_add" />
     </LinearLayout>
 
 </LinearLayout>
