@@ -36,55 +36,59 @@ public interface RetrofitService {
     Call<Bean<UserLoginBean>> login(@Field("parames") String parames);
     /**主页锅底选择*/
     @FormUrlEncoded
-    @POST("android/test/openReady")
-    Call<MainPagerShow> potDataShow(@Field("id") String id, @Field("deviceId") String deviceId);
-    /**请求开桌*/
+    @POST("rest/openTable/openTableData")
+    Call<Bean<MainPagerShow>> potDataShow(@Field("parames") String parames);
+    /**购物车数据提交*/
     @FormUrlEncoded
-    @POST("android/test/cart/open")
-    Call<CommonBean> openTable(@Field("table") String table, @Field("type") int type, @Field("params") String params, @Field("person") int person);
+    @POST("rest/openTable/openTableVerify")
+    Call<Bean<CommonBean>> openTable(@Field("parames") String parames);
     /**消费者选择点菜方式后请求分类列表*/
     @FormUrlEncoded
-    @POST("android/test/order/classify")
-    Call<ClassifyBean> classify(@Field("table") String table, @Field("type") int type);
+    @POST("rest/order/claaify")
+    Call<Bean<ClassifyBean>> classify(@Field("parames") String parames);
     /**菜品信息*/
     @FormUrlEncoded
-    @POST("android/test/order/dishes")
-    Call<List<DishesBean>> dishes(@Field("id") int id, @Field("table") String table, @Field("type") int type);
+    @POST("rest/order/dishesList")
+    Call<Bean<List<DishesBean>>> dishes(@Field("parames") String parames);
     /**菜品详情*/
     @FormUrlEncoded
-    @POST("android/test/order/show/details")
-    Call<DetailsBean> dishesDeatails(@Field("id") String id, @Field("name") String name);
+    @POST("rest/dishes/deatails")
+    Call<Bean<DetailsBean>> dishesDeatails(@Field("parames") String parames);
     /**菜品选择好后数据提交*/
+
+    @Deprecated
     @FormUrlEncoded
-    @POST("android/test/cart/order")
+    @POST("rest/order/dishesList")
     Call<CommonBean> chooseGood(@Field("table") String table, @Field("orderType") int orderType,@Field("type") int type,@Field("params") String params);
+
+
     /**结账清单数据请求*/
     @FormUrlEncoded
-    @POST("android/test/payTheBills/show")
-    Call<SettleAccountsBean> settleAccountsList(@Field("table") String table);
+    @POST("rest/accounts/accountsList")
+    Call<Bean<SettleAccountsBean>> settleAccountsList(@Field("parames") String parames);
     /**团购券验证*/
     @FormUrlEncoded
-    @POST("android/test/payTheBills/groupon")
-    Call<GrouponBean> verifyGroup(@Field("table") String table, @Field("groupon") String groupon);
+    @POST("rest/accounts/accountsGroupon")
+    Call<Bean<GrouponBean>> verifyGroup(@Field("parames") String parames);
     /**结账*/
     @FormUrlEncoded
-    @POST("android/test/payTheBills/pay")
-    Call<QRCodeBean> pay(@Field("table") String table, @Field("favorableType") int favorableType, @Field("userNmae") String userNmae, @Field("coupon") String coupon, @Field("payType") int payType, @Field("giftMoney") int giftMoney);
+    @POST("rest/accounts/accountsPay")
+    Call<Bean<QRCodeBean>> pay(@Field("parames") String parames);
     /**评价请求数据*/
     @FormUrlEncoded
-    @POST("android/test/payTheBills/evaluate")
-    Call<EvaluateBean> getEvaluate(@Field("id") String id);
+    @POST("rest/accounts/accountsEvaluateShow")
+    Call<Bean<EvaluateBean>> getEvaluate(@Field("parames") String parames);
     /**评价发送数据*/
     @FormUrlEncoded
-    @POST("android/test/payTheBills/evaluatePost")
-    Call<CommonBean> postEvaluate(@Field("id") String id,@Field("attitude") float attitude,@Field("quality") float quality,@Field("speed") float speed,@Field("other") float other,@Field("hotword") String hotword,@Field("opinion") String opinion);
+    @POST("rest/accounts/accountsEvaluate")
+    Call<Bean<CommonBean>> postEvaluate(@Field("parames") String parames);
     /**服务呼叫*/
     @FormUrlEncoded
-    @POST("android/test/sercive")
-    Call<CommonBean> service(@Field("table") String table, @Field("type") int type);
+    @POST("rest/sercive")
+    Call<Bean<CommonBean>> service(@Field("parames") String parames);
     /**申请办理VIP*/
     @FormUrlEncoded
-    @POST("android/test/applyForVip")
+    @POST("rest/user/applyForVip")
     Call<Bean<CommonBean>> applyForVip(@Field("parames") String parames);
 
 }

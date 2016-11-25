@@ -13,9 +13,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckg.order.R;
-import cn.sczhckg.order.activity.MainActivity;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.CommonBean;
+import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,7 +31,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ServiceFragment extends BaseFragment implements Callback<CommonBean> {
+public class ServiceFragment extends BaseFragment implements Callback<Bean<CommonBean>> {
 
 
     /**
@@ -80,20 +85,29 @@ public class ServiceFragment extends BaseFragment implements Callback<CommonBean
     }
 
     private void postService(int type) {
-        Call<CommonBean> call = RetrofitRequest.service().service(MainActivity.table, type);
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setType(type);
+
+        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.SERVICE)
+                .time()
+                .bean(bean);
+
+        Call<Bean<CommonBean>> call = RetrofitRequest.service().service(restRequest.toRequestString());
         call.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<CommonBean> call, Response<CommonBean> response) {
-        CommonBean bean = response.body();
-        if (bean.getStatus() == 0) {
-            Toast.makeText(getContext(), bean.getMsg(), Toast.LENGTH_SHORT).show();
+    public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
+        Bean<CommonBean> bean = response.body();
+        if (bean!=null&&bean.getCode() == ResponseCode.SUCCESS) {
+            Toast.makeText(getContext(), bean.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onFailure(Call<CommonBean> call, Throwable t) {
+    public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
 
     }
 

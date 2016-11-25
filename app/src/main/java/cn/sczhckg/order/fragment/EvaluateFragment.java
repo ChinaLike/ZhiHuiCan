@@ -25,10 +25,16 @@ import butterknife.OnClick;
 import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.EvaluateHotWordAdapter;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.EvaluateBean;
+import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.event.EvaluateListEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +64,7 @@ public class EvaluateFragment extends BaseFragment {
     /**
      * 热词ID
      */
-    private String hotWordId = "";
+    private int hotWordId =-1;
     /**
      * 用户输入意见
      */
@@ -125,20 +131,26 @@ public class EvaluateFragment extends BaseFragment {
      * @param id
      */
     private void getEvaluate(String id) {
-        Log.d("====","=====");
-        Call<EvaluateBean> getEvaluateCall = RetrofitRequest.service().getEvaluate(id);
-        getEvaluateCall.enqueue(new Callback<EvaluateBean>() {
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setId(id);
+        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ACCOUNTS_EVALUATE_SHOW)
+                .time()
+                .bean(bean);
+
+        Call<Bean<EvaluateBean>> getEvaluateCall = RetrofitRequest.service().getEvaluate(restRequest.toRequestString());
+        getEvaluateCall.enqueue(new Callback<Bean<EvaluateBean>>() {
             @Override
-            public void onResponse(Call<EvaluateBean> call, Response<EvaluateBean> response) {
-                EvaluateBean bean = response.body();
-                if (bean != null) {
-                    mList = bean.getEvaluateListBean();
+            public void onResponse(Call<Bean<EvaluateBean>> call, Response<Bean<EvaluateBean>> response) {
+                Bean<EvaluateBean> bean = response.body();
+                if (bean != null&&bean.getCode()== ResponseCode.SUCCESS) {
+                    mList = bean.getResult().getEvaluateListBean();
                     adapter.notifyDataSetChanged(mList);
                 }
             }
 
             @Override
-            public void onFailure(Call<EvaluateBean> call, Throwable t) {
+            public void onFailure(Call<Bean<EvaluateBean>> call, Throwable t) {
                 Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
             }
         });
@@ -148,15 +160,32 @@ public class EvaluateFragment extends BaseFragment {
      * 上传评价信息
      */
     private void postEvaluate() {
-        Call<CommonBean> postEvaluateCall = RetrofitRequest.service().postEvaluate(id, ratingBar1.getRating(), ratingBar2.getRating(), ratingBar3.getRating(), ratingBar4.getRating(), hotWordId, opinion);
-        postEvaluateCall.enqueue(new Callback<CommonBean>() {
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setId(id);
+        bean.setRatingBar1(ratingBar1.getRating());
+        bean.setRatingBar2(ratingBar2.getRating());
+        bean.setRatingBar3(ratingBar3.getRating());
+        bean.setRatingBar4(ratingBar4.getRating());
+        bean.setHotWordId(hotWordId);
+        bean.setOpinion(opinion);
+
+        RestRequest<RequestCommonBean> restRequest=JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ACCOUNTS_EVALUATE)
+                .time()
+                .bean(bean);
+
+        Call<Bean<CommonBean>> postEvaluateCall = RetrofitRequest.service().postEvaluate(restRequest.toRequestString());
+        postEvaluateCall.enqueue(new Callback<Bean<CommonBean>>() {
             @Override
-            public void onResponse(Call<CommonBean> call, Response<CommonBean> response) {
-                Toast.makeText(getContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
+                Bean<CommonBean> beanBean=response.body();
+                if (beanBean!=null&&beanBean.getCode()==ResponseCode.SUCCESS) {
+                    Toast.makeText(getContext(), beanBean.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(Call<CommonBean> call, Throwable t) {
+            public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
                 Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
             }
         });

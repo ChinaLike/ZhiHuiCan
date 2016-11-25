@@ -28,16 +28,24 @@ import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ShoppingCartAdapter;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.event.MoreDishesHintEvent;
 import cn.sczhckg.order.data.event.RefreshCartEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnTotalNumberListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import cn.sczhckg.order.until.AppSystemUntil;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +56,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<CommonBean> {
+public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<Bean<CommonBean>> {
 
 
     @Bind(R.id.nothing)
@@ -108,20 +116,21 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void refreshCart(RefreshCartEvent event) {
         shoppingcartButton.setClickable(true);
         shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
-        List<DishesBean> list=initList(event.getBean());
+        List<DishesBean> list = initList(event.getBean());
         isHaveData(list);
         mShoppingCartAdapter.notifyDataSetChanged(list);
     }
 
     /**
      * 通过菜品信息来判断是否已经添加次菜品，如果已经添加刷新数量
+     *
      * @param bean
      */
-    private List<DishesBean> initList(DishesBean bean){
+    private List<DishesBean> initList(DishesBean bean) {
         if (mList.contains(bean)) {
             int postion = mList.indexOf(bean);
             mList.remove(bean);
-            if (bean.getNumber()!=0) {
+            if (bean.getNumber() != 0) {
                 mList.add(postion, bean);
             }
         } else {
@@ -167,15 +176,37 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.openTable))) {
             /**开桌*/
             buttonType = 0;
-            Call<CommonBean> openTable = RetrofitRequest.service().openTable(MainActivity.table, Constant.OPEN_TABLE, mList.toString(), MainActivity.person);
-            openTable.enqueue(this);
+            cartVerify(0);
         } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
             /**选好了*/
             buttonType = 1;
-            Call<CommonBean> chooseGood = RetrofitRequest.service().chooseGood(MainActivity.table, orderType, Constant.ORDER, mList.toString());
-            chooseGood.enqueue(this);
+            cartVerify(1);
+//            Call<CommonBean> chooseGood = RetrofitRequest.service().chooseGood(MainActivity.table, orderType, Constant.ORDER, mList.toString());
+//            chooseGood.enqueue(this);
         }
 
+    }
+
+    /**
+     * 购物车数据验证
+     */
+    private void cartVerify(int type) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setDishesList(mList);
+        bean.setPerson(MainActivity.person);
+        if (type == 0) {
+            bean.setType(Constant.OPEN_TABLE);
+        } else if (type == 1) {
+            bean.setType(Constant.ORDER);
+            bean.setOrderType(orderType);
+        }
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.OPEN_TABLE_VERIFY)
+                .time()
+                .bean(bean);
+        Call<Bean<CommonBean>> mainShow = RetrofitRequest.service().openTable(restRequest.toRequestString());
+        mainShow.enqueue(this);
     }
 
     @Override
@@ -192,26 +223,27 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     }
 
     @Override
-    public void onResponse(Call<CommonBean> call, Response<CommonBean> response) {
-        CommonBean bean = response.body();
-        if (buttonType == 0) {
-            shoppingcartButton.setText(R.string.choose_good);
-            if (bean.getStatus() == 0 && onButtonClickListener != null) {
-                flag = 1;
-                onButtonClickListener.onClick(Constant.ORDER, bean.getShowType());
-            }
-        } else if (buttonType == 1) {
-            Toast.makeText(getContext(), bean.getMsg(), Toast.LENGTH_SHORT).show();
-            if (bean.getStatus() == 0) {
+    public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
+        Bean<CommonBean> bean = response.body();
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            if (buttonType == 0) {
+                shoppingcartButton.setText(R.string.choose_good);
+                if (onButtonClickListener != null) {
+                    flag = 1;
+                    onButtonClickListener.onClick(Constant.ORDER, bean.getResult().getShowType());
+                }
+            } else if (buttonType == 1) {
+                Toast.makeText(getContext(), bean.getMessage(), Toast.LENGTH_SHORT).show();
                 /**如果状态是0，则是提交数据成功，此时把按钮变成灰色，当有加菜时，再次亮起*/
                 shoppingcartButton.setClickable(false);
                 shoppingcartButton.setTextColor(getResources().getColor(R.color.white));
             }
         }
+
     }
 
     @Override
-    public void onFailure(Call<CommonBean> call, Throwable t) {
+    public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
         Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 

@@ -12,8 +12,6 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,13 +20,12 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.event.LoginEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckj.platform.rest.io.RestRequest;
-import cn.sczhckj.platform.rest.io.RestResponse;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
-import cn.sczhckj.platform.rest.io.json.JSONRestResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,10 +95,10 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
             return;
         }
 
-        UserLoginBean bean=new UserLoginBean();
+        RequestCommonBean bean=new RequestCommonBean();
         bean.setName(userName);
         bean.setPassword(password);
-        RestRequest<UserLoginBean> restRequest= JSONRestRequest.Builder.build(UserLoginBean.class)
+        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.LOGIN)
                 .time()
                 .bean(bean);
@@ -118,17 +115,13 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
     private void into(UserLoginBean bean) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra(Constant.USER_INFO, bean);
-        Log.d("登录回调：","11111="+getIntent().getFlags());
-        if (getIntent().getFlags() == Constant.LEAD_TO_LOGIN) {
-            Log.d("登录回调：","22222");
+        if (getIntent().getExtras()!=null&&(getIntent().getExtras().getInt(Constant.INTENT_FLAG) == Constant.LEAD_TO_LOGIN)) {
             startActivity(intent);
-        } else if (getIntent().getFlags() == Constant.MAIN_TO_LOGIN) {
-            Log.d("登录回调：","333333");
+        } else if (getIntent().getExtras()!=null&&(getIntent().getExtras().getInt(Constant.INTENT_FLAG) == Constant.MAIN_TO_LOGIN)) {
             setResult(Constant.LOGIN_RESULT_CODE,intent);
         }
         /**发布消息*/
         EventBus.getDefault().post(new LoginEvent(LoginEvent.LOGIN_SUCCESS,bean));
-        Log.d("登录回调：","444444");
         finish();
     }
 

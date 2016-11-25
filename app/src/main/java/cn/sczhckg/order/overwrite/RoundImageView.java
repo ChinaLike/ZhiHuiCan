@@ -140,8 +140,11 @@ public class RoundImageView extends ImageView {
             BitmapDrawable bd = (BitmapDrawable) drawable;
             return bd.getBitmap();
         }
-        int w = drawable.getIntrinsicWidth();
-        int h = drawable.getIntrinsicHeight();
+        /**这里不应获取图片的宽高，应获取控件的宽高来适应图片，这样图片才会显示完全*/
+//        int w = drawable.getIntrinsicWidth();
+//        int h = drawable.getIntrinsicHeight();
+        int w = getWidth();
+        int h = getHeight();
         // 创建画布
         Bitmap bitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);

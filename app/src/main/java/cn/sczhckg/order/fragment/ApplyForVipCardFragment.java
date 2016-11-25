@@ -26,9 +26,13 @@ import cn.sczhckg.order.adapter.ApplyForVipCardAdapter;
 import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.CommonBean;
 import cn.sczhckg.order.data.bean.Constant;
+import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.bean.VipFavorableBean;
 import cn.sczhckg.order.data.event.ApplyForVipCardEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,17 +113,7 @@ public class ApplyForVipCardFragment extends BaseFragment implements Callback<Be
                 } else if (applyForVipCardPhoneInput.getText().toString().equals("")) {
                     Toast.makeText(getContext(), "请您输入您的电话号码", Toast.LENGTH_SHORT).show();
                 } else {
-                    JSONObject object = new JSONObject();
-                    try {
-                        object.put(Constant.APPLY_FOR_VIP_NAME, applyForVipCardNameInput.getText().toString());
-                        object.put(Constant.APPLY_FOR_VIP_PHONE, applyForVipCardPhoneInput.getText().toString());
-                        object.put(Constant.APPLY_FOR_VIP_TYPE, type);
-                        Call<Bean<CommonBean>> applyCall = RetrofitRequest.service().applyForVip(object.toString());
-                        applyCall.enqueue(this);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
+                    applyForVipCard(applyForVipCardNameInput.getText().toString(), applyForVipCardPhoneInput.getText().toString(), type);
                 }
                 break;
             case R.id.apply_for_vip_card_name_cancel:
@@ -131,6 +125,27 @@ public class ApplyForVipCardFragment extends BaseFragment implements Callback<Be
                 applyForVipCardPhoneInput.setText("");
                 break;
         }
+    }
+
+    /**
+     * 会员申请数据提交
+     *
+     * @param name
+     * @param phone
+     * @param type
+     */
+    private void applyForVipCard(String name, String phone, int type) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setUserName(name);
+        bean.setPhone(phone);
+        bean.setType(type);
+
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.APPLY_FOR_VIP)
+                .time()
+                .bean(bean);
+        Call<Bean<CommonBean>> applyCall = RetrofitRequest.service().applyForVip(restRequest.toRequestString());
+        applyCall.enqueue(this);
     }
 
     @Override

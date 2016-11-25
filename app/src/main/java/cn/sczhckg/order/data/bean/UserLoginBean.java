@@ -12,7 +12,6 @@ public class UserLoginBean implements Serializable {
 
     private String id;//用户ID
     private String name;//用户名字
-    private String password;//用户密码
     private String url;//用户头像地址
     private int vip;//用户VIP等级
     private String table;//如果主桌已经登录，返回主桌桌号
@@ -35,13 +34,6 @@ public class UserLoginBean implements Serializable {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getUrl() {
         return url;
@@ -88,7 +80,6 @@ public class UserLoginBean implements Serializable {
         return "{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
                 ", url='" + url + '\'' +
                 ", vip=" + vip +
                 ", table='" + table + '\'' +

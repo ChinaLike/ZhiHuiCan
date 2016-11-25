@@ -11,8 +11,6 @@ import java.util.List;
 
 public class MainPagerShow implements Serializable{
 
-    private int status;
-
     private int cartStatus;//购物车状态
 
     private String tableNumber;//桌号
@@ -26,14 +24,6 @@ public class MainPagerShow implements Serializable{
     private List<DishesBean> potList;//锅底选择
 
     private List<DishesBean> dishesList;//推荐菜品
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 
     public int getCartStatus() {
         return cartStatus;
@@ -89,5 +79,18 @@ public class MainPagerShow implements Serializable{
 
     public void setDishesList(List<DishesBean> dishesList) {
         this.dishesList = dishesList;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "cartStatus=" + cartStatus +
+                ", tableNumber='" + tableNumber + '\'' +
+                ", defaultNumber=" + defaultNumber +
+                ", waitress='" + waitress + '\'' +
+                ", person=" + person +
+                ", potList=" + potList +
+                ", dishesList=" + dishesList +
+                '}';
     }
 }

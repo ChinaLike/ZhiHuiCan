@@ -19,11 +19,17 @@ import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.SettleAccountsAdapter;
+import cn.sczhckg.order.data.bean.Bean;
+import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.bean.SettleAccountsBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesItemBean;
 import cn.sczhckg.order.data.event.SettleAountsCartEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +40,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class SettleAccountsFragment extends BaseFragment implements Callback<SettleAccountsBean> {
+public class SettleAccountsFragment extends BaseFragment implements Callback<Bean<SettleAccountsBean>> {
 
     @Bind(R.id.dishes_details)
     ExpandableListView dishesDetails;
@@ -79,7 +85,14 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
      * 获取清单数据
      */
     public void getData() {
-        Call<SettleAccountsBean> settleAccountsBeanCall = RetrofitRequest.service().settleAccountsList(MainActivity.table);
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ACCOUNTS_LIST)
+                .time()
+                .bean(bean);
+
+        Call<Bean<SettleAccountsBean>> settleAccountsBeanCall = RetrofitRequest.service().settleAccountsList(restRequest.toRequestString());
         settleAccountsBeanCall.enqueue(this);
     }
 
@@ -90,19 +103,19 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Set
     }
 
     @Override
-    public void onResponse(Call<SettleAccountsBean> call, Response<SettleAccountsBean> response) {
-        SettleAccountsBean bean = response.body();
-        if (bean != null) {
-            mList = bean.getSettleAccountsDishesBeen();
+    public void onResponse(Call<Bean<SettleAccountsBean>> call, Response<Bean<SettleAccountsBean>> response) {
+        Bean<SettleAccountsBean> bean = response.body();
+        if (bean != null&&bean.getCode() == ResponseCode.SUCCESS) {
+            mList = bean.getResult().getSettleAccountsDishesBeen();
             mSettleAccountsAdapter.notifyDataSetChanged(mList);
             /**更新左侧结账方式*/
-            EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.LOADING, bean));
+            EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.LOADING, bean.getResult()));
         }
 
     }
 
     @Override
-    public void onFailure(Call<SettleAccountsBean> call, Throwable t) {
+    public void onFailure(Call<Bean<SettleAccountsBean>> call, Throwable t) {
         Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 

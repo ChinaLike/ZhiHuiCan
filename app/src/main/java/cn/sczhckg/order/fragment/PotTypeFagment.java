@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -22,14 +25,21 @@ import butterknife.OnClick;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.PersonChooseAdapter;
+import cn.sczhckg.order.data.bean.Bean;
+import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
+import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.PersonBean;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
+import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnTableListenner;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
 import cn.sczhckg.order.until.AppSystemUntil;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,7 +50,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class PotTypeFagment extends BaseFragment implements Callback<MainPagerShow> {
+public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPagerShow>> {
 
 
     @Bind(R.id.pot_line)
@@ -94,7 +104,7 @@ public class PotTypeFagment extends BaseFragment implements Callback<MainPagerSh
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
-     }
+    }
 
     @Override
     public void init() {
@@ -104,13 +114,24 @@ public class PotTypeFagment extends BaseFragment implements Callback<MainPagerSh
     }
 
     /**
-     * 获取网络数据
+     * 获取开桌显示数据
      */
     private void initNet() {
-        deviceId = AppSystemUntil.getAndroidID(getContext());
-        Call<MainPagerShow> mainShow = RetrofitRequest.service().potDataShow(userId, deviceId);
-        mainShow.enqueue(this);
-        showProgress();
+        try {
+            deviceId = AppSystemUntil.getAndroidID(getContext());
+            RequestCommonBean bean = new RequestCommonBean();
+            bean.setId(userId);
+            bean.setDeviceId(deviceId);
+            RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                    .op(OP.OPEN_TABLE_SHOW)
+                    .time()
+                    .bean(bean);
+            Call<Bean<MainPagerShow>> mainShow = RetrofitRequest.service().potDataShow(restRequest.toRequestString());
+            mainShow.enqueue(this);
+            showProgress();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -230,17 +251,17 @@ public class PotTypeFagment extends BaseFragment implements Callback<MainPagerSh
     }
 
     @Override
-    public void onResponse(Call<MainPagerShow> call, Response<MainPagerShow> response) {
-        MainPagerShow bean = response.body();
+    public void onResponse(Call<Bean<MainPagerShow>> call, Response<Bean<MainPagerShow>> response) {
+        Bean<MainPagerShow> bean=response.body();
         /**获取数据成功*/
-        if (bean.getStatus() == 0 && bean != null) {
-            initView(bean);
-            mOnTableListenner.table(bean.getTableNumber(),bean.getWaitress());
+        if (bean != null && bean.getCode() == 0) {
+            initView(bean.getResult());
+            mOnTableListenner.table(bean.getResult().getTableNumber(), bean.getResult().getWaitress());
         }
     }
 
     @Override
-    public void onFailure(Call<MainPagerShow> call, Throwable t) {
+    public void onFailure(Call<Bean<MainPagerShow>> call, Throwable t) {
         Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
         loadingFail("加载失败", new View.OnClickListener() {
             @Override

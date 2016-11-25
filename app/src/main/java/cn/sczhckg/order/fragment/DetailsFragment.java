@@ -25,18 +25,24 @@ import butterknife.OnClick;
 import cn.sczhckg.order.Config;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.DetailsAdapter;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DetailsBean;
 import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.PriceTypeBean;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.event.RefreshCartEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
 import cn.sczhckg.order.image.GlideLoading;
 import cn.sczhckg.order.overwrite.CarouselView;
 import cn.sczhckg.order.until.AppSystemUntil;
 import cn.sczhckg.order.until.ConvertUtils;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,7 +53,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class DetailsFragment extends BaseFragment implements Callback<DetailsBean> {
+public class DetailsFragment extends BaseFragment implements Callback<Bean<DetailsBean>> {
 
     @Bind(R.id.details_add)
     Button detailsAdd;
@@ -123,8 +129,25 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
             detailsDishesMinus.setClickable(false);
             detailsDishesAdd.setClickable(false);
         }
-        Call<DetailsBean> detailsBeanCall = RetrofitRequest.service().dishesDeatails(bean.getId(), bean.getName());
+        dishesDeatil(bean);
+    }
+
+    /**
+     * 菜品详情请求
+     * @param dishesBean
+     */
+    private void dishesDeatil(DishesBean dishesBean){
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setId(dishesBean.getId());
+        bean.setName(dishesBean.getName());
+        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.DISHES_DETAILS)
+                .time()
+                .bean(bean);
+
+        Call<Bean<DetailsBean>> detailsBeanCall = RetrofitRequest.service().dishesDeatails(restRequest.toRequestString());
         detailsBeanCall.enqueue(this);
+
     }
 
     @Override
@@ -133,17 +156,17 @@ public class DetailsFragment extends BaseFragment implements Callback<DetailsBea
     }
 
     @Override
-    public void onResponse(Call<DetailsBean> call, Response<DetailsBean> response) {
-        DetailsBean bean = response.body();
-        if (bean != null) {
-            bannerAdapter(bean.getUrls());
-            favorableAdapter(bean.getPriceType());
-            initProgress(bean.getGoodEvaluate(), bean.getTotalEvaluate());
+    public void onResponse(Call<Bean<DetailsBean>> call, Response<Bean<DetailsBean>> response) {
+        Bean<DetailsBean> bean=response.body();
+        if (bean != null&&bean.getCode() == ResponseCode.SUCCESS) {
+            bannerAdapter(bean.getResult().getUrls());
+            favorableAdapter(bean.getResult().getPriceType());
+            initProgress(bean.getResult().getGoodEvaluate(), bean.getResult().getTotalEvaluate());
         }
     }
 
     @Override
-    public void onFailure(Call<DetailsBean> call, Throwable t) {
+    public void onFailure(Call<Bean<DetailsBean>> call, Throwable t) {
 
     }
 

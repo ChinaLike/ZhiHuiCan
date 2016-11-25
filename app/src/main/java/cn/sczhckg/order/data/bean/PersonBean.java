@@ -29,4 +29,12 @@ public class PersonBean implements Serializable{
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "number=" + number +
+                ", tableName='" + tableName + '\'' +
+                '}';
+    }
 }

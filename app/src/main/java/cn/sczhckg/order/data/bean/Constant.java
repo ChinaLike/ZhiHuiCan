@@ -30,6 +30,7 @@ public class Constant {
      * 用户登录信息传递
      */
     public final static String USER_INFO = "userInfo";
+    public final static String INTENT_FLAG = "flag";
 
     /**
      * 首页锅底，推荐菜品等

@@ -39,7 +39,12 @@ public class GlideLoading {
      * @param imageView 控件
      */
     public static void loadingHeader(Context mContext, String url, ImageView imageView) {
-        Glide.with(mContext.getApplicationContext()).load(url).into(imageView);
+        Glide
+                .with(mContext.getApplicationContext())
+                .load(url)
+                .placeholder(R.drawable.loading)
+                .error(R.drawable.loading_faild)
+                .into(imageView);
     }
 
 

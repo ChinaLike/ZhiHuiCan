@@ -22,8 +22,14 @@ import butterknife.OnClick;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.GrouponAdapter;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.GrouponBean;
+import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +40,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class GrouponFragment extends BaseFragment implements Callback<GrouponBean> {
+public class GrouponFragment extends BaseFragment implements Callback<Bean<GrouponBean>> {
 
     @Bind(R.id.groupon_number)
     TextView grouponNumber;
@@ -132,21 +138,28 @@ public class GrouponFragment extends BaseFragment implements Callback<GrouponBea
     }
 
     private void postData(String group) {
-        Call<GrouponBean> grouponCall = RetrofitRequest.service().verifyGroup(MainActivity.table, group);
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setGroup(group);
+        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ACCOUNTS_GROUPON)
+                .time()
+                .bean(bean);
+        Call<Bean<GrouponBean>> grouponCall = RetrofitRequest.service().verifyGroup(restRequest.toRequestString());
         grouponCall.enqueue(this);
         showProgress("团购券验证中...");
     }
 
     @Override
-    public void onResponse(Call<GrouponBean> call, Response<GrouponBean> response) {
-        GrouponBean bean = response.body();
-        if (bean.getStatus() == 0) {
+    public void onResponse(Call<Bean<GrouponBean>> call, Response<Bean<GrouponBean>> response) {
+        Bean<GrouponBean> bean = response.body();
+        if (bean!=null&&bean.getCode() == ResponseCode.SUCCESS) {
             updata(groupInput.getText().toString());
             itemGrouponParent.setVisibility(View.GONE);
             groupInput.setText("");
             dismissProgress();
-        } else {
-            loadingFail(bean.getMsg() + "", new View.OnClickListener() {
+        } else if(bean!=null){
+            loadingFail(bean.getMessage() + "", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     postData(groupInput.getText().toString());
@@ -156,7 +169,7 @@ public class GrouponFragment extends BaseFragment implements Callback<GrouponBea
     }
 
     @Override
-    public void onFailure(Call<GrouponBean> call, Throwable t) {
+    public void onFailure(Call<Bean<GrouponBean>> call, Throwable t) {
         loadingFail(getString(R.string.overTime), new View.OnClickListener() {
             @Override
             public void onClick(View v) {

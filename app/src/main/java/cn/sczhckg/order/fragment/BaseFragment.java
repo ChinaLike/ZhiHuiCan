@@ -58,7 +58,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 设备ID
      */
-    protected static String deviceId = "";
+    protected static String deviceId ;
 
     protected View loadingView;
 

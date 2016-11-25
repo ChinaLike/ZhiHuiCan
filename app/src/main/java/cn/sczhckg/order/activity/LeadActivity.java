@@ -47,7 +47,7 @@ public class LeadActivity extends Activity {
         switch (view.getId()) {
             case R.id.right:
                 intent = new Intent(LeadActivity.this, LoginActivity.class);
-                intent.setFlags(Constant.LEAD_TO_LOGIN);
+                intent.putExtra(Constant.INTENT_FLAG,Constant.LEAD_TO_LOGIN);
                 startActivity(intent);
                 break;
             case R.id.deny:

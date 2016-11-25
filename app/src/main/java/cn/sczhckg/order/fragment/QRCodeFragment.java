@@ -23,13 +23,19 @@ import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ListAdapter;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.ListBean;
+import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.QRCodeBean;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
 import cn.sczhckg.order.image.GlideLoading;
 import cn.sczhckg.order.overwrite.NoScrollRecyclerview;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,7 +46,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class QRCodeFragment extends BaseFragment implements Callback<QRCodeBean> {
+public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCodeBean>> {
 
 
     @Bind(R.id.code_pay_title)
@@ -137,7 +143,20 @@ public class QRCodeFragment extends BaseFragment implements Callback<QRCodeBean>
         for (int i = 0; i < groupons.size(); i++) {
             grouponStr = grouponStr + groupons.get(i) + ",";
         }
-        Call<QRCodeBean> codeCall = RetrofitRequest.service().pay(MainActivity.table, favorableType, MyApplication.userName, grouponStr, type, giftMoney);
+
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setFavorableType(favorableType);
+        bean.setGroup(grouponStr);
+        bean.setType(type);
+        bean.setGiftMoney(giftMoney);
+
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ACCOUNTS_PAY)
+                .time()
+                .bean(bean);
+
+        Call<Bean<QRCodeBean>> codeCall = RetrofitRequest.service().pay(restRequest.toRequestString());
         codeCall.enqueue(this);
     }
 
@@ -155,26 +174,26 @@ public class QRCodeFragment extends BaseFragment implements Callback<QRCodeBean>
     }
 
     @Override
-    public void onResponse(Call<QRCodeBean> call, Response<QRCodeBean> response) {
-        QRCodeBean bean = response.body();
-        if (bean.getStatus() == 0) {
-            initAdapter(bean.getListBeanList());
+    public void onResponse(Call<Bean<QRCodeBean>> call, Response<Bean<QRCodeBean>> response) {
+        Bean<QRCodeBean> bean = response.body();
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            initAdapter(bean.getResult().getListBeanList());
             if (type == Constant.ALIPAY || type == Constant.WEIXIN) {
                 code.setVisibility(View.VISIBLE);
                 evaluateChooseParent.setVisibility(View.GONE);
-                GlideLoading.loadingDishes(getContext(),bean.getUrl(),code);
+                GlideLoading.loadingDishes(getContext(), bean.getResult().getUrl(), code);
             }
         }
     }
 
     @Override
-    public void onFailure(Call<QRCodeBean> call, Throwable t) {
+    public void onFailure(Call<Bean<QRCodeBean>> call, Throwable t) {
 
     }
 
-    private void initAdapter(List<ListBean> bean){
-        mListAdapter=new ListAdapter(getContext(),bean);
-        listRecycler.setLayoutManager(new GridLayoutManager(getContext(),3));
+    private void initAdapter(List<ListBean> bean) {
+        mListAdapter = new ListAdapter(getContext(), bean);
+        listRecycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
         listRecycler.setAdapter(mListAdapter);
     }
 }

@@ -28,16 +28,22 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ClassifyAdapter;
 import cn.sczhckg.order.adapter.TabAdapter;
+import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.ClassifyBean;
 import cn.sczhckg.order.data.bean.ClassifyItemBean;
 import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.bean.OP;
+import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.bean.TabBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.event.MoreDishesHintEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
+import cn.sczhckg.order.data.response.ResponseCode;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
 import cn.sczhckg.order.until.AppSystemUntil;
 import cn.sczhckg.order.until.ConvertUtils;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +54,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class OrderFragment extends BaseFragment implements Callback<ClassifyBean>, ClassifyAdapter.OnItemClickListener {
+public class OrderFragment extends BaseFragment implements Callback<Bean<ClassifyBean>>, ClassifyAdapter.OnItemClickListener {
 
 
     private final String TAG = getClass().getSimpleName();
@@ -182,30 +188,38 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
      */
     public void loadingClassify(int type) {
         this.orderType = type;
-        Call<ClassifyBean> classify = RetrofitRequest.service().classify(MainActivity.table, type);
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setOrderType(type);
+        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ORDER_CLASSIFY_SHOW)
+                .time()
+                .bean(bean);
+
+        Call<Bean<ClassifyBean>> classify = RetrofitRequest.service().classify(restRequest.toRequestString());
         classify.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<ClassifyBean> call, Response<ClassifyBean> response) {
-        ClassifyBean bean = response.body();
-        if (bean != null) {
-            defaultItem = bean.getDefaultClassify();
-            List<ClassifyItemBean> itemBeen = bean.getClassifyItemList();
+    public void onResponse(Call<Bean<ClassifyBean>> call, Response<Bean<ClassifyBean>> response) {
+        Bean<ClassifyBean> bean=response.body();
+        if (bean != null&&bean.getCode()== ResponseCode.SUCCESS) {
+            defaultItem = bean.getResult().getDefaultClassify();
+            List<ClassifyItemBean> itemBeen = bean.getResult().getClassifyItemList();
             classifyList = itemBeen;
             ClassifyItemBean item = itemBeen.get(defaultItem);
             item.setSelect(true);
             initClassify(itemBeen);
             initDishesRequest(itemBeen.get(defaultItem));
             /**初始化头部导航栏数据*/
-            initTab(bean.getTabList());
+            initTab(bean.getResult().getTabList());
             /**菜品过多提示数量*/
-            warmPromptNumber = bean.getOrderMoreHint();
+            warmPromptNumber = bean.getResult().getOrderMoreHint();
         }
     }
 
     @Override
-    public void onFailure(Call<ClassifyBean> call, Throwable t) {
+    public void onFailure(Call<Bean<ClassifyBean>> call, Throwable t) {
         Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 
@@ -267,20 +281,29 @@ public class OrderFragment extends BaseFragment implements Callback<ClassifyBean
      * @param id
      */
     private void loadingDishes(String url, int id) {
-        Call<List<DishesBean>> dishesBeanCall = RetrofitRequest.service().dishes(id, MainActivity.table, orderType);
-        dishesBeanCall.enqueue(new Callback<List<DishesBean>>() {
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setId(id+"");
+        bean.setDeviceId(deviceId);
+        bean.setOrderType(orderType);
+        RestRequest<RequestCommonBean> restRequest=JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ORDER_DISHES_SHOW)
+                .time()
+                .bean(bean);
+
+        Call<Bean<List<DishesBean>>> dishesBeanCall = RetrofitRequest.service().dishes(restRequest.toRequestString());
+        dishesBeanCall.enqueue(new Callback<Bean<List<DishesBean>>>() {
             @Override
-            public void onResponse(Call<List<DishesBean>> call, Response<List<DishesBean>> response) {
-                List<DishesBean> beanList = response.body();
-                if (beanList != null) {
-                    dishesMap.put(classifyList.get(defaultItem).getName(), beanList);
-                    parentDishesList = beanList;
-                    mDishesAdapter.notifyDataSetChanged(beanList);
+            public void onResponse(Call<Bean<List<DishesBean>>> call, Response<Bean<List<DishesBean>>> response) {
+                Bean<List<DishesBean>> listBean=response.body();
+                if (listBean != null&&listBean.getCode()==ResponseCode.SUCCESS) {
+                    dishesMap.put(classifyList.get(defaultItem).getName(), listBean.getResult());
+                    parentDishesList = listBean.getResult();
+                    mDishesAdapter.notifyDataSetChanged(listBean.getResult());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<DishesBean>> call, Throwable t) {
+            public void onFailure(Call<Bean<List<DishesBean>>> call, Throwable t) {
                 Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
             }
         });

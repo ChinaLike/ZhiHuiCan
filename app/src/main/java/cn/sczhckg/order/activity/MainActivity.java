@@ -343,7 +343,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                 /**会员*/
                 if (!MyApplication.isLogin) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    intent.setFlags(Constant.MAIN_TO_LOGIN);
+                    intent.putExtra(Constant.INTENT_FLAG,Constant.MAIN_TO_LOGIN);
                     startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
                 } else {
                     favorableType = favorableTypeBean.getId();
@@ -426,9 +426,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
      * 如果判断已经有登录信息了，显示登录状态
      */
     private void login(UserLoginBean bean) {
-        if (!bean.getMsg().equals("") && bean.getMsg() != null) {
-            Toast.makeText(this, bean.getMsg() + "", Toast.LENGTH_SHORT).show();
-        }
         hasLogin.setVisibility(View.VISIBLE);
         noLogin.setVisibility(View.GONE);
         /**加载头像*/
@@ -443,7 +440,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         switch (view.getId()) {
             case R.id.no_login:
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.setFlags(Constant.MAIN_TO_LOGIN);
+                intent.putExtra(Constant.INTENT_FLAG,Constant.MAIN_TO_LOGIN);
                 startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
                 break;
         }
