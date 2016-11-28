@@ -6,3 +6,4 @@ build
 libraries
 copyright
 /.idea/*.xml
+/app/app.iml
