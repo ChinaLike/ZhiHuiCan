@@ -2,16 +2,13 @@ package cn.sczhckg.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +20,6 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.EvaluateListAdapter;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesItemBean;
-import cn.sczhckg.order.data.event.EvaluateListEvent;
 
 /**
  * @describe: 菜品评价列表
@@ -33,20 +29,15 @@ import cn.sczhckg.order.data.event.EvaluateListEvent;
 
 public class EvaluateListFragment extends BaseFragment {
 
-    @Bind(R.id.title)
-    TextView title;
     @Bind(R.id.list_recyclerview)
     RecyclerView recyclerview;
     private EvaluateListAdapter adapter;
-
-    private static int tag=0;
 
     private List<SettleAccountsDishesItemBean> dishesItemList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -72,20 +63,31 @@ public class EvaluateListFragment extends BaseFragment {
                 dishesItemList.add(item.get(j));
             }
         }
-        adapter.notifyDataSetChanged();
+        /**设置整体评价Item*/
+        SettleAccountsDishesItemBean item=new SettleAccountsDishesItemBean();
+        item.setId(-1+"");
+        item.setName("整体评价");
+        dishesItemList.add(0,item);
+        adapter.notifyDataSetChanged(dishesItemList);
     }
 
     @Override
     public void init() {
         adapter = new EvaluateListAdapter(getContext(), dishesItemList);
-        recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        final GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 0) {
+                    return manager.getSpanCount();
+                }
+                return 1;
+            }
+        });
+        recyclerview.setLayoutManager(manager);
+
+
         recyclerview.setAdapter(adapter);
-        if (tag==0){
-            tag++;
-            title.setTextColor(getContext().getResources().getColor(R.color.text_color_red));
-        }else {
-            title.setTextColor(getContext().getResources().getColor(R.color.text_color_person));
-        }
     }
 
     @Override
@@ -94,20 +96,11 @@ public class EvaluateListFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.list_cancel, R.id.title})
+    @OnClick({R.id.list_cancel})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.list_cancel:
                 getActivity().finish();
-                break;
-            case R.id.title:
-                tag++;
-                if (tag%2==1){
-                    title.setTextColor(getContext().getResources().getColor(R.color.text_color_red));
-                    EventBus.getDefault().post(new EvaluateListEvent(EvaluateListEvent.ALL));
-                }else {
-                    title.setTextColor(getContext().getResources().getColor(R.color.text_color_person));
-                }
                 break;
         }
     }
@@ -115,15 +108,7 @@ public class EvaluateListFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 单品菜品选择性评价
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void listEvent(EvaluateListEvent event){
-        title.setTextColor(getContext().getResources().getColor(R.color.text_color_person));
-    }
+
 }

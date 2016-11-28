@@ -72,7 +72,7 @@ public class EvaluateFragment extends BaseFragment {
 
     private EvaluateHotWordAdapter adapter;
 
-    private List<EvaluateBean.EvaluateListBean> mList = new ArrayList<>();
+    private List<EvaluateBean> mList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,20 +138,24 @@ public class EvaluateFragment extends BaseFragment {
                 .time()
                 .bean(bean);
 
-        Call<Bean<EvaluateBean>> getEvaluateCall = RetrofitRequest.service().getEvaluate(restRequest.toRequestString());
-        getEvaluateCall.enqueue(new Callback<Bean<EvaluateBean>>() {
+        Call<Bean<List<EvaluateBean>>> getEvaluateCall = RetrofitRequest.service().getEvaluate(restRequest.toRequestString());
+        getEvaluateCall.enqueue(new Callback<Bean<List<EvaluateBean>>>() {
             @Override
-            public void onResponse(Call<Bean<EvaluateBean>> call, Response<Bean<EvaluateBean>> response) {
-                Bean<EvaluateBean> bean = response.body();
+            public void onResponse(Call<Bean<List<EvaluateBean>>> call, Response<Bean<List<EvaluateBean>>> response) {
+                Bean<List<EvaluateBean>> bean = response.body();
                 if (bean != null&&bean.getCode()== ResponseCode.SUCCESS) {
-                    mList = bean.getResult().getEvaluateListBean();
+                    mList = bean.getResult();
                     adapter.notifyDataSetChanged(mList);
                 }
             }
 
             @Override
-            public void onFailure(Call<Bean<EvaluateBean>> call, Throwable t) {
-                Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Bean<List<EvaluateBean>>> call, Throwable t) {
+                try {
+                    Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

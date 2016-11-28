@@ -42,8 +42,8 @@ public class GlideLoading {
         Glide
                 .with(mContext.getApplicationContext())
                 .load(url)
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.loading_faild)
+                .placeholder(R.drawable.both_btn_login_nor)
+                .error(R.drawable.both_btn_login_faild)
                 .into(imageView);
     }
 

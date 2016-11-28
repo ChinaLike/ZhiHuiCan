@@ -11,45 +11,23 @@ import java.util.List;
 
 public class EvaluateBean implements Serializable {
 
-    private String table;
+    private int id;
+    private String text;
 
-    private List<EvaluateListBean> evaluateListBean;
-
-    public String getTable() {
-        return table;
+    public int getId() {
+        return id;
     }
 
-    public void setTable(String table) {
-        this.table = table;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public List<EvaluateListBean> getEvaluateListBean() {
-        return evaluateListBean;
+    public String getText() {
+        return text;
     }
 
-    public void setEvaluateListBean(List<EvaluateListBean> evaluateListBean) {
-        this.evaluateListBean = evaluateListBean;
-    }
-
-    public static class EvaluateListBean {
-        private int id;
-        private String text;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
+    public void setText(String text) {
+        this.text = text;
     }
 
 }

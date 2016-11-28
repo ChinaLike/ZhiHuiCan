@@ -156,9 +156,13 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         ChildViewHolder holder=new ChildViewHolder(convertView);
         holder.name.setText(getChild(groupPosition,childPosition).getName().toString());
         holder.number.setText("×"+getChild(groupPosition,childPosition).getNumber());
-        holder.favorablePrice.setText("¥  "+getChild(groupPosition,childPosition).getPriceTypeBean().getPrice());
+        if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null) {
+            holder.favorablePrice.setText("¥  " + getChild(groupPosition, childPosition).getPriceTypeBean().getPrice());
+        }
         holder.price.setText("¥  "+getChild(groupPosition,childPosition).getPrice());
-        holder.totalPrice.setText("¥  "+(getChild(groupPosition,childPosition).getNumber()*getChild(groupPosition,childPosition).getPriceTypeBean().getPrice()));
+        if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null) {
+            holder.totalPrice.setText("¥  " + (getChild(groupPosition, childPosition).getNumber() * getChild(groupPosition, childPosition).getPriceTypeBean().getPrice()));
+        }
         if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null){
             holder.image.setVisibility(View.VISIBLE);
             setFavorableImage(getChild(groupPosition,childPosition).getPriceTypeBean().getType(),holder.image);

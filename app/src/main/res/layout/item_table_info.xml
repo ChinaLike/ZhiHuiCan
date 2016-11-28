@@ -49,13 +49,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:gravity="right"
+            android:gravity="right|center_vertical"
             android:padding="5dp">
 
             <ImageView
                 android:id="@+id/no_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/both_btn_login_nor"
                 android:visibility="visible" />
@@ -64,14 +64,14 @@
                 android:id="@+id/has_login"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="right"
+                android:gravity="right|center_vertical"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <cn.sczhckg.order.overwrite.RoundImageView
                     android:id="@+id/header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     beyole:imageType="circle" />
 
                 <LinearLayout

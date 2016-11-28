@@ -39,7 +39,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
-        holder.listTitle.setText(mList.get(position).getTitle());
+        holder.listTitle.setText(mList.get(position).getTitle()+":");
         holder.listContext.setText(mList.get(position).getContext());
     }
 

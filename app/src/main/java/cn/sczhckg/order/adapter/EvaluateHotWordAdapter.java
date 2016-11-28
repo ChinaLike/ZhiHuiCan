@@ -24,9 +24,9 @@ public class EvaluateHotWordAdapter extends RecyclerView.Adapter<EvaluateHotWord
 
     private Context mContext;
 
-    private List<EvaluateBean.EvaluateListBean> mList;
+    private List<EvaluateBean> mList;
 
-    public EvaluateHotWordAdapter(Context mContext, List<EvaluateBean.EvaluateListBean> mList) {
+    public EvaluateHotWordAdapter(Context mContext, List<EvaluateBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -44,16 +44,16 @@ public class EvaluateHotWordAdapter extends RecyclerView.Adapter<EvaluateHotWord
             public void onClick(View v) {
                 if (holder.evaluateHotWord.isSelected()){
                     holder.evaluateHotWord.setSelected(false);
-                    holder.evaluateHotWord.setTextColor(mContext.getResources().getColor(R.color.text_color_person));
+                    holder.evaluateHotWord.setTextColor(0xFF333333);
                 }else {
                     holder.evaluateHotWord.setSelected(true);
-                    holder.evaluateHotWord.setTextColor(mContext.getResources().getColor(R.color.btn_side_yellow));
+                    holder.evaluateHotWord.setTextColor(mContext.getResources().getColor(R.color.button_text));
                 }
             }
         });
     }
 
-    public void notifyDataSetChanged(List<EvaluateBean.EvaluateListBean> mList){
+    public void notifyDataSetChanged(List<EvaluateBean> mList){
         this.mList=mList;
         notifyDataSetChanged();
     }

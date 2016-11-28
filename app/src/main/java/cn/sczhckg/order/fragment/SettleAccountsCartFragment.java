@@ -197,7 +197,9 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         for (SettleAccountsDishesBean bean : dishesBeen) {
             List<SettleAccountsDishesItemBean> list = bean.getItemDishes();
             for (SettleAccountsDishesItemBean item : list) {
-                total = total + (item.getPrice() - item.getPriceTypeBean().getPrice()) * item.getNumber();
+                if (item.getPriceTypeBean()!=null) {
+                    total = total + (item.getPrice() - item.getPriceTypeBean().getPrice()) * item.getNumber();
+                }
             }
         }
         favorablePrice.setText("¥  " + total);

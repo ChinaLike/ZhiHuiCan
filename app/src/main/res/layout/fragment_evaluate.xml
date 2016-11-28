@@ -4,10 +4,26 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <Button
+        android:id="@+id/evaluate_finish"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:padding="25dp"
+        android:background="@drawable/button_full_yellow_login"
+        android:text="完成"
+        android:textColor="@color/button_text"
+        android:textSize="@dimen/text_size_mediu" />
+
+
     <ScrollView
         android:id="@+id/evaluate_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/evaluate_finish"
         android:visibility="visible">
 
         <LinearLayout
@@ -122,22 +138,9 @@
                 android:id="@+id/evaluate_other"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp" />
-
-            <Button
-                android:id="@+id/evaluate_finish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                style="?android:attr/borderlessButtonStyle"
-                android:background="@drawable/button_yellow"
-                android:padding="15dp"
-                android:textColor="@color/button_text"
-                android:text="完成" />
+                android:layout_marginTop="20dp" />
+
 
         </LinearLayout>
 

@@ -52,7 +52,7 @@ public interface RetrofitService {
     Call<Bean<List<DishesBean>>> dishes(@Field("parames") String parames);
     /**菜品详情*/
     @FormUrlEncoded
-    @POST("rest/dishes/deatails")
+    @POST("rest/order/deatails")
     Call<Bean<DetailsBean>> dishesDeatails(@Field("parames") String parames);
     /**菜品选择好后数据提交*/
 
@@ -77,7 +77,7 @@ public interface RetrofitService {
     /**评价请求数据*/
     @FormUrlEncoded
     @POST("rest/accounts/accountsEvaluateShow")
-    Call<Bean<EvaluateBean>> getEvaluate(@Field("parames") String parames);
+    Call<Bean<List<EvaluateBean>>> getEvaluate(@Field("parames") String parames);
     /**评价发送数据*/
     @FormUrlEncoded
     @POST("rest/accounts/accountsEvaluate")

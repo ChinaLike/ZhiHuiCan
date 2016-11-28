@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,7 +32,9 @@ public class EvaluateListAdapter extends RecyclerView.Adapter<EvaluateListAdapte
 
     private List<SettleAccountsDishesItemBean> mList;
 
-    private Map<Integer,TextView> mMap=new HashMap<>();
+    private Map<Integer, Button> mMap = new HashMap<>();
+
+    private int current=0;
 
     public EvaluateListAdapter(Context mContext, List<SettleAccountsDishesItemBean> mList) {
         this.mContext = mContext;
@@ -45,20 +48,32 @@ public class EvaluateListAdapter extends RecyclerView.Adapter<EvaluateListAdapte
 
     @Override
     public void onBindViewHolder(final ListViewHolder holder, final int position) {
-        if (!mMap.containsKey(holder.getLayoutPosition())) {
-            mMap.put(holder.getLayoutPosition(), holder.title);
+
+        mMap.put(holder.getLayoutPosition(), holder.evaluateBtn);
+        holder.evaluateBtn.setText(mList.get(position).getName());
+        if (current==position){
+            holder.evaluateBtn.setSelected(true);
+            holder.evaluateBtn.setTextColor(mContext.getResources().getColor(R.color.button_text));
+        }else {
+            holder.evaluateBtn.setSelected(false);
+            holder.evaluateBtn.setTextColor(0xFF333333);
         }
-        holder.title.setText(mList.get(position).getName());
-        holder.title.setOnClickListener(new View.OnClickListener() {
+        holder.evaluateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Integer index:mMap.keySet()) {
-                    mMap.get(index).setTextColor(mContext.getResources().getColor(R.color.text_color_person));
-                }
-                mMap.get(holder.getLayoutPosition()).setTextColor(mContext.getResources().getColor(R.color.text_color_red));
-                EventBus.getDefault().post(new EvaluateListEvent(EvaluateListEvent.ITEM,mList.get(position)));
+                mMap.get(position).setSelected(true);
+                mMap.get(position).setTextColor(mContext.getResources().getColor(R.color.button_text));
+                mMap.get(current).setSelected(false);
+                mMap.get(current).setTextColor(0xFF333333);
+                current=position;
+                EventBus.getDefault().post(new EvaluateListEvent(EvaluateListEvent.ITEM, mList.get(position)));
             }
         });
+    }
+
+    public void notifyDataSetChanged(List<SettleAccountsDishesItemBean> mList){
+        this.mList=mList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -71,8 +86,8 @@ public class EvaluateListAdapter extends RecyclerView.Adapter<EvaluateListAdapte
 
     static class ListViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.title)
-        TextView title;
+        @Bind(R.id.dishes_evaluate)
+        Button evaluateBtn;
 
         public ListViewHolder(View itemView) {
             super(itemView);
