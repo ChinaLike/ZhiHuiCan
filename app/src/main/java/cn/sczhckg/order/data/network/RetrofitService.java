@@ -90,5 +90,13 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("rest/user/applyForVip")
     Call<Bean<CommonBean>> applyForVip(@Field("parames") String parames);
+    /**刷新购物车菜品*/
+    @FormUrlEncoded
+    @POST("rest/refresh/cartDishes")
+    Call<Bean<List<DishesBean>>> refreshCartDishes(@Field("parames") String parames);
+    /**刷新二维码是否验证成功*/
+    @FormUrlEncoded
+    @POST("rest/refresh/QRCodeVerify")
+    Call<Bean<CommonBean>> refreshQRCodeIsVerify(@Field("parames") String parames);
 
 }

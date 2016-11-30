@@ -23,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckg.order.Config;
+import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.EvaluateHotWordAdapter;
 import cn.sczhckg.order.data.bean.Bean;
@@ -185,6 +186,8 @@ public class EvaluateFragment extends BaseFragment {
                 Bean<CommonBean> beanBean=response.body();
                 if (beanBean!=null&&beanBean.getCode()==ResponseCode.SUCCESS) {
                     Toast.makeText(getContext(), beanBean.getMessage(), Toast.LENGTH_SHORT).show();
+                    /**成功评价后关闭*/
+                    finish();
                 }
             }
 

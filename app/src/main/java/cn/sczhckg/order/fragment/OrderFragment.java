@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,8 +24,8 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.sczhckg.order.R;
-import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.ClassifyAdapter;
 import cn.sczhckg.order.adapter.TabAdapter;
 import cn.sczhckg.order.data.bean.Bean;
@@ -68,6 +68,18 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     RecyclerView dishesShow;
     @Bind(R.id.tab_text)
     TextView tabText;
+    @Bind(R.id.contextParent)
+    LinearLayout contextParent;
+    @Bind(R.id.loading_title)
+    TextView loadingTitle;
+    @Bind(R.id.loading_parent)
+    LinearLayout loadingItemParent;
+    @Bind(R.id.loading_fail_title)
+    TextView loadingFailTitle;
+    @Bind(R.id.loading_fail)
+    LinearLayout loadingFail;
+    @Bind(R.id.loadingParent)
+    LinearLayout loadingParent;
 
     /**
      * 分类适配器
@@ -97,7 +109,9 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * 导航栏适配器
      */
     private TabAdapter mTabAdapter;
-    /**点菜桌选择类型，0-主桌*/
+    /**
+     * 点菜桌选择类型，0-主桌
+     */
     public static int tabOrderType = 0;
 
     /**
@@ -128,6 +142,12 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * pop的Y轴坐标
      */
     private float Y = 0;
+    /**
+     * 当前请求的数据
+     */
+    private ClassifyItemBean currentBean;
+
+    private boolean isMainTable=true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -168,8 +188,8 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     private void initRect() {
         int screenHeight = AppSystemUntil.height(getContext());
         int screenWidth = AppSystemUntil.width(getContext());
-        Y = (screenHeight-ConvertUtils.dip2px(getContext(),POP_HEIGHT)) / 2;
-        X = screenWidth*18/26-ConvertUtils.dip2px(getContext(),POP_WIDTH)/2;
+        Y = (screenHeight - ConvertUtils.dip2px(getContext(), POP_HEIGHT)) / 2;
+        X = screenWidth * 18 / 26 - ConvertUtils.dip2px(getContext(), POP_WIDTH) / 2;
     }
 
     @Override
@@ -188,22 +208,24 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      */
     public void loadingClassify(int type) {
         this.orderType = type;
-        RequestCommonBean bean=new RequestCommonBean();
+        RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(deviceId);
         bean.setOrderType(type);
-        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.ORDER_CLASSIFY_SHOW)
                 .time()
                 .bean(bean);
 
         Call<Bean<ClassifyBean>> classify = RetrofitRequest.service().classify(restRequest.toRequestString());
         classify.enqueue(this);
+        loading(getContext().getResources().getString(R.string.loading));
     }
 
     @Override
     public void onResponse(Call<Bean<ClassifyBean>> call, Response<Bean<ClassifyBean>> response) {
-        Bean<ClassifyBean> bean=response.body();
-        if (bean != null&&bean.getCode()== ResponseCode.SUCCESS) {
+        Bean<ClassifyBean> bean = response.body();
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+
             defaultItem = bean.getResult().getDefaultClassify();
             List<ClassifyItemBean> itemBeen = bean.getResult().getClassifyItemList();
             classifyList = itemBeen;
@@ -211,16 +233,31 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
             item.setSelect(true);
             initClassify(itemBeen);
             initDishesRequest(itemBeen.get(defaultItem));
+            /**是否是主桌，不是主桌开启服务实时刷新数据*/
+            isMainTable(bean.getResult());
             /**初始化头部导航栏数据*/
             initTab(bean.getResult().getTabList());
             /**菜品过多提示数量*/
             warmPromptNumber = bean.getResult().getOrderMoreHint();
+
+        }
+    }
+
+    /**
+     * 是否是主桌
+     * @param bean
+     */
+    private void isMainTable(ClassifyBean bean){
+        /**验证不是主桌*/
+        if (bean.getMainTale()!=0){
+            isMainTable=false;
+            startCartService();
         }
     }
 
     @Override
     public void onFailure(Call<Bean<ClassifyBean>> call, Throwable t) {
-        Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+        loadingFail(getContext().getResources().getString(R.string.loadingFail));
     }
 
     /**
@@ -229,7 +266,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * @param itemBeen
      */
     private void initClassify(List<ClassifyItemBean> itemBeen) {
-        mClassifyAdapter = new ClassifyAdapter(getContext(), itemBeen,defaultItem);
+        mClassifyAdapter = new ClassifyAdapter(getContext(), itemBeen, defaultItem);
         mClassifyAdapter.addOnItemClickListener(this);
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         dishesClassify.setLayoutManager(mLinearLayoutManager);
@@ -269,6 +306,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * @param bean
      */
     private void initDishesRequest(ClassifyItemBean bean) {
+        currentBean = bean;
         int id = bean.getId();
         String url = bean.getUrl();
         loadingDishes(url, id);
@@ -281,11 +319,11 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * @param id
      */
     private void loadingDishes(String url, int id) {
-        RequestCommonBean bean=new RequestCommonBean();
-        bean.setId(id+"");
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setId(id + "");
         bean.setDeviceId(deviceId);
         bean.setOrderType(orderType);
-        RestRequest<RequestCommonBean> restRequest=JSONRestRequest.Builder.build(RequestCommonBean.class)
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.ORDER_DISHES_SHOW)
                 .time()
                 .bean(bean);
@@ -294,17 +332,24 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
         dishesBeanCall.enqueue(new Callback<Bean<List<DishesBean>>>() {
             @Override
             public void onResponse(Call<Bean<List<DishesBean>>> call, Response<Bean<List<DishesBean>>> response) {
-                Bean<List<DishesBean>> listBean=response.body();
-                if (listBean != null&&listBean.getCode()==ResponseCode.SUCCESS) {
+                Bean<List<DishesBean>> listBean = response.body();
+                if (listBean != null && listBean.getCode() == ResponseCode.SUCCESS) {
+                    /**在菜品清单请求成功后才做显示*/
+                    loadingSuccess();
+
                     dishesMap.put(classifyList.get(defaultItem).getName(), listBean.getResult());
                     parentDishesList = listBean.getResult();
                     mDishesAdapter.notifyDataSetChanged(listBean.getResult());
+                } else if (listBean != null) {
+                    loadingFail(listBean.getMessage());
+                } else {
+                    loadingFail(getContext().getResources().getString(R.string.loadingFail));
                 }
             }
 
             @Override
             public void onFailure(Call<Bean<List<DishesBean>>> call, Throwable t) {
-                Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+                loadingFail(getContext().getResources().getString(R.string.loadingFail));
             }
         });
     }
@@ -315,7 +360,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * @param tabList
      */
     private void initTab(List<TabBean> tabList) {
-        if (tabList == null || tabList.size() == 0) {
+        if (tabList == null || tabList.size() == 0||!isMainTable) {
             dishesTab.setVisibility(View.GONE);
             tabText.setVisibility(View.VISIBLE);
             if (orderType == ALONE_ORDER) {
@@ -325,7 +370,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
                 tabOrderType = 1;
                 tabText.setText(getResources().getString(R.string.more_order));
             }
-        } else {
+        } else{
             dishesTab.setVisibility(View.VISIBLE);
             tabText.setVisibility(View.GONE);
             this.tabList = tabList;
@@ -396,7 +441,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
         int number = event.getNumber();
         if (isHint) {
             if (number > warmPromptNumber) {
-                mPopupWindow.showAtLocation(popView, Gravity.NO_GRAVITY, (int)X, (int)Y);
+                mPopupWindow.showAtLocation(popView, Gravity.NO_GRAVITY, (int) X, (int) Y);
                 backgroundAlpha(0.6f);
             }
         }
@@ -436,14 +481,51 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
 
     /**
      * 设置添加屏幕的背景透明度
+     *
      * @param bgAlpha
      */
-    public void backgroundAlpha(float bgAlpha)
-    {
+    public void backgroundAlpha(float bgAlpha) {
         WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
         lp.alpha = bgAlpha; //0.0-1.0
         getActivity().getWindow().setAttributes(lp);
     }
 
+    /**
+     * 加载中
+     */
+    private void loading(String str) {
+        loadingParent.setVisibility(View.VISIBLE);
+        contextParent.setVisibility(View.GONE);
+        loadingItemParent.setVisibility(View.VISIBLE);
+        loadingFail.setVisibility(View.GONE);
+        loadingTitle.setText(str);
+    }
 
+    /**
+     * 加载成功
+     */
+    private void loadingSuccess() {
+        loadingParent.setVisibility(View.GONE);
+        contextParent.setVisibility(View.VISIBLE);
+        loadingItemParent.setVisibility(View.VISIBLE);
+        loadingFail.setVisibility(View.GONE);
+    }
+
+    /**
+     * 加载失败
+     */
+    private void loadingFail(String str) {
+        loadingParent.setVisibility(View.VISIBLE);
+        contextParent.setVisibility(View.GONE);
+        loadingItemParent.setVisibility(View.GONE);
+        loadingFail.setVisibility(View.VISIBLE);
+        loadingFailTitle.setText(str);
+    }
+
+
+    @OnClick(R.id.loadingParent)
+    public void onClick() {
+        /**加载失败时使用*/
+        initDishesRequest(currentBean);
+    }
 }

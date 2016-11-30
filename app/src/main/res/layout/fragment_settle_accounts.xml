@@ -1,54 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/contextParent"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/table_info_height"
-        android:background="@color/cart_top"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:gravity="center"
-            android:textColor="@color/text_color_m"
-            android:text="菜品" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_info_height"
+            android:background="@color/cart_top"
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/text_color_m"
-            android:text="数量" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center"
+                android:text="菜品"
+                android:textColor="@color/text_color_m" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textColor="@color/text_color_m"
-            android:text="单价" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="数量"
+                android:textColor="@color/text_color_m" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textColor="@color/text_color_m"
-            android:text="总价" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="单价"
+                android:textColor="@color/text_color_m" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="总价"
+                android:textColor="@color/text_color_m" />
+
+        </LinearLayout>
+
+        <ExpandableListView
+            android:id="@+id/dishes_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ExpandableListView>
 
     </LinearLayout>
 
-    <ExpandableListView
-        android:id="@+id/dishes_details"
+    <LinearLayout
+        android:id="@+id/loadingParent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    </ExpandableListView>
+        <include layout="@layout/item_loading" />
+
+    </LinearLayout>
 
 </LinearLayout>

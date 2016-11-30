@@ -79,8 +79,10 @@
         android:background="@color/hint_color"/>
 
     <LinearLayout
+        android:id="@+id/contextParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <android.support.v7.widget.RecyclerView
@@ -96,6 +98,18 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:layout_weight="3.2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loadingParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/item_loading"/>
+
     </LinearLayout>
 
 

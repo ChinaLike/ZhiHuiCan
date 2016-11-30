@@ -1,7 +1,6 @@
 package cn.sczhckg.order.adapter;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,9 +126,9 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             } else {
                 dishesNumber = dishesNumber + bean.getNumber();
             }
-            if (bean.getPriceType()!=null&&bean.getPriceType().size()!=0) {
+            if (bean.getPriceType() != null && bean.getPriceType().size() != 0) {
                 totalPrice = totalPrice + bean.getNumber() * getFavortablePrice(bean.getPriceType());
-            }else {
+            } else {
                 totalPrice = totalPrice + bean.getNumber() * bean.getPrice();
             }
         }
@@ -144,18 +143,19 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         int type = getFavorableType(priceTypeBeen);
         textView.setText("¥" + price);
         for (int i = 0; i < priceTypeBeen.size(); i++) {
-            if(priceTypeBeen.get(i).getType()==type){
-                GlideLoading.loadingDishes(mContext,priceTypeBeen.get(i).getUrl(),image);
+            if (priceTypeBeen.get(i).getType() == type) {
+                GlideLoading.loadingDishes(mContext, priceTypeBeen.get(i).getUrl(), image);
             }
         }
     }
 
     /**
      * 获取优惠的ID
+     *
      * @param priceTypeBeen
      * @return
      */
-    private int getFavorableType(List<PriceTypeBean> priceTypeBeen){
+    private int getFavorableType(List<PriceTypeBean> priceTypeBeen) {
         int price = priceTypeBeen.get(0).getPrice();
         int type = priceTypeBeen.get(0).getType();
         for (int i = 0; i < priceTypeBeen.size(); i++) {
@@ -170,10 +170,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     /**
      * 获取优惠价格
+     *
      * @param priceTypeBeen
      * @return
      */
-    private int getFavortablePrice(List<PriceTypeBean> priceTypeBeen){
+    private int getFavortablePrice(List<PriceTypeBean> priceTypeBeen) {
         int price = priceTypeBeen.get(0).getPrice();
         for (int i = 0; i < priceTypeBeen.size(); i++) {
             if (priceTypeBeen.get(i).getPrice() < price) {

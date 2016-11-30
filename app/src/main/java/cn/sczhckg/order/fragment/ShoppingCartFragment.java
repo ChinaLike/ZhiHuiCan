@@ -19,7 +19,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -88,6 +90,8 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        /**初始化弹窗*/
+        initLoadingPop();
     }
 
     @Nullable
@@ -116,27 +120,73 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void refreshCart(RefreshCartEvent event) {
         shoppingcartButton.setClickable(true);
         shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
-        List<DishesBean> list = initList(event.getBean());
-        isHaveData(list);
-        mShoppingCartAdapter.notifyDataSetChanged(list);
+        /**本地加菜*/
+        if (event.getBean() != null) {
+            List<DishesBean> list = initList(event.getBean());
+            isHaveData(list);
+            mShoppingCartAdapter.notifyDataSetChanged(list);
+        }
+        /**后台加菜*/
+        if (event.getBeanList() != null) {
+            List<DishesBean> list = refreshMainTableAddDishes(event.getBeanList());
+            isHaveData(list);
+            mShoppingCartAdapter.notifyDataSetChanged(list);
+        }
     }
 
     /**
-     * 通过菜品信息来判断是否已经添加次菜品，如果已经添加刷新数量
+     * 通过菜品信息来判断是否已经添加次菜品，如果已经添加刷新数量，处理本地加菜
      *
      * @param bean
      */
     private List<DishesBean> initList(DishesBean bean) {
-        if (mList.contains(bean)) {
-            int postion = mList.indexOf(bean);
-            mList.remove(bean);
-            if (bean.getNumber() != 0) {
-                mList.add(postion, bean);
-            }
+        Map<String, DishesBean> localMap = listToMap();
+        if (localMap.containsKey(bean.getId())) {
+            int postion = mList.indexOf(localMap.get(bean.getId()));
+            int number = bean.getNumber();
+            mList.get(postion).setNumber(number);
         } else {
             mList.add(bean);
         }
         return mList;
+    }
+
+    /**
+     * 处理通过后台即主桌加菜
+     *
+     * @param beenList
+     * @return
+     */
+    private List<DishesBean> refreshMainTableAddDishes(List<DishesBean> beenList) {
+        Map<String, DishesBean> localMap = listToMap();
+        for (int i = 0; i < beenList.size(); i++) {
+            String id = beenList.get(i).getId();
+            DishesBean bean = beenList.get(i);
+            if (localMap.containsKey(id)) {
+                int postion = mList.indexOf(localMap.get(id));
+                int number = mList.get(postion).getNumber() + bean.getNumber();
+                mList.get(postion).setNumber(number);
+                bean.setNumber(number);
+            } else {
+                mList.add(bean);
+            }
+            /**刷新点菜界面数据*/
+            EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 0, bean));
+        }
+        return mList;
+    }
+
+    /**
+     * 把List集合转换为Map集合
+     *
+     * @return
+     */
+    private Map<String, DishesBean> listToMap() {
+        Map<String, DishesBean> localMap = new HashMap<>();
+        for (int i = 0; i < mList.size(); i++) {
+            localMap.put(mList.get(i).getId(), mList.get(i));
+        }
+        return localMap;
     }
 
     @Override
@@ -177,12 +227,12 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
             /**开桌*/
             buttonType = 0;
             cartVerify(0);
+            showProgress("数据提交中，清请稍后...");
         } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
             /**选好了*/
             buttonType = 1;
             cartVerify(1);
-//            Call<CommonBean> chooseGood = RetrofitRequest.service().chooseGood(MainActivity.table, orderType, Constant.ORDER, mList.toString());
-//            chooseGood.enqueue(this);
+            showProgress("数据提交中，清请稍后...");
         }
 
     }
@@ -226,6 +276,9 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
         Bean<CommonBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            /**关闭进度框*/
+            dismissProgress();
+
             if (buttonType == 0) {
                 shoppingcartButton.setText(R.string.choose_good);
                 if (onButtonClickListener != null) {
@@ -244,7 +297,16 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
 
     @Override
     public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
-        Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+        loadingFail("提交失败，点击重新提交", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (buttonType == 0) {
+                    cartVerify(0);
+                } else if (buttonType == 1) {
+                    cartVerify(1);
+                }
+            }
+        });
     }
 
     /**

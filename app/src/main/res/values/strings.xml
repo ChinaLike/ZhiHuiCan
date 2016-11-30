@@ -14,6 +14,8 @@
     <string name="overTime">请求超时</string>
     <string name="potMustChoose">锅底必选</string>
     <string name="recommendingDishes">推荐菜品</string>
+    <string name="loadingFail">数据加载失败，点击刷新</string>
+    <string name="loading">努力加载中...</string>
 
     <string name="dishes">菜品</string>
     <string name="numbers">数量</string>

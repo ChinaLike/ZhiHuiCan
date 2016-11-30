@@ -1,5 +1,7 @@
 package cn.sczhckg.order.data.event;
 
+import java.util.List;
+
 import cn.sczhckg.order.data.bean.DishesBean;
 
 /**
@@ -12,8 +14,14 @@ public class RefreshCartEvent {
 
     private DishesBean bean;
 
+    private List<DishesBean> beanList;
+
     public RefreshCartEvent(DishesBean bean) {
         this.bean = bean;
+    }
+
+    public RefreshCartEvent(List<DishesBean> beanList) {
+        this.beanList = beanList;
     }
 
     public DishesBean getBean() {
@@ -22,5 +30,13 @@ public class RefreshCartEvent {
 
     public void setBean(DishesBean bean) {
         this.bean = bean;
+    }
+
+    public List<DishesBean> getBeanList() {
+        return beanList;
+    }
+
+    public void setBeanList(List<DishesBean> beanList) {
+        this.beanList = beanList;
     }
 }

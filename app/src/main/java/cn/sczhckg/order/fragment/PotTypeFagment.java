@@ -4,18 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -26,13 +25,11 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.activity.MainActivity;
 import cn.sczhckg.order.adapter.PersonChooseAdapter;
 import cn.sczhckg.order.data.bean.Bean;
-import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.bean.MainPagerShow;
 import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.PersonBean;
 import cn.sczhckg.order.data.bean.RequestCommonBean;
-import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.event.CartNumberEvent;
 import cn.sczhckg.order.data.listener.OnTableListenner;
 import cn.sczhckg.order.data.network.RetrofitRequest;
@@ -66,10 +63,24 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
     @Bind(R.id.rl_order_dishes_parent)
     RelativeLayout dishesParent;
 
+    @Bind(R.id.contextParent)
+    LinearLayout contextParent;
+    @Bind(R.id.loading_title)
+    TextView loadingTitle;
+    @Bind(R.id.loading_parent)
+    LinearLayout loadingItemParent;
+    @Bind(R.id.loading_fail_title)
+    TextView loadingFailTitle;
+    @Bind(R.id.loading_fail)
+    LinearLayout loadingFail;
+    @Bind(R.id.loadingParent)
+    LinearLayout loadingParent;
+
     /**
      * 默认显示几列备选人数
      */
     public static int DEFAULT_PERSON = 3;
+
 
     private PersonChooseAdapter personAdapter;
 
@@ -89,7 +100,6 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
         super.onCreate(savedInstanceState);
         /**注册事件监听*/
         EventBus.getDefault().register(this);
-        initLoadingPop();
     }
 
     @Nullable
@@ -128,7 +138,7 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
                     .bean(bean);
             Call<Bean<MainPagerShow>> mainShow = RetrofitRequest.service().potDataShow(restRequest.toRequestString());
             mainShow.enqueue(this);
-            showProgress();
+            loading(getContext().getResources().getString(R.string.loading));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -168,7 +178,6 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
         dishesList = bean.getDishesList();
         parentDishesList = bean.getPotList();
         mDishesAdapter.notifyDataSetChanged(parentDishesList);
-        dismissProgress();
     }
 
 
@@ -226,7 +235,7 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
         upData(event.getBean());
     }
 
-    @OnClick({R.id.rl_pot_parent, R.id.rl_order_dishes_parent})
+    @OnClick({R.id.rl_pot_parent, R.id.rl_order_dishes_parent,R.id.loadingParent})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_pot_parent:
@@ -238,6 +247,10 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
                 potLine.setVisibility(View.GONE);
                 dishesLine.setVisibility(View.VISIBLE);
                 mDishesAdapter.notifyDataSetChanged(dishesList);
+                break;
+            case R.id.loadingParent:
+                /**点击重新加载数据*/
+                initNet();
                 break;
         }
     }
@@ -252,22 +265,53 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
 
     @Override
     public void onResponse(Call<Bean<MainPagerShow>> call, Response<Bean<MainPagerShow>> response) {
-        Bean<MainPagerShow> bean=response.body();
+        Bean<MainPagerShow> bean = response.body();
         /**获取数据成功*/
         if (bean != null && bean.getCode() == 0) {
+            loadingSuccess();
             initView(bean.getResult());
             mOnTableListenner.table(bean.getResult().getTableNumber(), bean.getResult().getWaitress());
+        }else if (bean != null) {
+            loadingFail(bean.getMessage());
+        } else {
+            loadingFail(getContext().getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<MainPagerShow>> call, Throwable t) {
-        Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
-        loadingFail("加载失败", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initNet();
-            }
-        });
+        loadingFail(getContext().getResources().getString(R.string.loadingFail));
+    }
+
+    /**
+     * 加载中
+     */
+    private void loading(String str){
+        loadingParent.setVisibility(View.VISIBLE);
+        contextParent.setVisibility(View.GONE);
+        loadingItemParent.setVisibility(View.VISIBLE);
+        loadingFail.setVisibility(View.GONE);
+        loadingTitle.setText(str);
+    }
+
+    /**
+     * 加载成功
+     */
+    private void loadingSuccess(){
+        loadingParent.setVisibility(View.GONE);
+        contextParent.setVisibility(View.VISIBLE);
+        loadingItemParent.setVisibility(View.VISIBLE);
+        loadingFail.setVisibility(View.GONE);
+    }
+
+    /**
+     * 加载失败
+     */
+    private void loadingFail(String str){
+        loadingParent.setVisibility(View.VISIBLE);
+        contextParent.setVisibility(View.GONE);
+        loadingItemParent.setVisibility(View.GONE);
+        loadingFail.setVisibility(View.VISIBLE);
+        loadingFailTitle.setText(str);
     }
 }

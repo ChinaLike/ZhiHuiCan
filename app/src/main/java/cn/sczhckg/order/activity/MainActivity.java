@@ -33,6 +33,7 @@ import cn.sczhckg.order.data.bean.PayTypeBean;
 import cn.sczhckg.order.data.bean.UserLoginBean;
 import cn.sczhckg.order.data.event.ApplyForVipCardEvent;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
+import cn.sczhckg.order.data.event.CloseServiceEvent;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.listener.OnButtonClickListener;
 import cn.sczhckg.order.data.listener.OnTableListenner;
@@ -290,6 +291,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         MyApplication.isLogin = false;
         /**退出时暂停Glide请求*/
         Glide.with(getApplicationContext()).pauseRequests();
+        /**销毁时关闭服务*/
+        EventBus.getDefault().post(new CloseServiceEvent());
     }
 
     @Override
@@ -313,7 +316,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
         } else if (event.getType() == Constant.BOTTOM_SETTLE_ACCOUNTS) {
             cart.setCurrentItem(CART_SETTLT_AOUNTS, false);
-            mSettleAccountsCartFragment.showPop();
+//            mSettleAccountsCartFragment.showPop();
         } else if (event.getType() == Constant.DISHES_DETAILS_IN) {
             /**进入菜品详情*/
             tableInfoParent.setVisibility(View.GONE);

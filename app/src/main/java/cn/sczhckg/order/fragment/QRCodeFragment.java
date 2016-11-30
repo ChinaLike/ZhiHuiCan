@@ -3,6 +3,7 @@ package cn.sczhckg.order.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -29,6 +33,8 @@ import cn.sczhckg.order.data.bean.ListBean;
 import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.QRCodeBean;
 import cn.sczhckg.order.data.bean.RequestCommonBean;
+import cn.sczhckg.order.data.event.CloseServiceEvent;
+import cn.sczhckg.order.data.event.QRCodeVerifyEvent;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.data.response.ResponseCode;
@@ -74,6 +80,7 @@ public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCode
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -114,6 +121,7 @@ public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCode
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -168,7 +176,7 @@ public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCode
                 break;
             case R.id.evaluate_no:
                 /**不评价的话，返回主界面*/
-                getActivity().finish();
+                finish();
                 break;
         }
     }
@@ -177,8 +185,11 @@ public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCode
     public void onResponse(Call<Bean<QRCodeBean>> call, Response<Bean<QRCodeBean>> response) {
         Bean<QRCodeBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            initAdapter(bean.getResult().getListBeanList());
+                initAdapter(bean.getResult().getListBeanList());
             if (type == Constant.ALIPAY || type == Constant.WEIXIN) {
+                /**开启服务等待扫码完成*/
+                startQRCodeService();
+
                 code.setVisibility(View.VISIBLE);
                 evaluateChooseParent.setVisibility(View.GONE);
                 GlideLoading.loadingDishes(getContext(), bean.getResult().getUrl(), code);
@@ -196,4 +207,21 @@ public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCode
         listRecycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
         listRecycler.setAdapter(mListAdapter);
     }
+
+    /**
+     * 验证二维码是否成功
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void verifyServiceEventBus(QRCodeVerifyEvent event){
+        if (event.getCode()==ResponseCode.SUCCESS){
+            Toast.makeText(getContext(),event.getMsg()+"",Toast.LENGTH_SHORT).show();
+            /**销毁时关闭服务*/
+            EventBus.getDefault().post(new CloseServiceEvent());
+            code.setVisibility(View.GONE);
+            evaluateChooseParent.setVisibility(View.VISIBLE);
+        }
+    }
+
+
 }

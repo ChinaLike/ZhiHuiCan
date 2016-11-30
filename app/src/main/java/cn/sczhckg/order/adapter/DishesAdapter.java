@@ -119,6 +119,8 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
             DetailsAdapter adapter=new DetailsAdapter(mContext,bean.getPriceType());
             holder.dishesFavorableRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
             holder.dishesFavorableRecyclerView.setAdapter(adapter);
+        }else {
+            holder.dishesFavorableRecyclerView.setVisibility(View.GONE);
         }
 
         /**权限判定,该桌是否可以点餐*/

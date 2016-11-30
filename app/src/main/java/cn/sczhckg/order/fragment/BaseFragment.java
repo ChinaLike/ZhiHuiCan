@@ -1,5 +1,6 @@
 package cn.sczhckg.order.fragment;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,16 +17,20 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sczhckg.order.MyApplication;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.adapter.DishesAdapter;
 import cn.sczhckg.order.data.bean.DishesBean;
+import cn.sczhckg.order.data.event.CloseServiceEvent;
 import cn.sczhckg.order.data.listener.OnGiftListenner;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
-import cn.sczhckg.order.until.AppSystemUntil;
-import cn.sczhckg.order.until.ConvertUtils;
+import cn.sczhckg.order.service.CartService;
+import cn.sczhckg.order.service.QRCodeService;
 
 /**
  * @describe:
@@ -58,20 +63,11 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 设备ID
      */
-    protected static String deviceId ;
+    public static String deviceId;
 
     protected View loadingView;
 
     private PopupWindow loadingPop;
-
-    /**
-     * pop的X轴坐标
-     */
-    private float X = 0;
-    /**
-     * pop的Y轴坐标
-     */
-    private float Y = 0;
 
     protected LinearLayout loading;
 
@@ -80,11 +76,19 @@ public abstract class BaseFragment extends Fragment {
     private TextView loadingText;
 
     private TextView loadingFailText;
+    /**
+     * 购物车刷新
+     */
+    private Intent mCartIntent;
+    /**
+     * 二维码扫描
+     */
+    private Intent mQRCodeIntent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       }
+    }
 
     @Nullable
     @Override
@@ -131,7 +135,7 @@ public abstract class BaseFragment extends Fragment {
             Log.d("PopWindow", "show");
             loading.setVisibility(View.VISIBLE);
             loading_fail.setVisibility(View.GONE);
-            loadingPop.showAtLocation(loadingView, Gravity.NO_GRAVITY, (int)X, (int)Y);
+            loadingPop.showAtLocation(loadingView, Gravity.CENTER, 0, 0);
         }
     }
 
@@ -143,7 +147,7 @@ public abstract class BaseFragment extends Fragment {
             Log.d("PopWindow", "show");
             loading.setVisibility(View.VISIBLE);
             loading_fail.setVisibility(View.GONE);
-            loadingPop.showAtLocation(loadingView, Gravity.NO_GRAVITY, (int)X, (int)Y);
+            loadingPop.showAtLocation(loadingView, Gravity.CENTER, 0, 0);
             this.loadingText.setText(loadingText);
         }
     }
@@ -159,7 +163,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 加载失败
      */
-    protected void loadingFail(String loadingFailText, View.OnClickListener onClickListener){
+    protected void loadingFail(String loadingFailText, View.OnClickListener onClickListener) {
         loading.setVisibility(View.GONE);
         loading_fail.setVisibility(View.VISIBLE);
         this.loadingFailText.setText(loadingFailText);
@@ -172,7 +176,6 @@ public abstract class BaseFragment extends Fragment {
     protected void initLoadingPop() {
         Log.d("PopWindow", "init");
         loadingView = LayoutInflater.from(getContext()).inflate(R.layout.item_loading, null, false);
-        initRect();
         loading = (LinearLayout) loadingView.findViewById(R.id.loading_parent);
         loading_fail = (LinearLayout) loadingView.findViewById(R.id.loading_fail);
         loadingText = (TextView) loadingView.findViewById(R.id.loading_title);
@@ -185,13 +188,29 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 初始化Pop的位置
+     * 完成后关闭界面，推到会员登录界面
      */
-    private void initRect() {
-        int screenHeight = AppSystemUntil.height(getContext());
-        int screenWidth = AppSystemUntil.width(getContext());
-        Y = (screenHeight- ConvertUtils.dip2px(getContext(),getContext().getResources().getDimension(R.dimen.loading_progress))) / 2;
-        X = screenWidth*18/26-ConvertUtils.dip2px(getContext(),getContext().getResources().getDimension(R.dimen.loading_progress))/2;
+    protected void finish() {
+        getActivity().finish();
+        MyApplication.isLogin = false;
+        /**销毁时关闭服务*/
+        EventBus.getDefault().post(new CloseServiceEvent());
+    }
+
+    /**
+     * 开启扫码服务
+     */
+    protected void startQRCodeService() {
+        mQRCodeIntent = new Intent(getActivity(), QRCodeService.class);
+        getActivity().startService(mQRCodeIntent);
+    }
+
+    /**
+     * 开启购物车刷新服务
+     */
+    protected void startCartService() {
+        mCartIntent = new Intent(getActivity(), CartService.class);
+        getActivity().startService(mCartIntent);
     }
 
 }

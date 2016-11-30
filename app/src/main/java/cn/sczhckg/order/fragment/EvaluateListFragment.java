@@ -100,7 +100,7 @@ public class EvaluateListFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.list_cancel:
-                getActivity().finish();
+                finish();
                 break;
         }
     }

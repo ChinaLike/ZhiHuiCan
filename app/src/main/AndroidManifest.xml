@@ -36,6 +36,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.CartService"
+            android:exported="false">
+
+        </service>
+
+        <service
+            android:name=".service.QRCodeService"
+            android:exported="false">
+
+        </service>
+
     </application>
 
 </manifest>

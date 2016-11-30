@@ -73,4 +73,14 @@ public interface OP {
      */
     String SERVICE = "service";
 
+    /**
+     * 刷新购物车
+     */
+    String REFRESH_CART = "refreshCart";
+
+    /**
+     * 刷新二维码
+     */
+    String REFRESH_QRCODE = "refreshQRCode";
+
 }
