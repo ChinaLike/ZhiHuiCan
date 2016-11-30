@@ -3,6 +3,7 @@ package cn.sczhckg.order.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,11 +35,6 @@ public class LeadActivity extends Activity {
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
 
-        Log.d("单位转换：","px2dip="+ ConvertUtils.px2dip(this,245));
-        Log.d("单位转换：","dip2px="+ ConvertUtils.dip2px(this,100));
-        Log.d("单位转换：","sp2px="+ ConvertUtils.sp2px(this,100));
-        Log.d("单位转换：","px2sp="+ ConvertUtils.px2sp(this,100));
-
     }
 
     @OnClick({R.id.right, R.id.deny})
@@ -46,14 +42,33 @@ public class LeadActivity extends Activity {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.right:
+                /**选择是，即先登录*/
+                right.setSelected(true);
+                right.setTextColor(ContextCompat.getColor(this,R.color.text_color_main_select));
+                deny.setSelected(false);
+                deny.setTextColor(ContextCompat.getColor(this,R.color.white));
                 intent = new Intent(LeadActivity.this, LoginActivity.class);
                 intent.putExtra(Constant.INTENT_FLAG,Constant.LEAD_TO_LOGIN);
                 startActivity(intent);
                 break;
             case R.id.deny:
+                /**暂时未登录*/
+                right.setSelected(false);
+                right.setTextColor(ContextCompat.getColor(this,R.color.white));
+                deny.setSelected(true);
+                deny.setTextColor(ContextCompat.getColor(this,R.color.text_color_main_select));
                 intent = new Intent(LeadActivity.this, MainActivity.class);
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        right.setSelected(false);
+        right.setTextColor(ContextCompat.getColor(this,R.color.white));
+        deny.setSelected(false);
+        deny.setTextColor(ContextCompat.getColor(this,R.color.white));
     }
 }

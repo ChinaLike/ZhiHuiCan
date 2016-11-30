@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/text_color_person"
+            android:textColor="#999999"
             android:text="牛肉汤国" />
 
     </LinearLayout>
@@ -39,7 +39,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"
-        android:textColor="@color/text_color_person"
+        android:textColor="#999999"
         android:text="×5" />
 
     <LinearLayout
@@ -52,7 +52,7 @@
             android:id="@+id/el2_favorable_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_color_person"
+            android:textColor="#999999"
             android:text="¥ 68"/>
 
         <cn.sczhckg.order.overwrite.SlantTextView
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textSize="12sp"
-            android:textColor="@color/text_color_price"
+            android:textColor="@color/text_color_gray"
             android:text="¥ 2"/>
 
     </LinearLayout>
@@ -71,7 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textColor="@color/text_color_m"
+        android:textColor="#666666"
         android:text="¥  369"
         android:layout_weight="2" />
 

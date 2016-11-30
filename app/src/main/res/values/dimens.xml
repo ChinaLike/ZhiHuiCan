@@ -9,6 +9,7 @@
     <dimen name="text_size_mediu">20sp</dimen>
     <dimen name="text_size_s_m">18sp</dimen>
     <dimen name="text_size_mediu_s">17sp</dimen>
+    <dimen name="cart_title_text_size">16sp</dimen>
     <dimen name="text_size_smart">15sp</dimen>
     <dimen name="text_size_smart_s">12sp</dimen>
 

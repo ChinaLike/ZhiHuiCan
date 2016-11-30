@@ -49,6 +49,7 @@ public class RequestCommonBean {
      * 团购券验证
      */
     private String group;
+    private List<String> groupList;
 
     /**
      * 支付请求
@@ -145,6 +146,14 @@ public class RequestCommonBean {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public List<String> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<String> groupList) {
+        this.groupList = groupList;
     }
 
     public Integer getFavorableType() {

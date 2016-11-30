@@ -83,4 +83,9 @@ public interface OP {
      */
     String REFRESH_QRCODE = "refreshQRCode";
 
+    /**
+     * 有虎类型验证
+     */
+    String ACCOUNTS_FAVORABLE_TYPE = "accountsFavorableType";
+
 }

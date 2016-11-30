@@ -19,6 +19,7 @@ import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.FavorableTypeBean;
 import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.listener.OnAccountsListenner;
+import cn.sczhckg.order.fragment.SettleAccountsCartFragment;
 
 /**
  * @describe: 结账优惠方式适配
@@ -55,15 +56,13 @@ public class SettleAountsFavorableAdapter extends RecyclerView.Adapter<SettleAou
             mMap.put(holder.getLayoutPosition(),holder.cartType);
         }
         holder.cartType.setText(mList.get(position).getName());
-        holder.cartType.setSelected(false);
-
         holder.cartType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (Integer btn:mMap.keySet()) {
-                    mMap.get(btn).setSelected(false);
+                    SettleAccountsCartFragment.buttonLoosen(mMap.get(btn),mContext);
                 }
-                holder.cartType.setSelected(true);
+                SettleAccountsCartFragment.buttonSelect(holder.cartType,mContext);
                 onAccountsListenner.favorableType(mList.get(position));
 
             }

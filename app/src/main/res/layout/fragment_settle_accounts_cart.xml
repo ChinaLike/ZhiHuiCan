@@ -39,6 +39,7 @@
                         android:layout_height="wrap_content"
                         android:text="应支付："
                         android:textColor="@color/text_color_m"
+                        android:textStyle="bold"
                         android:textSize="@dimen/text_size_s_m" />
 
                     <TextView
@@ -69,7 +70,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="优惠  "
+                        android:text="优惠："
                         android:textColor="@color/text_color_m"
                         android:textSize="@dimen/text_size_s_m" />
 
@@ -102,7 +103,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="打赏  " />
+                        android:text="打赏：" />
 
                     <TextView
                         android:id="@+id/exceptional_price"
@@ -195,8 +196,8 @@
                         android:layout_weight="1"
                         android:padding="10dp"
                         android:text="优惠方式"
-                        android:textColor="@color/text_color_m"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/cart_title_text_size"
+                        android:textColor="@color/text_color_m" />
 
                 </LinearLayout>
 
@@ -225,8 +226,8 @@
                         android:layout_weight="1"
                         android:padding="10dp"
                         android:text="支付方式"
-                        android:textColor="@color/text_color_m"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/cart_title_text_size"
+                        android:textColor="@color/text_color_m" />
 
                     <RelativeLayout
                         android:layout_width="0dp"

@@ -1,8 +1,10 @@
 package cn.sczhckg.order.fragment;
 
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -164,11 +166,10 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void settleAountsCartEvent(SettleAountsCartEvent event) {
-
         /**刷新数据，布局界面*/
         loadingSuccess();
         if (event.getType() == SettleAountsCartEvent.LOADING) {
-            cartGift.setSelected(false);
+            buttonLoosen(cartGift,getContext());
             /**刷新会员优惠类型*/
             mVipFavorableAdapter.notifyDataSetChanged(event.getBean().getVipFavorable());
             dishesBeen = event.getBean().getSettleAccountsDishesBeen();
@@ -179,6 +180,9 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
             countTotalPrice();
             countTotalFavorable();
 
+        } else if (event.getType() == SettleAountsCartEvent.REFRESH) {
+            countTotalPrice();
+            countTotalFavorable();
         }
     }
 
@@ -221,7 +225,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
             case R.id.cart_gift:
                 /**进入打赏界面*/
                 if (cartGift.isSelected()) {
-                    cartGift.setSelected(false);
+                    buttonLoosen(cartGift,getContext());
                     money(0);
                 } else {
                     EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.GTYPE));
@@ -268,7 +272,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         countTotalPrice();
         /**有价格回调时，才把打赏点亮*/
         if (money != 0) {
-            cartGift.setSelected(true);
+            buttonSelect(cartGift,getContext());
         }
     }
 
@@ -291,13 +295,6 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         return giftMoney;
     }
 
-    /**
-     * 登陆成功，通知价格刷新
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void loginEvent(LoginEvent event) {
-
-    }
 
     /**
      * 初始化会员显示
@@ -346,6 +343,24 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         loadingItemParent.setVisibility(View.GONE);
         loadingFail.setVisibility(View.VISIBLE);
         loadingFailTitle.setText(str);
+    }
+
+    /**
+     * 按钮被按下
+     * @param btn
+     */
+    public static void buttonSelect(Button btn, Context mContext){
+        btn.setSelected(true);
+        btn.setTextColor(ContextCompat.getColor(mContext,R.color.text_color_main_select));
+    }
+
+    /**
+     * 按钮松开
+     * @param btn
+     */
+    public static void buttonLoosen(Button btn, Context mContext){
+        btn.setSelected(false);
+        btn.setTextColor(ContextCompat.getColor(mContext,R.color.text_color_person));
     }
 
 }

@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beyole="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp">
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:layout_weight="2">
+        android:layout_weight="2"
+        android:gravity="center_vertical">
 
-        <ImageView
+        <cn.sczhckg.order.overwrite.RoundImageView
             android:id="@+id/cart_favorable"
             android:layout_width="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_height="20dp" />
+            android:layout_height="20dp"
+            android:scaleType="matrix"
+            beyole:borderRadius="5dip"
+            beyole:imageType="round" />
 
         <TextView
             android:id="@+id/cart_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:ellipsize="end"
-            android:paddingLeft="5dp"
-            android:gravity="center_vertical|left"
-            android:lines="2"
-            android:textColor="@color/text_color_m"
+            android:gravity="center_vertical"
             android:lineSpacingExtra="2dp"
-            android:textStyle="bold"
-            android:lineSpacingMultiplier="1.2" />
+            android:lineSpacingMultiplier="1.2"
+            android:lines="2"
+            android:paddingLeft="5dp" />
 
     </LinearLayout>
 
@@ -51,9 +52,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/text_color_cart_price_m"
-                android:textSize="@dimen/text_size_smart" />
+                android:gravity="center" />
 
 
             <TextView
@@ -61,9 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/text_color_cart_price_m"
-                android:textSize="@dimen/text_size_smart" />
+                android:gravity="center" />
 
 
             <TextView
@@ -71,9 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/text_color_m"
-                android:textSize="@dimen/text_size_smart" />
+                android:gravity="center" />
 
         </LinearLayout>
 
@@ -99,9 +94,9 @@
                 <ImageView
                     android:id="@+id/cart_minus"
                     android:layout_width="wrap_content"
-                    android:scaleType="fitXY"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:scaleType="fitXY"
                     android:src="@drawable/open_btn_dishes_reduce" />
 
             </RelativeLayout>

@@ -59,12 +59,12 @@
                 android:gravity="center">
 
                 <Button
-                    android:id="@+id/right"
+                    android:id="@+id/deny"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_white_first_page"
-                    android:text="是"
-                    style="?android:attr/borderlessButtonStyle"
+                    android:text="否"
                     android:textColor="@color/white" />
             </RelativeLayout>
 
@@ -75,12 +75,12 @@
                 android:gravity="center">
 
                 <Button
-                    android:id="@+id/deny"
+                    android:id="@+id/right"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_white_first_page"
-                    android:text="否"
-                    style="?android:attr/borderlessButtonStyle"
+                    android:text="是"
                     android:textColor="@color/white" />
             </RelativeLayout>
         </LinearLayout>

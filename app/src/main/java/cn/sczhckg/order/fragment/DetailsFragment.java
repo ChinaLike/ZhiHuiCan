@@ -258,7 +258,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
-        if (event.getBean().getId().equals(dishesBean.getId())) {
+        if (event.getBean()!=null&&event.getBean().getId().equals(dishesBean.getId())) {
             detailsDishesNumber.setText(event.getBean().getNumber() + "");
         }
     }

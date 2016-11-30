@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import cn.sczhckg.order.R;
 import cn.sczhckg.order.data.bean.PayTypeBean;
 import cn.sczhckg.order.data.listener.OnAccountsListenner;
+import cn.sczhckg.order.fragment.SettleAccountsCartFragment;
 
 /**
  * @describe: 结账方式适配
@@ -55,9 +56,9 @@ public class SettleAountsPayAdapter extends RecyclerView.Adapter<SettleAountsPay
             @Override
             public void onClick(View v) {
                 for (Integer btn : mMap.keySet()) {
-                    mMap.get(btn).setSelected(false);
+                    SettleAccountsCartFragment.buttonLoosen(mMap.get(btn),mContext);
                 }
-                holder.cartType.setSelected(true);
+                SettleAccountsCartFragment.buttonSelect(holder.cartType,mContext);
                 onAccountsListenner.payType(mList.get(position));
             }
         });

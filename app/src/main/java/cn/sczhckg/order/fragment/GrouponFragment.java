@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,8 @@ import cn.sczhckg.order.data.bean.Bean;
 import cn.sczhckg.order.data.bean.GrouponBean;
 import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.RequestCommonBean;
+import cn.sczhckg.order.data.event.GrouponVerifyEvent;
+import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.data.response.ResponseCode;
 import cn.sczhckj.platform.rest.io.RestRequest;
@@ -132,7 +136,8 @@ public class GrouponFragment extends BaseFragment implements Callback<Bean<Group
                 break;
             case R.id.group_verify:
                 /**验证所有，并刷新价格*/
-                // TODO: 2016/11/23 这里还未实现刷新价格
+                EventBus.getDefault().post(new GrouponVerifyEvent(getGrouponList()));
+                EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.TTYPE));
                 break;
         }
     }

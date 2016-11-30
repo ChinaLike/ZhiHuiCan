@@ -22,7 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/cart_top"
-            android:background="@color/cart_top">
+            android:background="@color/white">
 
             <TextView
                 android:layout_width="0dp"
@@ -30,7 +30,8 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="@string/dishes"
-                android:textSize="@dimen/text_size_mediu_s"
+                android:textStyle="bold"
+                android:textSize="@dimen/cart_title_text_size"
                 android:textColor="@color/text_color_m" />
 
             <TextView
@@ -39,7 +40,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/numbers"
-                android:textSize="@dimen/text_size_mediu_s"
+                android:textStyle="bold"
+                android:textSize="@dimen/cart_title_text_size"
                 android:textColor="@color/text_color_m" />
 
             <TextView
@@ -48,7 +50,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/price"
-                android:textSize="@dimen/text_size_mediu_s"
+                android:textStyle="bold"
+                android:textSize="@dimen/cart_title_text_size"
                 android:textColor="@color/text_color_m" />
 
             <TextView
@@ -57,10 +60,16 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/totalPrice"
-                android:textSize="@dimen/text_size_mediu_s"
+                android:textStyle="bold"
+                android:textSize="@dimen/cart_title_text_size"
                 android:textColor="@color/text_color_m" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hint_line"
+            android:background="@color/hint_color"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -71,6 +80,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cart_recyclerView"
                 android:layout_width="match_parent"
+                android:padding="10dp"
+                android:background="@color/background_gray_m"
                 android:layout_height="match_parent" />
 
         </RelativeLayout>
@@ -105,15 +116,17 @@
                         android:layout_height="wrap_content"
                         android:text="合计："
                         android:textColor="@color/text_color_m"
-                        android:textSize="@dimen/text_size_mediu_s" />
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_size_s_m" />
 
                     <TextView
                         android:id="@+id/shoppingcart_total_price"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="¥ 0"
+                        android:textStyle="bold"
                         android:textColor="@color/text_color_red"
-                        android:textSize="@dimen/text_size_mediu_s" />
+                        android:textSize="@dimen/text_size_s_m" />
 
                 </LinearLayout>
 
@@ -138,15 +151,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="锅底  "
-                            android:textColor="@color/text_color_gray" />
+                            android:text="锅底："/>
 
                         <TextView
                             android:id="@+id/shoppingcart_part_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="@color/text_color_m" />
+                            android:text="0" />
 
                     </LinearLayout>
 
@@ -160,15 +171,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="菜品  "
-                            android:textColor="@color/text_color_gray" />
+                            android:text="菜品："/>
 
                         <TextView
                             android:id="@+id/shoppingcart_dishes_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="@color/text_color_m" />
+                            android:text="0"/>
                     </LinearLayout>
 
                 </LinearLayout>

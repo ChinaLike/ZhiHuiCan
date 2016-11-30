@@ -13,9 +13,10 @@
         android:layout_weight="6"
         android:gravity="center"
         android:text="@string/potMustChoose"
+        android:textColor="@color/text_color_m"
         android:paddingRight="25dp"
         android:paddingLeft="25dp"
-        android:textColor="@color/black"
+        android:textStyle="bold"
         android:textSize="@dimen/text_size_mediu_s" />
 
 

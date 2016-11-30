@@ -15,6 +15,8 @@ import cn.sczhckg.order.data.bean.SettleAccountsBean;
 public class SettleAountsCartEvent {
     /**加载数据*/
     public final static int LOADING=1;
+    /**刷新数据*/
+    public final static int REFRESH=2;
 
     private int type;
 

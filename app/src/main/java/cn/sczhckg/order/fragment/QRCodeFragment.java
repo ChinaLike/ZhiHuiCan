@@ -215,7 +215,7 @@ public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCode
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void verifyServiceEventBus(QRCodeVerifyEvent event){
         if (event.getCode()==ResponseCode.SUCCESS){
-            Toast.makeText(getContext(),event.getMsg()+"",Toast.LENGTH_SHORT).show();
+            codePayTitle.setText(event.getMsg()+"");
             /**销毁时关闭服务*/
             EventBus.getDefault().post(new CloseServiceEvent());
             code.setVisibility(View.GONE);

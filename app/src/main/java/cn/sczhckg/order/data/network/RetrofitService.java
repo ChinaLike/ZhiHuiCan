@@ -98,5 +98,9 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("rest/refresh/QRCodeVerify")
     Call<Bean<CommonBean>> refreshQRCodeIsVerify(@Field("parames") String parames);
+    /**优惠类型验证*/
+    @FormUrlEncoded
+    @POST("rest/accounts/favorableTypeVerify")
+    Call<Bean<SettleAccountsBean>> favorableTypeVerify(@Field("parames") String parames);
 
 }

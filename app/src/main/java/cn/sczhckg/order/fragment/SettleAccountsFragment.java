@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,10 @@ import cn.sczhckg.order.data.bean.OP;
 import cn.sczhckg.order.data.bean.RequestCommonBean;
 import cn.sczhckg.order.data.bean.SettleAccountsBean;
 import cn.sczhckg.order.data.bean.SettleAccountsDishesBean;
+import cn.sczhckg.order.data.event.GrouponVerifyEvent;
+import cn.sczhckg.order.data.event.LoginEvent;
 import cn.sczhckg.order.data.event.SettleAountsCartEvent;
+import cn.sczhckg.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.data.response.ResponseCode;
 import cn.sczhckj.platform.rest.io.RestRequest;
@@ -60,10 +64,15 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Bea
     private List<SettleAccountsDishesBean> mList = new ArrayList<>();
 
     private SettleAccountsAdapter mSettleAccountsAdapter;
+    /**
+     * 优惠类型的ID
+     */
+    private Integer favorableId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -113,6 +122,7 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Bea
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -182,6 +192,75 @@ public class SettleAccountsFragment extends BaseFragment implements Callback<Bea
         loadingItemParent.setVisibility(View.GONE);
         loadingFail.setVisibility(View.VISIBLE);
         loadingFailTitle.setText(str);
+    }
+
+    /**
+     * 登陆成功，通知价格刷新
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginEvent(LoginEvent event) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setUserId(event.getBean().getId());
+        bean.setFavorableType(favorableId);
+        favorableVerify(bean);
+    }
+
+    /**
+     * 团购券验证，通知价格刷新
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void grouponVerifyEventBus(GrouponVerifyEvent event) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setGroupList(event.getList());
+        bean.setFavorableType(favorableId);
+        favorableVerify(bean);
+    }
+
+    /**
+     * 处理消费者选择的优惠类型，留值等待验证返回新数据
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void favorableTypeEventBus(SettleAountsTypeEvent event) {
+        if (event.getType() == SettleAountsTypeEvent.FTYPE) {
+            /**为优惠类型赋值*/
+            favorableId = event.getFavorableTypeBean().getId();
+        }
+    }
+
+    /**
+     * 优惠类型验证
+     *
+     * @param bean
+     */
+    private void favorableVerify(RequestCommonBean bean) {
+
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ACCOUNTS_FAVORABLE_TYPE)
+                .time()
+                .bean(bean);
+
+        Call<Bean<SettleAccountsBean>> settleAccountsBeanCall = RetrofitRequest.service().favorableTypeVerify(restRequest.toRequestString());
+        settleAccountsBeanCall.enqueue(new Callback<Bean<SettleAccountsBean>>() {
+            @Override
+            public void onResponse(Call<Bean<SettleAccountsBean>> call, Response<Bean<SettleAccountsBean>> response) {
+                Bean<SettleAccountsBean> bean = response.body();
+                if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                    mList = bean.getResult().getSettleAccountsDishesBeen();
+                    mSettleAccountsAdapter.notifyDataSetChanged(mList);
+                    /**更新左侧结账方式*/
+                    EventBus.getDefault().post(new SettleAountsCartEvent(SettleAountsCartEvent.REFRESH, bean.getResult()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Bean<SettleAccountsBean>> call, Throwable t) {
+
+            }
+        });
     }
 
 }

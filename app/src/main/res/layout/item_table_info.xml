@@ -4,7 +4,7 @@
     android:id="@+id/table_info_parent"
     android:layout_width="match_parent"
     android:layout_height="@dimen/table_info_height"
-    android:background="@color/white">
+    android:background="@drawable/both_bg_header_right">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:id="@+id/parent_show_table"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="7"
             android:orientation="horizontal"
             android:visibility="visible">
 
@@ -29,7 +29,7 @@
                 android:lines="1"
                 android:padding="10dp"
                 android:text="桌号："
-                android:textColor="@color/text_color_m"
+                android:textColor="@color/white"
                 android:textSize="@dimen/table_info_text_size" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:lines="1"
                 android:padding="10dp"
                 android:text="服务员："
-                android:textColor="@color/text_color_m"
+                android:textColor="@color/white"
                 android:textSize="@dimen/table_info_text_size" />
         </LinearLayout>
 
@@ -77,22 +77,23 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_smart_s"
-                        android:textColor="@color/black" />
+                        android:layout_gravity="center"
+                        android:textColor="@color/white"
+                        android:lines="1"
+                        android:textSize="@dimen/text_size_smart_s" />
 
                     <ImageView
                         android:id="@+id/vip_grade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleType="fitCenter"/>
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -103,8 +104,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
         android:layout_height="@dimen/hint_line"
-        android:background="@color/hint_color"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/hint_color" />
 
 </RelativeLayout>
