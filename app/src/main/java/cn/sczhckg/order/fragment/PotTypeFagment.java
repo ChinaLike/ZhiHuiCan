@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -84,7 +86,7 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
 
     private PersonChooseAdapter personAdapter;
 
-    private List<PersonBean> personList;
+    private List<PersonBean> personList=new ArrayList<>();
 
     private List<DishesBean> dishesList;
 
@@ -166,8 +168,12 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
     private void initView(MainPagerShow bean) {
         potParent.setClickable(true);
         dishesParent.setClickable(true);
-
-        DEFAULT_PERSON = bean.getPerson().size();
+        if (bean.getPerson()!=null){
+            DEFAULT_PERSON = bean.getPerson().size();
+            DEFAULT_PERSON=DEFAULT_PERSON>=0?DEFAULT_PERSON:0;
+        }else {
+            DEFAULT_PERSON = 0;
+        }
         /**========初始化人数========*/
         personChoose.setLayoutManager(new LinearLayoutManager(getActivity()));
         personAdapter = new PersonChooseAdapter(getActivity(), initPerson(bean));
@@ -217,7 +223,9 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
         mPersonBean.setTableName(bean.getTableNumber());
         /**初始化默认人数，避免消费者未选择时此数为0*/
         MainActivity.person = bean.getDefaultNumber();
-        personList = bean.getPerson();
+        if (bean.getPerson()!=null) {
+            personList = bean.getPerson();
+        }
         personList.add(mPersonBean);
         return personList;
     }
@@ -271,6 +279,8 @@ public class PotTypeFagment extends BaseFragment implements Callback<Bean<MainPa
             loadingSuccess();
             initView(bean.getResult());
             mOnTableListenner.table(bean.getResult().getTableNumber(), bean.getResult().getWaitress());
+            /**设置开桌密码*/
+            openTablePassword=bean.getResult().getOpenTablePassword();
         }else if (bean != null) {
             loadingFail(bean.getMessage());
         } else {

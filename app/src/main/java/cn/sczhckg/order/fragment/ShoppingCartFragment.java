@@ -45,6 +45,7 @@ import cn.sczhckg.order.data.listener.OnTotalNumberListener;
 import cn.sczhckg.order.data.network.RetrofitRequest;
 import cn.sczhckg.order.data.response.ResponseCode;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import cn.sczhckg.order.overwrite.MyEditTextDialog;
 import cn.sczhckg.order.until.AppSystemUntil;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -144,9 +145,9 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         if (localMap.containsKey(bean.getId())) {
             int postion = mList.indexOf(localMap.get(bean.getId()));
             int number = bean.getNumber();
-            if (number==0){
-                mList.remove( mList.get(postion));
-            }else {
+            if (number == 0) {
+                mList.remove(mList.get(postion));
+            } else {
                 mList.get(postion).setNumber(number);
             }
         } else {
@@ -229,9 +230,13 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void onClick() {
         if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.openTable))) {
             /**开桌*/
-            buttonType = 0;
-            cartVerify(0);
-            showProgress("数据提交中，清请稍后...");
+            if (openTablePassword != null && !openTablePassword.equals("")) {
+                /**验证密码*/
+                passwordVerify();
+            } else {
+                /**不用验证密码*/
+                openTable();
+            }
         } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
             /**选好了*/
             buttonType = 1;
@@ -239,6 +244,42 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
             showProgress("数据提交中，清请稍后...");
         }
 
+    }
+
+    /**
+     * 开桌
+     */
+    private void openTable() {
+        buttonType = 0;
+        cartVerify(0);
+        showProgress("数据提交中，清请稍后...");
+    }
+
+    /**
+     * 密码验证
+     */
+    private void passwordVerify() {
+        final MyEditTextDialog dialog = new MyEditTextDialog(getContext());
+        dialog.setTitle("请输入服务密码");
+        dialog.setEditTextHint("请输入密码");
+        dialog.setLeftButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setRightButton("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (openTablePassword.equals(dialog.getEditText())) {
+                    openTable();
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(getContext(), "密码输入错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -265,6 +306,8 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
 
     @Override
     public void totalNumber(int totalPrice, int potNumber, int dishesNumber) {
+        /**设置本次锅底数量*/
+        totalPotNumber = potNumber;
         shoppingcartTotalPrice.setText("¥  " + totalPrice);
         shoppingcartPartNumber.setText(potNumber + "");
         shoppingcartDishesNumber.setText(dishesNumber + "");

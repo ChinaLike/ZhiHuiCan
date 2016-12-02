@@ -1,5 +1,6 @@
 package cn.sczhckg.order.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.event.CloseServiceEvent;
 import cn.sczhckg.order.data.listener.OnGiftListenner;
 import cn.sczhckg.order.overwrite.DashlineItemDivider;
+import cn.sczhckg.order.overwrite.MyDialog;
 import cn.sczhckg.order.service.CartService;
 import cn.sczhckg.order.service.QRCodeService;
 
@@ -40,7 +42,7 @@ import cn.sczhckg.order.service.QRCodeService;
 
 public abstract class BaseFragment extends Fragment {
 
-    protected static DishesAdapter mDishesAdapter = null;
+    protected DishesAdapter mDishesAdapter = null;
 
     protected List<DishesBean> parentDishesList = new ArrayList<>();
     /**
@@ -84,6 +86,12 @@ public abstract class BaseFragment extends Fragment {
      * 二维码扫描
      */
     private Intent mQRCodeIntent;
+    /**
+     * 锅底数量
+     */
+    public static int totalPotNumber = 0;
+
+    protected static String openTablePassword="";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,9 +119,7 @@ public abstract class BaseFragment extends Fragment {
      * @param mRecyclerView
      */
     protected void initDishesAdapter(RecyclerView mRecyclerView) {
-        if (mDishesAdapter == null) {
-            mDishesAdapter = new DishesAdapter(getContext(), parentDishesList);
-        }
+        mDishesAdapter = new DishesAdapter(getContext(), parentDishesList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
         mRecyclerView.setAdapter(mDishesAdapter);
@@ -195,6 +201,16 @@ public abstract class BaseFragment extends Fragment {
         MyApplication.isLogin = false;
         /**销毁时关闭服务*/
         EventBus.getDefault().post(new CloseServiceEvent());
+        /**把锅底数量职位初始值*/
+        totalPotNumber = 0;
+        /**初始密码*/
+        openTablePassword="";
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        finish();
     }
 
     /**

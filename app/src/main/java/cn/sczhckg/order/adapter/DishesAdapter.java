@@ -21,8 +21,10 @@ import cn.sczhckg.order.data.bean.Constant;
 import cn.sczhckg.order.data.bean.DishesBean;
 import cn.sczhckg.order.data.event.BottomChooseEvent;
 import cn.sczhckg.order.data.event.RefreshCartEvent;
+import cn.sczhckg.order.fragment.BaseFragment;
 import cn.sczhckg.order.fragment.OrderFragment;
 import cn.sczhckg.order.image.GlideLoading;
+import cn.sczhckg.order.overwrite.MyDialog;
 
 /**
  * @describe: 菜品适配
@@ -36,10 +38,13 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
 
     private List<DishesBean> mList;
 
+    private MyDialog dialog;
+
 
     public DishesAdapter(Context mContext, List<DishesBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
+        dialog=new MyDialog(mContext);
     }
 
     @Override
@@ -95,14 +100,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-                    int number = bean.getNumber();
-                    number++;
-                    bean.setNumber(number);
-                    holder.dishesNumber.setText(number + "");
-                    bean.setTableId(OrderFragment.tabOrderType);
-                    EventBus.getDefault().post(new RefreshCartEvent(bean));
-                }
+                isOverProof(bean,holder);
             }
         });
         /**点击进入详情*/
@@ -176,6 +174,49 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         public DishesHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+    }
+
+    /**
+     * 判断锅底是否超过标准
+     */
+    private void isOverProof(final DishesBean bean, final DishesHolder holder){
+        /**首先判断是否是锅底再次判断是否已经选择了一个锅底*/
+        if(bean.getType()==0&& BaseFragment.totalPotNumber>0){
+            dialog.setTitle("温馨提示");
+            dialog.setContextText("尊敬的顾客您好！\n您已经选择了一份锅底，确认还\n需要再来一份吗？");
+            dialog.setPositiveButton("确认选择", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setAddDishes(bean,holder);
+                    dialog.dismiss();
+                }
+            });
+            dialog.setNegativeButton("不选了", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }else {
+            setAddDishes(bean,holder);
+        }
+    }
+
+    /**
+     * 菜品添加
+     * @param bean
+     * @param holder
+     */
+    private void setAddDishes(DishesBean bean,DishesHolder holder){
+        if (bean.getPermiss() == Constant.PREMISS_AGREE) {
+            int number = bean.getNumber();
+            number++;
+            bean.setNumber(number);
+            holder.dishesNumber.setText(number + "");
+            bean.setTableId(OrderFragment.tabOrderType);
+            EventBus.getDefault().post(new RefreshCartEvent(bean));
         }
     }
 

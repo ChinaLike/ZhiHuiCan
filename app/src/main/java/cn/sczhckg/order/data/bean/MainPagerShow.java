@@ -19,6 +19,8 @@ public class MainPagerShow implements Serializable{
 
     private String waitress;//服务员
 
+    private String openTablePassword;//开桌密码
+
     private List<PersonBean> person;//就餐人数推荐表
 
     private List<DishesBean> potList;//锅底选择
@@ -81,6 +83,14 @@ public class MainPagerShow implements Serializable{
         this.dishesList = dishesList;
     }
 
+    public String getOpenTablePassword() {
+        return openTablePassword;
+    }
+
+    public void setOpenTablePassword(String openTablePassword) {
+        this.openTablePassword = openTablePassword;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -88,6 +98,7 @@ public class MainPagerShow implements Serializable{
                 ", tableNumber='" + tableNumber + '\'' +
                 ", defaultNumber=" + defaultNumber +
                 ", waitress='" + waitress + '\'' +
+                ", openTablePassword='" + openTablePassword + '\'' +
                 ", person=" + person +
                 ", potList=" + potList +
                 ", dishesList=" + dishesList +

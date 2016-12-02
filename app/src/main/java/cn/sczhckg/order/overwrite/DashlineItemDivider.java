@@ -18,25 +18,25 @@ import android.view.View;
 
 public class DashlineItemDivider extends RecyclerView.ItemDecoration {
 
-    private int color=Color.GRAY;
+    private int color = Color.GRAY;
 
-    private int line=5;
+    private int line = 5;
 
-    private float width=1;
+    private float width = 1;
 
-    private int showNum=0;
+    private int showNum = 0;
 
-    public DashlineItemDivider(int color, int line,float width) {
+    public DashlineItemDivider(int color, int line, float width) {
         this.color = color;
         this.line = line;
-        this.width=width;
+        this.width = width;
     }
 
-    public DashlineItemDivider(int color, int line,float width,int showNum) {
+    public DashlineItemDivider(int color, int line, float width, int showNum) {
         this.color = color;
         this.line = line;
-        this.width=width;
-        this.showNum=showNum;
+        this.width = width;
+        this.showNum = showNum;
     }
 
     @Override
@@ -45,29 +45,30 @@ public class DashlineItemDivider extends RecyclerView.ItemDecoration {
         final int right = parent.getWidth() - parent.getPaddingRight();
 
         int childCount = parent.getChildCount();
-        if (showNum!=0){
-            childCount=showNum;
-        }
-        for (int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-                    .getLayoutParams();
-            //以下计算主要用来确定绘制的位置
-            final int top = child.getBottom() + params.bottomMargin;
+        if (showNum != 0) {
+            childCount = showNum;
 
-            //绘制虚线
-            Paint paint = new Paint();
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(color);
-            Path path = new Path();
-            path.moveTo(left, top);
-            path.lineTo(right, top);
-            PathEffect effects = new DashPathEffect(new float[]{line, line, line, line}, 5);//此处单位是像素不是dp  注意 请自行转化为dp
-            paint.setStrokeWidth(width);
-            paint.setPathEffect(effects);
-            c.drawPath(path, paint);
+            for (int i = 0; i < childCount; i++) {
+                final View child = parent.getChildAt(i);
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
+                        .getLayoutParams();
+                //以下计算主要用来确定绘制的位置
+                final int top = child.getBottom() + params.bottomMargin;
+
+                //绘制虚线
+                Paint paint = new Paint();
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setColor(color);
+                Path path = new Path();
+                path.moveTo(left, top);
+                path.lineTo(right, top);
+                PathEffect effects = new DashPathEffect(new float[]{line, line, line, line}, 5);//此处单位是像素不是dp  注意 请自行转化为dp
+                paint.setStrokeWidth(width);
+                paint.setPathEffect(effects);
+                c.drawPath(path, paint);
 
 
+            }
         }
     }
 
