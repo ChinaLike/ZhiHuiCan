@@ -135,13 +135,14 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
 
     /**
      * 菜品详情请求
+     *
      * @param dishesBean
      */
-    private void dishesDeatil(DishesBean dishesBean){
-        RequestCommonBean bean=new RequestCommonBean();
+    private void dishesDeatil(DishesBean dishesBean) {
+        RequestCommonBean bean = new RequestCommonBean();
         bean.setId(dishesBean.getId());
         bean.setName(dishesBean.getName());
-        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.DISHES_DETAILS)
                 .time()
                 .bean(bean);
@@ -153,13 +154,13 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
 
     @Override
     public void init() {
-        detailsBanner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppSystemUntil.height(getContext())*2/3));
+        detailsBanner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppSystemUntil.height(getContext()) * 2 / 3));
     }
 
     @Override
     public void onResponse(Call<Bean<DetailsBean>> call, Response<Bean<DetailsBean>> response) {
-        Bean<DetailsBean> bean=response.body();
-        if (bean != null&&bean.getCode() == ResponseCode.SUCCESS) {
+        Bean<DetailsBean> bean = response.body();
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             bannerAdapter(bean.getResult().getUrls());
             favorableAdapter(bean.getResult().getPriceType());
             initProgress(bean.getResult().getGoodEvaluate(), bean.getResult().getTotalEvaluate());
@@ -258,7 +259,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
-        if (event.getBean()!=null&&event.getBean().getId().equals(dishesBean.getId())) {
+        if (dishesBean != null && event.getBean().getId().equals(dishesBean.getId())) {
             detailsDishesNumber.setText(event.getBean().getNumber() + "");
         }
     }

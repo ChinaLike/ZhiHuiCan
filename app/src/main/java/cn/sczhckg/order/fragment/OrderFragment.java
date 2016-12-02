@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -147,7 +148,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      */
     private ClassifyItemBean currentBean;
 
-    private boolean isMainTable=true;
+    private boolean isMainTable = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -245,12 +246,13 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
 
     /**
      * 是否是主桌
+     *
      * @param bean
      */
-    private void isMainTable(ClassifyBean bean){
+    private void isMainTable(ClassifyBean bean) {
         /**验证不是主桌*/
-        if (bean.getMainTale()!=0){
-            isMainTable=false;
+        if (bean.getMainTale() != 0) {
+            isMainTable = false;
             startCartService();
         }
     }
@@ -292,12 +294,21 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     public void onItemClick(View view, int position) {
         defaultItem = position;
         move(position);
-        if (dishesMap.containsKey(classifyList.get(position).getName())) {
-            parentDishesList = dishesMap.get(classifyList.get(position).getName());
-            mDishesAdapter.notifyDataSetChanged(parentDishesList);
-        } else {
-            initDishesRequest(classifyList.get(position));
-        }
+
+//        if (dishesMap.containsKey(classifyList.get(position).getName())) {
+//            /**再次验证一级分类ID与之对应*/
+//            if (dishesMap.get(classifyList.get(position).getName()).size() > 0 &&
+//                    (dishesMap.get(classifyList.get(position).getName()).get(0).getType()
+//                            == classifyList.get(position).getId())) {
+//                /**如果存在已经请求数据，则直接利用*/
+//                parentDishesList = dishesMap.get(classifyList.get(position).getName());
+//                mDishesAdapter.notifyDataSetChanged(parentDishesList);
+//            } else {
+//                initDishesRequest(classifyList.get(position));
+//            }
+//        } else {
+        initDishesRequest(classifyList.get(position));
+//        }
     }
 
     /**
@@ -360,7 +371,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * @param tabList
      */
     private void initTab(List<TabBean> tabList) {
-        if (tabList == null || tabList.size() == 0||!isMainTable) {
+        if (tabList == null || tabList.size() == 0 || !isMainTable) {
             dishesTab.setVisibility(View.GONE);
             tabText.setVisibility(View.VISIBLE);
             if (orderType == ALONE_ORDER) {
@@ -370,7 +381,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
                 tabOrderType = 1;
                 tabText.setText(getResources().getString(R.string.more_order));
             }
-        } else{
+        } else {
             dishesTab.setVisibility(View.VISIBLE);
             tabText.setVisibility(View.GONE);
             this.tabList = tabList;

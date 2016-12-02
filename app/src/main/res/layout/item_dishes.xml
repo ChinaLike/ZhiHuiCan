@@ -124,7 +124,9 @@
                     <ImageView
                         android:id="@+id/dishes_minus"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:src="@drawable/open_btn_dishes_reduce" />
 
                     <TextView
@@ -138,7 +140,9 @@
                     <ImageView
                         android:id="@+id/dishes_add"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:layout_alignParentRight="true"
                         android:src="@drawable/open_btn_dishes_add" />
                 </LinearLayout>

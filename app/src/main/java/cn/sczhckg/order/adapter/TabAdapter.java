@@ -59,7 +59,6 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
         holder.tabParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Tab", "onBindViewHolder: "+mList.get(position).toString());
                 views.get(position).setSelected(true);
                 views.get(current).setSelected(false);
                 current = position;

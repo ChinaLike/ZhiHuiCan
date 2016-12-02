@@ -58,11 +58,10 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
         viewMap.put(position, holder.classifyLine);
         textMap.put(position, holder.classifyText);
         layoutMap.put(position, holder.classiftItem);
-
         if (position == current) {
-            holder.classifyLine.setSelected(true);
-            holder.classifyText.setSelected(true);
-            holder.classiftItem.setSelected(true);
+            select(holder.classifyLine, holder.classifyText, holder.classiftItem);
+        } else {
+            loosen(holder.classifyLine, holder.classifyText, holder.classiftItem);
         }
         holder.classiftItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,17 +99,31 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
     }
 
     private void upData(int n) {
-        viewMap.get(current).setSelected(false);
-        textMap.get(current).setSelected(false);
-        layoutMap.get(current).setSelected(false);
-        viewMap.get(n).setSelected(true);
-        textMap.get(n).setSelected(true);
-        layoutMap.get(n).setSelected(true);
+        loosen(viewMap.get(current), textMap.get(current), layoutMap.get(current));
+        select(viewMap.get(n), textMap.get(n), layoutMap.get(n));
         current = n;
     }
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+    }
+
+    /**
+     * 选中
+     */
+    private void select(View view, TextView mTextView, LinearLayout layout) {
+        view.setSelected(true);
+        mTextView.setSelected(true);
+        layout.setSelected(true);
+    }
+
+    /**
+     * 松开
+     */
+    private void loosen(View view, TextView mTextView, LinearLayout layout) {
+        view.setSelected(false);
+        mTextView.setSelected(false);
+        layout.setSelected(false);
     }
 
 }

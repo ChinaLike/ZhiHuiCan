@@ -144,7 +144,11 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         if (localMap.containsKey(bean.getId())) {
             int postion = mList.indexOf(localMap.get(bean.getId()));
             int number = bean.getNumber();
-            mList.get(postion).setNumber(number);
+            if (number==0){
+                mList.remove( mList.get(postion));
+            }else {
+                mList.get(postion).setNumber(number);
+            }
         } else {
             mList.add(bean);
         }
