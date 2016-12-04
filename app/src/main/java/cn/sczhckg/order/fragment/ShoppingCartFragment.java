@@ -151,7 +151,9 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
                 mList.get(postion).setNumber(number);
             }
         } else {
-            mList.add(bean);
+            if (bean.getNumber()!=0) {
+                mList.add(bean);
+            }
         }
         return mList;
     }

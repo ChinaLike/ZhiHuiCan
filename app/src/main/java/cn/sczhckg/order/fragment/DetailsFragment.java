@@ -192,7 +192,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
         switch (view.getId()) {
             case R.id.details_add:
                 /**判断数量是否为0且本桌可以点菜*/
-                if (!detailsDishesNumber.getText().toString().trim().equals("0") && dishesBean.getPermiss() == Constant.PREMISS_AGREE) {
+                if (dishesBean.getPermiss() == Constant.PREMISS_AGREE) {
                     EventBus.getDefault().post(new RefreshCartEvent(dishesBean));
                 }
                 break;

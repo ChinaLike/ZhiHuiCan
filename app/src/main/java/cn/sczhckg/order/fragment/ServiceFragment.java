@@ -119,7 +119,9 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<Commo
     public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
         Bean<CommonBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            Toast.makeText(getContext(), bean.getMessage(), Toast.LENGTH_SHORT).show();
+            if (servicePhone.isSelected()){
+                serviceTitle.setText(bean.getMessage());
+            }
         }
     }
 
