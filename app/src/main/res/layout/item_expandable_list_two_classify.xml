@@ -55,7 +55,7 @@
             android:textColor="#999999"
             android:text="¥ 68"/>
 
-        <cn.sczhckg.order.overwrite.SlantTextView
+        <cn.sczhckj.order.overwrite.SlantTextView
             android:id="@+id/el2_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

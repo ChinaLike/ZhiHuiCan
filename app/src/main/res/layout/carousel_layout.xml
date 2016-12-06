@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <cn.sczhckg.order.overwrite.InsideViewPager
+    <cn.sczhckj.order.overwrite.InsideViewPager
         android:id="@+id/gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:unselectedAlpha="1"></cn.sczhckg.order.overwrite.InsideViewPager>
+        android:unselectedAlpha="1"></cn.sczhckj.order.overwrite.InsideViewPager>
 
     <LinearLayout
         android:id="@+id/CarouselLayoutPage"

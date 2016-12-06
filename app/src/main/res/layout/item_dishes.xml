@@ -17,7 +17,7 @@
         android:orientation="horizontal">
 
 
-        <cn.sczhckg.order.overwrite.RoundImageView
+        <cn.sczhckj.order.overwrite.RoundImageView
             android:id="@+id/dishes_image"
             android:layout_width="110dp"
             android:layout_height="110dp"
@@ -152,7 +152,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <cn.sczhckg.order.overwrite.NoScrollRecyclerview
+    <cn.sczhckj.order.overwrite.NoScrollRecyclerview
         android:id="@+id/dishes_favorable_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

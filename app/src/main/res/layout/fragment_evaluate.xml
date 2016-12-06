@@ -134,7 +134,7 @@
 
             </LinearLayout>
 
-            <cn.sczhckg.order.overwrite.NoScrollRecyclerview
+            <cn.sczhckj.order.overwrite.NoScrollRecyclerview
                 android:id="@+id/evaluate_other"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

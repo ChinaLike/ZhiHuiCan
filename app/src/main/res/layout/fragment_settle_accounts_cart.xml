@@ -201,7 +201,7 @@
 
                 </LinearLayout>
 
-                <cn.sczhckg.order.overwrite.NoScrollRecyclerview
+                <cn.sczhckj.order.overwrite.NoScrollRecyclerview
                     android:id="@+id/cart_favorable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -248,7 +248,7 @@
 
                 </LinearLayout>
 
-                <cn.sczhckg.order.overwrite.NoScrollRecyclerview
+                <cn.sczhckj.order.overwrite.NoScrollRecyclerview
                     android:id="@+id/cart_pay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

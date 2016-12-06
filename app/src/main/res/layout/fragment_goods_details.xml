@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <cn.sczhckg.order.overwrite.CarouselView
+        <cn.sczhckj.order.overwrite.CarouselView
             android:id="@+id/details_banner"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -69,7 +69,7 @@
 
                             </LinearLayout>
 
-                            <cn.sczhckg.order.overwrite.NoScrollRecyclerview
+                            <cn.sczhckj.order.overwrite.NoScrollRecyclerview
                                 android:id="@+id/details_favorable_recycler"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />

@@ -6,7 +6,7 @@
     android:background="@color/main"
     android:orientation="horizontal">
 
-    <cn.sczhckg.order.overwrite.NoScrollViewPager
+    <cn.sczhckj.order.overwrite.NoScrollViewPager
         android:id="@+id/cart"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -22,7 +22,7 @@
 
         <include layout="@layout/item_table_info" />
 
-        <cn.sczhckg.order.overwrite.NoScrollViewPager
+        <cn.sczhckj.order.overwrite.NoScrollViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

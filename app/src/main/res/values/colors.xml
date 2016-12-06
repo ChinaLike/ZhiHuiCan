@@ -29,6 +29,7 @@
 
     <!--分割线-->
     <color name="line_s">#E9E9E9</color>
+    <color name="cart_line">#F0F0F0</color>
     <color name="line_yellow">#f4d452</color>
 
     <!--系统主要背景颜色-->

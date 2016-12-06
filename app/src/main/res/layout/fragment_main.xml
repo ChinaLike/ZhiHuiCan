@@ -100,7 +100,7 @@
         android:layout_above="@id/main_bottom_hint"
         android:visibility="gone" />
 
-    <cn.sczhckg.order.overwrite.NoScrollViewPager
+    <cn.sczhckj.order.overwrite.NoScrollViewPager
         android:id="@+id/main_bottom_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

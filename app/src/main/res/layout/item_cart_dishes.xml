@@ -14,7 +14,7 @@
         android:layout_weight="2"
         android:gravity="center_vertical">
 
-        <cn.sczhckg.order.overwrite.RoundImageView
+        <cn.sczhckj.order.overwrite.RoundImageView
             android:id="@+id/cart_favorable"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -101,7 +101,7 @@
 
             </RelativeLayout>
 
-            <cn.sczhckg.order.overwrite.SlantTextView
+            <cn.sczhckj.order.overwrite.SlantTextView
                 android:id="@+id/cart_favorable_price"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
