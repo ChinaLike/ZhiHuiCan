@@ -13,19 +13,24 @@ import cn.sczhckj.order.data.bean.MainPagerShow;
 import cn.sczhckj.order.data.bean.QRCodeBean;
 import cn.sczhckj.order.data.bean.SettleAccountsBean;
 import cn.sczhckj.order.data.bean.UserLoginBean;
+import cn.sczhckj.order.data.bean.VersionBean;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 /**
- * @describe:
+ * @describe: 接口定义
  * @author: Like on 2016/11/4.
  * @Email: 572919350@qq.com
  */
 
 public interface RetrofitService {
 
+    /**版本管理信息*/
+    @FormUrlEncoded
+    @POST("rest/device/version")
+    Call<Bean<VersionBean>> version(@Field("params") String params);
     /**会员登录*/
     @FormUrlEncoded
     @POST("rest/user/login")

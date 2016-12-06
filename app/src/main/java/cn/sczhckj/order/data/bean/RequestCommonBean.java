@@ -10,7 +10,16 @@ import java.util.List;
 
 public class RequestCommonBean {
 
-    /**用户登录*/
+    /**
+     * 版本信息
+     */
+    private Integer versionCode;//版本号
+    private String versionName;//版本号
+
+
+    /**
+     * 用户登录
+     */
     private String password;
 
 
@@ -22,7 +31,6 @@ public class RequestCommonBean {
     private String deviceId;//用于开桌设备ID
 
 
-
     /**
      * 购物车数据验证请求
      */
@@ -30,7 +38,6 @@ public class RequestCommonBean {
     private Integer type;//开桌标识0-开桌
     private List<DishesBean> dishesList;//菜品数据
     private Integer person;//本桌已选人数
-
 
 
     /**
@@ -71,10 +78,27 @@ public class RequestCommonBean {
     private Integer hotWordId;
     private String opinion;
 
-    /**VIP申请*/
+    /**
+     * VIP申请
+     */
     private String userName;
     private String phone;
 
+    public Integer getVersionCode() {
+        return versionCode;
+    }
+
+    public void setVersionCode(Integer versionCode) {
+        this.versionCode = versionCode;
+    }
+
+    public String getVersionName() {
+        return versionName;
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
+    }
 
     public String getPassword() {
         return password;

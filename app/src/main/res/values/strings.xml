@@ -20,7 +20,7 @@
     <string name="dishes">菜品</string>
     <string name="numbers">数量</string>
     <string name="price">单价</string>
-    <string name="totalPrice">总价</string>
+    <string name="totalPrice">小计</string>
 
 
     <string name="title_activity_base_activvity">BaseActivvity</string>

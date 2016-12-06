@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -28,6 +29,8 @@ public class MyDialog extends Dialog {
     Button dialogRight;
     @Bind(R.id.dialog_title)
     TextView dialogTitle;
+    @Bind(R.id.right_parent)
+    RelativeLayout rightParent;
     private Context mContext;
 
     private View view;
@@ -80,6 +83,20 @@ public class MyDialog extends Dialog {
             dialogRight.setText(title);
         }
         dialogRight.setOnClickListener(onClickListener);
+    }
+
+    /**
+     * 设置只有一个按键的Buton
+     *
+     * @param title
+     * @param onClickListener
+     */
+    public void setAloneButton(String title, View.OnClickListener onClickListener) {
+        rightParent.setVisibility(View.GONE);
+        if (title != null) {
+            dialogLeft.setText(title);
+        }
+        dialogLeft.setOnClickListener(onClickListener);
     }
 
     @Override

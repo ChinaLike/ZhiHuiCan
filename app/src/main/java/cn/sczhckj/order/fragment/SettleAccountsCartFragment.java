@@ -190,7 +190,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
         for (SettleAccountsDishesBean bean : dishesBeen) {
             total = total + bean.getTotalPrice();
         }
-        shoppingcartTotalPrice.setText("¥  " + (total + giftMoney));
+        shoppingcartTotalPrice.setText("¥ " + (total + giftMoney));
     }
 
     /**
@@ -206,7 +206,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnGiftLi
                 }
             }
         }
-        favorablePrice.setText("¥  " + total);
+        favorablePrice.setText("¥ " + total);
     }
 
     @Override

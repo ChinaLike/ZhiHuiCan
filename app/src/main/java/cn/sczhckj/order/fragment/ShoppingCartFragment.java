@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,16 +122,32 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         /**本地加菜*/
         if (event.getBean() != null) {
             List<DishesBean> list = initList(event.getBean());
+            /**在没有任何菜品时把锅底设置为0*/
+            isEmptyList(list);
             isHaveData(list);
             mShoppingCartAdapter.notifyDataSetChanged(list);
         }
         /**后台加菜*/
         if (event.getBeanList() != null) {
             List<DishesBean> list = refreshMainTableAddDishes(event.getBeanList());
+            /**在没有任何菜品时把锅底设置为0*/
+            isEmptyList(list);
             isHaveData(list);
             mShoppingCartAdapter.notifyDataSetChanged(list);
         }
     }
+
+    /**
+     * 判断是否是空的list
+     *
+     * @param list
+     */
+    private void isEmptyList(List<DishesBean> list) {
+        if (list.size() == 0) {
+            totalPotNumber = 0;
+        }
+    }
+
 
     /**
      * 通过菜品信息来判断是否已经添加次菜品，如果已经添加刷新数量，处理本地加菜
@@ -148,7 +165,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
                 mList.get(postion).setNumber(number);
             }
         } else {
-            if (bean.getNumber()!=0) {
+            if (bean.getNumber() != 0) {
                 mList.add(bean);
             }
         }
@@ -200,7 +217,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         mShoppingCartAdapter.setOnTotalNumberListener(this);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         cartRecyclerView.setAdapter(mShoppingCartAdapter);
-        cartRecyclerView.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(),R.color.cart_line), 100000, 1));
+        cartRecyclerView.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
     }
 
     /**
@@ -307,7 +324,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void totalNumber(int totalPrice, int potNumber, int dishesNumber) {
         /**设置本次锅底数量*/
         totalPotNumber = potNumber;
-        shoppingcartTotalPrice.setText("¥  " + totalPrice);
+        shoppingcartTotalPrice.setText("¥ " + totalPrice);
         shoppingcartPartNumber.setText(potNumber + "");
         shoppingcartDishesNumber.setText(dishesNumber + "");
         /**发送消息，点菜界面收到后判断数量与提示数量是否相符合*/

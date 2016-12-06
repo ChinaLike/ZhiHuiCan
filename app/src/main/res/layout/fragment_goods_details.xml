@@ -97,9 +97,10 @@
                                     android:paddingLeft="10dp">
 
                                     <ImageView
+                                        android:id="@+id/details_like"
                                         android:layout_width="20dp"
                                         android:layout_height="20dp"
-                                        android:src="@drawable/open_btn_like_nor" />
+                                        android:src="@drawable/dishes_like" />
 
                                     <TextView
                                         android:id="@+id/dishes_like"

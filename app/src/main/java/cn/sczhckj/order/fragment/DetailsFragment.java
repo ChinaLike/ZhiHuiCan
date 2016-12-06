@@ -81,6 +81,8 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
     ImageView detailsBack;
     @Bind(R.id.details_banner)
     CarouselView detailsBanner;
+    @Bind(R.id.details_like)
+    ImageView detailsLike;
 
     private DetailsAdapter adapter;
     /**
@@ -207,6 +209,14 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
                 break;
             case R.id.details_back:
                 EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_OUT));
+                break;
+            case R.id.details_like:
+                /**点赞按钮*/
+                if (detailsLike.isSelected()) {
+                    detailsLike.setSelected(false);
+                } else {
+                    detailsLike.setSelected(true);
+                }
                 break;
         }
     }

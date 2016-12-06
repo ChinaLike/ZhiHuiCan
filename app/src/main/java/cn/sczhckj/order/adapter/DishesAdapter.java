@@ -18,6 +18,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.data.bean.CommonConstant;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.DishesBean;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
@@ -45,7 +46,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
     public DishesAdapter(Context mContext, List<DishesBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
-        dialog=new MyDialog(mContext);
+        dialog = new MyDialog(mContext);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         final DishesBean bean = mList.get(position);
         GlideLoading.loadingDishes(mContext, bean.getUrl(), holder.dishesImage);
         holder.dishesName.setText(bean.getName());
-        holder.dishesPrice.setText("¥  " + bean.getPrice() + "");
+        holder.dishesPrice.setText("¥ " + bean.getPrice() + "");
         holder.dishesSales.setText(bean.getSales() + "");
         holder.dishesCollect.setText(bean.getCollect() + "");
         if (bean.getStockout() == 0) {
@@ -101,7 +102,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isOverProof(bean,holder);
+                isOverProof(bean, holder);
             }
         });
         /**点击菜品图片进入详情*/
@@ -113,31 +114,31 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         });
 
         /**判断优惠类型,并显示*/
-        if (bean.getPriceType()!=null&&bean.getPriceType().size()!=0){
+        if (bean.getPriceType() != null && bean.getPriceType().size() != 0) {
             holder.dishesFavorableRecyclerView.setVisibility(View.VISIBLE);
-            DetailsAdapter adapter=new DetailsAdapter(mContext,bean.getPriceType());
-            holder.dishesFavorableRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
+            DetailsAdapter adapter = new DetailsAdapter(mContext, bean.getPriceType());
+            holder.dishesFavorableRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
             holder.dishesFavorableRecyclerView.setAdapter(adapter);
-        }else {
+        } else {
             holder.dishesFavorableRecyclerView.setVisibility(View.GONE);
         }
 
         /**判断是否喜欢，即收藏与否*/
-        if (bean.isCollect()){
+        if (bean.isCollect()) {
             holder.dishesCollectIcon.setSelected(true);
-        }else {
+        } else {
             holder.dishesCollectIcon.setSelected(false);
         }
         /**收藏标识点击事件*/
         holder.dishesCollectIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.dishesCollectIcon.isSelected()){
+                if (holder.dishesCollectIcon.isSelected()) {
                     holder.dishesCollectIcon.setSelected(false);
                     bean.setCollect(false);
-                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext,R.color.text_color_gray));
-                }else {
-                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext,R.color.text_color_main_select));
+                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.text_color_gray));
+                } else {
+                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.text_color_main_select));
                     holder.dishesCollectIcon.setSelected(true);
                     bean.setCollect(true);
                 }
@@ -145,11 +146,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         });
 
         /**权限判定,该桌是否可以点餐*/
-        if (bean.getPermiss()==Constant.PREMISS_AGREE){
+        if (bean.getPermiss() == Constant.PREMISS_AGREE) {
             /**可以点菜*/
             holder.dishesAdd.setClickable(true);
             holder.dishesMinus.setClickable(true);
-        }else {
+        } else {
             /**不可以点菜*/
             holder.dishesAdd.setClickable(false);
             holder.dishesMinus.setClickable(false);
@@ -203,15 +204,15 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
     /**
      * 判断锅底是否超过标准
      */
-    private void isOverProof(final DishesBean bean, final DishesHolder holder){
+    private void isOverProof(final DishesBean bean, final DishesHolder holder) {
         /**首先判断是否是锅底再次判断是否已经选择了一个锅底*/
-        if(bean.getType()==0&& BaseFragment.totalPotNumber>0){
+        if (bean.getType() == CommonConstant.POT_TYPE && BaseFragment.totalPotNumber > 0) {
             dialog.setTitle("温馨提示");
             dialog.setContextText("尊敬的顾客您好！\n您已经选择了一份锅底，确认还\n需要再来一份吗？");
             dialog.setPositiveButton("确认选择", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setAddDishes(bean,holder);
+                    setAddDishes(bean, holder);
                     dialog.dismiss();
                 }
             });
@@ -222,17 +223,18 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
                 }
             });
             dialog.show();
-        }else {
-            setAddDishes(bean,holder);
+        } else {
+            setAddDishes(bean, holder);
         }
     }
 
     /**
      * 菜品添加
+     *
      * @param bean
      * @param holder
      */
-    private void setAddDishes(DishesBean bean,DishesHolder holder){
+    private void setAddDishes(DishesBean bean, DishesHolder holder) {
         if (bean.getPermiss() == Constant.PREMISS_AGREE) {
             int number = bean.getNumber();
             number++;

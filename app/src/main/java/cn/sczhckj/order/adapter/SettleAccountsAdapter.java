@@ -128,7 +128,7 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         ParentViewHolder holder=new ParentViewHolder(convertView);
         holder.name.setText(getGroup(groupPosition).getName().toString());
         holder.number.setText("×"+getGroup(groupPosition).getTotalNumber()+"");
-        holder.totalPrice.setText("¥  "+getGroup(groupPosition).getTotalPrice());
+        holder.totalPrice.setText("¥ "+getGroup(groupPosition).getTotalPrice());
         holder.favorablePrice.setVisibility(View.INVISIBLE);
         holder.price.setVisibility(View.INVISIBLE);
         holder.image.setVisibility(View.INVISIBLE);
@@ -155,11 +155,11 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         holder.name.setText(getChild(groupPosition,childPosition).getName().toString());
         holder.number.setText("×"+getChild(groupPosition,childPosition).getNumber());
         if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null) {
-            holder.favorablePrice.setText("¥  " + getChild(groupPosition, childPosition).getPriceTypeBean().getPrice());
+            holder.favorablePrice.setText("¥ " + getChild(groupPosition, childPosition).getPriceTypeBean().getPrice());
         }
-        holder.price.setText("¥  "+getChild(groupPosition,childPosition).getPrice());
+        holder.price.setText("¥ "+getChild(groupPosition,childPosition).getPrice());
         if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null) {
-            holder.totalPrice.setText("¥  " + (getChild(groupPosition, childPosition).getNumber() * getChild(groupPosition, childPosition).getPriceTypeBean().getPrice()));
+            holder.totalPrice.setText("¥ " + (getChild(groupPosition, childPosition).getNumber() * getChild(groupPosition, childPosition).getPriceTypeBean().getPrice()));
         }
         if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null){
             holder.image.setVisibility(View.VISIBLE);

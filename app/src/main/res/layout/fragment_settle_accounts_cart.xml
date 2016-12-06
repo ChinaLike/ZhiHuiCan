@@ -186,9 +186,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -204,6 +203,7 @@
                 <cn.sczhckj.order.overwrite.NoScrollRecyclerview
                     android:id="@+id/cart_favorable"
                     android:layout_width="match_parent"
+                    android:layout_marginBottom="15dp"
                     android:layout_height="wrap_content" />
 
                 <View
@@ -216,6 +216,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp">
 

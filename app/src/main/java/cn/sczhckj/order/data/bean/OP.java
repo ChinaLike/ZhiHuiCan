@@ -9,6 +9,11 @@ package cn.sczhckj.order.data.bean;
 public interface OP {
 
     /**
+     * 版本
+     */
+    String VERSION = "version";
+
+    /**
      * 登录
      */
     String LOGIN = "login";
