@@ -23,6 +23,10 @@
     <string name="totalPrice">小计</string>
 
 
+    <string name="numberLogin">账号登录</string>
+    <string name="shortcutLogin">快捷登陆</string>
+
+
     <string name="title_activity_base_activvity">BaseActivvity</string>
 
     <!--购物车按钮-->

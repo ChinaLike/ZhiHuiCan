@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="¥ 450"
-            android:textColor="@color/text_color_orange" />
+            android:textColor="@color/yellow" />
 
 
     </LinearLayout>
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="¥ 68"
-                android:textColor="@color/text_color_orange" />
+                android:textColor="@color/yellow" />
         </LinearLayout>
 
         <LinearLayout

@@ -19,6 +19,11 @@ public interface OP {
     String LOGIN = "login";
 
     /**
+     * 获取短信验证码
+     */
+    String LOGIN_AUTH_CODE = "loginAuthCode";
+
+    /**
      * 办理VIP
      */
     String APPLY_FOR_VIP = "applyForVip";

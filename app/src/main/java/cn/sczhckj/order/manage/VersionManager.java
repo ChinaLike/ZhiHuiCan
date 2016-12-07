@@ -1,16 +1,15 @@
 package cn.sczhckj.order.manage;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.View;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
+import cn.sczhckj.order.data.bean.FileConstant;
 import cn.sczhckj.order.data.bean.VersionBean;
 import cn.sczhckj.order.overwrite.MyDialog;
-import cn.sczhckj.platform.util.HttpClient;
+import cn.sczhckj.order.until.ConvertUtils;
 
 /**
  * @describe: 版本管理
@@ -20,8 +19,22 @@ import cn.sczhckj.platform.util.HttpClient;
 
 public class VersionManager {
 
-    public interface OnDialogClickListener{
+    private DownLoadManager downLoadManager;
+
+    private MyDialog downLoadDialog;
+
+    private Context mContext;
+
+    private int maxs = 0;
+
+    public VersionManager(Context mContext) {
+        this.mContext = mContext;
+        downLoadManager = new DownLoadManager();
+    }
+
+    public interface OnDialogClickListener {
         void show();
+
         void dismiss();
     }
 
@@ -65,16 +78,16 @@ public class VersionManager {
     public void version(Context mContext, VersionBean bean) {
         if (getVersionCode(mContext) < bean.getVersionCode()) {
             /**服务器有更新*/
-            updataVersion(mContext,bean);
+            updataVersion(mContext, bean);
         }
     }
 
     /**
      * 提示当前有新版本
      */
-    public void updataVersion(Context mContext,VersionBean bean) {
-        String context="当前版本："+getVersionName(mContext)+"\n最新版本："+bean.getVersionName()+"\n更新大小："+bean.getVersionSize()+"M";
-        final MyDialog dialog=new MyDialog(mContext);
+    public void updataVersion(final Context mContext, final VersionBean bean) {
+        String context = "当前版本：" + getVersionName(mContext) + "\n最新版本：" + bean.getVersionName() + "\n更新大小：" + bean.getVersionSize() + "M";
+        final MyDialog dialog = new MyDialog(mContext);
         dialog.setTitle("版本更新");
         dialog.setContextText(context);
         dialog.setNegativeButton("暂不更新", new View.OnClickListener() {
@@ -88,7 +101,8 @@ public class VersionManager {
         dialog.setPositiveButton("马上更新", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2016/12/6 进入下载
+                downLoadDialog(mContext);
+                downLoadManager.retrofitDownload(bean.getHost(),bean.getUrl(), FileConstant.APK_NME, downLoadDialog,mContext);
                 onDialogClickListener.show();
                 dialog.dismiss();
             }
@@ -98,15 +112,36 @@ public class VersionManager {
         dialog.show();
     }
 
+
     /**
      * 当前没有新版本
      */
-    public void notUpdata(Context mContext){
+    public void notUpdata(Context mContext) {
 
     }
 
     public void setOnDialogClickListener(OnDialogClickListener onDialogClickListener) {
         this.onDialogClickListener = onDialogClickListener;
+    }
+
+    /**
+     * 下载弹窗
+     *
+     * @param mContext
+     */
+    private void downLoadDialog(Context mContext) {
+        downLoadDialog = new MyDialog(mContext);
+        downLoadDialog.setTitle("软件更新");
+        downLoadDialog.setContextText("正在更新中...");
+        downLoadDialog.setProgressVisibility();
+        downLoadDialog.setAloneButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downLoadDialog.dismiss();
+                onDialogClickListener.dismiss();
+            }
+        });
+        downLoadDialog.show();
     }
 
 }

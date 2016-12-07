@@ -10,19 +10,7 @@ import java.io.Serializable;
 
 public class CommonBean implements Serializable {
 
-    private int status;//返回字节码
-
-    private String msg;//错误信息
-
     private int showType;//显示点菜方式
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 
     public int getShowType() {
         return showType;
@@ -30,13 +18,5 @@ public class CommonBean implements Serializable {
 
     public void setShowType(int showType) {
         this.showType = showType;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 }

@@ -32,34 +32,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:lineSpacingExtra="2dp"
+        android:lineSpacingMultiplier="1.2"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:paddingTop="20dp"
-        android:lineSpacingExtra="2dp"
-        android:lineSpacingMultiplier="1.2"
         android:text="@string/warm_prompt" />
+
+    <LinearLayout
+        android:id="@+id/progress_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/dialog_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:indeterminateOnly="false"
+            android:progressDrawable="@drawable/progress_yellow_pro" />
+
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:padding="20dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="20dp">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center">
+
             <Button
                 android:id="@+id/dialog_left"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:lines="1"
                 android:background="@drawable/button_orange"
+                android:lines="1"
                 android:text="确认选择"
                 android:textColor="@color/white" />
         </RelativeLayout>
@@ -70,15 +102,16 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1">
+
             <Button
                 android:id="@+id/dialog_right"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_centerInParent="true"
-                android:lines="1"
                 android:background="@drawable/button_orange"
+                android:gravity="center"
+                android:lines="1"
                 android:text="不选了"
                 android:textColor="@color/white" />
         </RelativeLayout>

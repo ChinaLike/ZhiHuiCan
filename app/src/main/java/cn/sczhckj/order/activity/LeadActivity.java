@@ -49,13 +49,14 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
     @Bind(R.id.lead_isVip)
     TextView leadIsVip;
 
-    private VersionManager mVersionManager = new VersionManager();
+    private VersionManager mVersionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
+        mVersionManager = new VersionManager(LeadActivity.this);
         buttonIsClick(false);
         getVersion();
     }
@@ -117,11 +118,13 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
         Bean<VersionBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             if (bean.getResult() != null) {
-                Log.d("版本更新", "有更新");
-                mVersionManager.version(LeadActivity.this, bean.getResult());
-                mVersionManager.setOnDialogClickListener(this);
+                if (bean.getResult().getVersionCode()>mVersionManager.getVersionCode(LeadActivity.this)) {
+                    mVersionManager.version(LeadActivity.this, bean.getResult());
+                    mVersionManager.setOnDialogClickListener(this);
+                }else {
+                    buttonIsClick(true);
+                }
             } else {
-                Log.d("版本更新", "没有更新");
                 buttonIsClick(true);
             }
         }
@@ -129,8 +132,6 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
 
     @Override
     public void onFailure(Call<Bean<VersionBean>> call, Throwable t) {
-        Log.d("版本更新", "更新出错");
-
         buttonIsClick(true);
     }
 

@@ -20,8 +20,9 @@ public class RequestCommonBean {
     /**
      * 用户登录
      */
-    private String password;
-
+    private String password;//登录密码或验证码
+    private Integer loginType;//登录类型
+    private String phone;//用户手机号
 
     /**
      * 开桌获取数据
@@ -82,7 +83,6 @@ public class RequestCommonBean {
      * VIP申请
      */
     private String userName;
-    private String phone;
 
     public Integer getVersionCode() {
         return versionCode;
@@ -268,10 +268,22 @@ public class RequestCommonBean {
         this.phone = phone;
     }
 
+    public Integer getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(Integer loginType) {
+        this.loginType = loginType;
+    }
+
     @Override
     public String toString() {
         return "{" +
-                "password='" + password + '\'' +
+                "versionCode=" + versionCode +
+                ", versionName='" + versionName + '\'' +
+                ", password='" + password + '\'' +
+                ", loginType='" + loginType + '\'' +
+                ", phone='" + phone + '\'' +
                 ", id='" + id + '\'' +
                 ", deviceId='" + deviceId + '\'' +
                 ", type=" + type +
@@ -280,6 +292,7 @@ public class RequestCommonBean {
                 ", orderType=" + orderType +
                 ", name='" + name + '\'' +
                 ", group='" + group + '\'' +
+                ", groupList=" + groupList +
                 ", favorableType=" + favorableType +
                 ", userId='" + userId + '\'' +
                 ", giftMoney=" + giftMoney +
@@ -290,7 +303,6 @@ public class RequestCommonBean {
                 ", hotWordId=" + hotWordId +
                 ", opinion='" + opinion + '\'' +
                 ", userName='" + userName + '\'' +
-                ", phone='" + phone + '\'' +
                 '}';
     }
 }

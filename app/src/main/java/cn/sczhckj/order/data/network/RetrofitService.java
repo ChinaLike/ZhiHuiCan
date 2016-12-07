@@ -35,6 +35,10 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("rest/user/login")
     Call<Bean<UserLoginBean>> login(@Field("params") String params);
+    /**获取短信验证码*/
+    @FormUrlEncoded
+    @POST("rest/user/smsAuthCode")
+    Call<Bean<Integer>> smsAuthCode(@Field("params") String params);
     /**主页锅底选择*/
     @FormUrlEncoded
     @POST("rest/openTable/openTableData")

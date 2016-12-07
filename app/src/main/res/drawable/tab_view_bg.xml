@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="false" android:drawable="@color/cart_top"></item>
 
-    <item android:state_selected="true" android:drawable="@color/line_yellow"></item>
+    <item android:state_selected="true" android:drawable="@color/yellow"></item>
 
 </selector>

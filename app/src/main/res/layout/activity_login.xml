@@ -3,7 +3,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
+    android:background="@drawable/open_bg_login"
     android:orientation="vertical">
 
     <RelativeLayout

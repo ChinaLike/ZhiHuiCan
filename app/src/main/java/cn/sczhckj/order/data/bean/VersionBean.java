@@ -16,6 +16,8 @@ public class VersionBean {
 
     private String updateContent;//版本更新内容
 
+    private String host;//主机
+
     private String url;//版本更新下载地址
 
     public Integer getVersionCode() {
@@ -56,5 +58,13 @@ public class VersionBean {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 }

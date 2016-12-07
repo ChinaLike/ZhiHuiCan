@@ -30,7 +30,7 @@
             <shape>
                 <corners android:radius="10dip" />
 
-                <solid android:color="@color/table_item_line" />
+                <solid android:color="@color/yellow" />
             </shape>
         </clip>
     </item>

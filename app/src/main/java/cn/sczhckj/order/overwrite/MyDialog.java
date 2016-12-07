@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,6 +33,13 @@ public class MyDialog extends Dialog {
     TextView dialogTitle;
     @Bind(R.id.right_parent)
     RelativeLayout rightParent;
+    @Bind(R.id.dialog_progress)
+    ProgressBar dialogProgress;
+    @Bind(R.id.progress_text)
+    TextView progressText;
+    @Bind(R.id.progress_parent)
+    LinearLayout progressParent;
+
     private Context mContext;
 
     private View view;
@@ -112,6 +121,45 @@ public class MyDialog extends Dialog {
     public void setContextText(String context) {
         if (context != null) {
             dialogContext.setText(context);
+        }
+    }
+
+    /**
+     * 设置进度条的最大进度
+     *
+     * @param max
+     */
+    public void setProgressMax(int max) {
+
+        dialogProgress.setMax(max);
+    }
+
+    /**
+     * 设置进度条的进度
+     *
+     * @param progress
+     */
+    public void setProgress(int progress) {
+
+        dialogProgress.setProgress(progress);
+    }
+
+    /**
+     * 设置进度条进度文字描述
+     *
+     * @param text
+     */
+    public void setProgressText(String text) {
+
+        progressText.setText(text);
+    }
+
+    /**
+     * 设置进度条显示
+     */
+    public void setProgressVisibility() {
+        if (progressParent.getVisibility() == View.GONE) {
+            progressParent.setVisibility(View.VISIBLE);
         }
     }
 
