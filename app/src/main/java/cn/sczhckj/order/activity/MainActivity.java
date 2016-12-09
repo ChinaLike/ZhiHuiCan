@@ -73,8 +73,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     LinearLayout hasLogin;
     @Bind(R.id.cart)
     NoScrollViewPager cart;
-    @Bind(R.id.parent_show_table)
-    LinearLayout parentShowTable;
     @Bind(R.id.table_info_parent)
     RelativeLayout tableInfoParent;
     @Bind(R.id.header)
@@ -449,7 +447,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     @Override
     public void table(String tableNumber, String waitress) {
         table = tableNumber;
-        this.tableNumber.setText("桌号：" + table);
-        this.waitress.setText("服务员：" + waitress);
+        this.tableNumber.setText(table);
+        this.waitress.setText(waitress);
     }
 }

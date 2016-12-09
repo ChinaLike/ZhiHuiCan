@@ -1,72 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:beyole="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dishes_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:id="@+id/dishes_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="10dp">
 
-
+    <cn.sczhckj.order.overwrite.RoundImageView
+        android:id="@+id/dishes_image"
+        android:layout_width="@dimen/dishes_width"
+        android:layout_height="@dimen/dishes_height"
+        android:scaleType="matrix"
+        beyole:borderRadius="5dip"
+        beyole:imageType="round" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dishes_height"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1.5"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/dishes_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="top"
+            android:lines="1"
+            android:text="鲜牛肉"
+            android:textColor="@color/text_color_dishes_name" />
 
-        <cn.sczhckj.order.overwrite.RoundImageView
-            android:id="@+id/dishes_image"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:scaleType="matrix"
-            beyole:borderRadius="5dip"
-            beyole:imageType="round" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥"
+                android:textColor="@color/text_color_red"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/dishes_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="38"
+                android:textColor="@color/text_color_red" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dishes_favorable_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/dishes_name"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:text="鲜牛肉"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:textColor="@color/text_color_dishes_name"
-                    android:textSize="@dimen/text_size_mediu_s" />
-
-                <TextView
-                    android:id="@+id/dishes_price"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="¥  38"
-                    android:textColor="@color/text_color_red"
-                    android:textSize="@dimen/text_size_mediu_s" />
-
-            </LinearLayout>
-
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -74,7 +81,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="月售"
-                    android:textColor="@color/text_color_gray" />
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/dishes_sales"
@@ -82,13 +90,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="235"
-                    android:textColor="@color/text_color_gray" />
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/dishes_collect_icon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/dishes_like" />
 
                 <TextView
@@ -97,65 +114,50 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="230"
-                    android:textColor="@color/text_color_gray" />
-
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="10sp" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/dishes_stockout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:src="@drawable/dishes_guqing_off" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:gravity="right|center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/dishes_minus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:src="@drawable/open_btn_dishes_reduce" />
-
-                    <TextView
-                        android:id="@+id/dishes_number"
-                        android:layout_width="40dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textColor="@color/text_color_m" />
-
-                    <ImageView
-                        android:id="@+id/dishes_add"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/open_btn_dishes_add" />
-                </LinearLayout>
-            </LinearLayout>
-
 
         </LinearLayout>
+
     </LinearLayout>
 
-    <cn.sczhckj.order.overwrite.NoScrollRecyclerview
-        android:id="@+id/dishes_favorable_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dishes_height"
+        android:layout_weight="1"
+        android:gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/dishes_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:src="@drawable/open_btn_dishes_reduce" />
+
+            <TextView
+                android:id="@+id/dishes_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/text_color_m" />
+
+            <ImageView
+                android:id="@+id/dishes_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="20dp"
+                android:src="@drawable/open_btn_dishes_add" />
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>

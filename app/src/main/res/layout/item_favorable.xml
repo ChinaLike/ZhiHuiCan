@@ -1,37 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:beyole="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp">
+    android:layout_height="wrap_content">
 
-    <cn.sczhckj.order.overwrite.RoundImageView
-        android:id="@+id/image"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:scaleType="matrix"
-        beyole:borderRadius="5dip"
-        beyole:imageType="round" />
-
-    <TextView
-        android:id="@+id/title"
+    <cn.sczhckj.order.overwrite.TextViewBorder
+        android:id="@+id/favorable_context"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:ellipsize="end"
+        android:textSize="10sp"
         android:lines="1"
-        android:textColor="#666666" />
-
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="@color/text_color_red" />
-
+        android:padding="2dp"
+        app:borderColor="@color/text_color_red" />
 
 </LinearLayout>

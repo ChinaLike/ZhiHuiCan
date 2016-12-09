@@ -31,12 +31,12 @@ public interface OP {
     /**
      * 开桌数据显示
      */
-    String OPEN_TABLE_SHOW = "openTableShow";
+    String OPEN_TABLE_SHOW = "openTableData";
 
     /**
      * 开桌数据显示
      */
-    String OPEN_TABLE_VERIFY = "openTableVerify";
+    String OPEN_TABLE_VERIFY = "openTable";
 
     /**
      * 点菜界面分类显示

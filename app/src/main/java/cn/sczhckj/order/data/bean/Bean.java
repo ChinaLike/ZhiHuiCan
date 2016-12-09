@@ -1,7 +1,7 @@
 package cn.sczhckj.order.data.bean;
 
 /**
- * @describe: 通用父类参数
+ * @describe: 通用父类参数,服务器返回码统一放在code字段中，备注信息统一放在message中，请求的数据放在result
  * @author: Like on 2016/11/18.
  * @Email: 572919350@qq.com
  */

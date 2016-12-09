@@ -8,6 +8,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="hint_color">#DDDDDD</color>
+    <color name="view_color">#D3D3D3</color>
     <color name="text_hint_color">#D0D3D5</color>
     <!--首页欢迎语-->
     <color name="FF693D0A">#693D0A</color>
@@ -31,7 +32,7 @@
     <color name="cart_line">#F0F0F0</color>
 
     <!--系统主要背景颜色-->
-    <color name="main">#ECECEC</color>
+    <color name="main">#E0E0E0</color>
     <!---->
     <color name="cart_top">#F5F5F5</color>
     <!---->
@@ -41,6 +42,7 @@
 
     <color name="yellow">#FBDB5A</color>
     <color name="gray">#E3E2DF</color>
+    <color name="gray_c">#CCCCCC</color>
 
     <color name="background_gray_m">#FAFAFA</color>
 
@@ -52,6 +54,7 @@
 
     <!--EditText提示语颜色-->
     <color name="edit_text_hint_color">#BBBBBB</color>
+    <color name="text_color_default">#333333</color>
 
 
 

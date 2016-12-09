@@ -10,13 +10,19 @@ import java.io.Serializable;
 
 public class PriceTypeBean implements Serializable {
 
+    private int id;//优惠ID
+
     private int type;//优惠类型
 
     private int price;//优惠价格
-    
+
     private String title;
 
-    private String url;
+    private String imageUrl;
+
+    private String color;
+
+    private Integer imageId;//图片ID
 
 
     public String getTitle() {
@@ -25,14 +31,6 @@ public class PriceTypeBean implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public int getType() {
@@ -51,11 +49,48 @@ public class PriceTypeBean implements Serializable {
         this.price = price;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Integer getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Integer imageId) {
+        this.imageId = imageId;
+    }
+
     @Override
     public String toString() {
         return "{" +
-                "type=" + type +
+                "id=" + id +
+                ", type=" + type +
                 ", price=" + price +
+                ", title='" + title + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", color='" + color + '\'' +
+                ", imageId=" + imageId +
                 '}';
     }
 }

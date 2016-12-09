@@ -2,6 +2,7 @@ package cn.sczhckj.order.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.PriceTypeBean;
 import cn.sczhckj.order.image.GlideLoading;
+import cn.sczhckj.order.overwrite.TextViewBorder;
+import cn.sczhckj.order.until.ColorUntils;
 
 /**
  * @describe:
@@ -41,9 +44,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
     @Override
     public void onBindViewHolder(DetailsViewHolder holder, int position) {
         PriceTypeBean bean=mList.get(position);
-        GlideLoading.loadingDishes(mContext,bean.getUrl(),holder.image);
-        holder.title.setText(bean.getTitle());
-        holder.price.setText("¥  "+bean.getPrice());
+        /**设置内容*/
+        holder.context.setText(bean.getTitle()+"：¥"+bean.getPrice());
+        /**设置字体颜色*/
+        holder.context.setTextColor(ColorUntils.stringToHex(bean.getColor()));
+        /**设置边框颜色*/
+        holder.context.setBorderColor(ColorUntils.stringToHex(bean.getColor()));
     }
 
     @Override
@@ -56,12 +62,8 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
     static class DetailsViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.image)
-        ImageView image;
-        @Bind(R.id.title)
-        TextView title;
-        @Bind(R.id.price)
-        TextView price;
+        @Bind(R.id.favorable_context)
+        TextViewBorder context;
 
         public DetailsViewHolder(View itemView) {
             super(itemView);

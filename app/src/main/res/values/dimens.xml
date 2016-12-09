@@ -3,6 +3,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!--菜品的图片的宽、高-->
+    <dimen name="dishes_height">102dp</dimen>
+    <dimen name="dishes_width">110dp</dimen>
+
     <!--通用尺寸-->
     <dimen name="hint_line">1dp</dimen>
     <dimen name="text_size_largr">22sp</dimen>
@@ -24,8 +28,11 @@
 
     <!--桌面信息及个人信息栏    px*0.8=sp-->
     <dimen name="table_info_height">60dp</dimen>
+    <dimen name="table_info_total">65dp</dimen>
+    <dimen name="table_info_space">5dp</dimen>
     <dimen name="table_info_text_size">20sp</dimen>
     <dimen name="table_item_text_size">25sp</dimen>
+    <dimen name="table_item_text_hint_size">10sp</dimen>
 
     <!--登录界面外边距，原边距为245px-->
     <dimen name="margin_login">180dp</dimen>

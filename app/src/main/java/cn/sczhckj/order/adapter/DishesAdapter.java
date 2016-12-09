@@ -69,18 +69,10 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         final DishesBean bean = mList.get(position);
         GlideLoading.loadingDishes(mContext, bean.getUrl(), holder.dishesImage);
         holder.dishesName.setText(bean.getName());
-        holder.dishesPrice.setText("¥ " + bean.getPrice() + "");
+        holder.dishesPrice.setText(bean.getPrice() + "");
         holder.dishesSales.setText(bean.getSales() + "");
         holder.dishesCollect.setText(bean.getCollect() + "");
-        if (bean.getStockout() == 0) {
-            holder.dishesStockout.setVisibility(View.INVISIBLE);
-            holder.dishesMinus.setClickable(false);
-            holder.dishesAdd.setClickable(false);
-        } else {
-            holder.dishesStockout.setVisibility(View.INVISIBLE);
-            holder.dishesMinus.setClickable(true);
-            holder.dishesAdd.setClickable(true);
-        }
+
         holder.dishesNumber.setText(bean.getNumber() + "");
         /**菜品减少*/
         holder.dishesMinus.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +112,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
             holder.dishesFavorableRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
             holder.dishesFavorableRecyclerView.setAdapter(adapter);
         } else {
-            holder.dishesFavorableRecyclerView.setVisibility(View.GONE);
+            holder.dishesFavorableRecyclerView.setVisibility(View.INVISIBLE);
         }
 
         /**判断是否喜欢，即收藏与否*/
@@ -181,8 +173,6 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesHold
         ImageView dishesCollectIcon;
         @Bind(R.id.dishes_collect)
         TextView dishesCollect;
-        @Bind(R.id.dishes_stockout)
-        ImageView dishesStockout;
         @Bind(R.id.dishes_minus)
         ImageView dishesMinus;
         @Bind(R.id.dishes_number)

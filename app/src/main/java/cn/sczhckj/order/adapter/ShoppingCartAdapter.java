@@ -144,7 +144,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         textView.setText("¥" + price);
         for (int i = 0; i < priceTypeBeen.size(); i++) {
             if (priceTypeBeen.get(i).getType() == type) {
-                GlideLoading.loadingDishes(mContext, priceTypeBeen.get(i).getUrl(), image);
+                GlideLoading.loadingDishes(mContext, priceTypeBeen.get(i).getImageUrl(), image);
             }
         }
     }

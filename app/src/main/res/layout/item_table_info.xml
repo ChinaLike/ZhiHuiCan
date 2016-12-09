@@ -3,60 +3,144 @@
     xmlns:beyole="http://schemas.android.com/apk/res-auto"
     android:id="@+id/table_info_parent"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/table_info_height"
-    android:background="@drawable/both_bg_header_right">
+    android:layout_height="@dimen/table_info_total"
+    android:background="@color/main">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/table_info_height"
+        android:background="@color/white"
         android:orientation="horizontal">
 
+        <View
+            android:layout_width="@dimen/hint_line"
+            android:layout_height="match_parent"
+            android:background="@color/view_color" />
+
         <LinearLayout
-            android:id="@+id/parent_show_table"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="7"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:padding="5dp">
 
-            <TextView
-                android:id="@+id/table_number"
-                android:layout_width="0dp"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:padding="10dp"
-                android:text="桌号："
-                android:textColor="@color/white"
-                android:textSize="@dimen/table_info_text_size" />
+                android:src="@drawable/header_icon_desk" />
 
-            <TextView
-                android:id="@+id/waitress"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
-                android:lines="1"
-                android:padding="10dp"
-                android:text="服务员："
-                android:textColor="@color/white"
-                android:textSize="@dimen/table_info_text_size" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="桌号"
+                    android:textColor="@color/gray_c"
+                    android:textSize="@dimen/table_item_text_hint_size" />
+
+                <TextView
+                    android:id="@+id/table_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:textColor="@color/text_color_default" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="right|center_vertical"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/header_icon_waiter" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="服务员"
+                    android:textColor="@color/gray_c"
+                    android:textSize="@dimen/table_item_text_hint_size" />
+
+                <TextView
+                    android:id="@+id/waitress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:textColor="@color/text_color_default" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/header_icon_amounts" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="就餐人数"
+                    android:textColor="@color/gray_c"
+                    android:textSize="@dimen/table_item_text_hint_size" />
+
+                <TextView
+                    android:id="@+id/table_person_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:textColor="@color/text_color_default" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
             android:padding="5dp">
 
             <ImageView
                 android:id="@+id/no_login"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:src="@drawable/both_btn_login_nor"
                 android:visibility="visible" />
 
@@ -64,7 +148,6 @@
                 android:id="@+id/has_login"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="right|center_vertical"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
@@ -75,37 +158,40 @@
                     beyole:imageType="circle" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/white"
                         android:lines="1"
-                        android:textSize="@dimen/text_size_smart_s" />
+                        android:textColor="@color/text_color_default" />
 
                     <ImageView
                         android:id="@+id/vip_grade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="fitStart" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/hint_line"
         android:layout_alignParentBottom="true"
-        android:background="@color/hint_color" />
+        android:translationY="-5dp"
+        android:background="@color/view_color" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hint_line"
+        android:layout_alignParentBottom="true"
+        android:background="@color/view_color" />
+
 
 </RelativeLayout>
