@@ -5,11 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
-        android:name="cn.sczhckj.order.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:configChanges="orientation|keyboardHidden"
         android:icon="@mipmap/ic_launcher"
@@ -17,19 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/NotitleTheme">
         <activity
-            android:name="cn.sczhckj.order.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
+            
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
 
         </activity>
         <activity
-            android:name="cn.sczhckj.order.activity.MainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="landscape">
-
-        </activity>
-        <activity
-            android:name="cn.sczhckj.order.activity.LeadActivity"
+            android:name=".activity.LeadActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -40,17 +40,22 @@
         </activity>
 
         <service
-            android:name="cn.sczhckj.order.service.CartService"
+            android:name=".service.CartService"
             android:exported="false">
 
         </service>
-
         <service
-            android:name="cn.sczhckj.order.service.QRCodeService"
+            android:name=".service.QRCodeService"
             android:exported="false">
 
         </service>
 
+        <activity
+            android:name=".activity.FavorableActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
+
+        </activity>
     </application>
 
 </manifest>

@@ -24,8 +24,8 @@ import java.util.List;
 
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.adapter.DishesAdapter;
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.adapter.FoodAdapter;
+import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.listener.OnGiftListenner;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
@@ -40,9 +40,9 @@ import cn.sczhckj.order.service.QRCodeService;
 
 public abstract class BaseFragment extends Fragment {
 
-    protected DishesAdapter mDishesAdapter = null;
+    protected FoodAdapter mFoodAdapter = null;
 
-    protected List<DishesBean> parentDishesList = new ArrayList<>();
+    protected List<FoodBean> parentDishesList = new ArrayList<>();
     /**
      * 打赏接口
      */
@@ -117,9 +117,9 @@ public abstract class BaseFragment extends Fragment {
      * @param mRecyclerView
      */
     protected void initDishesAdapter(RecyclerView mRecyclerView) {
-        mDishesAdapter = new DishesAdapter(getContext(), parentDishesList);
+        mFoodAdapter = new FoodAdapter(getContext(), parentDishesList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mDishesAdapter);
+        mRecyclerView.setAdapter(mFoodAdapter);
         mRecyclerView.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
     }
 

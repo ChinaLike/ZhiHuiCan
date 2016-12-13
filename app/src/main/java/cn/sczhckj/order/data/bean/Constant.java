@@ -86,4 +86,11 @@ public class Constant {
     public final static int PREMISS_AGREE = 0;
     public final static int PREMISS_DISAGREE = 1;
 
+    /**
+     * 点菜类型 字段orderType
+     */
+    public final static int ORDER_TYPE_OPEN = 0;//开桌点餐
+    public final static int ORDER_TYPE_ALONE = 1;//单桌点餐
+    public final static int ORDER_TYPE_MERGE = 2;//并卓点餐
+
 }

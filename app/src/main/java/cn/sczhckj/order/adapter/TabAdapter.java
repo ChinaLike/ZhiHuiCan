@@ -15,8 +15,10 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.TabBean;
+import cn.sczhckj.order.data.bean.CateBean;
+import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.fragment.OrderFragment;
+import cn.sczhckj.order.until.AppSystemUntil;
 
 /**
  * @describe: 头部导航栏数据
@@ -28,15 +30,25 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
 
     private Context mContext;
 
-    private List<TabBean> mList;
+    private List<CateBean.CateItemBean> mList;
 
     private Map<Integer, LinearLayout> layouts = new HashMap<>();
 
     private Map<Integer, View> views = new HashMap<>();
 
     private int current = 0;
+    /**
+     * 平分等分
+     */
+    private int ITEM_WIDTH=2;
+    /**
+     * 默认显示第几项
+     */
+    private int defaultItem=0;
 
-    public TabAdapter(Context mContext, List<TabBean> mList) {
+    private OnItemClickListener onItemClickListener;
+
+    public TabAdapter(Context mContext, List<CateBean.CateItemBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -51,8 +63,15 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
 
         layouts.put(position, holder.tabParent);
         views.put(position, holder.tabLine);
-
-        views.get(current).setSelected(true);
+        /**设置每一项的宽度*/
+        holder.tabParent.setLayoutParams(new LinearLayout.LayoutParams(getItemWidth(),LinearLayout.LayoutParams.MATCH_PARENT));
+        /**设置默认选择项*/
+        if (defaultItem==position) {
+            views.get(position).setSelected(true);
+            onItemClickListener.onItemClick(holder.tabParent,holder.getLayoutPosition(),mList.get(position));
+        }else {
+            views.get(position).setSelected(false);
+        }
         holder.tabName.setText(mList.get(position).getName());
         holder.tabParent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +79,8 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
                 views.get(position).setSelected(true);
                 views.get(current).setSelected(false);
                 current = position;
-                OrderFragment.tabOrderType = mList.get(position).getId();
+                onItemClickListener.onItemClick(holder.tabParent,holder.getLayoutPosition(),mList.get(position));
+//                OrderFragment.tabOrderType = mList.get(position).getId();
             }
         });
     }
@@ -74,7 +94,11 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
         }
     }
 
-    public void notifyDataSetChanged(List<TabBean> mList) {
+    /**
+     * 刷新数据
+     * @param mList
+     */
+    public void notifyDataSetChanged(List<CateBean.CateItemBean> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }
@@ -92,5 +116,22 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void setDefaultItem(int defaultItem) {
+        this.defaultItem = defaultItem;
+    }
+
+    /**
+     * 获取每一项的宽度
+     * @return
+     */
+    private int getItemWidth(){
+        int screen= AppSystemUntil.width(mContext);
+        return screen/2/ITEM_WIDTH;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 }

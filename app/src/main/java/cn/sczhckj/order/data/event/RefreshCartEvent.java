@@ -2,7 +2,7 @@ package cn.sczhckj.order.data.event;
 
 import java.util.List;
 
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 
 /**
  * @describe: 刷新购物车事件
@@ -12,31 +12,31 @@ import cn.sczhckj.order.data.bean.DishesBean;
 
 public class RefreshCartEvent {
 
-    private DishesBean bean;
+    private FoodBean bean;
 
-    private List<DishesBean> beanList;
+    private List<FoodBean> beanList;
 
-    public RefreshCartEvent(DishesBean bean) {
+    public RefreshCartEvent(FoodBean bean) {
         this.bean = bean;
     }
 
-    public RefreshCartEvent(List<DishesBean> beanList) {
+    public RefreshCartEvent(List<FoodBean> beanList) {
         this.beanList = beanList;
     }
 
-    public DishesBean getBean() {
+    public FoodBean getBean() {
         return bean;
     }
 
-    public void setBean(DishesBean bean) {
+    public void setBean(FoodBean bean) {
         this.bean = bean;
     }
 
-    public List<DishesBean> getBeanList() {
+    public List<FoodBean> getBeanList() {
         return beanList;
     }
 
-    public void setBeanList(List<DishesBean> beanList) {
+    public void setBeanList(List<FoodBean> beanList) {
         this.beanList = beanList;
     }
 }

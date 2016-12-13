@@ -13,11 +13,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
-import cn.sczhckj.order.data.event.RefreshCartEvent;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.fragment.BaseFragment;
@@ -33,13 +32,13 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class CartService extends Service implements Callback<Bean<List<DishesBean>>> {
+public class CartService extends Service implements Callback<Bean<List<FoodBean>>> {
     /**
      * 设备ID
      */
     private String deviceID = BaseFragment.deviceId;
 
-    private Call<Bean<List<DishesBean>>> call;
+    private Call<Bean<List<FoodBean>>> call;
 
     private Handler mHandler;
 
@@ -89,16 +88,16 @@ public class CartService extends Service implements Callback<Bean<List<DishesBea
     }
 
     @Override
-    public void onResponse(Call<Bean<List<DishesBean>>> call, Response<Bean<List<DishesBean>>> response) {
-        Bean<List<DishesBean>> bean = response.body();
+    public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
+        Bean<List<FoodBean>> bean = response.body();
         delay();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            EventBus.getDefault().post(new RefreshCartEvent(bean.getResult()));
+//            EventBus.getDefault().post(new RefreshCartEvent(bean.getResult()));
         }
     }
 
     @Override
-    public void onFailure(Call<Bean<List<DishesBean>>> call, Throwable t) {
+    public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
     }
 
     /**

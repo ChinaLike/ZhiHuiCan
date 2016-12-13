@@ -3,122 +3,136 @@
     xmlns:beyole="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingBottom="5dp"
-    android:paddingTop="5dp">
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <cn.sczhckj.order.overwrite.RoundImageView
-            android:id="@+id/cart_favorable"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:scaleType="matrix"
-            beyole:borderRadius="5dip"
-            beyole:imageType="round" />
-
-        <TextView
-            android:id="@+id/cart_name"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:ellipsize="end"
+            android:layout_weight="2"
+            android:gravity="center_vertical">
+
+            <cn.sczhckj.order.overwrite.RoundImageView
+                android:id="@+id/cart_favorable_iamge"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:scaleType="matrix"
+                beyole:borderRadius="5dip"
+                beyole:imageType="round" />
+
+            <TextView
+                android:id="@+id/cart_dishes_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:lines="2"
+                android:textColor="@color/text_color_default"
+                android:textSize="@dimen/cart_dishes_name_size" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center_vertical"
-            android:lineSpacingExtra="2dp"
-            android:lineSpacingMultiplier="1.2"
-            android:lines="2"
-            android:paddingLeft="5dp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cart_dishes_number"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/text_color_default"
+                android:textSize="@dimen/cart_dishes_name_size" />
+
+            <ImageView
+                android:id="@+id/cart_dishes_refund"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:src="@drawable/order_btn_foodback_dis" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/text_color_default"
+
+                android:textSize="@dimen/cart_dishes_RMB" />
+
+            <TextView
+                android:id="@+id/cart_dishes_price"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/text_color_default"
+                android:textSize="@dimen/cart_dishes_name_size" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/text_color_default"
+                android:textSize="@dimen/cart_dishes_RMB" />
+
+            <TextView
+                android:id="@+id/cart_dishes_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/text_color_default"
+                android:textSize="@dimen/cart_dishes_name_size" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:id="@+id/cart_dishes_flag"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal" />
 
-            <TextView
-                android:id="@+id/cart_number"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" />
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-
-            <TextView
-                android:id="@+id/cart_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" />
-
-
-            <TextView
-                android:id="@+id/cart_total_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/cart_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/open_btn_dishes_add" />
-
-                <ImageView
-                    android:id="@+id/cart_minus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/open_btn_dishes_reduce" />
-
-            </RelativeLayout>
-
-            <cn.sczhckj.order.overwrite.SlantTextView
-                android:id="@+id/cart_favorable_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/text_color_cart_price_s"
-                android:textSize="@dimen/text_size_smart_s" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-        </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

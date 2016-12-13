@@ -16,6 +16,12 @@
     <dimen name="cart_title_text_size">16sp</dimen>
     <dimen name="text_size_smart">15sp</dimen>
     <dimen name="text_size_smart_s">12sp</dimen>
+    <dimen name="text_size_RMB">10sp</dimen>
+    <dimen name="text_size_RMB_price">20sp</dimen>
+
+    <dimen name="cart_dishes_name_size">13sp</dimen>
+    <dimen name="cart_dishes_RMB">8sp</dimen>
+    <dimen name="cart_dishes_RMB_price">13sp</dimen>
 
     <!--vip界面尺寸-->
     <dimen name="vip_top">65dp</dimen>
@@ -44,6 +50,10 @@
 
     <!--进度提示框-->
     <dimen name="loading_progress">250dp</dimen>
+
+
+    <!--圆角-->
+    <dimen name="corners">4dp</dimen>
 
 
 </resources>

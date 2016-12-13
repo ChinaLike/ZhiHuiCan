@@ -8,16 +8,17 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="hint_color">#DDDDDD</color>
+    <color name="hint_color_dash">#DFDFDF</color>
     <color name="view_color">#D3D3D3</color>
     <color name="text_hint_color">#D0D3D5</color>
     <!--首页欢迎语-->
     <color name="FF693D0A">#693D0A</color>
 
     <!--购物车按钮文字颜色-->
-    <color name="button_text">#652b0b</color>
+    <color name="button_text">#712c11</color>
     <!--字体颜色-->
     <color name="text_color_m">#303537</color>
-    <color name="text_color_red">#fb4f45</color>
+    <color name="text_color_red">#f54a23</color>
     <color name="text_color_gray">#ABABAB</color>
     <color name="text_color_dishes_name">#3a3634</color>
     <color name="text_color_person">#7a8081</color>
@@ -41,10 +42,10 @@
     <color name="black_overlay">#66000000</color>
 
     <color name="yellow">#FBDB5A</color>
-    <color name="gray">#E3E2DF</color>
+    <color name="gray">#E0E0E0</color>
     <color name="gray_c">#CCCCCC</color>
 
-    <color name="background_gray_m">#FAFAFA</color>
+
 
     <color name="btn_side">#F8F8F8</color>
     <color name="btn_side_gray">#E8ECED</color>
@@ -56,6 +57,9 @@
     <color name="edit_text_hint_color">#BBBBBB</color>
     <color name="text_color_default">#333333</color>
 
+    <!--背景颜色-->
+    <color name="bg_gray_person">#F0F0F0</color>
+    <color name="background_gray_m">#FAFAFA</color>
 
 
 </resources>

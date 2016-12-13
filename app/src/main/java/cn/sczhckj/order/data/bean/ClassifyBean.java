@@ -19,11 +19,11 @@ public class ClassifyBean implements Serializable {
 
     private int mainTale;//是否是主桌，0-是 1-不是
 
-    private List<TabBean> tabList;//导航栏，只有在单桌点菜的主桌才会显示
+    private List<CateBean.CateItemBean> tabList;//导航栏，只有在单桌点菜的主桌才会显示
 
     private List<ClassifyItemBean> classifyItemList;//每一个小项
 
-    private List<DishesBean> cartList;//购物车目前所有信息
+    private List<FoodBean> cartList;//购物车目前所有信息
 
     public String getTable() {
         return table;
@@ -57,11 +57,11 @@ public class ClassifyBean implements Serializable {
         this.mainTale = mainTale;
     }
 
-    public List<TabBean> getTabList() {
+    public List<CateBean.CateItemBean> getTabList() {
         return tabList;
     }
 
-    public void setTabList(List<TabBean> tabList) {
+    public void setTabList(List<CateBean.CateItemBean> tabList) {
         this.tabList = tabList;
     }
 
@@ -73,11 +73,11 @@ public class ClassifyBean implements Serializable {
         this.classifyItemList = classifyItemList;
     }
 
-    public List<DishesBean> getCartList() {
+    public List<FoodBean> getCartList() {
         return cartList;
     }
 
-    public void setCartList(List<DishesBean> cartList) {
+    public void setCartList(List<FoodBean> cartList) {
         this.cartList = cartList;
     }
 

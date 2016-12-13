@@ -6,37 +6,32 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/person_table_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#EFEFEF"
         android:gravity="center_vertical"
-        android:paddingBottom="5dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="5dp"
-        android:text="桌号"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_mediu"
-        android:visibility="gone" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="自定："
+        android:textColor="@color/black" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:padding="10dp">
+        android:background="@drawable/bg_person_common"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="10dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/person"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
             android:text="4"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_largr" />
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,10 +39,9 @@
             android:layout_alignBaseline="@id/person"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
             android:text="人"
             android:textColor="@color/text_color_person"
-            android:textSize="13sp" />
+            android:textSize="10sp" />
 
     </RelativeLayout>
 

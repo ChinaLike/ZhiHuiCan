@@ -23,7 +23,7 @@ import cn.sczhckj.order.data.bean.ClassifyItemBean;
  * @Email: 572919350@qq.com
  */
 
-public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.ClassifyViewHolder> {
+public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyViewHolder> {
 
     private Context mContext;
 
@@ -38,7 +38,7 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.Classi
 
     private int current = 0;
 
-    public ClassifyAdapter(Context mContext, List<ClassifyItemBean> mList, int current) {
+    public CatesAdapter(Context mContext, List<ClassifyItemBean> mList, int current) {
         this.mContext = mContext;
         this.mList = mList;
         this.current = current;

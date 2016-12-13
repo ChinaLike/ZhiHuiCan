@@ -26,15 +26,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.adapter.ClassifyAdapter;
+import cn.sczhckj.order.adapter.CatesAdapter;
 import cn.sczhckj.order.adapter.TabAdapter;
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.CateBean;
 import cn.sczhckj.order.data.bean.ClassifyBean;
 import cn.sczhckj.order.data.bean.ClassifyItemBean;
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.bean.TabBean;
 import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.network.RetrofitRequest;
@@ -54,7 +54,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class OrderFragment extends BaseFragment implements Callback<Bean<ClassifyBean>>, ClassifyAdapter.OnItemClickListener {
+public class OrderFragment extends BaseFragment implements Callback<Bean<ClassifyBean>>, CatesAdapter.OnItemClickListener {
 
 
     private final String TAG = getClass().getSimpleName();
@@ -84,7 +84,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     /**
      * 分类适配器
      */
-    private ClassifyAdapter mClassifyAdapter;
+    private CatesAdapter mCatesAdapter;
     /**
      * 默认显示第几个
      */
@@ -98,12 +98,12 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     /**
      * 装菜品容器，如果有数据，直接刷新，如果没有重新请求数据
      */
-    private Map<String, List<DishesBean>> dishesMap = new HashMap<>();
+    private Map<String, List<FoodBean>> dishesMap = new HashMap<>();
 
     /**
      * 头部导航栏数据
      */
-    private List<TabBean> tabList = new ArrayList<>();
+    private List<CateBean.CateItemBean> tabList = new ArrayList<>();
 
     /**
      * 导航栏适配器
@@ -267,11 +267,11 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      * @param itemBeen
      */
     private void initClassify(List<ClassifyItemBean> itemBeen) {
-        mClassifyAdapter = new ClassifyAdapter(getContext(), itemBeen, defaultItem);
-        mClassifyAdapter.addOnItemClickListener(this);
+        mCatesAdapter = new CatesAdapter(getContext(), itemBeen, defaultItem);
+        mCatesAdapter.addOnItemClickListener(this);
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         dishesClassify.setLayoutManager(mLinearLayoutManager);
-        dishesClassify.setAdapter(mClassifyAdapter);
+        dishesClassify.setAdapter(mCatesAdapter);
         dishesClassify.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 5, 1));
     }
 
@@ -301,7 +301,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
 //                            == classifyList.get(position).getId())) {
 //                /**如果存在已经请求数据，则直接利用*/
 //                parentDishesList = dishesMap.get(classifyList.get(position).getName());
-//                mDishesAdapter.notifyDataSetChanged(parentDishesList);
+//                mFoodAdapter.notifyDataSetChanged(parentDishesList);
 //            } else {
 //                initDishesRequest(classifyList.get(position));
 //            }
@@ -338,18 +338,18 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
                 .time()
                 .bean(bean);
 
-        Call<Bean<List<DishesBean>>> dishesBeanCall = RetrofitRequest.service().dishes(restRequest.toRequestString());
-        dishesBeanCall.enqueue(new Callback<Bean<List<DishesBean>>>() {
+        Call<Bean<List<FoodBean>>> dishesBeanCall = RetrofitRequest.service().dishes(restRequest.toRequestString());
+        dishesBeanCall.enqueue(new Callback<Bean<List<FoodBean>>>() {
             @Override
-            public void onResponse(Call<Bean<List<DishesBean>>> call, Response<Bean<List<DishesBean>>> response) {
-                Bean<List<DishesBean>> listBean = response.body();
+            public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
+                Bean<List<FoodBean>> listBean = response.body();
                 if (listBean != null && listBean.getCode() == ResponseCode.SUCCESS) {
                     /**在菜品清单请求成功后才做显示*/
                     loadingSuccess();
 
                     dishesMap.put(classifyList.get(defaultItem).getName(), listBean.getResult());
-                    parentDishesList = listBean.getResult();
-                    mDishesAdapter.notifyDataSetChanged(listBean.getResult());
+//                    parentDishesList = listBean.getResult();
+//                    mFoodAdapter.notifyDataSetChanged(listBean.getResult());
                 } else if (listBean != null) {
                     loadingFail(listBean.getMessage());
                 } else {
@@ -358,7 +358,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
             }
 
             @Override
-            public void onFailure(Call<Bean<List<DishesBean>>> call, Throwable t) {
+            public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
                 loadingFail(getContext().getResources().getString(R.string.loadingFail));
             }
         });
@@ -369,7 +369,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      *
      * @param tabList
      */
-    private void initTab(List<TabBean> tabList) {
+    private void initTab(List<CateBean.CateItemBean> tabList) {
         if (tabList == null || tabList.size() == 0 || !isMainTable) {
             dishesTab.setVisibility(View.GONE);
             tabText.setVisibility(View.VISIBLE);
@@ -390,7 +390,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     }
 
     private void move(int n) {
-        if (n < 0 || n >= mClassifyAdapter.getItemCount()) {
+        if (n < 0 || n >= mCatesAdapter.getItemCount()) {
             return;
         }
         mIndex = n;
@@ -418,14 +418,14 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
-        DishesBean bean = event.getBean();
+        FoodBean bean = event.getBean();
         if (bean != null) {
-            String id = bean.getId();
+            Integer id = bean.getId();
             String dishesName = bean.getName();
-            for (DishesBean item : parentDishesList) {
+            for (FoodBean item : parentDishesList) {
                 if (item.getId().equals(id) && item.getName().equals(dishesName)) {
                     item.setNumber(bean.getNumber());
-                    mDishesAdapter.notifyDataSetChanged();
+                    mFoodAdapter.notifyDataSetChanged();
                 }
             }
         }

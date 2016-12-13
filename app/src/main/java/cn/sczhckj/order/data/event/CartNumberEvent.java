@@ -1,6 +1,6 @@
 package cn.sczhckj.order.data.event;
 
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 
 /**
  * @describe: 购物车数量变化事件
@@ -14,9 +14,9 @@ public class CartNumberEvent {
 
     private int type;
 
-    private DishesBean bean;
+    private FoodBean bean;
 
-    public CartNumberEvent(int tag, int type, DishesBean bean) {
+    public CartNumberEvent(int tag, int type, FoodBean bean) {
         this.tag = tag;
         this.type = type;
         this.bean = bean;
@@ -30,7 +30,7 @@ public class CartNumberEvent {
         return type;
     }
 
-    public DishesBean getBean() {
+    public FoodBean getBean() {
         return bean;
     }
 }

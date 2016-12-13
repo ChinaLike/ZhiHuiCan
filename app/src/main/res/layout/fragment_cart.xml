@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/nothing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/order_status_blank"
+        android:visibility="gone" />
+
+
+    <RelativeLayout
+        android:id="@+id/has_thing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/cart_top_parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cart_top"
+            android:layout_alignParentTop="true"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="35dp"
+                android:text="@string/dishes"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/numbers"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/price"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/totalPrice"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cart_bottom_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_left">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="菜品："
+                        android:textColor="@color/button_text"
+                        android:textSize="@dimen/text_size_smart_s" />
+
+                    <TextView
+                        android:id="@+id/shoppingcart_dishes_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/button_text" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/hint_line"
+                    android:layout_height="20dp"
+                    android:background="@color/view_color" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="合计："
+                        android:textColor="@color/button_text"
+                        android:textSize="@dimen/text_size_smart_s" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB" />
+
+                    <TextView
+                        android:id="@+id/shoppingcart_total_price"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="0"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB_price" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/hint_line"
+                    android:layout_height="20dp"
+                    android:background="@color/view_color" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="优惠："
+                        android:textColor="@color/button_text"
+                        android:textSize="@dimen/text_size_smart_s" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB" />
+
+                    <TextView
+                        android:id="@+id/shoppingcart_part_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB_price" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/shoppingcart_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_left"
+                android:background="@drawable/button_yellow"
+                android:text="@string/openTable"
+                android:textColor="@color/button_text"
+                android:textSize="@dimen/button_size" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/cart_top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hint_line"
+            android:layout_below="@id/cart_top_parent"
+            android:background="@color/view_color" />
+
+        <View
+            android:id="@+id/cart_bottom_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hint_line"
+            android:layout_above="@id/cart_bottom_parent"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/cart_bottom_view"
+            android:layout_below="@id/cart_top_view"
+            android:background="@drawable/accounts_bg_pay_unfold"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cart_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/cart_favorable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cart_bottom_view"
+            android:src="@drawable/both_btn_favorable" />
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -10,6 +10,11 @@ import java.util.List;
 
 public class RequestCommonBean {
 
+    private String userId;//用户ID
+    private Integer orderType;//点菜类型
+    private String deviceId;//用于开桌设备ID
+    private Integer cateId;//菜品分类ID
+
     /**
      * 版本信息
      */
@@ -29,7 +34,6 @@ public class RequestCommonBean {
      */
     private String id;//用于开桌用户ID
 
-    private String deviceId;//用于开桌设备ID
 
 
     /**
@@ -37,14 +41,14 @@ public class RequestCommonBean {
      */
 
     private Integer type;//开桌标识0-开桌
-    private List<DishesBean> dishesList;//菜品数据
+    private List<FoodBean> dishesList;//菜品数据
     private Integer person;//本桌已选人数
 
 
     /**
      * 点菜界面分类数据显示
      */
-    private Integer orderType;//点菜类型
+
 
     /**点菜界面根据分类请求菜品的数据*/
 
@@ -64,7 +68,7 @@ public class RequestCommonBean {
      */
     private Integer favorableType;
 
-    private String userId;
+
 
     private Integer giftMoney;
 
@@ -132,11 +136,11 @@ public class RequestCommonBean {
         this.type = type;
     }
 
-    public List<DishesBean> getDishesList() {
+    public List<FoodBean> getDishesList() {
         return dishesList;
     }
 
-    public void setDishesList(List<DishesBean> dishesList) {
+    public void setDishesList(List<FoodBean> dishesList) {
         this.dishesList = dishesList;
     }
 
@@ -274,6 +278,14 @@ public class RequestCommonBean {
 
     public void setLoginType(Integer loginType) {
         this.loginType = loginType;
+    }
+
+    public Integer getCateId() {
+        return cateId;
+    }
+
+    public void setCateId(Integer cateId) {
+        this.cateId = cateId;
     }
 
     @Override

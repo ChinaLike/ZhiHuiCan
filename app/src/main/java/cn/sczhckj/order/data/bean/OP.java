@@ -9,6 +9,23 @@ package cn.sczhckj.order.data.bean;
 public interface OP {
 
     /**
+     * 开桌数据信息
+     */
+    String TABLE_OPEN_INFO = "openInfo";
+
+    /**
+     * 菜品分类
+     */
+    String FOOD_CATE = "foodCate";
+
+    /**
+     * 菜品列表
+     */
+    String FOOD_LIST = "foodList";
+
+
+
+    /**
      * 版本
      */
     String VERSION = "version";
@@ -28,10 +45,7 @@ public interface OP {
      */
     String APPLY_FOR_VIP = "applyForVip";
 
-    /**
-     * 开桌数据显示
-     */
-    String OPEN_TABLE_SHOW = "openTableData";
+
 
     /**
      * 开桌数据显示

@@ -8,6 +8,25 @@ package cn.sczhckj.order.data.listener;
 
 public interface OnTableListenner {
 
-    void table(String tableNumber, String waitress);
+    /**
+     * 台桌名称
+     *
+     * @param tableName
+     */
+    void table(String tableName);
+
+    /**
+     * 服务员信息
+     *
+     * @param waiter
+     */
+    void waiter(String waiter);
+
+    /**
+     * 就餐人数
+     *
+     * @param number
+     */
+    void person(int number);
 
 }

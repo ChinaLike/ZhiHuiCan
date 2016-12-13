@@ -37,16 +37,16 @@ import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.listener.OnTableListenner;
 import cn.sczhckj.order.fragment.ApplyForVipCardFragment;
 import cn.sczhckj.order.fragment.BaseFragment;
+import cn.sczhckj.order.fragment.CartFragment;
 import cn.sczhckj.order.fragment.DetailsFragment;
 import cn.sczhckj.order.fragment.EvaluateFragment;
 import cn.sczhckj.order.fragment.EvaluateListFragment;
 import cn.sczhckj.order.fragment.GiftFragment;
 import cn.sczhckj.order.fragment.GrouponFragment;
 import cn.sczhckj.order.fragment.MainFragment;
-import cn.sczhckj.order.fragment.PotTypeFagment;
 import cn.sczhckj.order.fragment.QRCodeFragment;
+import cn.sczhckj.order.fragment.RequiredFagment;
 import cn.sczhckj.order.fragment.SettleAccountsCartFragment;
-import cn.sczhckj.order.fragment.ShoppingCartFragment;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.overwrite.NoScrollViewPager;
 import cn.sczhckj.order.overwrite.RoundImageView;
@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     @Bind(R.id.viewPager)
     NoScrollViewPager viewPager;
     @Bind(R.id.table_number)
-    TextView tableNumber;
+    TextView tableName;
     @Bind(R.id.waitress)
     TextView waitress;
     @Bind(R.id.no_login)
@@ -81,6 +81,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     TextView userName;
     @Bind(R.id.vip_grade)
     ImageView vipGrade;
+    @Bind(R.id.table_person_num)
+    TextView tablePersonNum;
     /**
      * 事物管理器
      */
@@ -97,7 +99,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     /**
      * 锅底选择，推荐菜品
      */
-    private PotTypeFagment mPotTypeFagment;
+    private RequiredFagment mRequiredFagment;
     /**
      * 主要导航界面
      */
@@ -111,7 +113,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     /**
      * 购物车
      */
-    private ShoppingCartFragment mShoppingCartFragment;
+    private CartFragment mCartFragment;
 
     /**
      * 结账
@@ -202,9 +204,9 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         mFm = getSupportFragmentManager();
         adapter = new ViewPagerAdapter(mFm);
         /**购物车*/
-        mShoppingCartFragment = new ShoppingCartFragment();
-        mShoppingCartFragment.setOnButtonClickListener(this);
-        mList.add(mShoppingCartFragment);
+        mCartFragment = new CartFragment();
+        mCartFragment.setOnButtonClickListener(this);
+        mList.add(mCartFragment);
         /**结账*/
         mSettleAccountsCartFragment = new SettleAccountsCartFragment();
         mList.add(mSettleAccountsCartFragment);
@@ -225,9 +227,9 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     private List<Fragment> initFragment() {
         List<Fragment> mList = new ArrayList<>();
         /**锅底必选*/
-        mPotTypeFagment = new PotTypeFagment();
-        mPotTypeFagment.setOnTableListenner(this);
-        mPotTypeFagment.setUserId(userId);
+        mRequiredFagment = new RequiredFagment();
+        mRequiredFagment.setOnTableListenner(this);
+        mRequiredFagment.setUserId(userId);
         /**菜品选择主页*/
         mMainFragment = new MainFragment();
         /**团购券*/
@@ -243,7 +245,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         /**申请办理VIP*/
         mApplyForVipCardFragment = new ApplyForVipCardFragment();
 
-        mList.add(mPotTypeFagment);
+        mList.add(mRequiredFagment);
         mList.add(mMainFragment);
         mList.add(mGrouponFragment);
         mList.add(mGiftFragment);
@@ -260,7 +262,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     @Override
     public void onClick(int type, int isShow) {
-        if (tableInfoParent.getVisibility() == View.GONE){
+        if (tableInfoParent.getVisibility() == View.GONE) {
             tableInfoParent.setVisibility(View.VISIBLE);
         }
         /**开桌成功后回调*/
@@ -340,7 +342,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                 /**会员*/
                 if (!MyApplication.isLogin) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    intent.putExtra(Constant.INTENT_FLAG,Constant.MAIN_TO_LOGIN);
+                    intent.putExtra(Constant.INTENT_FLAG, Constant.MAIN_TO_LOGIN);
                     startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
                 } else {
                     favorableType = favorableTypeBean.getId();
@@ -437,17 +439,25 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         switch (view.getId()) {
             case R.id.no_login:
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.putExtra(Constant.INTENT_FLAG,Constant.MAIN_TO_LOGIN);
+                intent.putExtra(Constant.INTENT_FLAG, Constant.MAIN_TO_LOGIN);
                 startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
                 break;
         }
     }
 
+    @Override
+    public void table(String tableName) {
+        table = tableName;
+        this.tableName.setText(tableName);
+    }
 
     @Override
-    public void table(String tableNumber, String waitress) {
-        table = tableNumber;
-        this.tableNumber.setText(table);
-        this.waitress.setText(waitress);
+    public void waiter(String waiter) {
+        this.waitress.setText(waiter);
+    }
+
+    @Override
+    public void person(int number) {
+        this.tablePersonNum.setText(number+"人");
     }
 }

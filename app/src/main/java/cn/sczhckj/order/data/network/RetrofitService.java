@@ -3,13 +3,14 @@ package cn.sczhckj.order.data.network;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.CateBean;
 import cn.sczhckj.order.data.bean.ClassifyBean;
 import cn.sczhckj.order.data.bean.CommonBean;
 import cn.sczhckj.order.data.bean.DetailsBean;
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.bean.EvaluateBean;
 import cn.sczhckj.order.data.bean.GrouponBean;
-import cn.sczhckj.order.data.bean.MainPagerShow;
+import cn.sczhckj.order.data.bean.OpenInfoBean;
 import cn.sczhckj.order.data.bean.QRCodeBean;
 import cn.sczhckj.order.data.bean.SettleAccountsBean;
 import cn.sczhckj.order.data.bean.UserLoginBean;
@@ -27,6 +28,24 @@ import retrofit2.http.POST;
 
 public interface RetrofitService {
 
+    /**必选界面*/
+    @FormUrlEncoded
+    @POST("rest/table/openInfo")
+    Call<Bean<OpenInfoBean>> openInfo(@Field("p") String p);
+
+    /**菜品分类*/
+    @FormUrlEncoded
+    @POST("rest/food/cates")
+    Call<Bean<CateBean>> cates(@Field("p") String p);
+
+    /**菜品列表*/
+    @FormUrlEncoded
+    @POST("rest/food/foods")
+    Call<Bean<List<FoodBean>>> foods(@Field("p") String p);
+
+
+
+
     /**版本管理信息*/
     @FormUrlEncoded
     @POST("rest/device/version")
@@ -39,10 +58,7 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("rest/user/smsAuthCode")
     Call<Bean<Integer>> smsAuthCode(@Field("params") String params);
-    /**主页锅底选择*/
-    @FormUrlEncoded
-    @POST("rest/openTable/openTableData")
-    Call<Bean<MainPagerShow>> potDataShow(@Field("params") String params);
+
     /**购物车数据提交*/
     @FormUrlEncoded
     @POST("rest/openTable/openTableVerify")
@@ -54,7 +70,7 @@ public interface RetrofitService {
     /**菜品信息*/
     @FormUrlEncoded
     @POST("rest/order/dishesList")
-    Call<Bean<List<DishesBean>>> dishes(@Field("params") String params);
+    Call<Bean<List<FoodBean>>> dishes(@Field("params") String params);
     /**菜品详情*/
     @FormUrlEncoded
     @POST("rest/order/deatails")
@@ -90,7 +106,7 @@ public interface RetrofitService {
     /**刷新购物车菜品*/
     @FormUrlEncoded
     @POST("rest/refresh/cartDishes")
-    Call<Bean<List<DishesBean>>> refreshCartDishes(@Field("params") String params);
+    Call<Bean<List<FoodBean>>> refreshCartDishes(@Field("params") String params);
     /**刷新二维码是否验证成功*/
     @FormUrlEncoded
     @POST("rest/refresh/QRCodeVerify")

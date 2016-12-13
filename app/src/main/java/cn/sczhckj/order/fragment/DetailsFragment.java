@@ -27,13 +27,12 @@ import cn.sczhckj.order.adapter.DetailsAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.DetailsBean;
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.PriceTypeBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.data.event.CartNumberEvent;
-import cn.sczhckj.order.data.event.RefreshCartEvent;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.image.GlideLoading;
@@ -88,7 +87,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
     /**
      * 菜品详情
      */
-    private DishesBean dishesBean;
+    private FoodBean foodBean;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,12 +111,12 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
 
     @Override
     public void setData(Object object) {
-        DishesBean bean = (DishesBean) object;
-        dishesBean = bean;
+        FoodBean bean = (FoodBean) object;
+        foodBean = bean;
         dishesName.setText(bean.getName());
         detailsPrice.setText("¥  " + bean.getPrice());
         dishesSales.setText("月销量  " + bean.getSales());
-        dishesLike.setText("  " + bean.getCollect());
+        dishesLike.setText("  " + bean.getFavors());
         detailsDishesNumber.setText(bean.getNumber() + "");
         /**判断权限是否可以点餐*/
         if (bean.getPermiss() == Constant.PREMISS_AGREE) {
@@ -135,12 +134,12 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
     /**
      * 菜品详情请求
      *
-     * @param dishesBean
+     * @param foodBean
      */
-    private void dishesDeatil(DishesBean dishesBean) {
+    private void dishesDeatil(FoodBean foodBean) {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setId(dishesBean.getId());
-        bean.setName(dishesBean.getName());
+        bean.setId(foodBean.getId()+"");
+        bean.setName(foodBean.getName());
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.DISHES_DETAILS)
                 .time()
@@ -187,25 +186,25 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
 
     @OnClick({R.id.details_add, R.id.details_dishes_minus, R.id.details_dishes_add, R.id.details_back})
     public void onClick(View view) {
-        int number = dishesBean.getNumber();
+        int number = foodBean.getNumber();
         switch (view.getId()) {
             case R.id.details_add:
                 /**判断数量是否为0且本桌可以点菜*/
-                if (dishesBean.getPermiss() == Constant.PREMISS_AGREE) {
-                    EventBus.getDefault().post(new RefreshCartEvent(dishesBean));
-                }
+//                if (foodBean.getPermiss() == Constant.PREMISS_AGREE) {
+//                    EventBus.getDefault().post(new RefreshCartEvent(foodBean));
+//                }
                 break;
             case R.id.details_dishes_minus:
                 if (number > 0) {
                     number--;
                     detailsDishesNumber.setText(number + "");
-                    dishesBean.setNumber(number);
+                    foodBean.setNumber(number);
                 }
                 break;
             case R.id.details_dishes_add:
                 number++;
                 detailsDishesNumber.setText(number + "");
-                dishesBean.setNumber(number);
+                foodBean.setNumber(number);
                 break;
             case R.id.details_back:
                 EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_OUT));
@@ -266,7 +265,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
-        if (dishesBean != null && event.getBean().getId().equals(dishesBean.getId())) {
+        if (foodBean != null && event.getBean().getId().equals(foodBean.getId())) {
             detailsDishesNumber.setText(event.getBean().getNumber() + "");
         }
     }

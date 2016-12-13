@@ -1,17 +1,17 @@
 package cn.sczhckj.order.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,12 +28,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.activity.FavorableActivity;
 import cn.sczhckj.order.activity.MainActivity;
-import cn.sczhckj.order.adapter.ShoppingCartAdapter;
+import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.CommonBean;
 import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CartNumberEvent;
@@ -45,6 +46,8 @@ import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.overwrite.MyEditTextDialog;
+import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.ConvertUtils;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -57,7 +60,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberListener, Callback<Bean<CommonBean>> {
+public class CartFragment extends BaseFragment implements OnTotalNumberListener, Callback<Bean<CommonBean>> {
 
 
     @Bind(R.id.nothing)
@@ -65,7 +68,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @Bind(R.id.cart_recyclerView)
     RecyclerView cartRecyclerView;
     @Bind(R.id.has_thing)
-    LinearLayout hasThing;
+    RelativeLayout hasThing;
     @Bind(R.id.shoppingcart_total_price)
     TextView shoppingcartTotalPrice;
     @Bind(R.id.shoppingcart_part_number)
@@ -74,10 +77,12 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     TextView shoppingcartDishesNumber;
     @Bind(R.id.shoppingcart_button)
     Button shoppingcartButton;
+    @Bind(R.id.cart_favorable)
+    ImageView cartFavorable;
 
-    private ShoppingCartAdapter mShoppingCartAdapter;
+    private CartAdapter mCartAdapter;
 
-    private List<DishesBean> mList = new ArrayList<>();
+    private List<FoodBean> mList = new ArrayList<>();
 
     private OnButtonClickListener onButtonClickListener;
     /**
@@ -96,7 +101,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shopping_cart, null, true);
+        View view = inflater.inflate(R.layout.fragment_cart, null, true);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -105,6 +110,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
+        initFavorableLocation();
     }
 
     @Override
@@ -113,28 +119,36 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     }
 
     /**
+     * 初始化更多优惠的位置
+     */
+    private void initFavorableLocation() {
+        cartFavorable.setTranslationX((float) (AppSystemUntil.width(getContext()) * 0.25));
+        cartFavorable.setTranslationY(ConvertUtils.dip2px(getContext(), -8));
+    }
+
+    /**
      * 刷新购物车
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshCart(RefreshCartEvent event) {
-        shoppingcartButton.setClickable(true);
-        shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
-        /**本地加菜*/
-        if (event.getBean() != null) {
-            List<DishesBean> list = initList(event.getBean());
-            /**在没有任何菜品时把锅底设置为0*/
-            isEmptyList(list);
-            isHaveData(list);
-            mShoppingCartAdapter.notifyDataSetChanged(list);
-        }
-        /**后台加菜*/
-        if (event.getBeanList() != null) {
-            List<DishesBean> list = refreshMainTableAddDishes(event.getBeanList());
-            /**在没有任何菜品时把锅底设置为0*/
-            isEmptyList(list);
-            isHaveData(list);
-            mShoppingCartAdapter.notifyDataSetChanged(list);
-        }
+//        shoppingcartButton.setClickable(true);
+//        shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
+//        /**本地加菜*/
+//        if (event.getBean() != null) {
+//            List<FoodBean> list = initList(event.getBean());
+//            /**在没有任何菜品时把锅底设置为0*/
+//            isEmptyList(list);
+//            isHaveData(list);
+//            mCartAdapter.notifyDataSetChanged(list);
+//        }
+//        /**后台加菜*/
+//        if (event.getBeanList() != null) {
+//            List<FoodBean> list = refreshMainTableAddDishes(event.getBeanList());
+//            /**在没有任何菜品时把锅底设置为0*/
+//            isEmptyList(list);
+//            isHaveData(list);
+//            mCartAdapter.notifyDataSetChanged(list);
+//        }
     }
 
     /**
@@ -142,7 +156,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
      *
      * @param list
      */
-    private void isEmptyList(List<DishesBean> list) {
+    private void isEmptyList(List<FoodBean> list) {
         if (list.size() == 0) {
             totalPotNumber = 0;
         }
@@ -154,8 +168,8 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
      *
      * @param bean
      */
-    private List<DishesBean> initList(DishesBean bean) {
-        Map<String, DishesBean> localMap = listToMap();
+    private List<FoodBean> initList(FoodBean bean) {
+        Map<String, FoodBean> localMap = listToMap();
         if (localMap.containsKey(bean.getId())) {
             int postion = mList.indexOf(localMap.get(bean.getId()));
             int number = bean.getNumber();
@@ -178,11 +192,11 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
      * @param beenList
      * @return
      */
-    private List<DishesBean> refreshMainTableAddDishes(List<DishesBean> beenList) {
-        Map<String, DishesBean> localMap = listToMap();
+    private List<FoodBean> refreshMainTableAddDishes(List<FoodBean> beenList) {
+        Map<String, FoodBean> localMap = listToMap();
         for (int i = 0; i < beenList.size(); i++) {
-            String id = beenList.get(i).getId();
-            DishesBean bean = beenList.get(i);
+            Integer id = beenList.get(i).getId();
+            FoodBean bean = beenList.get(i);
             if (localMap.containsKey(id)) {
                 int postion = mList.indexOf(localMap.get(id));
                 int number = mList.get(postion).getNumber() + bean.getNumber();
@@ -202,10 +216,10 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
      *
      * @return
      */
-    private Map<String, DishesBean> listToMap() {
-        Map<String, DishesBean> localMap = new HashMap<>();
+    private Map<String, FoodBean> listToMap() {
+        Map<String, FoodBean> localMap = new HashMap<>();
         for (int i = 0; i < mList.size(); i++) {
-            localMap.put(mList.get(i).getId(), mList.get(i));
+            localMap.put(mList.get(i).getId()+"", mList.get(i));
         }
         return localMap;
     }
@@ -213,17 +227,17 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     @Override
     public void init() {
         isHaveData(mList);
-        mShoppingCartAdapter = new ShoppingCartAdapter(mList, getActivity());
-        mShoppingCartAdapter.setOnTotalNumberListener(this);
+        mCartAdapter = new CartAdapter(mList, getActivity());
+        mCartAdapter.setOnTotalNumberListener(this);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        cartRecyclerView.setAdapter(mShoppingCartAdapter);
+        cartRecyclerView.setAdapter(mCartAdapter);
         cartRecyclerView.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
     }
 
     /**
      * 处理购物车为空的状态
      */
-    private void isHaveData(List<DishesBean> mList) {
+    private void isHaveData(List<FoodBean> mList) {
         if (mList.size() == 0) {
             nothing.setVisibility(View.VISIBLE);
             hasThing.setVisibility(View.GONE);
@@ -240,26 +254,6 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-    }
-
-    @OnClick(R.id.shoppingcart_button)
-    public void onClick() {
-        if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.openTable))) {
-            /**开桌*/
-            if (openTablePassword != null && !openTablePassword.equals("")) {
-                /**验证密码*/
-                passwordVerify();
-            } else {
-                /**不用验证密码*/
-                openTable();
-            }
-        } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
-            /**选好了*/
-            buttonType = 1;
-            cartVerify(1);
-            showProgress("数据提交中，清请稍后...");
-        }
-
     }
 
     /**
@@ -324,7 +318,7 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
     public void totalNumber(int totalPrice, int potNumber, int dishesNumber) {
         /**设置本次锅底数量*/
         totalPotNumber = potNumber;
-        shoppingcartTotalPrice.setText("¥ " + totalPrice);
+        shoppingcartTotalPrice.setText("" + totalPrice);
         shoppingcartPartNumber.setText(potNumber + "");
         shoppingcartDishesNumber.setText(dishesNumber + "");
         /**发送消息，点菜界面收到后判断数量与提示数量是否相符合*/
@@ -381,4 +375,31 @@ public class ShoppingCartFragment extends BaseFragment implements OnTotalNumberL
         shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
     }
 
+    @OnClick({R.id.shoppingcart_button, R.id.cart_favorable})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.shoppingcart_button:
+                if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.openTable))) {
+                    /**开桌*/
+                    if (openTablePassword != null && !openTablePassword.equals("")) {
+                        /**验证密码*/
+                        passwordVerify();
+                    } else {
+                        /**不用验证密码*/
+                        openTable();
+                    }
+                } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
+                    /**选好了*/
+                    buttonType = 1;
+                    cartVerify(1);
+                    showProgress("数据提交中，清请稍后...");
+                }
+                break;
+            case R.id.cart_favorable:
+                /**更多优惠*/
+                Intent intent = new Intent(getActivity(), FavorableActivity.class);
+                getContext().startActivity(intent);
+                break;
+        }
+    }
 }

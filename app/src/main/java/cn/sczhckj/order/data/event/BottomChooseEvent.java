@@ -1,6 +1,6 @@
 package cn.sczhckj.order.data.event;
 
-import cn.sczhckj.order.data.bean.DishesBean;
+import cn.sczhckj.order.data.bean.FoodBean;
 
 /**
  * @describe: 底部菜单按钮
@@ -12,9 +12,9 @@ public class BottomChooseEvent {
 
     private int type;
 
-    private DishesBean bean;
+    private FoodBean bean;
 
-    public BottomChooseEvent(int type, DishesBean bean) {
+    public BottomChooseEvent(int type, FoodBean bean) {
         this.type = type;
         this.bean = bean;
     }
@@ -31,11 +31,11 @@ public class BottomChooseEvent {
         this.type = type;
     }
 
-    public DishesBean getBean() {
+    public FoodBean getBean() {
         return bean;
     }
 
-    public void setBean(DishesBean bean) {
+    public void setBean(FoodBean bean) {
         this.bean = bean;
     }
 }

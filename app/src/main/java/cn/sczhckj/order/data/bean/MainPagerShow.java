@@ -23,9 +23,9 @@ public class MainPagerShow implements Serializable{
 
     private List<PersonBean> person;//就餐人数推荐表
 
-    private List<DishesBean> potList;//锅底选择
+    private List<FoodBean> potList;//锅底选择
 
-    private List<DishesBean> dishesList;//推荐菜品
+    private List<FoodBean> dishesList;//推荐菜品
 
     public int getCartStatus() {
         return cartStatus;
@@ -67,19 +67,19 @@ public class MainPagerShow implements Serializable{
         this.person = person;
     }
 
-    public List<DishesBean> getPotList() {
+    public List<FoodBean> getPotList() {
         return potList;
     }
 
-    public void setPotList(List<DishesBean> potList) {
+    public void setPotList(List<FoodBean> potList) {
         this.potList = potList;
     }
 
-    public List<DishesBean> getDishesList() {
+    public List<FoodBean> getDishesList() {
         return dishesList;
     }
 
-    public void setDishesList(List<DishesBean> dishesList) {
+    public void setDishesList(List<FoodBean> dishesList) {
         this.dishesList = dishesList;
     }
 
