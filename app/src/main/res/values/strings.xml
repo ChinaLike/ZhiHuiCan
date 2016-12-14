@@ -67,4 +67,10 @@
     <string name="button_vip_select">取消办卡</string>
     <string name="button_vip_no_select">立即享受</string>
 
+    <!--Dialog-->
+    <string name="dialog_title">温馨提示</string>
+    <string name="dialog_context">尊敬的顾客您好！\n您选择的菜品已经达到限制数量,不能再\n选择了，给你带来的不便还请谅解！</string>
+    <string name="dialog_context1">尊敬的顾客您好！\n您没有足够的权限点次菜品，具体事宜请你\n联系主桌！还请谅解！</string>
+    <string name="dialog_cacel">好的</string>
+
 </resources>

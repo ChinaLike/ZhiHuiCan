@@ -14,6 +14,8 @@ public class RequestCommonBean {
     private Integer orderType;//点菜类型
     private String deviceId;//用于开桌设备ID
     private Integer cateId;//菜品分类ID
+    private String password;//密码
+    private List<CartBean> cart;//购物车数据
 
     /**
      * 版本信息
@@ -25,7 +27,6 @@ public class RequestCommonBean {
     /**
      * 用户登录
      */
-    private String password;//登录密码或验证码
     private Integer loginType;//登录类型
     private String phone;//用户手机号
 
@@ -286,6 +287,14 @@ public class RequestCommonBean {
 
     public void setCateId(Integer cateId) {
         this.cateId = cateId;
+    }
+
+    public List<CartBean> getCart() {
+        return cart;
+    }
+
+    public void setCart(List<CartBean> cart) {
+        this.cart = cart;
     }
 
     @Override

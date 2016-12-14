@@ -73,11 +73,11 @@ public class PriceBean {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getIsDefault() {
+    public Integer getActive() {
         return active;
     }
 
-    public void setIsDefault(Integer active) {
+    public void setActive(Integer active) {
         this.active = active;
     }
 
@@ -91,7 +91,7 @@ public class PriceBean {
                 ", color='" + color + '\'' +
                 ", imageId=" + imageId +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", isDefault=" + active +
+                ", active=" + active +
                 '}';
     }
 }

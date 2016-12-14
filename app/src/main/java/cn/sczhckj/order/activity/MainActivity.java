@@ -156,6 +156,9 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     private int favorableType = 0;
 
+    /**人数*/
+    public static Integer personNumber=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -289,6 +292,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         Glide.with(getApplicationContext()).pauseRequests();
         /**销毁时关闭服务*/
         EventBus.getDefault().post(new CloseServiceEvent());
+        /**人数清零*/
+        personNumber=0;
     }
 
     @Override
@@ -458,6 +463,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     @Override
     public void person(int number) {
+        personNumber=number;
         this.tablePersonNum.setText(number+"人");
     }
 }

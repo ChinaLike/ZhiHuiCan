@@ -16,7 +16,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/order_status_reminder" />
+            android:src="@drawable/open_status_prompt" />
 
         <TextView
             android:id="@+id/dialog_title"

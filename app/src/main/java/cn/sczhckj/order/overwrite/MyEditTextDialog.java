@@ -30,6 +30,8 @@ public class MyEditTextDialog extends Dialog {
     Button dialogLeft;
     @Bind(R.id.dialog_right)
     Button dialogRight;
+    @Bind(R.id.dialog_hint)
+    TextView dialogHint;
     private Context mContext;
 
     private View view;
@@ -65,11 +67,12 @@ public class MyEditTextDialog extends Dialog {
      * @param title
      * @param onClickListener
      */
-    public void setLeftButton(String title, View.OnClickListener onClickListener) {
+    public MyEditTextDialog setLeftButton(String title, View.OnClickListener onClickListener) {
         if (title != null) {
             dialogLeft.setText(title);
         }
         dialogLeft.setOnClickListener(onClickListener);
+        return this;
     }
 
     /**
@@ -78,11 +81,13 @@ public class MyEditTextDialog extends Dialog {
      * @param title
      * @param onClickListener
      */
-    public void setRightButton(String title, View.OnClickListener onClickListener) {
+    public MyEditTextDialog setRightButton(String title, View.OnClickListener onClickListener) {
         if (title != null) {
             dialogRight.setText(title);
         }
         dialogRight.setOnClickListener(onClickListener);
+
+        return this;
     }
 
     @Override
@@ -99,9 +104,10 @@ public class MyEditTextDialog extends Dialog {
 
     /**
      * 设置提示语
+     *
      * @param hintText
      */
-    public void setEditTextHint(String hintText){
+    public void setEditTextHint(String hintText) {
         dialogContext.setHint(hintText);
     }
 
@@ -109,4 +115,15 @@ public class MyEditTextDialog extends Dialog {
     public void onClick() {
         dialogContext.setText("");
     }
+
+    /**
+     * 设置内容
+     *
+     * @param context
+     */
+    public void setContext(String context) {
+        dialogHint.setVisibility(View.VISIBLE);
+        dialogHint.setText(context);
+    }
+
 }

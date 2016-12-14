@@ -23,6 +23,8 @@ public class FoodBean {
     private Integer stockout;//是否缺货，暂时保留
     private Integer number;//默认数量
     private List<PriceBean> prices;//价格策略
+    private boolean isFavor;//是否点赞
+    private Integer finishFood;//完成菜品数量
 
     public Integer getId() {
         return id;
@@ -128,6 +130,22 @@ public class FoodBean {
         this.prices = prices;
     }
 
+    public boolean isFavor() {
+        return isFavor;
+    }
+
+    public void setFavor(boolean favor) {
+        isFavor = favor;
+    }
+
+    public Integer getFinishFood() {
+        return finishFood;
+    }
+
+    public void setFinishFood(Integer finishFood) {
+        this.finishFood = finishFood;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -144,6 +162,8 @@ public class FoodBean {
                 ", stockout=" + stockout +
                 ", number=" + number +
                 ", prices=" + prices +
+                ", isFavor=" + isFavor +
+                ", finishFood=" + finishFood +
                 '}';
     }
 }

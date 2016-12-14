@@ -27,6 +27,7 @@
     <color name="text_color_main_normal">#6d7172</color>
     <color name="text_color_main_select">#5f3507</color>
     <color name="text_color_price">#c5cccf</color>
+    <color name="text_color_999999">#999999</color>
 
     <!--分割线-->
     <color name="line_s">#E9E9E9</color>
@@ -60,6 +61,10 @@
     <!--背景颜色-->
     <color name="bg_gray_person">#F0F0F0</color>
     <color name="background_gray_m">#FAFAFA</color>
+
+    <!--点赞颜色-->
+    <color name="favor_nor">#CCCCCC</color>
+    <color name="favor_sel">#F45665</color>
 
 
 </resources>

@@ -9,12 +9,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.PriceBean;
 import cn.sczhckj.order.data.bean.PriceTypeBean;
 import cn.sczhckj.order.data.listener.OnTotalNumberListener;
 import cn.sczhckj.order.image.GlideLoading;
@@ -47,10 +52,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
     @Override
     public void onBindViewHolder(ShoppingCartViewHolder holder, int position) {
         final FoodBean bean = mList.get(position);
+        /**设置菜品名字*/
         holder.cartDishesName.setText(bean.getName());
+        /**设置菜品数量*/
         holder.cartDishesNumber.setText("×" + bean.getNumber());
-        /**设置优惠之前的价格，以及优惠图标*/
-//        if (bean.getPriceType() == null || bean.getPriceType().size() == 0) {
+        /**设置菜品价格*/
+        holder.cartDishesPrice.setText("" + bean.getPrice());
+        /**设置价格，以及优惠图标*/
+        holder.cartDishesTotalPrice.setText(bean.getNumber() * bean.getPrice() + "");
+        setPrice(holder.cartFavorableIamge, holder.cartDishesPrice, holder.cartDishesTotalPrice, bean);
+        /**设置已完成数量*/
+        setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund,bean);
+//        if (bean.getPrices() == null || bean.getPrices().size() == 0) {
 //            holder.cartPrice.setText("¥" + bean.getPrice());
 //        } else {
 //            holder.cartFavorablePrice.setText("¥" + bean.getPrice());
@@ -107,8 +120,57 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
     }
 
     /**
-     * 计算锅底数量，菜品数量，总价
+     * 设置小计价格，优惠图标，单价
+     *
+     * @param imageView  优惠图标
+     * @param price      单价
+     * @param totalPrice 小计
+     * @param bean       参数
      */
+    private void setPrice(ImageView imageView, TextView price, TextView totalPrice, FoodBean bean) {
+        if (bean.getPrices() != null && bean.getPrices().size() != 0) {
+            for (PriceBean item : bean.getPrices()) {
+                if (item.getActive() == Constant.PRICE_ACTIVE) {
+                    price.setText(item.getPrice() + "");
+                    totalPrice.setText(bean.getNumber() * item.getPrice() + "");
+                    GlideLoading.loadingDishes(mContext, item.getImageUrl(), imageView);
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置已经完成菜品显示
+     *
+     * @param layout
+     * @param bean
+     */
+    private void setFinishFood(LinearLayout layout, ImageView retIm,FoodBean bean) {
+        layout.removeAllViews();
+        List<ImageView> mList=new ArrayList<>();
+        for (int i = 0; i < bean.getNumber(); i++) {
+            ImageView imageView = new ImageView(mContext);
+            imageView.setImageResource(R.drawable.cart_food_finish);
+            imageView.setPadding(0,0,5,0);
+            layout.addView(imageView);
+            mList.add(imageView);
+        }
+        if (bean.getFinishFood() != null && bean.getFinishFood() != 0) {
+            for (int i = 0; i < bean.getFinishFood(); i++) {
+                mList.get(i).setSelected(true);
+            }
+        }
+        /**设置可退图标*/
+        if (bean.getNumber()==bean.getFinishFood()){
+            retIm.setImageResource(R.drawable.order_btn_foodback_dis);
+        }else {
+            retIm.setImageResource(R.drawable.order_btn_foodback_nor);
+        }
+    }
+
+//    /**
+//     * 计算锅底数量，菜品数量，总价
+//     */
 //    public void countTotal() {
 //        /**锅底数量*/
 //        int potNumber = 0;

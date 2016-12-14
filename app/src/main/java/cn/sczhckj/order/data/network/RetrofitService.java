@@ -43,7 +43,10 @@ public interface RetrofitService {
     @POST("rest/food/foods")
     Call<Bean<List<FoodBean>>> foods(@Field("p") String p);
 
-
+    /**购物车数据提交*/
+    @FormUrlEncoded
+    @POST("rest/order/order")
+    Call<Bean<CommonBean>> order(@Field("p") String p);
 
 
     /**版本管理信息*/

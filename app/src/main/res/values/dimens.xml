@@ -16,8 +16,8 @@
     <dimen name="cart_title_text_size">16sp</dimen>
     <dimen name="text_size_smart">15sp</dimen>
     <dimen name="text_size_smart_s">12sp</dimen>
-    <dimen name="text_size_RMB">10sp</dimen>
-    <dimen name="text_size_RMB_price">20sp</dimen>
+    <dimen name="text_size_RMB">7sp</dimen>
+    <dimen name="text_size_RMB_price">16sp</dimen>
 
     <dimen name="cart_dishes_name_size">13sp</dimen>
     <dimen name="cart_dishes_RMB">8sp</dimen>

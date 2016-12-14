@@ -14,14 +14,39 @@ public interface OP {
     String TABLE_OPEN_INFO = "openInfo";
 
     /**
+     * 台桌信息
+     */
+    String TABLE_INFO = "info";
+
+    /**
      * 菜品分类
      */
-    String FOOD_CATE = "foodCate";
+    String FOOD_CATE = "cates";
 
     /**
      * 菜品列表
      */
-    String FOOD_LIST = "foodList";
+    String FOOD_LIST = "foods";
+
+    /**
+     * 菜品信息
+     */
+    String FOOD_INFO = "info";
+
+    /**
+     * 菜品图片
+     */
+    String FOOD_IMAGE = "images";
+
+    /**
+     * 菜品价格
+     */
+    String FOOD_PRICE = "prices";
+
+    /**
+     * 下单
+     */
+    String ORDER_ORDER = "order";
 
 
 

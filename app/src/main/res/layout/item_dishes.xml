@@ -56,7 +56,7 @@
                 android:textColor="@color/text_color_red" />
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <cn.sczhckj.order.overwrite.TagCloudLayout
             android:id="@+id/dishes_favorable_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -96,6 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/dishes_favor_parent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -114,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="230"
-                    android:textColor="@color/text_color_gray"
+                    android:textColor="@color/favor_nor"
                     android:textSize="10sp" />
             </LinearLayout>
 

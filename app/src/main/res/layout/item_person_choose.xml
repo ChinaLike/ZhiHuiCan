@@ -13,7 +13,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="自定："
-        android:textColor="@color/black" />
+        android:textSize="@dimen/text_size_smart_s"
+        android:textColor="@color/text_color_default" />
 
     <RelativeLayout
         android:layout_width="wrap_content"

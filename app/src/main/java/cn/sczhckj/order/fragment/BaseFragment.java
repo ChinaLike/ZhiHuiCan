@@ -24,6 +24,7 @@ import java.util.List;
 
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
@@ -187,7 +188,7 @@ public abstract class BaseFragment extends Fragment {
         loadingPop = new PopupWindow(loadingView, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
         loadingPop.setFocusable(true);
         loadingPop.setTouchable(true);
-        loadingPop.setOutsideTouchable(true);
+        loadingPop.setOutsideTouchable(false);
         loadingPop.setBackgroundDrawable(new ColorDrawable(0));
     }
 
@@ -203,6 +204,8 @@ public abstract class BaseFragment extends Fragment {
         totalPotNumber = 0;
         /**初始密码*/
         openTablePassword="";
+        /**人数清零*/
+        MainActivity.personNumber=0;
     }
 
     @Override

@@ -83,8 +83,8 @@ public class Constant {
     /**
      * 点菜权限
      */
-    public final static int PREMISS_AGREE = 0;
-    public final static int PREMISS_DISAGREE = 1;
+    public final static int PREMISS_AGREE = 1;//可以操作点菜
+    public final static int PREMISS_DISAGREE = 0;//不可以操作点菜
 
     /**
      * 点菜类型 字段orderType
@@ -92,5 +92,13 @@ public class Constant {
     public final static int ORDER_TYPE_OPEN = 0;//开桌点餐
     public final static int ORDER_TYPE_ALONE = 1;//单桌点餐
     public final static int ORDER_TYPE_MERGE = 2;//并卓点餐
+
+    /**取价 字段active*/
+    public final static int PRICE_DISACTIVE=0;//不取此价
+    public final static int PRICE_ACTIVE=1;//取此价
+
+    /**菜品数量控制 字段maximum*/
+    public final static int FOOD_DISASTRICT=0;//不限制数量
+    public final static int FOOD_ASTRICT=1;//限制数量，数量为给定大小，此处不一定为1
 
 }

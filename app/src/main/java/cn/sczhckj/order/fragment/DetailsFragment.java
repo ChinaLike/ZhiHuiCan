@@ -23,7 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.adapter.DetailsAdapter;
+import cn.sczhckj.order.adapter.PriceAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.DetailsBean;
@@ -83,7 +83,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
     @Bind(R.id.details_like)
     ImageView detailsLike;
 
-    private DetailsAdapter adapter;
+    private PriceAdapter adapter;
     /**
      * 菜品详情
      */
@@ -253,9 +253,9 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
      * @param mList
      */
     private void favorableAdapter(List<PriceTypeBean> mList) {
-        adapter = new DetailsAdapter(getContext(), mList);
-        detailsFavorableRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        detailsFavorableRecycler.setAdapter(adapter);
+//        adapter = new PriceAdapter(getContext(), mList);
+//        detailsFavorableRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+//        detailsFavorableRecycler.setAdapter(adapter);
     }
 
     /**

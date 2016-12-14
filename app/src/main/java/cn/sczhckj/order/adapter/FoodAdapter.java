@@ -1,6 +1,7 @@
 package cn.sczhckj.order.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +10,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.event.BottomChooseEvent;
+import cn.sczhckj.order.data.event.RefreshCartEvent;
 import cn.sczhckj.order.image.GlideLoading;
-import cn.sczhckj.order.overwrite.MyDialog;
+import cn.sczhckj.order.mode.impl.DialogImpl;
+import cn.sczhckj.order.mode.impl.TagCloudImpl;
+import cn.sczhckj.order.overwrite.TagCloudLayout;
 
 /**
  * @describe: 菜品适配
@@ -29,14 +37,19 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
     private Context mContext;
 
     private List<FoodBean> mList;
+    /**
+     * 标签云数据适配
+     */
+    private TagCloudImpl mTagCloudImpl;
 
-    private MyDialog dialog;
+    private DialogImpl dialog;
 
 
     public FoodAdapter(Context mContext, List<FoodBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
-        dialog = new MyDialog(mContext);
+        mTagCloudImpl = new TagCloudImpl(mContext);
+        dialog = new DialogImpl(mContext);
     }
 
     @Override
@@ -57,86 +70,87 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
     @Override
     public void onBindViewHolder(final DishesHolder holder, int position) {
         final FoodBean bean = mList.get(position);
+        /**菜品缩略图*/
         GlideLoading.loadingDishes(mContext, bean.getImageUrl(), holder.dishesImage);
+        /**菜品名字*/
         holder.dishesName.setText(bean.getName());
+        /**菜品价格*/
         holder.dishesPrice.setText(bean.getPrice() + "");
+        /**菜品销量*/
         holder.dishesSales.setText(bean.getSales() + "");
+        /**菜品点赞数*/
         holder.dishesCollect.setText(bean.getFavors() + "");
-
+        /**默认菜品*/
         holder.dishesNumber.setText(bean.getNumber() + "");
-//        /**菜品减少*/
-//        holder.dishesMinus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-//                    int number = bean.getNumber();
-//                    if (number > 0) {
-//                        number--;
-//                        bean.setNumber(number);
-//                        holder.dishesNumber.setText(number + "");
-////                        bean.setTableId(OrderFragment.tabOrderType);
-//                        EventBus.getDefault().post(new RefreshCartEvent(bean));
-//                    }
-//                }
-//            }
-//        });
-//        /**菜品添加*/
-//        holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                isOverProof(bean, holder);
-//            }
-//        });
-//        /**点击菜品图片进入详情*/
-//        holder.dishesImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean));
-//            }
-//        });
-//
-//        /**判断优惠类型,并显示*/
-//        if (bean.getPriceType() != null && bean.getPriceType().size() != 0) {
-//            holder.dishesFavorableRecyclerView.setVisibility(View.VISIBLE);
-//            DetailsAdapter adapter = new DetailsAdapter(mContext, bean.getPriceType());
-//            holder.dishesFavorableRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
-//            holder.dishesFavorableRecyclerView.setAdapter(adapter);
-//        } else {
-//            holder.dishesFavorableRecyclerView.setVisibility(View.INVISIBLE);
-//        }
-//
-//        /**判断是否喜欢，即收藏与否*/
-//        if (bean.isCollect()) {
-//            holder.dishesCollectIcon.setSelected(true);
-//        } else {
-//            holder.dishesCollectIcon.setSelected(false);
-//        }
-//        /**收藏标识点击事件*/
-//        holder.dishesCollectIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (holder.dishesCollectIcon.isSelected()) {
-//                    holder.dishesCollectIcon.setSelected(false);
-//                    bean.setCollect(false);
-//                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.text_color_gray));
-//                } else {
-//                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.text_color_main_select));
-//                    holder.dishesCollectIcon.setSelected(true);
-//                    bean.setCollect(true);
-//                }
-//            }
-//        });
-//
-//        /**权限判定,该桌是否可以点餐*/
-//        if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-//            /**可以点菜*/
-//            holder.dishesAdd.setClickable(true);
-//            holder.dishesMinus.setClickable(true);
-//        } else {
-//            /**不可以点菜*/
-//            holder.dishesAdd.setClickable(false);
-//            holder.dishesMinus.setClickable(false);
-//        }
+        /**菜品减少*/
+        holder.dishesMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int number = bean.getNumber();
+                if (number > 0) {
+                    number--;
+                    bean.setNumber(number);
+                    holder.dishesNumber.setText(number + "");
+                    EventBus.getDefault().post(new RefreshCartEvent(bean));
+                }
+            }
+        });
+        /**菜品添加*/
+        holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isOverProof(bean, holder);
+            }
+        });
+        /**点击菜品图片进入详情*/
+        holder.dishesImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean));
+            }
+        });
+
+        /**判断优惠类型,并显示*/
+        mTagCloudImpl.setPrice(holder.dishesFavorableRecyclerView, bean.getPrices());
+        // TODO: 2016/12/14 显示原价还是优惠价？
+//        mTagCloudImpl.getPrice(holder.dishesPrice, bean.getPrices());
+        /**判断是否喜欢，即收藏与否*/
+        if (bean.isFavor()) {
+            holder.dishesCollectIcon.setSelected(true);
+            holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
+        } else {
+            holder.dishesCollectIcon.setSelected(false);
+            holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
+        }
+        /**收藏标识点击事件*/
+        holder.favorParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int favorNum = Integer.parseInt(holder.dishesCollect.getText().toString());
+                if (holder.dishesCollectIcon.isSelected()) {
+                    holder.dishesCollect.setText(favorNum - 1 + "");
+                    holder.dishesCollectIcon.setSelected(false);
+                    bean.setFavor(false);
+                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
+                } else {
+                    holder.dishesCollect.setText(favorNum + 1 + "");
+                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
+                    holder.dishesCollectIcon.setSelected(true);
+                    bean.setFavor(true);
+                }
+            }
+        });
+
+        /**权限判定,该桌是否可以点餐*/
+        if (bean.getPermiss() == Constant.PREMISS_AGREE) {
+            /**可以点菜*/
+            holder.dishesAdd.setClickable(true);
+            holder.dishesMinus.setClickable(true);
+        } else {
+            /**不可以点菜*/
+            buttonClick(holder.dishesAdd);
+            buttonClick(holder.dishesMinus);
+        }
 
     }
 
@@ -170,9 +184,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         @Bind(R.id.dishes_add)
         ImageView dishesAdd;
         @Bind(R.id.dishes_favorable_recyclerView)
-        RecyclerView dishesFavorableRecyclerView;
+        TagCloudLayout dishesFavorableRecyclerView;
         @Bind(R.id.dishes_parent)
         LinearLayout parent;
+        @Bind(R.id.dishes_favor_parent)
+        LinearLayout favorParent;
 
 
         public DishesHolder(View itemView) {
@@ -185,27 +201,20 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      * 判断锅底是否超过标准
      */
     private void isOverProof(final FoodBean bean, final DishesHolder holder) {
-        /**首先判断是否是锅底再次判断是否已经选择了一个锅底*/
-//        if (bean.getType() == CommonConstant.POT_TYPE && BaseFragment.totalPotNumber > 0) {
-//            dialog.setTitle("温馨提示");
-//            dialog.setContextText("尊敬的顾客您好！\n您已经选择了一份锅底，确认还\n需要再来一份吗？");
-//            dialog.setPositiveButton("确认选择", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    setAddDishes(bean, holder);
-//                    dialog.dismiss();
-//                }
-//            });
-//            dialog.setNegativeButton("不选了", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    dialog.dismiss();
-//                }
-//            });
-//            dialog.show();
-//        } else {
-//            setAddDishes(bean, holder);
-//        }
+        /**首先判断是否是锅底再次判断是否已经选择规定锅底*/
+        if (bean.getMaximum() == null || bean.getMaximum() == Constant.FOOD_DISASTRICT) {
+            /**不限制数量*/
+            setAddDishes(bean, holder);
+        } else {
+            if (bean.getNumber() >= bean.getMaximum()) {
+                /**限制数量*/
+                dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
+                        mContext.getResources().getString(R.string.dialog_context),
+                        mContext.getResources().getString(R.string.dialog_cacel)).show();
+            } else {
+                setAddDishes(bean, holder);
+            }
+        }
     }
 
     /**
@@ -214,15 +223,30 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      * @param bean
      * @param holder
      */
-//    private void setAddDishes(FoodBean bean, DishesHolder holder) {
-//        if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-//            int number = bean.getNumber();
-//            number++;
-//            bean.setNumber(number);
-//            holder.dishesNumber.setText(number + "");
-//            bean.setTableId(OrderFragment.tabOrderType);
-//            EventBus.getDefault().post(new RefreshCartEvent(bean));
-//        }
-//    }
+    private void setAddDishes(FoodBean bean, DishesHolder holder) {
+        int number = bean.getNumber();
+        number++;
+        bean.setNumber(number);
+        holder.dishesNumber.setText(number + "");
+        EventBus.getDefault().post(new RefreshCartEvent(bean));
+    }
+
+    /**
+     * 加菜按钮，减菜按钮
+     *
+     * @param button
+     */
+    private void buttonClick(final ImageView button) {
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button.setClickable(false);
+                dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
+                        mContext.getResources().getString(R.string.dialog_context1),
+                        mContext.getResources().getString(R.string.dialog_cacel)).show();
+            }
+        });
+    }
 
 }

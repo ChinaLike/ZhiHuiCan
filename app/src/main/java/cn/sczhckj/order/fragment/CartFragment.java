@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,24 +32,23 @@ import cn.sczhckj.order.activity.FavorableActivity;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.CartBean;
 import cn.sczhckj.order.data.bean.CommonBean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FoodBean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.bean.PriceBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshCartEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.listener.OnTotalNumberListener;
-import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
+import cn.sczhckj.order.mode.OrderMode;
+import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
-import cn.sczhckj.order.overwrite.MyEditTextDialog;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.platform.rest.io.RestRequest;
-import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,8 +64,8 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
 
     @Bind(R.id.nothing)
     ImageView nothing;
-    @Bind(R.id.cart_recyclerView)
-    RecyclerView cartRecyclerView;
+    @Bind(R.id.cart_dis_order)
+    RecyclerView disCartOrder;
     @Bind(R.id.has_thing)
     RelativeLayout hasThing;
     @Bind(R.id.shoppingcart_total_price)
@@ -79,16 +78,57 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     Button shoppingcartButton;
     @Bind(R.id.cart_favorable)
     ImageView cartFavorable;
+    @Bind(R.id.cart_view1)
+    View cartView1;
+    @Bind(R.id.cart_order_flag)
+    ImageView cartOrderFlag;
+    @Bind(R.id.cart_order)
+    RecyclerView cartOrder;
+    @Bind(R.id.cart_view3)
+    View cartView3;
+    @Bind(R.id.cart_dis_order_flag)
+    ImageView cartDisOrderFlag;
+    @Bind(R.id.order_parent)
+    LinearLayout orderParent;
+    @Bind(R.id.disOrder_parent)
+    LinearLayout disOrderParent;
 
-    private CartAdapter mCartAdapter;
 
-    private List<FoodBean> mList = new ArrayList<>();
+    /**
+     * 未下单适配器
+     */
+    private CartAdapter mDisOrderAdapter;
+
+    /**
+     * 已下单适配器
+     */
+    private CartAdapter mOrderAdapter;
 
     private OnButtonClickListener onButtonClickListener;
+
     /**
-     * Button按钮类型 0-开桌 1-选菜 3- 4-
+     * 下单的菜品，即已下单菜品
      */
-    private int buttonType = 0;
+    private List<FoodBean> orderList = new ArrayList<>();
+    /**
+     * 未下单的菜品，即购物车菜品
+     */
+    private List<FoodBean> disOrderList = new ArrayList<>();
+
+    /**
+     * 弹窗
+     */
+    private DialogImpl mDialog;
+
+    /**
+     * 数据请求
+     */
+    private OrderMode mOrderMode;
+
+    /**
+     * 开桌密码
+     */
+    private String password = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,12 +150,43 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
+        initCart(disOrderList);
         initFavorableLocation();
+    }
+
+    @Override
+    public void init() {
+        mDialog = new DialogImpl(getContext());
+        mOrderMode = new OrderMode();
+        initOrder();
+        initDisOrder();
     }
 
     @Override
     public void setData(Object object) {
 
+    }
+
+    /**
+     * 初始化已下单
+     */
+    private void initOrder() {
+        mOrderAdapter = new CartAdapter(orderList, getActivity());
+        mOrderAdapter.setOnTotalNumberListener(this);
+        cartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
+        cartOrder.setAdapter(mOrderAdapter);
+        cartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
+    }
+
+    /**
+     * 初始化购物车
+     */
+    private void initDisOrder() {
+        mDisOrderAdapter = new CartAdapter(disOrderList, getActivity());
+        mDisOrderAdapter.setOnTotalNumberListener(this);
+        disCartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
+        disCartOrder.setAdapter(mDisOrderAdapter);
+        disCartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
     }
 
     /**
@@ -127,21 +198,65 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     }
 
     /**
+     * 初始化购物车
+     */
+    private void initCart(List<FoodBean> list) {
+        if (orderList.size() == 0 && list.size() == 0) {
+            nothing.setVisibility(View.VISIBLE);
+            hasThing.setVisibility(View.GONE);
+        } else {
+            nothing.setVisibility(View.GONE);
+            hasThing.setVisibility(View.VISIBLE);
+        }
+        /**判断已下单菜品*/
+        if (orderList.size() == 0) {
+            orderParent.setVisibility(View.GONE);
+            cartOrder.setVisibility(View.GONE);
+        } else {
+            orderParent.setVisibility(View.VISIBLE);
+            cartOrder.setVisibility(View.VISIBLE);
+        }
+        /**判断购物车菜品*/
+        if (list.size() == 0) {
+            disOrderParent.setVisibility(View.GONE);
+            disCartOrder.setVisibility(View.GONE);
+        } else {
+            disOrderParent.setVisibility(View.VISIBLE);
+            disCartOrder.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    /**
+     * 设置Button的属性
+     *
+     * @param isClick
+     */
+    private void buttonAttr(boolean isClick) {
+        shoppingcartButton.setClickable(isClick);
+        if (isClick) {
+            shoppingcartButton.setSelected(false);
+            shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.button_text));
+        } else {
+            shoppingcartButton.setSelected(true);
+            shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color_999999));
+        }
+    }
+
+    /**
      * 刷新购物车
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshCart(RefreshCartEvent event) {
-//        shoppingcartButton.setClickable(true);
-//        shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
-//        /**本地加菜*/
-//        if (event.getBean() != null) {
-//            List<FoodBean> list = initList(event.getBean());
-//            /**在没有任何菜品时把锅底设置为0*/
-//            isEmptyList(list);
-//            isHaveData(list);
-//            mCartAdapter.notifyDataSetChanged(list);
-//        }
-//        /**后台加菜*/
+        buttonAttr(true);
+        /**本地加菜*/
+        if (event.getBean() != null) {
+            List<FoodBean> list = initList(event.getBean());
+            initCart(list);
+            mDisOrderAdapter.notifyDataSetChanged(list);
+            setFoodinfo(shoppingcartDishesNumber, shoppingcartTotalPrice, shoppingcartPartNumber, list);
+        }
+        /**后台加菜*/
 //        if (event.getBeanList() != null) {
 //            List<FoodBean> list = refreshMainTableAddDishes(event.getBeanList());
 //            /**在没有任何菜品时把锅底设置为0*/
@@ -152,38 +267,71 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     }
 
     /**
-     * 判断是否是空的list
-     *
-     * @param list
-     */
-    private void isEmptyList(List<FoodBean> list) {
-        if (list.size() == 0) {
-            totalPotNumber = 0;
-        }
-    }
-
-
-    /**
      * 通过菜品信息来判断是否已经添加次菜品，如果已经添加刷新数量，处理本地加菜
      *
      * @param bean
      */
     private List<FoodBean> initList(FoodBean bean) {
-        Map<String, FoodBean> localMap = listToMap();
-        if (localMap.containsKey(bean.getId())) {
-            int postion = mList.indexOf(localMap.get(bean.getId()));
-            int number = bean.getNumber();
-            if (number == 0) {
-                mList.remove(mList.get(postion));
-            } else {
-                mList.get(postion).setNumber(number);
-            }
+        if (disOrderList.size() == 0) {
+            disOrderList.add(bean);
         } else {
-            if (bean.getNumber() != 0) {
-                mList.add(bean);
+            boolean isAdd = false;
+            for (FoodBean item : disOrderList) {
+                /**只有ID和分类ID对应一样才是同一个菜品*/
+                if ((item.getId().equals(bean.getId())) && (item.getCateId().equals(bean.getCateId()))) {
+                    item.setNumber(bean.getNumber());
+                    isAdd = true;
+                }
+                if (item.getNumber() == 0) {
+                    disOrderList.remove(item);
+                }
+            }
+            if (!isAdd) {
+                disOrderList.add(bean);
             }
         }
-        return mList;
+        return disOrderList;
+    }
+
+    /**
+     * 设置总数量，总价格，总优惠
+     *
+     * @param numberView
+     * @param priceView
+     * @param favorView
+     * @param beenList
+     */
+    private void setFoodinfo(TextView numberView, TextView priceView, TextView favorView, List<FoodBean> beenList) {
+        int number = 0;
+        Double price = 0.0;
+        Double favorPrice = 0.0;
+        for (FoodBean bean : beenList) {
+            number = number + bean.getNumber();
+            Double currPrice = getPrice(bean);
+            price = price + currPrice * bean.getNumber();
+            favorPrice = favorPrice + (bean.getPrice() - currPrice) * bean.getNumber();
+        }
+        numberView.setText(number + "");
+        priceView.setText(price + "");
+        favorView.setText(favorPrice + "");
+    }
+
+    /**
+     * 获取最终价
+     *
+     * @param bean
+     * @return
+     */
+    private Double getPrice(FoodBean bean) {
+        Double price = bean.getPrice();
+        if (bean.getPrices() != null && bean.getPrices().size() != 0) {
+            for (PriceBean item : bean.getPrices()) {
+                if (item.getActive() == Constant.PRICE_ACTIVE) {
+                    price = item.getPrice();
+                }
+            }
+        }
+        return price;
     }
 
     /**
@@ -198,17 +346,17 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
             Integer id = beenList.get(i).getId();
             FoodBean bean = beenList.get(i);
             if (localMap.containsKey(id)) {
-                int postion = mList.indexOf(localMap.get(id));
-                int number = mList.get(postion).getNumber() + bean.getNumber();
-                mList.get(postion).setNumber(number);
+                int postion = disOrderList.indexOf(localMap.get(id));
+                int number = disOrderList.get(postion).getNumber() + bean.getNumber();
+                disOrderList.get(postion).setNumber(number);
                 bean.setNumber(number);
             } else {
-                mList.add(bean);
+                disOrderList.add(bean);
             }
             /**刷新点菜界面数据*/
             EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 0, bean));
         }
-        return mList;
+        return disOrderList;
     }
 
     /**
@@ -218,35 +366,10 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
      */
     private Map<String, FoodBean> listToMap() {
         Map<String, FoodBean> localMap = new HashMap<>();
-        for (int i = 0; i < mList.size(); i++) {
-            localMap.put(mList.get(i).getId()+"", mList.get(i));
+        for (int i = 0; i < disOrderList.size(); i++) {
+            localMap.put(disOrderList.get(i).getId() + "", disOrderList.get(i));
         }
         return localMap;
-    }
-
-    @Override
-    public void init() {
-        isHaveData(mList);
-        mCartAdapter = new CartAdapter(mList, getActivity());
-        mCartAdapter.setOnTotalNumberListener(this);
-        cartRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        cartRecyclerView.setAdapter(mCartAdapter);
-        cartRecyclerView.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
-    }
-
-    /**
-     * 处理购物车为空的状态
-     */
-    private void isHaveData(List<FoodBean> mList) {
-        if (mList.size() == 0) {
-            nothing.setVisibility(View.VISIBLE);
-            hasThing.setVisibility(View.GONE);
-        } else {
-            if (nothing.getVisibility() == View.VISIBLE && hasThing.getVisibility() == View.GONE) {
-                nothing.setVisibility(View.GONE);
-                hasThing.setVisibility(View.VISIBLE);
-            }
-        }
     }
 
     @Override
@@ -257,61 +380,57 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     }
 
     /**
-     * 开桌
+     * 下单数据初始化
+     *
+     * @param password
      */
-    private void openTable() {
-        buttonType = 0;
-        cartVerify(0);
+    private void openTable(String password) {
         showProgress("数据提交中，清请稍后...");
-    }
-
-    /**
-     * 密码验证
-     */
-    private void passwordVerify() {
-        final MyEditTextDialog dialog = new MyEditTextDialog(getContext());
-        dialog.setTitle("请输入服务密码");
-        dialog.setEditTextHint("请输入密码");
-        dialog.setLeftButton("取消", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setRightButton("确定", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (openTablePassword.equals(dialog.getEditText())) {
-                    openTable();
-                    dialog.dismiss();
-                } else {
-                    Toast.makeText(getContext(), "密码输入错误", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        dialog.show();
-    }
-
-    /**
-     * 购物车数据验证
-     */
-    private void cartVerify(int type) {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(deviceId);
-        bean.setDishesList(mList);
-        bean.setPerson(MainActivity.person);
-        if (type == 0) {
-            bean.setType(Constant.OPEN_TABLE);
-        } else if (type == 1) {
-            bean.setType(Constant.ORDER);
-            bean.setOrderType(orderType);
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setPassword(password);
+        bean.setCart(infoSwitch());
+        mOrderMode.order(bean, this);
+
+    }
+
+    /**
+     * 把菜品信息简化后提交给服务器
+     *
+     * @return
+     */
+    private List<CartBean> infoSwitch() {
+        List<CartBean> cartList = new ArrayList<>();
+        for (FoodBean bean : disOrderList) {
+            CartBean cart = new CartBean();
+            cart.setId(bean.getId());
+            cart.setCateId(bean.getCateId());
+            cart.setNumber(bean.getNumber());
+            cart.setPrice(getPrice(bean));
         }
-        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.OPEN_TABLE_VERIFY)
-                .time()
-                .bean(bean);
-        Call<Bean<CommonBean>> mainShow = RetrofitRequest.service().openTable(restRequest.toRequestString());
-        mainShow.enqueue(this);
+        return cartList;
+    }
+
+    /**
+     * 信息验证
+     */
+    private void infoVerify() {
+
+        mDialog.setEditDialog("信息确认", "就餐人数：" + MainActivity.personNumber + "人", "请输入开桌密码")
+                .setLeftButton("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.editTextDialog().dismiss();
+                    }
+                })
+                .setRightButton("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        password=mDialog.editTextDialog().getEditText().toString();
+                        openTable(password);
+                        mDialog.editTextDialog().dismiss();
+                    }
+                }).show();
     }
 
     @Override
@@ -332,38 +451,50 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     @Override
     public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
         Bean<CommonBean> bean = response.body();
-        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            /**关闭进度框*/
-            dismissProgress();
-
-            if (buttonType == 0) {
-                shoppingcartButton.setText(R.string.choose_good);
-                if (onButtonClickListener != null) {
-                    flag = 1;
-                    onButtonClickListener.onClick(Constant.ORDER, bean.getResult().getShowType());
-                }
-            } else if (buttonType == 1) {
-                Toast.makeText(getContext(), bean.getMessage(), Toast.LENGTH_SHORT).show();
-                /**如果状态是0，则是提交数据成功，此时把按钮变成灰色，当有加菜时，再次亮起*/
-                shoppingcartButton.setClickable(false);
-                shoppingcartButton.setTextColor(getResources().getColor(R.color.white));
+        if (bean != null) {
+            if (bean.getCode()==ResponseCode.SUCCESS) {
+                /**关闭进度框*/
+                dismissProgress();
+                onButtonClickListener.onClick(Constant.ORDER, bean.getResult().getShowType());
+                cartToOrder();
+                mOrderAdapter.notifyDataSetChanged(orderList);
+            }else {
+                commit(""+bean.getMessage());
             }
+        } else {
+            commit("提交失败，点击重新提交");
         }
 
     }
 
     @Override
     public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
-        loadingFail("提交失败，点击重新提交", new View.OnClickListener() {
+        commit("提交失败，点击重新提交");
+    }
+
+    /**
+     * 提交失败，重新提交
+     * @param title
+     */
+    private void commit(String title){
+        loadingFail(title, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (buttonType == 0) {
-                    cartVerify(0);
-                } else if (buttonType == 1) {
-                    cartVerify(1);
-                }
+                openTable(password);
             }
         });
+    }
+
+    /**
+     * 购物车中数据转化到已下单中
+     */
+    private void cartToOrder(){
+        for (FoodBean bean:disOrderList) {
+            orderList.add(bean);
+            disOrderList.remove(bean);
+        }
+        mDisOrderAdapter.notifyDataSetChanged(disOrderList);
+        initCart(disOrderList);
     }
 
     /**
@@ -371,35 +502,51 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
-        shoppingcartButton.setClickable(true);
-        shoppingcartButton.setTextColor(getResources().getColor(R.color.button_text));
+        buttonAttr(true);
     }
 
-    @OnClick({R.id.shoppingcart_button, R.id.cart_favorable})
+    @OnClick({R.id.shoppingcart_button, R.id.cart_favorable, R.id.order_parent, R.id.disOrder_parent})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.shoppingcart_button:
-                if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.openTable))) {
-                    /**开桌*/
-                    if (openTablePassword != null && !openTablePassword.equals("")) {
-                        /**验证密码*/
-                        passwordVerify();
-                    } else {
-                        /**不用验证密码*/
-                        openTable();
-                    }
-                } else if (shoppingcartButton.getText().toString().equals(getResources().getString(R.string.choose_good))) {
-                    /**选好了*/
-                    buttonType = 1;
-                    cartVerify(1);
-                    showProgress("数据提交中，清请稍后...");
-                }
+                /**信息验证*/
+                infoVerify();
                 break;
             case R.id.cart_favorable:
                 /**更多优惠*/
                 Intent intent = new Intent(getActivity(), FavorableActivity.class);
                 getContext().startActivity(intent);
                 break;
+
+            case R.id.order_parent:
+                /**已经下单*/
+                setTitleStatus(cartOrderFlag, cartOrder,cartDisOrderFlag, disCartOrder);
+                break;
+            case R.id.disOrder_parent:
+                /**还未下单，在购物车*/
+                setTitleStatus(cartDisOrderFlag, disCartOrder,cartOrderFlag, cartOrder);
+                break;
         }
     }
+
+    /**
+     * 设置购物车中已下单和购物车切换状态
+     *
+     * @param imageView
+     * @param recyclerView
+     */
+    private void setTitleStatus(ImageView imageView, RecyclerView recyclerView,ImageView imageOteher,RecyclerView recyclerViewOther) {
+        if (imageView.isSelected()) {
+            imageView.setSelected(false);
+            recyclerView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setSelected(true);
+            recyclerView.setVisibility(View.GONE);
+        }
+
+        imageOteher.setSelected(true);
+        recyclerViewOther.setVisibility(View.GONE);
+
+    }
+
 }

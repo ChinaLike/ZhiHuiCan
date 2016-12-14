@@ -15,7 +15,10 @@
     <RelativeLayout
         android:id="@+id/has_thing"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/nothing"
+        android:layout_toRightOf="@+id/nothing">
 
         <LinearLayout
             android:id="@+id/cart_top_parent"
@@ -101,6 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:lines="1"
                         android:textColor="@color/button_text" />
                 </LinearLayout>
 
@@ -113,7 +117,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="bottom"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -138,6 +142,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:text="0"
+                        android:lines="1"
                         android:textColor="@color/text_color_red"
                         android:textSize="@dimen/text_size_RMB_price" />
 
@@ -151,7 +156,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="bottom"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -175,6 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:lines="1"
                         android:textColor="@color/text_color_red"
                         android:textSize="@dimen/text_size_RMB_price" />
 
@@ -215,13 +221,131 @@
             android:layout_above="@id/cart_bottom_view"
             android:layout_below="@id/cart_top_view"
             android:background="@drawable/accounts_bg_pay_unfold"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/order_parent"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/bg_gray_person"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/cart_view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hint_line"
+                    android:background="@color/view_color" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/cart_order_im"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/open_icon_list" />
+
+                    <TextView
+                        android:layout_toRightOf="@id/cart_order_im"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical"
+                        android:text="已下单"
+                        android:textColor="@color/text_color_default" />
+
+                    <ImageView
+                        android:id="@+id/cart_order_flag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/cart_order" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/cart_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hint_line"
+                    android:background="@color/view_color" />
+
+
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/cart_recyclerView"
+                android:id="@+id/cart_order"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
+
+            <LinearLayout
+                android:id="@+id/disOrder_parent"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/bg_gray_person"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/cart_view3"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hint_line"
+                    android:background="@color/view_color" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/cart_dis_im"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/open_icon_shopping" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/cart_dis_im"
+                        android:gravity="center_vertical"
+                        android:text="购物车"
+                        android:textColor="@color/text_color_default" />
+
+                    <ImageView
+                        android:id="@+id/cart_dis_order_flag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/cart_order" />
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/cart_view4"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hint_line"
+                    android:background="@color/view_color" />
+
+            </LinearLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cart_dis_order"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
 
         </LinearLayout>
 
