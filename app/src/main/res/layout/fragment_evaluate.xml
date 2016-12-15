@@ -13,7 +13,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         android:padding="25dp"
-        android:background="@drawable/button_full_yellow_login"
+        android:background="@drawable/shape_button_full_yellow_login"
         android:text="完成"
         android:textColor="@color/button_text"
         android:textSize="@dimen/text_size_mediu" />

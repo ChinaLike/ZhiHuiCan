@@ -13,6 +13,6 @@
         android:text="整体评价"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="@drawable/button_evaluate"/>
+        android:background="@drawable/selector_shape_button_evaluate"/>
 
 </LinearLayout>

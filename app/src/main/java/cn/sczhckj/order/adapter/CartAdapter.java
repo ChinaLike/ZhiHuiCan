@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +148,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
         List<ImageView> mList=new ArrayList<>();
         for (int i = 0; i < bean.getNumber(); i++) {
             ImageView imageView = new ImageView(mContext);
-            imageView.setImageResource(R.drawable.cart_food_finish);
+            imageView.setImageResource(R.drawable.selector_cart_food_finish);
             imageView.setPadding(0,0,5,0);
             layout.addView(imageView);
             mList.add(imageView);

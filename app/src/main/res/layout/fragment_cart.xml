@@ -194,7 +194,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_left"
-                android:background="@drawable/button_yellow"
+                android:background="@drawable/selector_shape_button_yellow"
                 android:text="@string/openTable"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_size" />
@@ -265,7 +265,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/cart_order" />
+                        android:src="@drawable/selector_cart_order" />
                 </RelativeLayout>
 
                 <View
@@ -327,7 +327,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/cart_order" />
+                        android:src="@drawable/selector_cart_order" />
 
                 </RelativeLayout>
 

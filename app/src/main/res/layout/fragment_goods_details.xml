@@ -100,7 +100,7 @@
                                         android:id="@+id/details_like"
                                         android:layout_width="20dp"
                                         android:layout_height="20dp"
-                                        android:src="@drawable/dishes_like" />
+                                        android:src="@drawable/selector_dishes_like" />
 
                                     <TextView
                                         android:id="@+id/dishes_like"
@@ -232,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_margin="20dp"
-                    android:background="@drawable/button_full_yellow_login"
+                    android:background="@drawable/shape_button_full_yellow_login"
                     android:text="加入订单"
                     android:textColor="@color/button_text" />
 

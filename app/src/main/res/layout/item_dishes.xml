@@ -107,7 +107,7 @@
                     android:id="@+id/dishes_collect_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/dishes_like" />
+                    android:src="@drawable/selector_dishes_like" />
 
                 <TextView
                     android:id="@+id/dishes_collect"

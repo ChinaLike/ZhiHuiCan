@@ -11,7 +11,7 @@
         android:lines="1"
         android:ellipsize="end"
         style="?android:attr/borderlessButtonStyle"
-        android:background="@drawable/button_slide_yellow"
+        android:background="@drawable/selector_shape_button_slide_yellow"
         android:paddingRight="20dp"
         android:paddingLeft="20dp"
         android:layout_height="wrap_content" />

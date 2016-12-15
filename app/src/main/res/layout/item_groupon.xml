@@ -3,7 +3,7 @@
     android:id="@+id/item_groupon_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_groupon"
+    android:background="@drawable/shape_bg_groupon"
     android:gravity="center_vertical"
     android:paddingBottom="20dp"
     android:paddingLeft="20dp"

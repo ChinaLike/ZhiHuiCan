@@ -3,7 +3,7 @@
 
     <!--进入页面-->
     <string name="firstPage">欢迎来到本店就餐，点击开桌开始就餐！</string>
-    <string name="isVip">是否会员？</string>
+    <string name="isVip">是否会员</string>
     <string name="cardNumber">卡号</string>
     <string name="vipCardNumberHint">会员卡号</string>
     <string name="password">密码</string>

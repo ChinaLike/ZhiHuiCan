@@ -12,7 +12,7 @@
         android:layout_alignParentBottom="true"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_mediu"
-        android:background="@drawable/button_full_red_service"
+        android:background="@drawable/shape_button_full_red_service"
         android:text="取消评价" />
 
     <ScrollView

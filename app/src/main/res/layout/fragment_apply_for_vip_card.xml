@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="15dp"
-        android:background="@drawable/button_yellow"
+        android:background="@drawable/selector_shape_button_yellow"
         android:padding="15dp"
         android:text="确定"
         android:textColor="@color/button_text"
@@ -33,7 +33,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_group"
+                android:background="@drawable/shape_bg_group"
                 android:orientation="vertical">
 
                 <LinearLayout

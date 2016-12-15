@@ -22,6 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/tab_view_bg" />
+        android:background="@drawable/selector_tab_view_bg" />
 
 </LinearLayout>

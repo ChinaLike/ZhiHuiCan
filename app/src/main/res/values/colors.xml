@@ -48,9 +48,12 @@
 
 
 
+    <!--按钮颜色-->
     <color name="btn_side">#F8F8F8</color>
     <color name="btn_side_gray">#E8ECED</color>
     <color name="btn_solder_yellow">#FDF5D7</color>
+    <color name="btn_dark_green">#1CBCA0</color>
+    <color name="btn_simple_gray">#F0F0F0</color>
 
     <color name="progress_background">#DFDFDF</color>
 

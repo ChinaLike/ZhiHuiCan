@@ -11,6 +11,6 @@
         android:lines="1"
         style="?android:attr/borderlessButtonStyle"
         android:textColor="@color/text_color_person"
-        android:background="@drawable/button_gray" />
+        android:background="@drawable/selector_shape_button_gray" />
 
 </LinearLayout>

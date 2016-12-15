@@ -5,7 +5,7 @@
     <solid android:color="#FAFAFA" />
     <!-- 边框的颜色 ：不能和窗口背景色一样-->
     <stroke
-        android:width="0.8dp"
+        android:width="@dimen/stroke"
         android:color="#EEEEEE" />
 
 </shape>

@@ -53,7 +53,9 @@
 
 
     <!--圆角-->
-    <dimen name="corners">4dp</dimen>
+    <dimen name="corners">5dp</dimen>
+
+    <dimen name="stroke">1dp</dimen>
 
 
 </resources>

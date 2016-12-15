@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/button_order" />
+                android:src="@drawable/selector_button_order" />
 
             <TextView
                 android:id="@+id/main_order_text"
@@ -30,7 +30,7 @@
                 android:layout_below="@id/main_order_img"
                 android:layout_centerHorizontal="true"
                 android:text="点菜"
-                android:textColor="@drawable/text_order" />
+                android:textColor="@drawable/selector_text_order" />
 
         </RelativeLayout>
 
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/button_service" />
+                android:src="@drawable/selector_button_service" />
 
             <TextView
                 android:id="@+id/main_service_text"
@@ -55,7 +55,7 @@
                 android:layout_below="@id/main_service_img"
                 android:layout_centerHorizontal="true"
                 android:text="服务"
-                android:textColor="@drawable/text_order" />
+                android:textColor="@drawable/selector_text_order" />
 
         </RelativeLayout>
 
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/button_pay" />
+                android:src="@drawable/selector_button_pay" />
 
             <TextView
                 android:id="@+id/main_settle_accounts_text"
@@ -80,7 +80,7 @@
                 android:layout_below="@id/main_settle_accounts_img"
                 android:layout_centerHorizontal="true"
                 android:text="结账"
-                android:textColor="@drawable/text_order" />
+                android:textColor="@drawable/selector_text_order" />
 
         </RelativeLayout>
 

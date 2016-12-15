@@ -40,7 +40,7 @@
             android:layout_marginLeft="@dimen/margin_right"
             android:layout_marginRight="@dimen/margin_right"
             style="?android:attr/borderlessButtonStyle"
-            android:background="@drawable/button_full_yellow_login"
+            android:background="@drawable/shape_button_full_yellow_login"
             android:text="@string/one_order"
             android:textColor="@color/button_text"
             android:textSize="@dimen/button_size" />
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             style="?android:attr/borderlessButtonStyle"
-            android:background="@drawable/button_full_yellow_login"
+            android:background="@drawable/shape_button_full_yellow_login"
             android:text="@string/more_order"
             android:textColor="@color/button_text"
             android:textSize="@dimen/button_size"

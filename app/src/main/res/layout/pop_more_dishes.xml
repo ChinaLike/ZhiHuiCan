@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/pop_bg"
+    android:background="@drawable/shape_pop_bg"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:background="@drawable/pop_bg_gray"
+        android:background="@drawable/shape_pop_bg_gray"
         android:padding="10dp"
         android:orientation="horizontal">
 
@@ -51,7 +51,7 @@
             android:textColor="@color/white"
             style="?android:attr/borderlessButtonStyle"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/button_pop_gray"
+            android:background="@drawable/shape_button_pop_gray"
             android:layout_height="wrap_content" />
 
         <Button
@@ -62,7 +62,7 @@
             android:textColor="@color/white"
             android:layout_marginLeft="20dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/button_orange"
+            android:background="@drawable/shape_button_orange"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
