@@ -274,7 +274,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
             if (isShow == 0) {
                 mMainFragment.showOrderType();
             } else {
-                mMainFragment.getData(BaseFragment.ALONE_ORDER);
+                mMainFragment.getData(BaseFragment.orderType);
             }
         }
     }

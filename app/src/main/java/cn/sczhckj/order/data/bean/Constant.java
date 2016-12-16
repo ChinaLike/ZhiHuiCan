@@ -101,4 +101,8 @@ public class Constant {
     public final static int FOOD_DISASTRICT=0;//不限制数量
     public final static int FOOD_ASTRICT=1;//限制数量，数量为给定大小，此处不一定为1
 
+    /**必选菜品 字段required*/
+    public final static int REQUIRED=1;//必选
+    public final static int DIS_REQUIRED=0;//可以不用必选
+
 }

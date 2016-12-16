@@ -31,6 +31,8 @@ public class MyDialog extends Dialog {
     Button dialogRight;
     @Bind(R.id.dialog_title)
     TextView dialogTitle;
+    @Bind(R.id.left_parent)
+    RelativeLayout leftParent;
     @Bind(R.id.right_parent)
     RelativeLayout rightParent;
     @Bind(R.id.dialog_progress)
@@ -101,11 +103,11 @@ public class MyDialog extends Dialog {
      * @param onClickListener
      */
     public void setAloneButton(String title, View.OnClickListener onClickListener) {
-        rightParent.setVisibility(View.GONE);
+        leftParent.setVisibility(View.GONE);
         if (title != null) {
-            dialogLeft.setText(title);
+            dialogRight.setText(title);
         }
-        dialogLeft.setOnClickListener(onClickListener);
+        dialogRight.setOnClickListener(onClickListener);
     }
 
     @Override

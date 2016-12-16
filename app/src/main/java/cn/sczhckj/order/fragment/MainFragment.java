@@ -1,5 +1,6 @@
 package cn.sczhckj.order.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -217,12 +218,14 @@ public class MainFragment extends BaseFragment {
                 EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_SETTLE_ACCOUNTS));
                 break;
             case R.id.main_alone_order:
-                orderType=ALONE_ORDER;
-                getData(ALONE_ORDER);
+                /**单桌点菜*/
+                orderType= Constant.ORDER_TYPE_ALONE;
+                getData(orderType);
                 break;
             case R.id.main_merger_order:
-                orderType=MERGER_ORDER;
-                getData(MERGER_ORDER);
+                /**并卓点餐*/
+                orderType=Constant.ORDER_TYPE_MERGE;
+                getData(orderType);
                 break;
         }
 

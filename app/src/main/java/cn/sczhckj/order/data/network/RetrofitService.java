@@ -13,6 +13,7 @@ import cn.sczhckj.order.data.bean.GrouponBean;
 import cn.sczhckj.order.data.bean.OpenInfoBean;
 import cn.sczhckj.order.data.bean.QRCodeBean;
 import cn.sczhckj.order.data.bean.SettleAccountsBean;
+import cn.sczhckj.order.data.bean.TableInfoBean;
 import cn.sczhckj.order.data.bean.UserLoginBean;
 import cn.sczhckj.order.data.bean.VersionBean;
 import retrofit2.Call;
@@ -28,10 +29,15 @@ import retrofit2.http.POST;
 
 public interface RetrofitService {
 
-    /**必选界面*/
+    /**开桌信息*/
     @FormUrlEncoded
     @POST("rest/table/openInfo")
     Call<Bean<OpenInfoBean>> openInfo(@Field("p") String p);
+
+    /**获取台桌信息*/
+    @FormUrlEncoded
+    @POST("rest/table/info")
+    Call<Bean<TableInfoBean>> tableInfo(@Field("p") String p);
 
     /**菜品分类*/
     @FormUrlEncoded
@@ -47,6 +53,7 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("rest/order/order")
     Call<Bean<CommonBean>> order(@Field("p") String p);
+
 
 
     /**版本管理信息*/

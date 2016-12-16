@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.CartBean;
+import cn.sczhckj.order.data.bean.CateBean;
 import cn.sczhckj.order.data.bean.CommonBean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FoodBean;
@@ -407,9 +409,47 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
             cart.setCateId(bean.getCateId());
             cart.setNumber(bean.getNumber());
             cart.setPrice(getPrice(bean));
+            cartList.add(cart);
         }
         return cartList;
     }
+
+    /**
+     * 必选菜品验证
+     */
+    private CateBean.CateItemBean requiredVerify() {
+        Map<Integer, Integer> map = getCateItemNumber();
+        CateBean.CateItemBean curr = null;
+        for (CateBean.CateItemBean bean : cateList) {
+            if (bean.getRequired() == Constant.REQUIRED) {
+                if (map.containsKey(bean.getId())) {
+                    curr = null;
+                } else {
+                    curr = bean;
+                    return curr;
+                }
+            }
+        }
+        return curr;
+    }
+
+    /**
+     * 获取分类下的个数和
+     */
+    private Map<Integer, Integer> getCateItemNumber() {
+        /**有分类ID作为Key，个数作为value*/
+        Map<Integer, Integer> mapNumber = new HashMap<>();
+        for (CartBean item : infoSwitch()) {
+            if (mapNumber.containsKey(item.getCateId())) {
+                Integer number = mapNumber.get(item.getCateId()) + item.getNumber();
+                mapNumber.put(item.getCateId(), number);
+            } else {
+                mapNumber.put(item.getCateId(), item.getNumber());
+            }
+        }
+        return mapNumber;
+    }
+
 
     /**
      * 信息验证
@@ -426,7 +466,7 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
                 .setRightButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        password=mDialog.editTextDialog().getEditText().toString();
+                        password = mDialog.editTextDialog().getEditText().toString();
                         openTable(password);
                         mDialog.editTextDialog().dismiss();
                     }
@@ -435,8 +475,7 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
 
     @Override
     public void totalNumber(int totalPrice, int potNumber, int dishesNumber) {
-        /**设置本次锅底数量*/
-        totalPotNumber = potNumber;
+
         shoppingcartTotalPrice.setText("" + totalPrice);
         shoppingcartPartNumber.setText(potNumber + "");
         shoppingcartDishesNumber.setText(dishesNumber + "");
@@ -452,14 +491,14 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
         Bean<CommonBean> bean = response.body();
         if (bean != null) {
-            if (bean.getCode()==ResponseCode.SUCCESS) {
+            if (bean.getCode() == ResponseCode.SUCCESS) {
                 /**关闭进度框*/
                 dismissProgress();
                 onButtonClickListener.onClick(Constant.ORDER, bean.getResult().getShowType());
                 cartToOrder();
                 mOrderAdapter.notifyDataSetChanged(orderList);
-            }else {
-                commit(""+bean.getMessage());
+            } else {
+                commit("" + bean.getMessage());
             }
         } else {
             commit("提交失败，点击重新提交");
@@ -474,9 +513,10 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
 
     /**
      * 提交失败，重新提交
+     *
      * @param title
      */
-    private void commit(String title){
+    private void commit(String title) {
         loadingFail(title, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -488,11 +528,12 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     /**
      * 购物车中数据转化到已下单中
      */
-    private void cartToOrder(){
-        for (FoodBean bean:disOrderList) {
+    private void cartToOrder() {
+        for (FoodBean bean : disOrderList) {
             orderList.add(bean);
-            disOrderList.remove(bean);
         }
+        /**把购物车清空*/
+        disOrderList = new ArrayList<>();
         mDisOrderAdapter.notifyDataSetChanged(disOrderList);
         initCart(disOrderList);
     }
@@ -509,8 +550,15 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.shoppingcart_button:
-                /**信息验证*/
-                infoVerify();
+                /**数据提交前先进行信息验证*/
+                CateBean.CateItemBean bean=requiredVerify();
+                if (bean == null) {
+                    infoVerify();
+                } else {
+                    mDialog.aloneDialog(getString(R.string.dialog_title),
+                            "尊敬的顾客您好！\n【" + bean.getName() + "】为必选菜品，只有选择规定数量\n才能提交信息，还请谅解！",
+                            "继续点餐").show();
+                }
                 break;
             case R.id.cart_favorable:
                 /**更多优惠*/
@@ -520,11 +568,11 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
 
             case R.id.order_parent:
                 /**已经下单*/
-                setTitleStatus(cartOrderFlag, cartOrder,cartDisOrderFlag, disCartOrder);
+                setTitleStatus(cartOrderFlag, cartOrder, cartDisOrderFlag, disCartOrder);
                 break;
             case R.id.disOrder_parent:
                 /**还未下单，在购物车*/
-                setTitleStatus(cartDisOrderFlag, disCartOrder,cartOrderFlag, cartOrder);
+                setTitleStatus(cartDisOrderFlag, disCartOrder, cartOrderFlag, cartOrder);
                 break;
         }
     }
@@ -535,7 +583,7 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
      * @param imageView
      * @param recyclerView
      */
-    private void setTitleStatus(ImageView imageView, RecyclerView recyclerView,ImageView imageOteher,RecyclerView recyclerViewOther) {
+    private void setTitleStatus(ImageView imageView, RecyclerView recyclerView, ImageView imageOteher, RecyclerView recyclerViewOther) {
         if (imageView.isSelected()) {
             imageView.setSelected(false);
             recyclerView.setVisibility(View.VISIBLE);

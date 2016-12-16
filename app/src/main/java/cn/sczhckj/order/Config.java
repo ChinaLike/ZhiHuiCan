@@ -10,6 +10,6 @@ public class Config {
 
 //    public static String HOST="http://192.168.0.250:8080/xwechat/";
 
-    public static String HOST="http://192.168.0.250:8080/cn.sczhckj.pad.rest/";
+    public static String HOST="http://192.168.0.50:8080/pad/";
 
 }

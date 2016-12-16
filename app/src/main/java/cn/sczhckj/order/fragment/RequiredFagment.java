@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -105,6 +107,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
      */
     private FoodAdapter mFoodAdapter;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +151,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
         /**就餐人数选择*/
         personAdapter = new PersonAdapter(getContext(), null);
         personChoose.setLayoutManager(new LinearLayoutManager(getContext()));
-        personChoose.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.hint_color_dash), 5, 1, DEFAULT_PERSON));
+        personChoose.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.hint_color_dash), 5, 1, DEFAULT_PERSON));
         personChoose.setAdapter(personAdapter);
         personAdapter.setOnTableListenner(mOnTableListenner);
         /**菜品*/
@@ -215,11 +218,13 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
     private Callback<Bean<CateBean>> cateCallback = new Callback<Bean<CateBean>>() {
         @Override
         public void onResponse(Call<Bean<CateBean>> call, Response<Bean<CateBean>> response) {
+
             Bean<CateBean> bean = response.body();
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
                     mTabAdapter.setDefaultItem(bean.getResult().getDefaultCate() != null ? bean.getResult().getDefaultCate() : 0);
-                    mTabAdapter.notifyDataSetChanged(bean.getResult().getCates());
+                    cateList=bean.getResult().getCates();
+                    mTabAdapter.notifyDataSetChanged(cateList);
                 } else {
                     loadingFail(getContext().getResources().getString(R.string.loadingFail));
                 }
@@ -280,6 +285,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
 
     /**
      * 购物车数据变化后，通知菜品变化
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -366,6 +372,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
 
     /**
      * Tab导航栏Item点击
+     *
      * @param view
      * @param position
      * @param bean

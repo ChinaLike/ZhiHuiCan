@@ -26,6 +26,8 @@ import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.FoodAdapter;
+import cn.sczhckj.order.data.bean.CateBean;
+import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.listener.OnGiftListenner;
@@ -50,12 +52,9 @@ public abstract class BaseFragment extends Fragment {
     protected static OnGiftListenner onGiftListenner;
 
     /**
-     * 点餐类型 0-单桌点餐  1-并桌点餐
+     * 点餐方式，默认单桌点餐
      */
-    public static final int ALONE_ORDER = 0;
-    public static final int MERGER_ORDER = 1;
-
-    protected int orderType = ALONE_ORDER;
+    public static int orderType = Constant.ORDER_TYPE_ALONE;
 
     /**
      * 界面标识  0-锅底必选  1-点菜界面
@@ -85,12 +84,11 @@ public abstract class BaseFragment extends Fragment {
      * 二维码扫描
      */
     private Intent mQRCodeIntent;
-    /**
-     * 锅底数量
-     */
-    public static int totalPotNumber = 0;
 
-    protected static String openTablePassword="";
+    /**
+     * 分类集合
+     */
+    protected static List<CateBean.CateItemBean> cateList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +104,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (cateList == null) {
+            cateList = new ArrayList<>();
+        }
     }
 
     public abstract void setData(Object object);
@@ -200,12 +201,10 @@ public abstract class BaseFragment extends Fragment {
         MyApplication.isLogin = false;
         /**销毁时关闭服务*/
         EventBus.getDefault().post(new CloseServiceEvent());
-        /**把锅底数量职位初始值*/
-        totalPotNumber = 0;
-        /**初始密码*/
-        openTablePassword="";
         /**人数清零*/
-        MainActivity.personNumber=0;
+        MainActivity.personNumber = 0;
+        /**设置默认点餐为单桌点餐*/
+        orderType = Constant.ORDER_TYPE_ALONE;
     }
 
     @Override

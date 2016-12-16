@@ -78,13 +78,14 @@
         android:padding="20dp">
 
         <RelativeLayout
+            android:id="@+id/left_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
 
             <Button
-                android:id="@+id/dialog_right"
+                android:id="@+id/dialog_left"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,7 +106,7 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/dialog_left"
+                android:id="@+id/dialog_right"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

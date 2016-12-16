@@ -2,6 +2,7 @@ package cn.sczhckj.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -27,11 +28,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.CatesAdapter;
+import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.adapter.TabAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.CateBean;
 import cn.sczhckj.order.data.bean.ClassifyBean;
 import cn.sczhckj.order.data.bean.ClassifyItemBean;
+import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
@@ -82,9 +85,19 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     LinearLayout loadingParent;
 
     /**
-     * 分类适配器
+     * 一级分类分类适配器
      */
     private CatesAdapter mCatesAdapter;
+    /**
+     * 导航栏适配器
+     */
+    private TabAdapter mTabAdapter;
+    /**
+     * 初始化菜品适配器
+     */
+    private FoodAdapter mFoodAdapter;
+
+
     /**
      * 默认显示第几个
      */
@@ -105,10 +118,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
      */
     private List<CateBean.CateItemBean> tabList = new ArrayList<>();
 
-    /**
-     * 导航栏适配器
-     */
-    private TabAdapter mTabAdapter;
+
     /**
      * 点菜桌选择类型，0-主桌
      */
@@ -168,8 +178,10 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initRect();
-        init();
+        initLoading(true);
+
+//        initRect();
+//        init();
     }
 
     @Override
@@ -177,10 +189,81 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    /**
+     * 初始化进度加载框
+     *
+     * @param isShow 是否显示
+     */
+    private void initLoading(boolean isShow) {
+        if (isShow) {
+            loadingParent.setVisibility(View.VISIBLE);
+            contextParent.setVisibility(View.GONE);
+        } else {
+            loadingParent.setVisibility(View.GONE);
+            contextParent.setVisibility(View.VISIBLE);
+        }
     }
+
+    /**
+     * 初始化分类适配器
+     */
+    private void initCateAdapter() {
+        mCatesAdapter = new CatesAdapter(getContext(), null, defaultItem);
+        /**添加Item点击监听*/
+        mCatesAdapter.addOnItemClickListener(this);
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        dishesClassify.setLayoutManager(mLinearLayoutManager);
+        dishesClassify.setAdapter(mCatesAdapter);
+        dishesClassify.addItemDecoration(
+                new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.line_s), 5, 1));
+    }
+
+    /**
+     * 初始化头部Tab适配器
+     */
+    private void initTabAdapter() {
+        mTabAdapter = new TabAdapter(getContext(), null);
+        LinearLayoutManager mLayoutManager =
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        dishesTab.setLayoutManager(mLayoutManager);
+        dishesTab.setAdapter(mTabAdapter);
+    }
+
+    /**
+     * 初始化菜品适配器
+     */
+    private void initFoodAdapter() {
+        mFoodAdapter = new FoodAdapter(getContext(), null);
+        dishesShow.setLayoutManager(new LinearLayoutManager(getContext()));
+        dishesShow.setAdapter(mFoodAdapter);
+        dishesShow.addItemDecoration(
+                new DashlineItemDivider(ContextCompat.getColor(getContext(),R.color.line_s), 100000, 1));
+    }
+
+    /**
+     * 初始化分类数据
+     */
+    private void initCate(){
+        RequestCommonBean bean=new RequestCommonBean();
+    }
+
+    /**
+     * 初始化导航栏数据
+     */
+    private void initTab(){
+        RequestCommonBean bean=new RequestCommonBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setOrderType(RequiredFagment.orderType);
+
+    }
+
+    /**
+     * 初始化菜品数据
+     */
+    private void initFood(){
+        RequestCommonBean bean=new RequestCommonBean();
+    }
+
 
     /**
      * 初始化Pop的位置
@@ -194,11 +277,15 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
 
     @Override
     public void init() {
-        parentDishesList = null;
-        initDishesAdapter(dishesShow);
+        initCateAdapter();
         initTabAdapter();
-        /**初始化PopWindow*/
-        initPop();
+        initFoodAdapter();
+
+//        parentDishesList = null;
+//        initDishesAdapter(dishesShow);
+//        initTabAdapter();
+//        /**初始化PopWindow*/
+//        initPop();
     }
 
     /**
@@ -373,10 +460,10 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
         if (tabList == null || tabList.size() == 0 || !isMainTable) {
             dishesTab.setVisibility(View.GONE);
             tabText.setVisibility(View.VISIBLE);
-            if (orderType == ALONE_ORDER) {
+            if (orderType == Constant.ORDER_TYPE_ALONE) {
                 tabOrderType = 0;
                 tabText.setText(getResources().getString(R.string.one_order));
-            } else {
+            } else if (orderType == Constant.ORDER_TYPE_MERGE) {
                 tabOrderType = 1;
                 tabText.setText(getResources().getString(R.string.more_order));
             }
@@ -429,16 +516,6 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
                 }
             }
         }
-    }
-
-    /**
-     * 初始化头部导航栏适配器
-     */
-    private void initTabAdapter() {
-        mTabAdapter = new TabAdapter(getContext(), tabList);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        dishesTab.setLayoutManager(mLayoutManager);
-        dishesTab.setAdapter(mTabAdapter);
     }
 
     /**
