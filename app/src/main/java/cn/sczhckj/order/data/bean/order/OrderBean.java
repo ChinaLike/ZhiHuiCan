@@ -1,16 +1,16 @@
-package cn.sczhckj.order.data.bean;
+package cn.sczhckj.order.data.bean.order;
 
 /**
- * @describe: 购物车数据菜品
- * @author: Like on 2016/12/14.
- * @Email: 572919350@qq.com
+ * @ describe: 点餐下单
+ * @ author: Like on 2016/12/16.
+ * @ email: 572919350@qq.com
  */
 
-public class CartBean {
-    private Integer id;
-    private Integer cateId;
-    private Integer number;
-    private Double price;
+public class OrderBean {
+    private Integer id;//菜品ID
+    private Integer cateId;//分类ID
+    private Integer count;//数量
+    private Integer price;//价格
 
     public Integer getId() {
         return id;
@@ -28,19 +28,19 @@ public class CartBean {
         this.cateId = cateId;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getCount() {
+        return count;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
-    public Double getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -49,7 +49,7 @@ public class CartBean {
         return "{" +
                 "id=" + id +
                 ", cateId=" + cateId +
-                ", number=" + number +
+                ", count=" + count +
                 ", price=" + price +
                 '}';
     }

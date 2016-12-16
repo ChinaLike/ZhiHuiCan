@@ -11,8 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.PriceBean;
-import cn.sczhckj.order.data.bean.PriceTypeBean;
+import cn.sczhckj.order.data.bean.food.PriceBean;
 import cn.sczhckj.order.overwrite.TextViewBorder;
 import cn.sczhckj.order.until.ColorUntils;
 

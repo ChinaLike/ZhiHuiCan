@@ -1,4 +1,4 @@
-package cn.sczhckj.order.data.bean;
+package cn.sczhckj.order.data.bean.table;
 
 import java.util.List;
 

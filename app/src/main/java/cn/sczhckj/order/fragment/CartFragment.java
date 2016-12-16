@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +32,12 @@ import cn.sczhckj.order.activity.FavorableActivity;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CartBean;
-import cn.sczhckj.order.data.bean.CateBean;
-import cn.sczhckj.order.data.bean.CommonBean;
+import cn.sczhckj.order.data.bean.food.CartBean;
+import cn.sczhckj.order.data.bean.food.CateBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.FoodBean;
-import cn.sczhckj.order.data.bean.PriceBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.bean.food.PriceBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
@@ -61,7 +60,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class CartFragment extends BaseFragment implements OnTotalNumberListener, Callback<Bean<CommonBean>> {
+public class CartFragment extends BaseFragment implements OnTotalNumberListener, Callback<Bean<ResponseCommonBean>> {
 
 
     @Bind(R.id.nothing)
@@ -281,10 +280,10 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
             for (FoodBean item : disOrderList) {
                 /**只有ID和分类ID对应一样才是同一个菜品*/
                 if ((item.getId().equals(bean.getId())) && (item.getCateId().equals(bean.getCateId()))) {
-                    item.setNumber(bean.getNumber());
+                    item.setCount(bean.getCount());
                     isAdd = true;
                 }
-                if (item.getNumber() == 0) {
+                if (item.getCount() == 0) {
                     disOrderList.remove(item);
                 }
             }
@@ -308,10 +307,10 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
         Double price = 0.0;
         Double favorPrice = 0.0;
         for (FoodBean bean : beenList) {
-            number = number + bean.getNumber();
+            number = number + bean.getCount();
             Double currPrice = getPrice(bean);
-            price = price + currPrice * bean.getNumber();
-            favorPrice = favorPrice + (bean.getPrice() - currPrice) * bean.getNumber();
+            price = price + currPrice * bean.getCount();
+            favorPrice = favorPrice + (bean.getPrice() - currPrice) * bean.getCount();
         }
         numberView.setText(number + "");
         priceView.setText(price + "");
@@ -349,9 +348,9 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
             FoodBean bean = beenList.get(i);
             if (localMap.containsKey(id)) {
                 int postion = disOrderList.indexOf(localMap.get(id));
-                int number = disOrderList.get(postion).getNumber() + bean.getNumber();
-                disOrderList.get(postion).setNumber(number);
-                bean.setNumber(number);
+                int number = disOrderList.get(postion).getCount() + bean.getCount();
+                disOrderList.get(postion).setCount(number);
+                bean.setCount(number);
             } else {
                 disOrderList.add(bean);
             }
@@ -407,7 +406,7 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
             CartBean cart = new CartBean();
             cart.setId(bean.getId());
             cart.setCateId(bean.getCateId());
-            cart.setNumber(bean.getNumber());
+            cart.setNumber(bean.getCount());
             cart.setPrice(getPrice(bean));
             cartList.add(cart);
         }
@@ -488,8 +487,8 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     }
 
     @Override
-    public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
-        Bean<CommonBean> bean = response.body();
+    public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+        Bean<ResponseCommonBean> bean = response.body();
         if (bean != null) {
             if (bean.getCode() == ResponseCode.SUCCESS) {
                 /**关闭进度框*/
@@ -507,7 +506,7 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     }
 
     @Override
-    public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
+    public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
         commit("提交失败，点击重新提交");
     }
 

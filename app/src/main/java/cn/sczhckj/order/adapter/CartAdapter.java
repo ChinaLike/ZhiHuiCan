@@ -16,8 +16,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.FoodBean;
-import cn.sczhckj.order.data.bean.PriceBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.bean.food.PriceBean;
 import cn.sczhckj.order.data.bean.PriceTypeBean;
 import cn.sczhckj.order.data.listener.OnTotalNumberListener;
 import cn.sczhckj.order.image.GlideLoading;
@@ -53,11 +53,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
         /**设置菜品名字*/
         holder.cartDishesName.setText(bean.getName());
         /**设置菜品数量*/
-        holder.cartDishesNumber.setText("×" + bean.getNumber());
+        holder.cartDishesNumber.setText("×" + bean.getCount());
         /**设置菜品价格*/
         holder.cartDishesPrice.setText("" + bean.getPrice());
         /**设置价格，以及优惠图标*/
-        holder.cartDishesTotalPrice.setText(bean.getNumber() * bean.getPrice() + "");
+        holder.cartDishesTotalPrice.setText(bean.getCount() * bean.getPrice() + "");
         setPrice(holder.cartFavorableIamge, holder.cartDishesPrice, holder.cartDishesTotalPrice, bean);
         /**设置已完成数量*/
         setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund,bean);
@@ -67,7 +67,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
 //            holder.cartFavorablePrice.setText("¥" + bean.getPrice());
 //            countFavorable(bean.getPriceType(), holder.cartPrice, holder.cartFavorable);
 //        }
-//        bean.setTotalPrice(countPrice(bean.getNumber(), holder.cartPrice));
+//        bean.setTotalPrice(countPrice(bean.getCount(), holder.cartPrice));
 //        holder.cartTotalPrice.setText("¥" + bean.getTotalPrice());
 //        /**加菜*/
 //        holder.cartAdd.setOnClickListener(new View.OnClickListener() {
@@ -75,9 +75,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
 //            public void onClick(View v) {
 //                /**首先判断权限*/
 //                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-//                    int number = bean.getNumber();
+//                    int number = bean.getCount();
 //                    number++;
-//                    bean.setNumber(number);
+//                    bean.setCount(number);
 //                    notifyDataSetChanged();
 //                    EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 0, bean));
 //                    countTotal();
@@ -90,10 +90,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
 //            public void onClick(View v) {
 //                /**首先判断权限*/
 //                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-//                    int number = bean.getNumber();
+//                    int number = bean.getCount();
 //                    if (number > 0) {
 //                        number--;
-//                        bean.setNumber(number);
+//                        bean.setCount(number);
 //                        if (number == 0) {
 //                            mList.remove(bean);
 //                        }
@@ -130,7 +130,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
             for (PriceBean item : bean.getPrices()) {
                 if (item.getActive() == Constant.PRICE_ACTIVE) {
                     price.setText(item.getPrice() + "");
-                    totalPrice.setText(bean.getNumber() * item.getPrice() + "");
+                    totalPrice.setText(bean.getCount() * item.getPrice() + "");
                     GlideLoading.loadingDishes(mContext, item.getImageUrl(), imageView);
                 }
             }
@@ -146,20 +146,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
     private void setFinishFood(LinearLayout layout, ImageView retIm,FoodBean bean) {
         layout.removeAllViews();
         List<ImageView> mList=new ArrayList<>();
-        for (int i = 0; i < bean.getNumber(); i++) {
+        for (int i = 0; i < bean.getCount(); i++) {
             ImageView imageView = new ImageView(mContext);
             imageView.setImageResource(R.drawable.selector_cart_food_finish);
             imageView.setPadding(0,0,5,0);
             layout.addView(imageView);
             mList.add(imageView);
         }
-        if (bean.getFinishFood() != null && bean.getFinishFood() != 0) {
-            for (int i = 0; i < bean.getFinishFood(); i++) {
+        if (bean.getFinishCount() != null && bean.getFinishCount() != 0) {
+            for (int i = 0; i < bean.getFinishCount(); i++) {
                 mList.get(i).setSelected(true);
             }
         }
         /**设置可退图标*/
-        if (bean.getNumber()==bean.getFinishFood()){
+        if (bean.getCount()==bean.getFinishCount()){
             retIm.setImageResource(R.drawable.order_btn_foodback_dis);
         }else {
             retIm.setImageResource(R.drawable.order_btn_foodback_nor);
@@ -179,14 +179,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
 //        for (int i = 0; i < mList.size(); i++) {
 //            FoodBean bean = mList.get(i);
 //            if (bean.getType() == 0) {
-//                potNumber = potNumber + bean.getNumber();
+//                potNumber = potNumber + bean.getCount();
 //            } else {
-//                dishesNumber = dishesNumber + bean.getNumber();
+//                dishesNumber = dishesNumber + bean.getCount();
 //            }
 //            if (bean.getPriceType() != null && bean.getPriceType().size() != 0) {
-//                totalPrice = totalPrice + bean.getNumber() * getFavortablePrice(bean.getPriceType());
+//                totalPrice = totalPrice + bean.getCount() * getFavortablePrice(bean.getPriceType());
 //            } else {
-//                totalPrice = totalPrice + bean.getNumber() * bean.getPrice();
+//                totalPrice = totalPrice + bean.getCount() * bean.getPrice();
 //            }
 //        }
 //        onTotalNumberListener.totalNumber(totalPrice, potNumber, dishesNumber);

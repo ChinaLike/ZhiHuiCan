@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
@@ -34,7 +34,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ServiceFragment extends BaseFragment implements Callback<Bean<CommonBean>> {
+public class ServiceFragment extends BaseFragment implements Callback<Bean<ResponseCommonBean>> {
 
     @Bind(R.id.service_title)
     TextView serviceTitle;
@@ -109,13 +109,13 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<Commo
                 .time()
                 .bean(bean);
 
-        Call<Bean<CommonBean>> call = RetrofitRequest.service().service(restRequest.toRequestString());
+        Call<Bean<ResponseCommonBean>> call = RetrofitRequest.service().service(restRequest.toRequestString());
         call.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
-        Bean<CommonBean> bean = response.body();
+    public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+        Bean<ResponseCommonBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             if (servicePhone.isSelected()){
                 serviceTitle.setText(bean.getMessage());
@@ -124,7 +124,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<Commo
     }
 
     @Override
-    public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
+    public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
 
     }
 

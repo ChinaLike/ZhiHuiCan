@@ -1,6 +1,6 @@
 package cn.sczhckj.order.data.event;
 
-import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 
 /**
  * @describe: 购物车数量变化事件

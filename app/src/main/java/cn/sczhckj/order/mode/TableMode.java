@@ -2,9 +2,9 @@ package cn.sczhckj.order.mode;
 
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.OP;
-import cn.sczhckj.order.data.bean.OpenInfoBean;
+import cn.sczhckj.order.data.bean.table.OpenInfoBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.bean.TableInfoBean;
+import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -39,12 +39,12 @@ public class TableMode {
      * @param bean
      * @param callback
      */
-    public void info(RequestCommonBean bean, Callback<Bean<TableInfoBean>> callback){
+    public void info(RequestCommonBean bean, Callback<Bean<InfoBean>> callback){
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.TABLE_INFO)
                 .time()
                 .bean(bean);
-        Call<Bean<TableInfoBean>> info=RetrofitRequest.service().tableInfo(restRequest.toRequestString());
+        Call<Bean<InfoBean>> info=RetrofitRequest.service().tableInfo(restRequest.toRequestString());
         info.enqueue(callback);
     }
 

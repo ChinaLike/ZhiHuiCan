@@ -9,6 +9,27 @@ package cn.sczhckj.order.data.bean;
 public interface OP {
 
     /**
+     * 卡号登录
+     */
+    String USER_LOGIN = "login";
+
+    /**
+     * 发送短信验证码
+     */
+    String USER_SMS = "sms";
+
+    /**
+     * 快捷登录
+     */
+    String USER_SMSLOGIN = "smsLogin";
+
+    /**
+     * 获取会员信息
+     */
+    String USER_INFO = "info";
+
+
+    /**
      * 开桌数据信息
      */
     String TABLE_OPEN_INFO = "openInfo";
@@ -49,7 +70,6 @@ public interface OP {
     String ORDER_ORDER = "order";
 
 
-
     /**
      * 版本
      */
@@ -69,7 +89,6 @@ public interface OP {
      * 办理VIP
      */
     String APPLY_FOR_VIP = "applyForVip";
-
 
 
     /**

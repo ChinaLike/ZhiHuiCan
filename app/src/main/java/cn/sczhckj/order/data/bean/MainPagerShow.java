@@ -3,6 +3,8 @@ package cn.sczhckj.order.data.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import cn.sczhckj.order.data.bean.food.FoodBean;
+
 /**
  * @describe: 主页数据显示
  * @author: Like on 2016/11/8.

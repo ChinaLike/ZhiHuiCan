@@ -1,4 +1,4 @@
-package cn.sczhckj.order.data.bean;
+package cn.sczhckj.order.data.bean.food;
 
 /**
  * @describe: 价格策略属性，即优惠类型等
@@ -10,12 +10,13 @@ public class PriceBean {
 
     private Integer id;//价格ID
     private Double price;//价格
-    private Integer type;//价格类型
+    private Integer type;//价格类型，会员价、VIP价格
+    private String memeberType;//会员类型
     private String title;//价格名称
     private String color;//颜色配置
     private Integer imageId;//图片ID，Android端不用
     private String imageUrl;//图片URL
-    private Integer active;//是否使用该价格 0-不是 1-是
+    private Integer isActive;//是否使用该价格 0-不是 1-是
 
     public Integer getId() {
         return id;
@@ -74,24 +75,26 @@ public class PriceBean {
     }
 
     public Integer getActive() {
-        return active;
+        return isActive;
     }
 
-    public void setActive(Integer active) {
-        this.active = active;
+    public void setActive(Integer isActive) {
+        this.isActive = isActive;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", price=" + price +
-                ", type=" + type +
-                ", title='" + title + '\'' +
-                ", color='" + color + '\'' +
-                ", imageId=" + imageId +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", active=" + active +
-                '}';
+    public String getMemeberType() {
+        return memeberType;
+    }
+
+    public void setMemeberType(String memeberType) {
+        this.memeberType = memeberType;
+    }
+
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
     }
 }

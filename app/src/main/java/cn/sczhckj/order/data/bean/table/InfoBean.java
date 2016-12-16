@@ -1,4 +1,4 @@
-package cn.sczhckj.order.data.bean;
+package cn.sczhckj.order.data.bean.table;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * @Email: 572919350@qq.com
  */
 
-public class TableInfoBean {
+public class InfoBean {
     private Integer tableType;//台桌类型，0-单独点餐，1-主桌，2-辅桌
     private List<Tables> tables;
 

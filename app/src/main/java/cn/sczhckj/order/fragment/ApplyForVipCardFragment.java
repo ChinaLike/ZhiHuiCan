@@ -20,7 +20,7 @@ import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ApplyForVipCardAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.VipFavorableBean;
@@ -38,7 +38,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ApplyForVipCardFragment extends BaseFragment implements Callback<Bean<CommonBean>> {
+public class ApplyForVipCardFragment extends BaseFragment implements Callback<Bean<ResponseCommonBean>> {
 
 
     @Bind(R.id.apply_for_vip_card_name_input)
@@ -139,13 +139,13 @@ public class ApplyForVipCardFragment extends BaseFragment implements Callback<Be
                 .op(OP.APPLY_FOR_VIP)
                 .time()
                 .bean(bean);
-        Call<Bean<CommonBean>> applyCall = RetrofitRequest.service().applyForVip(restRequest.toRequestString());
+        Call<Bean<ResponseCommonBean>> applyCall = RetrofitRequest.service().applyForVip(restRequest.toRequestString());
         applyCall.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
-        Bean<CommonBean> bean = response.body();
+    public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+        Bean<ResponseCommonBean> bean = response.body();
         Toast.makeText(getContext(), bean.getMessage(), Toast.LENGTH_SHORT).show();
         if (bean.getCode() == 0) {
             EventBus.getDefault().post(new ApplyForVipCardEvent(ApplyForVipCardEvent.CLOSE));
@@ -153,7 +153,7 @@ public class ApplyForVipCardFragment extends BaseFragment implements Callback<Be
     }
 
     @Override
-    public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
+    public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
         Toast.makeText(getContext(), getResources().getString(R.string.overTime), Toast.LENGTH_SHORT).show();
     }
 }

@@ -31,11 +31,11 @@ import cn.sczhckj.order.adapter.CatesAdapter;
 import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.adapter.TabAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CateBean;
+import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.ClassifyBean;
 import cn.sczhckj.order.data.bean.ClassifyItemBean;
 import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CartNumberEvent;
@@ -511,7 +511,7 @@ public class OrderFragment extends BaseFragment implements Callback<Bean<Classif
             String dishesName = bean.getName();
             for (FoodBean item : parentDishesList) {
                 if (item.getId().equals(id) && item.getName().equals(dishesName)) {
-                    item.setNumber(bean.getNumber());
+                    item.setCount(bean.getCount());
                     mFoodAdapter.notifyDataSetChanged();
                 }
             }

@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
@@ -31,13 +31,13 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class QRCodeService extends Service implements Callback<Bean<CommonBean>> {
+public class QRCodeService extends Service implements Callback<Bean<ResponseCommonBean>> {
     /**
      * 设备ID
      */
     private String deviceID = BaseFragment.deviceId;
 
-    private Call<Bean<CommonBean>> call;
+    private Call<Bean<ResponseCommonBean>> call;
 
     private Handler mHandler;
 
@@ -87,8 +87,8 @@ public class QRCodeService extends Service implements Callback<Bean<CommonBean>>
     }
 
     @Override
-    public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
-        Bean<CommonBean> bean = response.body();
+    public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+        Bean<ResponseCommonBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             EventBus.getDefault().post(new QRCodeVerifyEvent(bean.getCode(), bean.getMessage() + ""));
             call.cancel();
@@ -99,7 +99,7 @@ public class QRCodeService extends Service implements Callback<Bean<CommonBean>>
     }
 
     @Override
-    public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
+    public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
         delay();
     }
 

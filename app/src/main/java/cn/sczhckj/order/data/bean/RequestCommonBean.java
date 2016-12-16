@@ -2,6 +2,9 @@ package cn.sczhckj.order.data.bean;
 
 import java.util.List;
 
+import cn.sczhckj.order.data.bean.food.CartBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
+
 /**
  * @describe: 数据请求通用的Bean
  * @author: Like on 2016/11/25.
@@ -10,12 +13,19 @@ import java.util.List;
 
 public class RequestCommonBean {
 
-    private String userId;//用户ID
-    private Integer orderType;//点菜类型
-    private String deviceId;//用于开桌设备ID
-    private Integer cateId;//菜品分类ID
+    private String memberCode;//卡号
     private String password;//密码
-    private List<CartBean> cart;//购物车数据
+    private String phone;//用户手机号
+    private String identity;//短信验证码
+    private String userId;//用户ID
+    private String deviceId;//用于开桌设备ID
+    private Integer personCount;//就餐人数
+    private List<CartBean> foods;//购物车数据
+    private Integer orderType;//点菜类型
+    private Integer number;//人数
+    private Integer cateId;//菜品分类ID
+    private Integer foodId;//菜品ID
+
 
     /**
      * 版本信息
@@ -28,7 +38,7 @@ public class RequestCommonBean {
      * 用户登录
      */
     private Integer loginType;//登录类型
-    private String phone;//用户手机号
+
 
     /**
      * 开桌获取数据
@@ -289,12 +299,12 @@ public class RequestCommonBean {
         this.cateId = cateId;
     }
 
-    public List<CartBean> getCart() {
-        return cart;
+    public List<CartBean> getFoods() {
+        return foods;
     }
 
     public void setCart(List<CartBean> cart) {
-        this.cart = cart;
+        this.foods = cart;
     }
 
     @Override

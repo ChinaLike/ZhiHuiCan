@@ -3,8 +3,8 @@ package cn.sczhckj.order.mode;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CateBean;
-import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.food.CateBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;

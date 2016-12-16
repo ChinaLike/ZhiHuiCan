@@ -1,4 +1,4 @@
-package cn.sczhckj.order.data.bean;
+package cn.sczhckj.order.data.bean.food;
 
 import java.util.List;
 
@@ -29,10 +29,11 @@ public class CateBean {
         this.cates = cates;
     }
 
-    public class CateItemBean{
+    public class    CateItemBean{
         private Integer id;//分类ID
         private String name;//分类名字
         private Integer required;//是否必选
+        private Integer maximum;//最大数量，0-不控制
         private Integer permiss;//权限，0-不可选，1-可选，required 为1 时，permiss参数必须为1
 
         public Integer getId() {
@@ -67,12 +68,21 @@ public class CateBean {
             this.permiss = permiss;
         }
 
+        public Integer getMaximum() {
+            return maximum;
+        }
+
+        public void setMaximum(Integer maximum) {
+            this.maximum = maximum;
+        }
+
         @Override
         public String toString() {
             return "{" +
                     "id=" + id +
                     ", name='" + name + '\'' +
                     ", required=" + required +
+                    ", maximum=" + maximum +
                     ", permiss=" + permiss +
                     '}';
         }

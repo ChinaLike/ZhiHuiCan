@@ -1,7 +1,7 @@
 package cn.sczhckj.order.mode;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
@@ -25,12 +25,12 @@ public class OrderMode {
      * @param bean     参数对象
      * @param callback 回调
      */
-    public void order(RequestCommonBean bean, Callback<Bean<CommonBean>> callback) {
+    public void order(RequestCommonBean bean, Callback<Bean<ResponseCommonBean>> callback) {
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.ORDER_ORDER)
                 .time()
                 .bean(bean);
-        Call<Bean<CommonBean>> commonCall = RetrofitRequest.service().order(restRequest.toRequestString());
+        Call<Bean<ResponseCommonBean>> commonCall = RetrofitRequest.service().order(restRequest.toRequestString());
         commonCall.enqueue(callback);
     }
 

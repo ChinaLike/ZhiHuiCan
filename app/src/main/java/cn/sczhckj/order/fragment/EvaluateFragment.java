@@ -24,7 +24,7 @@ import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.EvaluateHotWordAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.CommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.EvaluateBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
@@ -176,11 +176,11 @@ public class EvaluateFragment extends BaseFragment {
                 .time()
                 .bean(bean);
 
-        Call<Bean<CommonBean>> postEvaluateCall = RetrofitRequest.service().postEvaluate(restRequest.toRequestString());
-        postEvaluateCall.enqueue(new Callback<Bean<CommonBean>>() {
+        Call<Bean<ResponseCommonBean>> postEvaluateCall = RetrofitRequest.service().postEvaluate(restRequest.toRequestString());
+        postEvaluateCall.enqueue(new Callback<Bean<ResponseCommonBean>>() {
             @Override
-            public void onResponse(Call<Bean<CommonBean>> call, Response<Bean<CommonBean>> response) {
-                Bean<CommonBean> beanBean=response.body();
+            public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+                Bean<ResponseCommonBean> beanBean=response.body();
                 if (beanBean!=null&&beanBean.getCode()==ResponseCode.SUCCESS) {
                     Toast.makeText(getContext(), beanBean.getMessage(), Toast.LENGTH_SHORT).show();
                     /**成功评价后关闭*/
@@ -189,7 +189,7 @@ public class EvaluateFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<Bean<CommonBean>> call, Throwable t) {
+            public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
                 Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
             }
         });

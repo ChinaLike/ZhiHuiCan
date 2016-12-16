@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;

@@ -2,7 +2,7 @@ package cn.sczhckj.order.data.event;
 
 import java.util.List;
 
-import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 
 /**
  * @describe: 刷新购物车事件

@@ -15,9 +15,8 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.CateBean;
+import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
-import cn.sczhckj.order.fragment.OrderFragment;
 import cn.sczhckj.order.until.AppSystemUntil;
 
 /**

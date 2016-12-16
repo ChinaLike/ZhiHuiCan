@@ -1,4 +1,4 @@
-package cn.sczhckj.order.data.bean;
+package cn.sczhckj.order.data.bean.food;
 
 import java.util.List;
 
@@ -15,16 +15,19 @@ public class FoodBean {
     private String name;//菜品名称
     private Integer permiss;//选择权限，0-不可选，1-可选
     private Integer maximum;//最大可选数量，0-不控制
-    private Double price;//单价，基础价格
+    private Double price;//当前价格，无优惠价格时，等于 originPrice
+    private String priceImageUrl;//价格图标
+    private Double originPrice;//原始价格
     private Integer imageId;//缩略图ID，Android端不用
     private String imageUrl;//缩略图URL
     private Long sales;//销量数
     private Long favors;//点赞数
     private Integer stockout;//是否缺货，暂时保留
-    private Integer number;//默认数量
+    private Integer count;//下单数量
+    private Integer finishCount;//已上数量
     private List<PriceBean> prices;//价格策略
     private boolean isFavor;//是否点赞
-    private Integer finishFood;//完成菜品数量
+
 
     public Integer getId() {
         return id;
@@ -114,12 +117,12 @@ public class FoodBean {
         this.stockout = stockout;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getCount() {
+        return count;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public List<PriceBean> getPrices() {
@@ -138,12 +141,12 @@ public class FoodBean {
         isFavor = favor;
     }
 
-    public Integer getFinishFood() {
-        return finishFood;
+    public Integer getFinishCount() {
+        return finishCount;
     }
 
-    public void setFinishFood(Integer finishFood) {
-        this.finishFood = finishFood;
+    public void setFinishCount(Integer finishCount) {
+        this.finishCount = finishCount;
     }
 
     @Override
@@ -160,10 +163,10 @@ public class FoodBean {
                 ", sales=" + sales +
                 ", favors=" + favors +
                 ", stockout=" + stockout +
-                ", number=" + number +
+                ", count=" + count +
                 ", prices=" + prices +
                 ", isFavor=" + isFavor +
-                ", finishFood=" + finishFood +
+                ", finishCount=" + finishCount +
                 '}';
     }
 }

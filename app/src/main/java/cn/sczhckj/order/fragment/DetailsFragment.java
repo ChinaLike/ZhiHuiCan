@@ -2,7 +2,6 @@ package cn.sczhckj.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,7 @@ import cn.sczhckj.order.adapter.PriceAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.DetailsBean;
-import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.PriceTypeBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
@@ -117,7 +116,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
         detailsPrice.setText("¥  " + bean.getPrice());
         dishesSales.setText("月销量  " + bean.getSales());
         dishesLike.setText("  " + bean.getFavors());
-        detailsDishesNumber.setText(bean.getNumber() + "");
+        detailsDishesNumber.setText(bean.getCount() + "");
         /**判断权限是否可以点餐*/
         if (bean.getPermiss() == Constant.PREMISS_AGREE) {
             detailsAdd.setClickable(true);
@@ -186,7 +185,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
 
     @OnClick({R.id.details_add, R.id.details_dishes_minus, R.id.details_dishes_add, R.id.details_back})
     public void onClick(View view) {
-        int number = foodBean.getNumber();
+        int number = foodBean.getCount();
         switch (view.getId()) {
             case R.id.details_add:
                 /**判断数量是否为0且本桌可以点菜*/
@@ -198,13 +197,13 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
                 if (number > 0) {
                     number--;
                     detailsDishesNumber.setText(number + "");
-                    foodBean.setNumber(number);
+                    foodBean.setCount(number);
                 }
                 break;
             case R.id.details_dishes_add:
                 number++;
                 detailsDishesNumber.setText(number + "");
-                foodBean.setNumber(number);
+                foodBean.setCount(number);
                 break;
             case R.id.details_back:
                 EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_OUT));
@@ -266,7 +265,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<Detai
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void cartEventBus(CartNumberEvent event) {
         if (foodBean != null && event.getBean().getId().equals(foodBean.getId())) {
-            detailsDishesNumber.setText(event.getBean().getNumber() + "");
+            detailsDishesNumber.setText(event.getBean().getCount() + "");
         }
     }
 

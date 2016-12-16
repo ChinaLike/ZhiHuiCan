@@ -18,7 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.FoodBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.data.event.RefreshCartEvent;
 import cn.sczhckj.order.image.GlideLoading;
@@ -81,15 +81,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         /**菜品点赞数*/
         holder.dishesCollect.setText(bean.getFavors() + "");
         /**默认菜品*/
-        holder.dishesNumber.setText(bean.getNumber() + "");
+        holder.dishesNumber.setText(bean.getCount() + "");
         /**菜品减少*/
         holder.dishesMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int number = bean.getNumber();
+                int number = bean.getCount();
                 if (number > 0) {
                     number--;
-                    bean.setNumber(number);
+                    bean.setCount(number);
                     holder.dishesNumber.setText(number + "");
                     EventBus.getDefault().post(new RefreshCartEvent(bean));
                 }
@@ -206,7 +206,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
             /**不限制数量*/
             setAddDishes(bean, holder);
         } else {
-            if (bean.getNumber() >= bean.getMaximum()) {
+            if (bean.getCount() >= bean.getMaximum()) {
                 /**限制数量*/
                 dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
                         mContext.getResources().getString(R.string.dialog_context),
@@ -224,9 +224,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      * @param holder
      */
     private void setAddDishes(FoodBean bean, DishesHolder holder) {
-        int number = bean.getNumber();
+        int number = bean.getCount();
         number++;
-        bean.setNumber(number);
+        bean.setCount(number);
         holder.dishesNumber.setText(number + "");
         EventBus.getDefault().post(new RefreshCartEvent(bean));
     }
