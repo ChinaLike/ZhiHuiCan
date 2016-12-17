@@ -28,16 +28,25 @@ public interface OP {
      */
     String USER_INFO = "info";
 
-
     /**
      * 开桌数据信息
      */
     String TABLE_OPEN_INFO = "openInfo";
 
     /**
+     * 开桌下单
+     */
+    String TABLE_OPEN = "open";
+
+    /**
      * 台桌信息
      */
     String TABLE_INFO = "info";
+
+    /**
+     * 设置台桌人数
+     */
+    String TABLE_SET_PERSON_NUM = "setPersonNum";
 
     /**
      * 菜品分类
@@ -68,6 +77,44 @@ public interface OP {
      * 下单
      */
     String ORDER_ORDER = "order";
+
+    /**
+     * 刷新菜品
+     */
+    String ORDER_REFRESH= "refresh";
+
+    /**
+     * 获取服务类型
+     */
+    String SERVICE_SERVICES= "services";
+
+    /**
+     * 呼叫服务
+     */
+    String SERVICE_CALL= "call";
+
+    /**
+     * 终止服务
+     */
+    String SERVICE_ABORT= "abort";
+
+    /**
+     * 推送 上菜信息
+     */
+    String PUSH_ARRIVE= "arrive";
+
+    /**
+     * 推送 服务完成
+     */
+    String PUSH_COMPLETE= "complete";
+
+    /**
+     * 获取结账清单
+     */
+    String BILL_BILL= "bill";
+
+
+
 
 
     /**
