@@ -8,11 +8,19 @@ import android.app.Application;
  * @Email: 572919350@qq.com
  */
 
-public class MyApplication extends Application{
-
-    public static boolean isLogin=false;
-
-    public static String userName;
+public class MyApplication extends Application {
+    /**
+     * 用户是否登录
+     */
+    public static boolean isLogin = false;
+    /**
+     * 用户编码，即手机号或卡号
+     */
+    public static String memberCode;
+    /**
+     * 消费记录ID
+     */
+    public static Integer recordId;
 
     @Override
     public void onCreate() {

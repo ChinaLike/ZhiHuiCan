@@ -5,8 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,13 +23,11 @@ import java.util.List;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.activity.MainActivity;
-import cn.sczhckj.order.adapter.FoodAdapter;
-import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.listener.OnGiftListenner;
-import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.service.CartService;
 import cn.sczhckj.order.service.QRCodeService;
 
@@ -42,8 +38,6 @@ import cn.sczhckj.order.service.QRCodeService;
  */
 
 public abstract class BaseFragment extends Fragment {
-
-    protected FoodAdapter mFoodAdapter = null;
 
     protected List<FoodBean> parentDishesList = new ArrayList<>();
     /**
@@ -90,6 +84,15 @@ public abstract class BaseFragment extends Fragment {
      */
     protected static List<CateBean.CateItemBean> cateList;
 
+    /**
+     * 菜品过多温馨提示界线
+     */
+    public static int warmPromptNumber = 0;
+    /**
+     * 是否开桌
+     */
+    protected static boolean isOpen = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,18 +115,6 @@ public abstract class BaseFragment extends Fragment {
     public abstract void setData(Object object);
 
     public abstract void init();
-
-    /**
-     * 菜品适配
-     *
-     * @param mRecyclerView
-     */
-    protected void initDishesAdapter(RecyclerView mRecyclerView) {
-        mFoodAdapter = new FoodAdapter(getContext(), parentDishesList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mFoodAdapter);
-        mRecyclerView.addItemDecoration(new DashlineItemDivider(getResources().getColor(R.color.line_s), 100000, 1));
-    }
 
     public void setOnGiftListenner(OnGiftListenner onGiftListenner) {
         this.onGiftListenner = onGiftListenner;
@@ -198,6 +189,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void finish() {
         getActivity().finish();
+        /**设置为未登录模式*/
         MyApplication.isLogin = false;
         /**销毁时关闭服务*/
         EventBus.getDefault().post(new CloseServiceEvent());
@@ -205,6 +197,14 @@ public abstract class BaseFragment extends Fragment {
         MainActivity.personNumber = 0;
         /**设置默认点餐为单桌点餐*/
         orderType = Constant.ORDER_TYPE_ALONE;
+        /**清空用户编码记录*/
+        MyApplication.memberCode = null;
+        /**设置菜品过多界线*/
+        warmPromptNumber = 0;
+        /**是否开桌*/
+        isOpen = false;
+        /**消费记录ID*/
+        MyApplication.recordId = null;
     }
 
     @Override
@@ -227,6 +227,57 @@ public abstract class BaseFragment extends Fragment {
     protected void startCartService() {
         mCartIntent = new Intent(getActivity(), CartService.class);
         getActivity().startService(mCartIntent);
+    }
+
+    /**
+     * 加载中
+     *
+     * @param loadingParent     显示加载区域控件
+     * @param contextParent     显示内容区域控件
+     * @param loadingItemParent 加载区域父类
+     * @param loadingFail       加载失败控件
+     * @param loadingTitle      加载成功提示语
+     * @param str
+     */
+    protected void loading(LinearLayout loadingParent, LinearLayout contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail, TextView loadingTitle, String str) {
+        loadingParent.setVisibility(View.VISIBLE);
+        contextParent.setVisibility(View.GONE);
+        loadingItemParent.setVisibility(View.VISIBLE);
+        loadingFail.setVisibility(View.GONE);
+        loadingTitle.setText(str);
+    }
+
+    /**
+     * 加载成功
+     *
+     * @param loadingParent     显示加载区域控件
+     * @param contextParent     显示内容区域控件
+     * @param loadingItemParent 加载区域父类
+     * @param loadingFail       加载失败控件
+     */
+    protected void loadingSuccess(LinearLayout loadingParent, LinearLayout contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail) {
+        loadingParent.setVisibility(View.GONE);
+        contextParent.setVisibility(View.VISIBLE);
+        loadingItemParent.setVisibility(View.VISIBLE);
+        loadingFail.setVisibility(View.GONE);
+    }
+
+    /**
+     * 加载失败
+     *
+     * @param loadingParent     显示加载区域控件
+     * @param contextParent     显示内容区域控件
+     * @param loadingItemParent 加载区域父类
+     * @param loadingFail       加载失败控件
+     * @param loadingFailTitle  加载失败提示语
+     * @param str
+     */
+    protected void loadingFail(LinearLayout loadingParent, LinearLayout contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail, TextView loadingFailTitle, String str) {
+        loadingParent.setVisibility(View.VISIBLE);
+        contextParent.setVisibility(View.GONE);
+        loadingItemParent.setVisibility(View.GONE);
+        loadingFail.setVisibility(View.VISIBLE);
+        loadingFailTitle.setText(str);
     }
 
 }

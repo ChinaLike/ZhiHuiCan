@@ -63,6 +63,13 @@ public class DialogImpl {
         return dialog;
     }
 
+    /**
+     * 自定义输入框
+     * @param title
+     * @param context
+     * @param hint
+     * @return
+     */
     public MyEditTextDialog setEditDialog(String title, String context, String hint) {
         myEditTextDialog.setTitle(title);
         myEditTextDialog.setEditTextHint(hint);

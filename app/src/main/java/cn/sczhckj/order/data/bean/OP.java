@@ -64,6 +64,16 @@ public interface OP {
     String FOOD_INFO = "info";
 
     /**
+     * 退菜
+     */
+    String FOOD_REFUND  = "refund ";
+
+    /**
+     * 点赞
+     */
+    String FOOD_FAVOR  = "favor ";
+
+    /**
      * 菜品图片
      */
     String FOOD_IMAGE = "images";

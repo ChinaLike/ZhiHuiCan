@@ -1,65 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FEFCF6">
-
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/service_gif"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/service_bg_call"/>
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/service_list_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="10dp"
         android:orientation="vertical">
 
-        <View
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/service_list"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2" />
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/service_title"
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/service_call_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FEFCF6">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/service_gif"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="bottom|center_horizontal" />
+            android:layout_height="match_parent"
+            android:src="@drawable/service_bg_call" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="right">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+
+            <TextView
+                android:id="@+id/service_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal" />
 
             <LinearLayout
-                android:id="@+id/service_parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="right">
 
-                <ImageView
-                    android:id="@+id/service_phone"
+                <LinearLayout
+                    android:id="@+id/service_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/service_image" />
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/service_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="呼叫" />
+                    <ImageView
+                        android:id="@+id/service_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/service_image" />
+
+                    <TextView
+                        android:id="@+id/service_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="取消" />
+                </LinearLayout>
+
+
             </LinearLayout>
-
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>

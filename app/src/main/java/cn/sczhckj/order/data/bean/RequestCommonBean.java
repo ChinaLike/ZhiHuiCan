@@ -25,6 +25,8 @@ public class RequestCommonBean {
     private Integer number;//人数
     private Integer cateId;//菜品分类ID
     private Integer foodId;//菜品ID
+    private Integer serviceId;//服务ID
+    private Integer recordId;//消费记录ID
 
 
     /**
@@ -307,25 +309,92 @@ public class RequestCommonBean {
         this.foods = cart;
     }
 
+    public String getMemberCode() {
+        return memberCode;
+    }
+
+    public void setMemberCode(String memberCode) {
+        this.memberCode = memberCode;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public Integer getPersonCount() {
+        return personCount;
+    }
+
+    public void setPersonCount(Integer personCount) {
+        this.personCount = personCount;
+    }
+
+    public void setFoods(List<CartBean> foods) {
+        this.foods = foods;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public Integer getFoodId() {
+        return foodId;
+    }
+
+    public void setFoodId(Integer foodId) {
+        this.foodId = foodId;
+    }
+
+    public Integer getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public Integer getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
+    }
+
     @Override
     public String toString() {
         return "{" +
-                "versionCode=" + versionCode +
-                ", versionName='" + versionName + '\'' +
+                "memberCode='" + memberCode + '\'' +
                 ", password='" + password + '\'' +
-                ", loginType='" + loginType + '\'' +
                 ", phone='" + phone + '\'' +
-                ", id='" + id + '\'' +
+                ", identity='" + identity + '\'' +
+                ", userId='" + userId + '\'' +
                 ", deviceId='" + deviceId + '\'' +
+                ", personCount=" + personCount +
+                ", foods=" + foods +
+                ", orderType=" + orderType +
+                ", number=" + number +
+                ", cateId=" + cateId +
+                ", foodId=" + foodId +
+                ", versionCode=" + versionCode +
+                ", versionName='" + versionName + '\'' +
+                ", loginType=" + loginType +
+                ", id='" + id + '\'' +
                 ", type=" + type +
                 ", dishesList=" + dishesList +
                 ", person=" + person +
-                ", orderType=" + orderType +
                 ", name='" + name + '\'' +
                 ", group='" + group + '\'' +
                 ", groupList=" + groupList +
                 ", favorableType=" + favorableType +
-                ", userId='" + userId + '\'' +
                 ", giftMoney=" + giftMoney +
                 ", ratingBar1=" + ratingBar1 +
                 ", ratingBar2=" + ratingBar2 +

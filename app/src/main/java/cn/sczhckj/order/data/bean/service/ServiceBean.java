@@ -6,7 +6,7 @@ package cn.sczhckj.order.data.bean.service;
  * @ email: 572919350@qq.com
  */
 
-public class ServicesBean {
+public class ServiceBean {
     private Integer id;//服务ID
     private String name;//服务名称
     private Integer imageId;//图片ID

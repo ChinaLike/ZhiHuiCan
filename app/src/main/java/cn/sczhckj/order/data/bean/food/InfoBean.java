@@ -27,7 +27,7 @@ public class InfoBean {
     private Integer finishCount;//已上数量
     private List<PriceBean> prices;//价格策略
     private boolean isFavor;//是否点赞
-    private List<ImagesBean> images;//图片轮播
+    private List<ImageBean> images;//图片轮播
 
     public Integer getId() {
         return id;
@@ -165,11 +165,11 @@ public class InfoBean {
         isFavor = favor;
     }
 
-    public List<ImagesBean> getImages() {
+    public List<ImageBean> getImages() {
         return images;
     }
 
-    public void setImages(List<ImagesBean> images) {
+    public void setImages(List<ImageBean> images) {
         this.images = images;
     }
 

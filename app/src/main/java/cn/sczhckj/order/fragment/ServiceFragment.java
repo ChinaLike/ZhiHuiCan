@@ -2,24 +2,35 @@ package cn.sczhckj.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.adapter.ServiceAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.bean.service.ServiceBean;
+import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
+import cn.sczhckj.order.mode.ServiceMode;
+import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import pl.droidsonroids.gif.GifDrawable;
@@ -34,28 +45,39 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class ServiceFragment extends BaseFragment implements Callback<Bean<ResponseCommonBean>> {
+public class ServiceFragment extends BaseFragment implements Callback<Bean<List<ServiceBean>>>, OnItemClickListener {
 
-    @Bind(R.id.service_title)
-    TextView serviceTitle;
-    @Bind(R.id.service_phone)
-    ImageView servicePhone;
-    @Bind(R.id.service_hint)
-    TextView serviceHint;
+
+    @Bind(R.id.service_list)
+    RecyclerView serviceList;
+    @Bind(R.id.service_list_parent)
+    LinearLayout serviceListParent;
     @Bind(R.id.service_gif)
     GifImageView serviceGif;
+    @Bind(R.id.service_title)
+    TextView serviceTitle;
+    @Bind(R.id.service_hint)
+    TextView serviceHint;
+    @Bind(R.id.service_call_parent)
+    RelativeLayout serviceCallParent;
 
+    /**
+     * 初始化GIF图片
+     */
     private GifDrawable mGifDrawable = null;
 
-
     /**
-     * 呼叫
+     * 列表适配器
      */
-    private final static int CALL = 0;
+    private ServiceAdapter mServiceAdapter;
     /**
-     * 取消呼叫
+     * 一行显示列数
      */
-    private final static int CANCEL = 1;
+    private final int ROW_COUNT = 2;
+    /**
+     * 数据请求
+     */
+    private ServiceMode mServiceMode;
 
 
     @Override
@@ -74,6 +96,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<Respo
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initView(true);
         init();
     }
 
@@ -84,13 +107,9 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<Respo
 
     @Override
     public void init() {
-        try {
-            mGifDrawable = new GifDrawable(getResources(), R.drawable.service_bg);
-            serviceGif.setImageResource(R.drawable.service_bg_call);
-            serviceTitle.setText("请点击呼叫按钮，服务员将火速前来！");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        initAdapter();
+        mServiceMode = new ServiceMode();
+        initList();
     }
 
     @Override
@@ -99,66 +118,122 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<Respo
         ButterKnife.unbind(this);
     }
 
-    private void postService(int type) {
-        RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(deviceId);
-        bean.setType(type);
-
-        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.SERVICE)
-                .time()
-                .bean(bean);
-
-        Call<Bean<ResponseCommonBean>> call = RetrofitRequest.service().service(restRequest.toRequestString());
-        call.enqueue(this);
-    }
-
-    @Override
-    public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
-        Bean<ResponseCommonBean> bean = response.body();
-        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            if (servicePhone.isSelected()){
-                serviceTitle.setText(bean.getMessage());
-            }
+    /**
+     * 初始化界面
+     *
+     * @param isShow 是否显示列表页
+     */
+    private void initView(boolean isShow) {
+        if (isShow) {
+            /**显示列表*/
+            serviceListParent.setVisibility(View.VISIBLE);
+            serviceCallParent.setVisibility(View.GONE);
+        } else {
+            /**显示动态呼叫界面*/
+            serviceListParent.setVisibility(View.GONE);
+            serviceCallParent.setVisibility(View.VISIBLE);
         }
     }
 
-    @Override
-    public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+    /**
+     * 初始化列表适配器
+     */
+    private void initAdapter() {
+        mServiceAdapter = new ServiceAdapter(null, getContext());
+        mServiceAdapter.setOnItemClickListener(this);
+        serviceList.setLayoutManager(new GridLayoutManager(getContext(), ROW_COUNT));
+        serviceList.setAdapter(mServiceAdapter);
+    }
 
+    /**
+     * 初始化网络数据
+     */
+    private void initList() {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        mServiceMode.services(bean, this);
+    }
+
+    /**
+     * 初始化Gif
+     */
+    private void initGif() {
+        try {
+            mGifDrawable = new GifDrawable(getResources(), R.drawable.service_bg);
+            serviceGif.setImageDrawable(mGifDrawable);
+            serviceHint.setText("挂断");
+            serviceTitle.setText("服务员呼叫中，请耐心等待...");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 呼叫服务
+     *
+     * @param serviceId 服务类型ID
+     */
+    private void callService(int serviceId) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        bean.setServiceId(serviceId);
+        mServiceMode.call(bean, requestCommonBeanCallback);
+
+        initGif();
+
+    }
+
+    /**
+     * 取消服务
+     */
+    private void cancelService() {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(deviceId);
+        mServiceMode.abort(bean, requestCommonBeanCallback);
     }
 
     @OnClick(R.id.service_parent)
     public void onClick() {
-        if (servicePhone.isSelected()) {
-            stopCall();
-        } else {
-            startCall();
+        cancelService();
+        initView(true);
+    }
+
+    @Override
+    public void onResponse(Call<Bean<List<ServiceBean>>> call, Response<Bean<List<ServiceBean>>> response) {
+        Bean<List<ServiceBean>> bean = response.body();
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            mServiceAdapter.notifyDataSetChanged(bean.getResult());
         }
     }
 
-    /**
-     * 开始呼叫
-     */
-    private void startCall() {
-        if (mGifDrawable!=null){
-            serviceGif.setImageDrawable(mGifDrawable);
-        }
-        servicePhone.setSelected(true);
-        postService(CALL);
-        serviceHint.setText("挂断");
-        serviceTitle.setText("服务员呼叫中，请耐心等待...");
+    @Override
+    public void onFailure(Call<Bean<List<ServiceBean>>> call, Throwable t) {
+    }
+
+    @Override
+    public void onItemClick(View view, int position, Object bean) {
+        initView(false);
+        callService(((ServiceBean) bean).getId());
     }
 
     /**
-     * 停止呼叫
+     * 呼叫服务或取消服务回调
      */
-    private void stopCall() {
-        serviceGif.setImageResource(R.drawable.service_bg_call);
-        servicePhone.setSelected(false);
-        postService(CANCEL);
-        serviceHint.setText("呼叫");
-        serviceTitle.setText("请点击呼叫按钮，服务员将火速前来！");
-    }
+    Callback<Bean<ResponseCommonBean>> requestCommonBeanCallback = new Callback<Bean<ResponseCommonBean>>() {
+        @Override
+        public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+            Bean<ResponseCommonBean> bean = response.body();
+            if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                if (bean.getResult().getWaiter() != null) {
+                    serviceTitle.setText("服务员:" + bean.getResult().getWaiter() + "将为您服务，正在赶来的路上！请稍等...");
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+
+        }
+    };
 
 }

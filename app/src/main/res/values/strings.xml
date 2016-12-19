@@ -71,6 +71,7 @@
     <string name="dialog_title">温馨提示</string>
     <string name="dialog_context">尊敬的顾客您好！\n您选择的菜品已经达到限制数量,不能再\n选择了，给你带来的不便还请谅解！</string>
     <string name="dialog_context1">尊敬的顾客您好！\n您没有足够的权限点次菜品，具体事宜请你\n联系主桌！还请谅解！</string>
+    <string name="dialog_context2">尊敬的顾客您好！\n您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
     <string name="dialog_cacel">好的</string>
 
 </resources>

@@ -47,5 +47,21 @@ public class GlideLoading {
                 .into(imageView);
     }
 
+    /**
+     * 加载服务列表
+     *
+     * @param mContext  上下文
+     * @param url       图片地址
+     * @param imageView 控件
+     */
+    public static void loadingService(Context mContext, String url, ImageView imageView) {
+        Glide
+                .with(mContext.getApplicationContext())
+                .load(url)
+                .placeholder(R.drawable.loading)
+                .error(R.drawable.loading_faild)
+                .into(imageView);
+    }
+
 
 }

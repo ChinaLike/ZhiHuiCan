@@ -149,6 +149,22 @@ public class FoodBean {
         this.finishCount = finishCount;
     }
 
+    public String getPriceImageUrl() {
+        return priceImageUrl;
+    }
+
+    public void setPriceImageUrl(String priceImageUrl) {
+        this.priceImageUrl = priceImageUrl;
+    }
+
+    public Double getOriginPrice() {
+        return originPrice;
+    }
+
+    public void setOriginPrice(Double originPrice) {
+        this.originPrice = originPrice;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -158,15 +174,17 @@ public class FoodBean {
                 ", permiss=" + permiss +
                 ", maximum=" + maximum +
                 ", price=" + price +
+                ", priceImageUrl='" + priceImageUrl + '\'' +
+                ", originPrice=" + originPrice +
                 ", imageId=" + imageId +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", sales=" + sales +
                 ", favors=" + favors +
                 ", stockout=" + stockout +
                 ", count=" + count +
+                ", finishCount=" + finishCount +
                 ", prices=" + prices +
                 ", isFavor=" + isFavor +
-                ", finishCount=" + finishCount +
                 '}';
     }
 }

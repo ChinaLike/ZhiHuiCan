@@ -24,7 +24,7 @@
             <ScrollView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -42,34 +42,39 @@
                             android:orientation="vertical"
                             android:padding="10dp">
 
+                            <TextView
+                                android:id="@+id/dishes_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:lines="1"
+                                android:text="鲜毛肚"
+                                android:textColor="@color/text_color_m"
+                                android:textSize="@dimen/text_size_mediu_s" />
+
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
                                 <TextView
-                                    android:id="@+id/dishes_name"
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="10dp"
-                                    android:layout_weight="1"
-                                    android:lines="1"
-                                    android:text="鲜毛肚"
-                                    android:textColor="@color/text_color_m"
-                                    android:textSize="@dimen/text_size_mediu_s" />
+                                    android:text="¥ "
+                                    android:textColor="@color/text_color_red"
+                                    android:textSize="@dimen/text_size_RMB" />
 
                                 <TextView
                                     android:id="@+id/details_price"
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="¥  38"
-                                    android:textColor="@color/text_color_red" />
-
-
+                                    android:text="38"
+                                    android:textColor="@color/text_color_red"
+                                    android:textSize="@dimen/text_size_RMB_price" />
                             </LinearLayout>
 
-                            <cn.sczhckj.order.overwrite.NoScrollRecyclerview
+
+                            <cn.sczhckj.order.overwrite.TagCloudLayout
                                 android:id="@+id/details_favorable_recycler"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -89,6 +94,7 @@
                                     android:text="月销量 230" />
 
                                 <LinearLayout
+                                    android:id="@+id/favor_parent"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -98,8 +104,8 @@
 
                                     <ImageView
                                         android:id="@+id/details_like"
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
                                         android:src="@drawable/selector_dishes_like" />
 
                                     <TextView
@@ -120,14 +126,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal"
-                            android:padding="10dp">
+                            android:padding="10dp"
+                            android:visibility="gone">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -135,7 +143,6 @@
                                 android:text="好评度  " />
 
                             <TextView
-                                android:id="@+id/details_precent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="98%"
@@ -157,7 +164,6 @@
                                 android:src="@drawable/open_btn_like_sel" />
 
                             <TextView
-                                android:id="@+id/like_number"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
@@ -173,10 +179,10 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:padding="10dp"
+                        android:visibility="gone">
 
                         <ProgressBar
-                            android:id="@+id/details_progress"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -224,17 +230,6 @@
                         android:src="@drawable/open_btn_dishes_add" />
 
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/details_add"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/shape_button_full_yellow_login"
-                    android:text="加入订单"
-                    android:textColor="@color/button_text" />
 
             </LinearLayout>
 

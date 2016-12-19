@@ -6,7 +6,7 @@ package cn.sczhckj.order.data.bean.food;
  * @ email: 572919350@qq.com
  */
 
-public class ImagesBean {
+public class ImageBean {
 
     private Integer imageId;//图片ID
     private String remark;//说明

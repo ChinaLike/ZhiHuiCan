@@ -23,6 +23,7 @@ import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.data.event.RefreshCartEvent;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.impl.DialogImpl;
+import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.TagCloudLayout;
 
@@ -44,12 +45,25 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
 
     private DialogImpl dialog;
 
+    /**
+     * 本分类最大数量
+     */
+    private int maximum = 0;
+    /**
+     * 本分类是否必选
+     */
+    private int required = 0;
+
+    /**点赞实现*/
+    private FavorImpl mFavorImpl;
+
 
     public FoodAdapter(Context mContext, List<FoodBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
         mTagCloudImpl = new TagCloudImpl(mContext);
         dialog = new DialogImpl(mContext);
+        mFavorImpl=new FavorImpl(mContext);
     }
 
     @Override
@@ -75,7 +89,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         /**菜品名字*/
         holder.dishesName.setText(bean.getName());
         /**菜品价格*/
-        holder.dishesPrice.setText(bean.getPrice() + "");
+        holder.dishesPrice.setText(bean.getOriginPrice() + "");
         /**菜品销量*/
         holder.dishesSales.setText(bean.getSales() + "");
         /**菜品点赞数*/
@@ -99,7 +113,13 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isOverProof(bean, holder);
+                if (verifyMaximum()) {
+                    /**验证总数是否超标*/
+                    maxDialog();
+                } else {
+                    /**验证单个数量是否超标*/
+                    isOverProof(bean, holder);
+                }
             }
         });
         /**点击菜品图片进入详情*/
@@ -126,18 +146,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         holder.favorParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int favorNum = Integer.parseInt(holder.dishesCollect.getText().toString());
-                if (holder.dishesCollectIcon.isSelected()) {
-                    holder.dishesCollect.setText(favorNum - 1 + "");
-                    holder.dishesCollectIcon.setSelected(false);
-                    bean.setFavor(false);
-                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
-                } else {
-                    holder.dishesCollect.setText(favorNum + 1 + "");
-                    holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
-                    holder.dishesCollectIcon.setSelected(true);
-                    bean.setFavor(true);
-                }
+                mFavorImpl.favor(holder.dishesCollectIcon,holder.dishesCollect,bean);
             }
         });
 
@@ -161,6 +170,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         } else {
             return mList.size();
         }
+    }
+
+
+    /**
+     * 设置最大数量
+     */
+    public void setMaximum(int maximum) {
+        this.maximum = maximum;
+    }
+
+    /**
+     * 设置是否必选
+     */
+    public void setRequired(int required) {
+        this.required = required;
     }
 
     static class DishesHolder extends RecyclerView.ViewHolder {
@@ -247,6 +271,36 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
                         mContext.getResources().getString(R.string.dialog_cacel)).show();
             }
         });
+    }
+
+    /**
+     * 验证是否必选
+     */
+    private void verifyRequired() {
+
+    }
+
+    /**
+     * 验证总数是否已经超过最大数量
+     */
+    private boolean verifyMaximum() {
+        int count = 0;
+        for (FoodBean bean : mList) {
+            count = count + bean.getCount();
+        }
+        if (count >= maximum) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 总数超标弹窗
+     */
+    private void maxDialog(){
+        dialog.aloneDialog(mContext.getString(R.string.dialog_title),
+                mContext.getString(R.string.dialog_context2),
+                "好的").show();
     }
 
 }

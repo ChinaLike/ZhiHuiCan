@@ -1,6 +1,5 @@
 package cn.sczhckj.order.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -185,11 +184,11 @@ public class MainFragment extends BaseFragment {
     /**
      * 加载网络数据
      */
-    public void getData(int orderType) {
+    public void getData() {
         mainHintChoose.setVisibility(View.GONE);
         mainBottomViewPager.setVisibility(View.VISIBLE);
         if (mOrderFragment != null) {
-            mOrderFragment.loadingClassify(orderType);
+            mOrderFragment.init();
         }
     }
 
@@ -212,20 +211,20 @@ public class MainFragment extends BaseFragment {
                 break;
             case R.id.main_settle_accounts:
                 index = 2;
-                if (mSettleAccountsFragment!=null) {
+                if (mSettleAccountsFragment != null) {
                     mSettleAccountsFragment.getData();
                 }
                 EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_SETTLE_ACCOUNTS));
                 break;
             case R.id.main_alone_order:
                 /**单桌点菜*/
-                orderType= Constant.ORDER_TYPE_ALONE;
-                getData(orderType);
+                orderType = Constant.ORDER_TYPE_ALONE;
+                getData();
                 break;
             case R.id.main_merger_order:
                 /**并卓点餐*/
-                orderType=Constant.ORDER_TYPE_MERGE;
-                getData(orderType);
+                orderType = Constant.ORDER_TYPE_MERGE;
+                getData();
                 break;
         }
 
@@ -243,4 +242,5 @@ public class MainFragment extends BaseFragment {
     public SettleAccountsFragment getmSettleAccountsFragment() {
         return mSettleAccountsFragment;
     }
+
 }

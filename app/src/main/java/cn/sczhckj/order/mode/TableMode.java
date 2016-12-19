@@ -2,6 +2,7 @@ package cn.sczhckj.order.mode;
 
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.table.OpenInfoBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
@@ -46,6 +47,36 @@ public class TableMode {
                 .bean(bean);
         Call<Bean<InfoBean>> info=RetrofitRequest.service().tableInfo(restRequest.toRequestString());
         info.enqueue(callback);
+    }
+
+    /**
+     * 开桌
+     *
+     * @param bean     参数对象
+     * @param callback 回调
+     */
+    public void open(RequestCommonBean bean, Callback<Bean<ResponseCommonBean>> callback) {
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.TABLE_OPEN)
+                .time()
+                .bean(bean);
+        Call<Bean<ResponseCommonBean>> commonCall = RetrofitRequest.service().open(restRequest.toRequestString());
+        commonCall.enqueue(callback);
+    }
+
+    /**
+     * 设置台桌人数
+     *
+     * @param bean     参数对象
+     * @param callback 回调
+     */
+    public void setPersonNum(RequestCommonBean bean, Callback<Bean<ResponseCommonBean>> callback) {
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.TABLE_SET_PERSON_NUM)
+                .time()
+                .bean(bean);
+        Call<Bean<ResponseCommonBean>> commonCall = RetrofitRequest.service().setPersonNum(restRequest.toRequestString());
+        commonCall.enqueue(callback);
     }
 
 }

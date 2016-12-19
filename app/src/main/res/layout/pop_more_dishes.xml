@@ -36,36 +36,35 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/warm_prompt"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-
-        <Button
-            android:id="@+id/pop_cancel"
-            android:layout_width="wrap_content"
-            android:text="不再提示"
-            android:textColor="@color/white"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/shape_button_pop_gray"
-            android:layout_height="wrap_content" />
+        android:layout_marginTop="20dp">
 
         <Button
             android:id="@+id/pop_ikonw"
             android:layout_width="wrap_content"
             android:text="知道了"
+            android:layout_centerInParent="true"
             style="?android:attr/borderlessButtonStyle"
             android:textColor="@color/white"
             android:layout_marginLeft="20dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/shape_button_orange"
+            android:background="@drawable/shape_button_dark_green"
             android:layout_height="wrap_content" />
 
-    </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/pop_isHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#999999"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/pop_ikonw"
+            style="@style/MyCheckBox"
+            android:text="不再提醒"/>
+
+    </RelativeLayout>
 
 
 

@@ -16,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.ClassifyItemBean;
+import cn.sczhckj.order.data.bean.food.CateBean;
 
 /**
  * @describe: 一级标题分类
@@ -27,7 +28,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
 
     private Context mContext;
 
-    private List<ClassifyItemBean> mList;
+    private List<CateBean.CateItemBean> mList;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -38,7 +39,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
 
     private int current = 0;
 
-    public CatesAdapter(Context mContext, List<ClassifyItemBean> mList, int current) {
+    public CatesAdapter(Context mContext, List<CateBean.CateItemBean> mList, int current) {
         this.mContext = mContext;
         this.mList = mList;
         this.current = current;
@@ -51,7 +52,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
 
     @Override
     public void onBindViewHolder(final ClassifyViewHolder holder, final int position) {
-        final ClassifyItemBean bean = mList.get(position);
+        final CateBean.CateItemBean bean = mList.get(position);
         holder.classifyText.setText(bean.getName());
         viewMap.put(position, holder.classifyLine);
         textMap.put(position, holder.classifyText);
@@ -66,10 +67,15 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
             public void onClick(View v) {
                 int n = holder.getLayoutPosition();
                 upData(n);
-                mOnItemClickListener.onItemClick(v, n);
+                mOnItemClickListener.onItemClick(v,bean, n);
             }
         });
 
+    }
+
+    public void notifyDataSetChanged(List<CateBean.CateItemBean> mList) {
+        this.mList = mList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -103,7 +109,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view,Object bean, int position);
     }
 
     /**
@@ -124,4 +130,11 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
         layout.setSelected(false);
     }
 
+    /**
+     * 设置默认选中分类
+     * @param current
+     */
+    public void setCurrent(int current) {
+        this.current = current;
+    }
 }

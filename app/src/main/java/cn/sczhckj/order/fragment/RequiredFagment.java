@@ -23,7 +23,7 @@ import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.adapter.PersonAdapter;
-import cn.sczhckj.order.adapter.TabAdapter;
+import cn.sczhckj.order.adapter.TabCateAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.Constant;
@@ -38,6 +38,7 @@ import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,7 +96,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
     /**
      * 导航栏适配器
      */
-    private TabAdapter mTabAdapter;
+    private TabCateAdapter mTabCateAdapter;
     /**
      * 就餐人数适配器
      */
@@ -140,12 +141,12 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
      */
     private void initAdapter() {
         /**Tab栏*/
-        mTabAdapter = new TabAdapter(getContext(), null);
-        mTabAdapter.setOnItemClickListener(this);
+        mTabCateAdapter = new TabCateAdapter(getContext(), null);
+        mTabCateAdapter.setOnItemClickListener(this);
         LinearLayoutManager tabManager = new LinearLayoutManager(getContext());
         tabManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         requiredTab.setLayoutManager(tabManager);
-        requiredTab.setAdapter(mTabAdapter);
+        requiredTab.setAdapter(mTabCateAdapter);
         /**就餐人数选择*/
         personAdapter = new PersonAdapter(getContext(), null);
         personChoose.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -220,9 +221,9 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
             Bean<CateBean> bean = response.body();
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
-                    mTabAdapter.setDefaultItem(bean.getResult().getDefaultCate() != null ? bean.getResult().getDefaultCate() : 0);
-                    cateList=bean.getResult().getCates();
-                    mTabAdapter.notifyDataSetChanged(cateList);
+                    mTabCateAdapter.setDefaultItem(bean.getResult().getDefaultCate() != null ? bean.getResult().getDefaultCate() : 0);
+                    cateList = bean.getResult().getCates();
+                    mTabCateAdapter.notifyDataSetChanged(cateList);
                 } else {
                     loadingFail(getContext().getResources().getString(R.string.loadingFail));
                 }
@@ -243,7 +244,9 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
     private Callback<Bean<List<FoodBean>>> foodCallback = new Callback<Bean<List<FoodBean>>>() {
         @Override
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
+
             Bean<List<FoodBean>> bean = response.body();
+            L.d("子项被点击"+bean);
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
                     loadingSuccess();
@@ -258,6 +261,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
+            L.d("子项被点击"+"1111111111111");
             loadingFail(getContext().getResources().getString(R.string.loadingFail));
         }
     };
@@ -377,6 +381,9 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
      */
     @Override
     public void onItemClick(View view, int position, Object bean) {
-        initFood(((CateBean.CateItemBean) bean).getId());
+        CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
+        initFood(itemBean.getId());
+        mFoodAdapter.setRequired(itemBean.getRequired());
+        mFoodAdapter.setMaximum(itemBean.getMaximum());
     }
 }

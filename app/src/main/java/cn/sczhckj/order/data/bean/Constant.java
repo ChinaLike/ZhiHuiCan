@@ -105,4 +105,9 @@ public class Constant {
     public final static int REQUIRED=1;//必选
     public final static int DIS_REQUIRED=0;//可以不用必选
 
+    /**接口回调台桌属性 字段tableType*/
+    public final static int TABLE_TYPE_ALONE=0;//单独点餐
+    public final static int TABLE_TYPE_MAIN=1;//主桌点餐
+    public final static int TABLE_TYPE_AUX=2;//辅桌点餐
+
 }

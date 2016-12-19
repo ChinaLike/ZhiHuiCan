@@ -27,6 +27,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.activity.FavorableActivity;
 import cn.sczhckj.order.activity.MainActivity;
@@ -46,10 +47,13 @@ import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.listener.OnTotalNumberListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.OrderMode;
+import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
+import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,7 +64,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class CartFragment extends BaseFragment implements OnTotalNumberListener, Callback<Bean<ResponseCommonBean>> {
+public class CartFragment extends BaseFragment implements Callback<Bean<ResponseCommonBean>> {
 
 
     @Bind(R.id.nothing)
@@ -122,9 +126,13 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     private DialogImpl mDialog;
 
     /**
-     * 数据请求
+     * 下单数据请求
      */
     private OrderMode mOrderMode;
+    /**
+     * 开桌
+     */
+    private TableMode mTableMode;
 
     /**
      * 开桌密码
@@ -157,8 +165,11 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
 
     @Override
     public void init() {
+        /**首先把购物车图标置为不可点*/
+        buttonAttr(false);
         mDialog = new DialogImpl(getContext());
         mOrderMode = new OrderMode();
+        mTableMode = new TableMode();
         initOrder();
         initDisOrder();
     }
@@ -173,7 +184,6 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
      */
     private void initOrder() {
         mOrderAdapter = new CartAdapter(orderList, getActivity());
-        mOrderAdapter.setOnTotalNumberListener(this);
         cartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
         cartOrder.setAdapter(mOrderAdapter);
         cartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
@@ -184,7 +194,6 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
      */
     private void initDisOrder() {
         mDisOrderAdapter = new CartAdapter(disOrderList, getActivity());
-        mDisOrderAdapter.setOnTotalNumberListener(this);
         disCartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
         disCartOrder.setAdapter(mDisOrderAdapter);
         disCartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
@@ -236,9 +245,11 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
     private void buttonAttr(boolean isClick) {
         shoppingcartButton.setClickable(isClick);
         if (isClick) {
+            /**可选状态*/
             shoppingcartButton.setSelected(false);
             shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.button_text));
         } else {
+            /**变为灰色*/
             shoppingcartButton.setSelected(true);
             shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color_999999));
         }
@@ -308,31 +319,17 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
         Double favorPrice = 0.0;
         for (FoodBean bean : beenList) {
             number = number + bean.getCount();
-            Double currPrice = getPrice(bean);
+            Double currPrice = bean.getPrice();
             price = price + currPrice * bean.getCount();
-            favorPrice = favorPrice + (bean.getPrice() - currPrice) * bean.getCount();
+            favorPrice = favorPrice + (bean.getOriginPrice() - bean.getPrice()) * bean.getCount();
         }
         numberView.setText(number + "");
         priceView.setText(price + "");
         favorView.setText(favorPrice + "");
-    }
-
-    /**
-     * 获取最终价
-     *
-     * @param bean
-     * @return
-     */
-    private Double getPrice(FoodBean bean) {
-        Double price = bean.getPrice();
-        if (bean.getPrices() != null && bean.getPrices().size() != 0) {
-            for (PriceBean item : bean.getPrices()) {
-                if (item.getActive() == Constant.PRICE_ACTIVE) {
-                    price = item.getPrice();
-                }
-            }
+        /**发送消息，点菜界面收到后判断数量与提示数量是否相符合*/
+        if (isOpen) {
+            EventBus.getDefault().post(new MoreDishesHintEvent(number));
         }
-        return price;
     }
 
     /**
@@ -386,13 +383,26 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
      * @param password
      */
     private void openTable(String password) {
-        showProgress("数据提交中，清请稍后...");
+        showProgress("数据提交中，请稍后...");
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         bean.setPassword(password);
+        bean.setMemberCode(MyApplication.memberCode);
+        bean.setPersonCount(MainActivity.personNumber);
+        bean.setCart(infoSwitch());
+        mTableMode.open(bean, this);
+    }
+
+    /**
+     * 已开桌，点菜
+     */
+    private void order() {
+        showProgress("数据提交中，请稍后...");
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setMemberCode(MyApplication.memberCode);
         bean.setCart(infoSwitch());
         mOrderMode.order(bean, this);
-
     }
 
     /**
@@ -407,7 +417,7 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
             cart.setId(bean.getId());
             cart.setCateId(bean.getCateId());
             cart.setNumber(bean.getCount());
-            cart.setPrice(getPrice(bean));
+            cart.setPrice(bean.getPrice());
             cartList.add(cart);
         }
         return cartList;
@@ -472,16 +482,6 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
                 }).show();
     }
 
-    @Override
-    public void totalNumber(int totalPrice, int potNumber, int dishesNumber) {
-
-        shoppingcartTotalPrice.setText("" + totalPrice);
-        shoppingcartPartNumber.setText(potNumber + "");
-        shoppingcartDishesNumber.setText(dishesNumber + "");
-        /**发送消息，点菜界面收到后判断数量与提示数量是否相符合*/
-        EventBus.getDefault().post(new MoreDishesHintEvent(dishesNumber));
-    }
-
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
         this.onButtonClickListener = onButtonClickListener;
     }
@@ -493,9 +493,25 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
             if (bean.getCode() == ResponseCode.SUCCESS) {
                 /**关闭进度框*/
                 dismissProgress();
-                onButtonClickListener.onClick(Constant.ORDER, bean.getResult().getShowType());
+                buttonAttr(false);
+                if (isOpen) {
+                    /**已开桌*/
+                    T.showShort(getContext(), bean.getMessage());
+                } else {
+                    /**未开桌*/
+                    onButtonClickListener.onClick(Constant.ORDER, bean.getResult().getShowType());
+                    /**设置菜品过多提醒*/
+                    warmPromptNumber = bean.getResult().getFoodCountHint() != null ? bean.getResult().getFoodCountHint() : 0;
+                    /**设置消费记录ID*/
+                    MyApplication.recordId = bean.getResult().getRecordId();
+                }
+                /**以下处理购物车数据*/
                 cartToOrder();
                 mOrderAdapter.notifyDataSetChanged(orderList);
+                /**初始导航*/
+                setTitleStatus(cartOrderFlag, cartOrder);
+                /**显示已下单价格*/
+                setFoodinfo(shoppingcartDishesNumber, shoppingcartTotalPrice, shoppingcartPartNumber, orderList);
             } else {
                 commit("" + bean.getMessage());
             }
@@ -550,14 +566,21 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
         switch (view.getId()) {
             case R.id.shoppingcart_button:
                 /**数据提交前先进行信息验证*/
-                CateBean.CateItemBean bean=requiredVerify();
-                if (bean == null) {
-                    infoVerify();
+                if (isOpen) {
+                    /**已开桌，加菜*/
+                    order();
                 } else {
-                    mDialog.aloneDialog(getString(R.string.dialog_title),
-                            "尊敬的顾客您好！\n【" + bean.getName() + "】为必选菜品，只有选择规定数量\n才能提交信息，还请谅解！",
-                            "继续点餐").show();
+                    CateBean.CateItemBean bean = requiredVerify();
+                    if (bean == null) {
+                        /**未开桌，提交菜品*/
+                        infoVerify();
+                    } else {
+                        mDialog.aloneDialog(getString(R.string.dialog_title),
+                                "尊敬的顾客您好！\n【" + bean.getName() + "】为必选菜品，只有选择规定数量\n才能提交信息，还请谅解！",
+                                "继续点餐").show();
+                    }
                 }
+
                 break;
             case R.id.cart_favorable:
                 /**更多优惠*/
@@ -567,33 +590,34 @@ public class CartFragment extends BaseFragment implements OnTotalNumberListener,
 
             case R.id.order_parent:
                 /**已经下单*/
-                setTitleStatus(cartOrderFlag, cartOrder, cartDisOrderFlag, disCartOrder);
+                setTitleStatus(cartOrderFlag, cartOrder);
                 break;
             case R.id.disOrder_parent:
                 /**还未下单，在购物车*/
-                setTitleStatus(cartDisOrderFlag, disCartOrder, cartOrderFlag, cartOrder);
+                setTitleStatus(cartDisOrderFlag, disCartOrder);
                 break;
         }
     }
 
     /**
      * 设置购物车中已下单和购物车切换状态
-     *
-     * @param imageView
-     * @param recyclerView
      */
-    private void setTitleStatus(ImageView imageView, RecyclerView recyclerView, ImageView imageOteher, RecyclerView recyclerViewOther) {
-        if (imageView.isSelected()) {
-            imageView.setSelected(false);
-            recyclerView.setVisibility(View.VISIBLE);
+    private void setTitleStatus(ImageView flag, RecyclerView recyclerView) {
+        if (orderList.size() != 0 && disOrderList.size() != 0) {
+            orderParent.setVisibility(View.VISIBLE);
+            disOrderParent.setVisibility(View.VISIBLE);
+            if (flag.isSelected()) {
+                flag.setSelected(false);
+                recyclerView.setVisibility(View.VISIBLE);
+            } else {
+                flag.setSelected(true);
+                recyclerView.setVisibility(View.GONE);
+            }
+
         } else {
-            imageView.setSelected(true);
-            recyclerView.setVisibility(View.GONE);
+            orderParent.setVisibility(View.GONE);
+            disOrderParent.setVisibility(View.GONE);
         }
-
-        imageOteher.setSelected(true);
-        recyclerViewOther.setVisibility(View.GONE);
-
     }
 
 }

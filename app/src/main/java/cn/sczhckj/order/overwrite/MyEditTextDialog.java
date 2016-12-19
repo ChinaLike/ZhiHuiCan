@@ -3,6 +3,7 @@ package cn.sczhckj.order.overwrite;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -124,6 +125,13 @@ public class MyEditTextDialog extends Dialog {
     public void setContext(String context) {
         dialogHint.setVisibility(View.VISIBLE);
         dialogHint.setText(context);
+    }
+
+    /**
+     * 设置输入框类型
+     */
+    public void setInputType(int type) {
+        dialogContext.setInputType(type);
     }
 
 }

@@ -16,10 +16,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.bean.PriceTypeBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.PriceBean;
-import cn.sczhckj.order.data.bean.PriceTypeBean;
-import cn.sczhckj.order.data.listener.OnTotalNumberListener;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.overwrite.RoundImageView;
 
@@ -35,7 +34,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
 
     private Context mContext;
 
-    private OnTotalNumberListener onTotalNumberListener;
 
     public CartAdapter(List<FoodBean> mList, Context mContext) {
         this.mList = mList;
@@ -60,7 +58,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
         holder.cartDishesTotalPrice.setText(bean.getCount() * bean.getPrice() + "");
         setPrice(holder.cartFavorableIamge, holder.cartDishesPrice, holder.cartDishesTotalPrice, bean);
         /**设置已完成数量*/
-        setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund,bean);
+        setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund, bean);
 //        if (bean.getPrices() == null || bean.getPrices().size() == 0) {
 //            holder.cartPrice.setText("¥" + bean.getPrice());
 //        } else {
@@ -126,15 +124,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
      * @param bean       参数
      */
     private void setPrice(ImageView imageView, TextView price, TextView totalPrice, FoodBean bean) {
-        if (bean.getPrices() != null && bean.getPrices().size() != 0) {
-            for (PriceBean item : bean.getPrices()) {
-                if (item.getActive() == Constant.PRICE_ACTIVE) {
-                    price.setText(item.getPrice() + "");
-                    totalPrice.setText(bean.getCount() * item.getPrice() + "");
-                    GlideLoading.loadingDishes(mContext, item.getImageUrl(), imageView);
-                }
-            }
-        }
+//        if (bean.getPrices() != null && bean.getPrices().size() != 0) {
+//            for (PriceBean item : bean.getPrices()) {
+//                if (item.getActive() == Constant.PRICE_ACTIVE) {
+//                    price.setText(item.getPrice() + "");
+//                    totalPrice.setText(bean.getCount() * item.getPrice() + "");
+//                    GlideLoading.loadingDishes(mContext, item.getImageUrl(), imageView);
+//                }
+//            }
+//        }
+        price.setText(bean.getPrice()+"");
+        totalPrice.setText(bean.getCount() * bean.getPrice() + "");
+        GlideLoading.loadingDishes(mContext, bean.getPriceImageUrl(), imageView);
     }
 
     /**
@@ -143,13 +144,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
      * @param layout
      * @param bean
      */
-    private void setFinishFood(LinearLayout layout, ImageView retIm,FoodBean bean) {
+    private void setFinishFood(LinearLayout layout, ImageView retIm, FoodBean bean) {
         layout.removeAllViews();
-        List<ImageView> mList=new ArrayList<>();
+        List<ImageView> mList = new ArrayList<>();
         for (int i = 0; i < bean.getCount(); i++) {
             ImageView imageView = new ImageView(mContext);
             imageView.setImageResource(R.drawable.selector_cart_food_finish);
-            imageView.setPadding(0,0,5,0);
+            imageView.setPadding(0, 0, 5, 0);
             layout.addView(imageView);
             mList.add(imageView);
         }
@@ -159,9 +160,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
             }
         }
         /**设置可退图标*/
-        if (bean.getCount()==bean.getFinishCount()){
+        if (bean.getCount() == bean.getFinishCount()) {
             retIm.setImageResource(R.drawable.order_btn_foodback_dis);
-        }else {
+        } else {
             retIm.setImageResource(R.drawable.order_btn_foodback_nor);
         }
     }
@@ -251,9 +252,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
         return number * price;
     }
 
-    public void setOnTotalNumberListener(OnTotalNumberListener onTotalNumberListener) {
-        this.onTotalNumberListener = onTotalNumberListener;
-    }
 
     static class ShoppingCartViewHolder extends RecyclerView.ViewHolder {
 

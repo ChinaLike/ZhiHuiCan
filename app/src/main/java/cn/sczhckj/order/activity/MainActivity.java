@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,9 +26,12 @@ import butterknife.OnClick;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ViewPagerAdapter;
+import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FavorableTypeBean;
 import cn.sczhckj.order.data.bean.PayTypeBean;
+import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.UserLoginBean;
 import cn.sczhckj.order.data.event.ApplyForVipCardEvent;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
@@ -35,6 +39,7 @@ import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.listener.OnTableListenner;
+import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.fragment.ApplyForVipCardFragment;
 import cn.sczhckj.order.fragment.BaseFragment;
 import cn.sczhckj.order.fragment.CartFragment;
@@ -48,15 +53,22 @@ import cn.sczhckj.order.fragment.QRCodeFragment;
 import cn.sczhckj.order.fragment.RequiredFagment;
 import cn.sczhckj.order.fragment.SettleAccountsCartFragment;
 import cn.sczhckj.order.image.GlideLoading;
+import cn.sczhckj.order.mode.TableMode;
+import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.overwrite.NoScrollViewPager;
 import cn.sczhckj.order.overwrite.RoundImageView;
+import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.T;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @ Describe:主界面
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements OnButtonClickListener, OnTableListenner {
+public class MainActivity extends BaseActivity implements OnButtonClickListener, OnTableListenner, Callback<Bean<ResponseCommonBean>> {
 
     /**
      * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
@@ -83,6 +95,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     ImageView vipGrade;
     @Bind(R.id.table_person_num)
     TextView tablePersonNum;
+    @Bind(R.id.table_person_parent)
+    LinearLayout tablePersonParent;
     /**
      * 事物管理器
      */
@@ -146,18 +160,26 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
      */
     private ApplyForVipCardFragment mApplyForVipCardFragment;
     /**
-     * 用餐人数
-     */
-    public static int person;
-    /**
      * 桌号
      */
     public static String table;
 
     private int favorableType = 0;
 
-    /**人数*/
-    public static Integer personNumber=0;
+    /**
+     * 用餐人数
+     */
+    public static Integer personNumber = 0;
+
+    /**
+     * 弹窗
+     */
+    private DialogImpl mDialog;
+
+    /**
+     * 设置就餐人数
+     */
+    private int personCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +214,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     @Override
     protected void init() {
-        person = 0;
+        mDialog = new DialogImpl(this);
+        personNumber = 0;
         mFm = getSupportFragmentManager();
         adapter = new ViewPagerAdapter(mFm);
         adapter.setList(initFragment());
@@ -274,7 +297,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
             if (isShow == 0) {
                 mMainFragment.showOrderType();
             } else {
-                mMainFragment.getData(BaseFragment.orderType);
+                mMainFragment.getData();
             }
         }
     }
@@ -293,7 +316,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         /**销毁时关闭服务*/
         EventBus.getDefault().post(new CloseServiceEvent());
         /**人数清零*/
-        personNumber=0;
+        personNumber = 0;
     }
 
     @Override
@@ -438,14 +461,50 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         GlideLoading.loadingDishes(this, bean.getVipUrl(), vipGrade);
     }
 
+    /**
+     * 初始化设置人数
+     */
+    private void initSetPerson(int number) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(this));
+        bean.setNumber(number);
+        TableMode tableMode = new TableMode();
+        tableMode.setPersonNum(bean, this);
+    }
 
-    @OnClick(R.id.no_login)
+
+    @OnClick({R.id.no_login, R.id.table_person_parent})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.no_login:
+                /**用户登录*/
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.putExtra(Constant.INTENT_FLAG, Constant.MAIN_TO_LOGIN);
                 startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
+                break;
+            case R.id.table_person_parent:
+                /**设置台桌人数*/
+                mDialog.editTextDialog().setInputType(InputType.TYPE_CLASS_NUMBER);
+                mDialog.setEditDialog("人数设置", null, "请输入人数")
+                        .setRightButton("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    personCount = Integer.parseInt(mDialog.editTextDialog().getEditText().toString());
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                    personCount = personNumber;
+                                }
+                                initSetPerson(personCount);
+                                mDialog.editTextDialog().dismiss();
+                            }
+                        })
+                        .setLeftButton("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDialog.editTextDialog().dismiss();
+                            }
+                        }).show();
                 break;
         }
     }
@@ -463,7 +522,26 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     @Override
     public void person(int number) {
-        personNumber=number;
-        this.tablePersonNum.setText(number+"人");
+        personNumber = number;
+        this.tablePersonNum.setText(number + "人");
+    }
+
+    @Override
+    public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+        Bean<ResponseCommonBean> bean = response.body();
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            person(personCount);
+            /**设置菜品过多提醒*/
+            if (bean.getResult() != null && bean.getResult().getFoodCountHint() != null) {
+                BaseFragment.warmPromptNumber = bean.getResult().getFoodCountHint();
+            }
+        } else {
+            T.showShort(this, bean.getMessage());
+        }
+    }
+
+    @Override
+    public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+        T.showShort(this, "设置失败，请重新设置！");
     }
 }

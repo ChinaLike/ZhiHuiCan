@@ -16,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.food.CateBean;
+import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.until.AppSystemUntil;
 
@@ -25,11 +26,11 @@ import cn.sczhckj.order.until.AppSystemUntil;
  * @Email: 572919350@qq.com
  */
 
-public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
+public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabViewHolder> {
 
     private Context mContext;
 
-    private List<CateBean.CateItemBean> mList;
+    private List<InfoBean.Tables> mList;
 
     private Map<Integer, LinearLayout> layouts = new HashMap<>();
 
@@ -47,7 +48,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
 
     private OnItemClickListener onItemClickListener;
 
-    public TabAdapter(Context mContext, List<CateBean.CateItemBean> mList) {
+    public TabTableAdapter(Context mContext, List<InfoBean.Tables> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -67,7 +68,6 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
         /**设置默认选择项*/
         if (defaultItem==position) {
             views.get(position).setSelected(true);
-            onItemClickListener.onItemClick(holder.tabParent,holder.getLayoutPosition(),mList.get(position));
         }else {
             views.get(position).setSelected(false);
         }
@@ -79,7 +79,6 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
                 views.get(current).setSelected(false);
                 current = position;
                 onItemClickListener.onItemClick(holder.tabParent,holder.getLayoutPosition(),mList.get(position));
-//                OrderFragment.tabOrderType = mList.get(position).getId();
             }
         });
     }
@@ -97,7 +96,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
      * 刷新数据
      * @param mList
      */
-    public void notifyDataSetChanged(List<CateBean.CateItemBean> mList) {
+    public void notifyDataSetChanged(List<InfoBean.Tables> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }

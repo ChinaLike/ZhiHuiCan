@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_left"
                 android:background="@drawable/selector_shape_button_yellow"
-                android:text="@string/openTable"
+                android:text="@string/choose_good"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_size" />
 
