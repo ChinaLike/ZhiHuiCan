@@ -3,23 +3,22 @@ package cn.sczhckj.order.data.network;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.bill.BillBean;
-import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.ClassifyBean;
-import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.DetailsBean;
-import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.EvaluateBean;
 import cn.sczhckj.order.data.bean.GrouponBean;
+import cn.sczhckj.order.data.bean.QRCodeBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.bean.VersionBean;
+import cn.sczhckj.order.data.bean.bill.BillBean;
+import cn.sczhckj.order.data.bean.food.CateBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
 import cn.sczhckj.order.data.bean.food.PriceBean;
 import cn.sczhckj.order.data.bean.service.ServiceBean;
-import cn.sczhckj.order.data.bean.table.OpenInfoBean;
-import cn.sczhckj.order.data.bean.QRCodeBean;
-import cn.sczhckj.order.data.bean.SettleAccountsBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
-import cn.sczhckj.order.data.bean.UserLoginBean;
-import cn.sczhckj.order.data.bean.VersionBean;
+import cn.sczhckj.order.data.bean.table.TableBean;
+import cn.sczhckj.order.data.bean.user.MemberBean;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -38,7 +37,7 @@ public interface RetrofitService {
      */
     @FormUrlEncoded
     @POST("rest/table/openInfo")
-    Call<Bean<OpenInfoBean>> openInfo(@Field("p") String p);
+    Call<Bean<TableBean>> openInfo(@Field("p") String p);
 
     /**
      * 获取台桌信息
@@ -145,6 +144,33 @@ public interface RetrofitService {
     @POST("rest/bill/bill")
     Call<Bean<List<BillBean>>> bill(@Field("p") String p);
 
+    /**
+     * 用户登录
+     */
+    @FormUrlEncoded
+    @POST("rest/user/login")
+    Call<Bean<MemberBean>> login(@Field("p") String p);
+
+    /**
+     * 发送短信验证码
+     */
+    @FormUrlEncoded
+    @POST("rest/user/sms")
+    Call<Bean<ResponseCommonBean>> sms(@Field("p") String p);
+
+    /**
+     * 快捷登录
+     */
+    @FormUrlEncoded
+    @POST("rest/user/smsLogin")
+    Call<Bean<MemberBean>> smsLogin(@Field("p") String p);
+
+    /**
+     * 获取会员信息
+     */
+    @FormUrlEncoded
+    @POST("rest/user/info")
+    Call<Bean<MemberBean>> userInfo(@Field("p") String p);
 
 
 
@@ -156,12 +182,6 @@ public interface RetrofitService {
     @POST("rest/device/version")
     Call<Bean<VersionBean>> version(@Field("params") String params);
 
-    /**
-     * 会员登录
-     */
-    @FormUrlEncoded
-    @POST("rest/user/login")
-    Call<Bean<UserLoginBean>> login(@Field("params") String params);
 
     /**
      * 获取短信验证码
@@ -198,12 +218,6 @@ public interface RetrofitService {
     @POST("rest/order/deatails")
     Call<Bean<DetailsBean>> dishesDeatails(@Field("params") String params);
 
-    /**
-     * 结账清单数据请求
-     */
-    @FormUrlEncoded
-    @POST("rest/accounts/accountsList")
-    Call<Bean<SettleAccountsBean>> settleAccountsList(@Field("params") String params);
 
     /**
      * 团购券验证
@@ -261,11 +275,5 @@ public interface RetrofitService {
     @POST("rest/refresh/QRCodeVerify")
     Call<Bean<ResponseCommonBean>> refreshQRCodeIsVerify(@Field("params") String params);
 
-    /**
-     * 优惠类型验证
-     */
-    @FormUrlEncoded
-    @POST("rest/accounts/favorableTypeVerify")
-    Call<Bean<SettleAccountsBean>> favorableTypeVerify(@Field("params") String params);
 
 }

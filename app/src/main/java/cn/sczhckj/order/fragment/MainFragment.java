@@ -86,7 +86,7 @@ public class MainFragment extends BaseFragment {
     /**
      * 结账
      */
-    private SettleAccountsFragment mSettleAccountsFragment;
+    private BillFragment mBillFragment;
 
     private FragmentManager mFm;
 
@@ -155,7 +155,7 @@ public class MainFragment extends BaseFragment {
      * 初始化结账界面
      */
     private void initSettleAccountsFragment() {
-        mSettleAccountsFragment = new SettleAccountsFragment();
+        mBillFragment = new BillFragment();
     }
 
     /**
@@ -165,7 +165,7 @@ public class MainFragment extends BaseFragment {
         mFm = getChildFragmentManager();
         fragmentList.add(mOrderFragment);
         fragmentList.add(mServiceFragment);
-        fragmentList.add(mSettleAccountsFragment);
+        fragmentList.add(mBillFragment);
         adapter = new ViewPagerAdapter(mFm);
         adapter.setList(fragmentList);
         mainBottomViewPager.setAdapter(adapter);
@@ -211,8 +211,8 @@ public class MainFragment extends BaseFragment {
                 break;
             case R.id.main_settle_accounts:
                 index = 2;
-                if (mSettleAccountsFragment != null) {
-                    mSettleAccountsFragment.getData();
+                if (mBillFragment != null) {
+                    mBillFragment.setData(null);
                 }
                 EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_SETTLE_ACCOUNTS));
                 break;
@@ -239,8 +239,8 @@ public class MainFragment extends BaseFragment {
 
     }
 
-    public SettleAccountsFragment getmSettleAccountsFragment() {
-        return mSettleAccountsFragment;
+    public BillFragment getBillFragment() {
+        return mBillFragment;
     }
 
 }

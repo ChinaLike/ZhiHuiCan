@@ -91,7 +91,16 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 是否开桌
      */
-    protected static boolean isOpen = false;
+    public static boolean isOpen = false;
+
+    /**
+     * 下单的菜品，即已下单菜品
+     */
+    protected static List<FoodBean> orderList = new ArrayList<>();
+    /**
+     * 未下单的菜品，即购物车菜品
+     */
+    protected static List<FoodBean> disOrderList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -205,6 +214,9 @@ public abstract class BaseFragment extends Fragment {
         isOpen = false;
         /**消费记录ID*/
         MyApplication.recordId = null;
+        /**清空购物车数据*/
+        orderList = new ArrayList<>();
+        disOrderList = new ArrayList<>();
     }
 
     @Override

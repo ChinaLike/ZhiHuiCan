@@ -1,6 +1,6 @@
 package cn.sczhckj.order.data.event;
 
-import cn.sczhckj.order.data.bean.UserLoginBean;
+import cn.sczhckj.order.data.bean.user.MemberBean;
 
 /**
  * @describe: 登录信息
@@ -10,14 +10,14 @@ import cn.sczhckj.order.data.bean.UserLoginBean;
 
 public class LoginEvent {
 
-    public final static int LOGIN_SUCCESS=0;
-    public final static int LOGIN_FAIL=1;
+    public final static int LOGIN_SUCCESS = 0;
+    public final static int LOGIN_FAIL = 1;
 
     private int flag;
 
-    private UserLoginBean bean;
+    private MemberBean bean;
 
-    public LoginEvent(int flag, UserLoginBean bean) {
+    public LoginEvent(int flag, MemberBean bean) {
         this.flag = flag;
         this.bean = bean;
     }
@@ -30,11 +30,11 @@ public class LoginEvent {
         this.flag = flag;
     }
 
-    public UserLoginBean getBean() {
+    public MemberBean getBean() {
         return bean;
     }
 
-    public void setBean(UserLoginBean bean) {
+    public void setBean(MemberBean bean) {
         this.bean = bean;
     }
 }

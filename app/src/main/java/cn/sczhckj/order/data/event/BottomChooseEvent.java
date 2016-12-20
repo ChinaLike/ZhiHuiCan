@@ -1,5 +1,7 @@
 package cn.sczhckj.order.data.event;
 
+import java.util.List;
+
 import cn.sczhckj.order.data.bean.food.FoodBean;
 
 /**
@@ -14,14 +16,23 @@ public class BottomChooseEvent {
 
     private FoodBean bean;
 
+    private List<FoodBean> beanList;
+
+    public BottomChooseEvent(int type) {
+        this.type = type;
+    }
+
     public BottomChooseEvent(int type, FoodBean bean) {
         this.type = type;
         this.bean = bean;
     }
 
-    public BottomChooseEvent(int type) {
+    public BottomChooseEvent(int type, FoodBean bean, List<FoodBean> beanList) {
         this.type = type;
+        this.bean = bean;
+        this.beanList = beanList;
     }
+
 
     public int getType() {
         return type;
@@ -37,5 +48,13 @@ public class BottomChooseEvent {
 
     public void setBean(FoodBean bean) {
         this.bean = bean;
+    }
+
+    public List<FoodBean> getBeanList() {
+        return beanList;
+    }
+
+    public void setBeanList(List<FoodBean> beanList) {
+        this.beanList = beanList;
     }
 }

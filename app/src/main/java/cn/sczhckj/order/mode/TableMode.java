@@ -3,7 +3,7 @@ package cn.sczhckj.order.mode;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.table.OpenInfoBean;
+import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
@@ -26,12 +26,12 @@ public class TableMode {
      * @param bean     参数对象
      * @param callback 回调
      */
-    public void openInfo(RequestCommonBean bean, Callback<Bean<OpenInfoBean>> callback) {
+    public void openInfo(RequestCommonBean bean, Callback<Bean<TableBean>> callback) {
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.TABLE_OPEN_INFO)
                 .time()
                 .bean(bean);
-        Call<Bean<OpenInfoBean>> openInfo = RetrofitRequest.service().openInfo(restRequest.toRequestString());
+        Call<Bean<TableBean>> openInfo = RetrofitRequest.service().openInfo(restRequest.toRequestString());
         openInfo.enqueue(callback);
     }
 

@@ -1,12 +1,14 @@
 package cn.sczhckj.order.data.bean.user;
 
+import java.io.Serializable;
+
 /**
  * @ describe: 卡号登录
  * @ author: Like on 2016/12/16.
  * @ email: 572919350@qq.com
  */
 
-public class LoginBean {
+public class MemberBean implements Serializable{
 
     private Integer id;
     private String memberCode;//会员编码

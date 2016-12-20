@@ -20,10 +20,10 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
-import cn.sczhckj.order.data.event.RefreshCartEvent;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.mode.impl.FavorImpl;
+import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.TagCloudLayout;
 
@@ -54,8 +54,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      */
     private int required = 0;
 
-    /**点赞实现*/
+    /**
+     * 点赞实现
+     */
     private FavorImpl mFavorImpl;
+    /**
+     * 菜品数量控制实现
+     */
+    private FoodControlImpl mFoodControl;
 
 
     public FoodAdapter(Context mContext, List<FoodBean> mList) {
@@ -63,7 +69,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         this.mList = mList;
         mTagCloudImpl = new TagCloudImpl(mContext);
         dialog = new DialogImpl(mContext);
-        mFavorImpl=new FavorImpl(mContext);
+        mFavorImpl = new FavorImpl(mContext);
+        mFoodControl = new FoodControlImpl(mContext);
     }
 
     @Override
@@ -97,43 +104,19 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         /**默认菜品*/
         holder.dishesNumber.setText(bean.getCount() + "");
         /**菜品减少*/
-        holder.dishesMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int number = bean.getCount();
-                if (number > 0) {
-                    number--;
-                    bean.setCount(number);
-                    holder.dishesNumber.setText(number + "");
-                    EventBus.getDefault().post(new RefreshCartEvent(bean));
-                }
-            }
-        });
+        mFoodControl.minusFood(holder.dishesMinus,holder.dishesNumber,bean);
         /**菜品添加*/
-        holder.dishesAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (verifyMaximum()) {
-                    /**验证总数是否超标*/
-                    maxDialog();
-                } else {
-                    /**验证单个数量是否超标*/
-                    isOverProof(bean, holder);
-                }
-            }
-        });
+        mFoodControl.addFood(holder.dishesAdd,holder.dishesNumber,bean,mList);
         /**点击菜品图片进入详情*/
         holder.dishesImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean));
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean,mList));
             }
         });
 
         /**判断优惠类型,并显示*/
         mTagCloudImpl.setPrice(holder.dishesFavorableRecyclerView, bean.getPrices());
-        // TODO: 2016/12/14 显示原价还是优惠价？
-//        mTagCloudImpl.getPrice(holder.dishesPrice, bean.getPrices());
         /**判断是否喜欢，即收藏与否*/
         if (bean.isFavor()) {
             holder.dishesCollectIcon.setSelected(true);
@@ -146,7 +129,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         holder.favorParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFavorImpl.favor(holder.dishesCollectIcon,holder.dishesCollect,bean);
+                mFavorImpl.favor(holder.dishesCollectIcon, holder.dishesCollect, bean);
             }
         });
 
@@ -157,8 +140,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
             holder.dishesMinus.setClickable(true);
         } else {
             /**不可以点菜*/
-            buttonClick(holder.dishesAdd);
-            buttonClick(holder.dishesMinus);
+            mFoodControl.buttonClick(holder.dishesAdd);
+            mFoodControl.buttonClick(holder.dishesMinus);
         }
 
     }
@@ -178,6 +161,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      */
     public void setMaximum(int maximum) {
         this.maximum = maximum;
+        mFoodControl.setMaximum(maximum);
     }
 
     /**
@@ -185,6 +169,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      */
     public void setRequired(int required) {
         this.required = required;
+        mFoodControl.setRequired(required);
     }
 
     static class DishesHolder extends RecyclerView.ViewHolder {
@@ -220,87 +205,4 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
             ButterKnife.bind(this, itemView);
         }
     }
-
-    /**
-     * 判断锅底是否超过标准
-     */
-    private void isOverProof(final FoodBean bean, final DishesHolder holder) {
-        /**首先判断是否是锅底再次判断是否已经选择规定锅底*/
-        if (bean.getMaximum() == null || bean.getMaximum() == Constant.FOOD_DISASTRICT) {
-            /**不限制数量*/
-            setAddDishes(bean, holder);
-        } else {
-            if (bean.getCount() >= bean.getMaximum()) {
-                /**限制数量*/
-                dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
-                        mContext.getResources().getString(R.string.dialog_context),
-                        mContext.getResources().getString(R.string.dialog_cacel)).show();
-            } else {
-                setAddDishes(bean, holder);
-            }
-        }
-    }
-
-    /**
-     * 菜品添加
-     *
-     * @param bean
-     * @param holder
-     */
-    private void setAddDishes(FoodBean bean, DishesHolder holder) {
-        int number = bean.getCount();
-        number++;
-        bean.setCount(number);
-        holder.dishesNumber.setText(number + "");
-        EventBus.getDefault().post(new RefreshCartEvent(bean));
-    }
-
-    /**
-     * 加菜按钮，减菜按钮
-     *
-     * @param button
-     */
-    private void buttonClick(final ImageView button) {
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                button.setClickable(false);
-                dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
-                        mContext.getResources().getString(R.string.dialog_context1),
-                        mContext.getResources().getString(R.string.dialog_cacel)).show();
-            }
-        });
-    }
-
-    /**
-     * 验证是否必选
-     */
-    private void verifyRequired() {
-
-    }
-
-    /**
-     * 验证总数是否已经超过最大数量
-     */
-    private boolean verifyMaximum() {
-        int count = 0;
-        for (FoodBean bean : mList) {
-            count = count + bean.getCount();
-        }
-        if (count >= maximum) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 总数超标弹窗
-     */
-    private void maxDialog(){
-        dialog.aloneDialog(mContext.getString(R.string.dialog_title),
-                mContext.getString(R.string.dialog_context2),
-                "好的").show();
-    }
-
 }

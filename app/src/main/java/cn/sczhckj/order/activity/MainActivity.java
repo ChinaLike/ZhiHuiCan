@@ -32,7 +32,7 @@ import cn.sczhckj.order.data.bean.FavorableTypeBean;
 import cn.sczhckj.order.data.bean.PayTypeBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.UserLoginBean;
+import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.event.ApplyForVipCardEvent;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     /**
      * 用户ID
      */
-    private String userId = "";
+    private String userId ="";
     /**
      * 锅底选择，推荐菜品
      */
@@ -198,8 +198,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     private void isLogin() {
         /**判断是否登录*/
         if (MyApplication.isLogin) {
-            UserLoginBean bean = (UserLoginBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
-            userId = bean.getId();
+            MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
+            userId = bean.getId()+"";
             login(bean);
         }
     }
@@ -346,12 +346,13 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
             tableInfoParent.setVisibility(View.GONE);
             viewPager.setCurrentItem(FRAGMENT_DETAILS, false);
             mDetailsFragment.setData(event.getBean());
+            mDetailsFragment.setBeanList(event.getBeanList());
         } else if (event.getType() == Constant.DISHES_DETAILS_OUT) {
             /**退出菜品详情*/
-            if (BaseFragment.flag == 0) {
-                viewPager.setCurrentItem(FRAGMENT_POT_TYPE, false);
-            } else {
+            if (BaseFragment.isOpen) {
                 viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+            } else {
+                viewPager.setCurrentItem(FRAGMENT_POT_TYPE, false);
             }
         }
     }
@@ -410,7 +411,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         } else if (event.getType() == SettleAountsTypeEvent.ETYPE) {
             viewPager.setCurrentItem(FRAGMENT_EVALUATE, false);
             cart.setCurrentItem(CART_EVALUATE_LIST, false);
-            mEvaluateListFragment.setData(mMainFragment.getmSettleAccountsFragment().getmList());
+            mEvaluateListFragment.setData(mMainFragment.getBillFragment().getBillList());
         }
     }
 
@@ -442,7 +443,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         switch (requestCode) {
             case Constant.LOGIN_RESULT_CODE:
                 if (data != null) {
-                    UserLoginBean bean = (UserLoginBean) data.getExtras().get(Constant.USER_INFO);
+                    MemberBean bean = (MemberBean) data.getExtras().get(Constant.USER_INFO);
                     login(bean);
                 }
                 break;
@@ -452,13 +453,13 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     /**
      * 如果判断已经有登录信息了，显示登录状态
      */
-    private void login(UserLoginBean bean) {
+    private void login(MemberBean bean) {
         hasLogin.setVisibility(View.VISIBLE);
         noLogin.setVisibility(View.GONE);
         /**加载头像*/
-        GlideLoading.loadingHeader(this, bean.getUrl(), header);
-        userName.setText(bean.getName() + "");
-        GlideLoading.loadingDishes(this, bean.getVipUrl(), vipGrade);
+        GlideLoading.loadingHeader(this, bean.getHeadImageUrl(), header);
+        userName.setText(bean.getShortName() + "");
+        GlideLoading.loadingDishes(this, bean.getMemberTypeImageUrl(), vipGrade);
     }
 
     /**

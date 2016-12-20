@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,14 +21,13 @@ import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.bean.UserLoginBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.event.LoginEvent;
-import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
-import cn.sczhckj.platform.rest.io.RestRequest;
-import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
+import cn.sczhckj.order.mode.UserMode;
+import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,21 +37,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class LoginActivity extends Activity implements Callback<Bean<UserLoginBean>> {
-
-    /**
-     * 账号登录
-     */
-    private static final int PASSWORD_LOGIN = 1;
-    /**
-     * 快捷登录
-     */
-    private static final int SHORTCUT_LOGIN = 2;
-    /**
-     * 短信倒计时时间
-     */
-    private static final long TIME = 60000;
-
+public class LoginActivity extends Activity implements Callback<Bean<MemberBean>> {
 
     @Bind(R.id.back)
     ImageView back;
@@ -74,21 +58,105 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
     @Bind(R.id.login)
     Button login;
 
+    /**
+     * 账号登录
+     */
+    private static final int PASSWORD_LOGIN = 1;
+    /**
+     * 快捷登录
+     */
+    private static final int SHORTCUT_LOGIN = 2;
+    /**
+     * 短信倒计时时间
+     */
+    private static final long TIME = 60000;
+    /**
+     * 登录类型
+     */
     private Integer loginType;
-
-
+    /**
+     * 计时器
+     */
     private CountDownTimer mCountDownTimer;
+    /**
+     * 用户数据请求
+     */
+    private UserMode mUserMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        mUserMode = new UserMode();
         /**设置默认选中账号登录*/
         loginType(PASSWORD_LOGIN);
+        loginBtnStatus(false);
         initTime();
     }
+
+    /**
+     * 初始化登录
+     *
+     * @param number 卡号或手机号
+     * @param code   密码或验证码
+     */
+    private void initLogin(String number, String code) {
+        if (number.equals("") || number == null) {
+            T.showShort(this, getString(R.string.userNameHint));
+            return;
+        }
+        if (code.equals("") || code == null) {
+            T.showShort(this, getString(R.string.passwordHint));
+            return;
+        }
+        RequestCommonBean bean = new RequestCommonBean();
+        if (loginType == PASSWORD_LOGIN) {
+            bean.setMemberCode(number);
+            bean.setPassword(code);
+            mUserMode.login(bean, this);
+        } else if (loginType == SHORTCUT_LOGIN) {
+            bean.setPhone(number);
+            bean.setIdentity(code);
+            mUserMode.smsLogin(bean, this);
+        }
+    }
+
+    /**
+     * 初始化获取验证码
+     *
+     * @param phone 手机号
+     */
+    private void initSms(String phone) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setPhone(phone);
+        mUserMode.sms(bean, smsCallback);
+    }
+
+    /**
+     * 获取验证码回调
+     */
+    Callback<Bean<ResponseCommonBean>> smsCallback = new Callback<Bean<ResponseCommonBean>>() {
+        @Override
+        public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+            Bean<ResponseCommonBean> bean = response.body();
+            if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                T.showShort(LoginActivity.this, bean.getMessage());
+                mCountDownTimer.start();
+            } else {
+                T.showShort(LoginActivity.this, bean.getMessage());
+                loginCode.setClickable(true);
+                loginCode.setText("重新发送");
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+            T.showShort(LoginActivity.this, getString(R.string.overTime));
+            loginCode.setClickable(true);
+            loginCode.setText("重新发送");
+        }
+    };
 
     /**
      * 初始化倒计时时间
@@ -108,7 +176,8 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
         };
     }
 
-    @OnClick({R.id.back, R.id.login_set, R.id.login_numberLogin, R.id.login_shortcutLogin, R.id.login_code, R.id.login_cancel_phone, R.id.login_cancel_password, R.id.login})
+    @OnClick({R.id.back, R.id.login_set, R.id.login_numberLogin, R.id.login_shortcutLogin,
+            R.id.login_code, R.id.login_cancel_phone, R.id.login_cancel_password, R.id.login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -129,9 +198,8 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
             case R.id.login_code:
                 /**获取验证码*/
                 if (!"".equals(loginPhoneInput.getText().toString())) {
-                    mCountDownTimer.start();
                     loginCode.setClickable(false);
-                    getSMSAuthCode(loginPhoneInput.getText().toString());
+                    initSms(loginPhoneInput.getText().toString());
                 } else {
                     Toast.makeText(LoginActivity.this, "请先输入电话号码", Toast.LENGTH_SHORT).show();
                 }
@@ -145,13 +213,14 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
                 loginPasswordInput.setText("");
                 break;
             case R.id.login:
-                login(loginPhoneInput.getText().toString(), loginPasswordInput.getText().toString());
+                loginBtnStatus(true);
+                initLogin(loginPhoneInput.getText().toString(), loginPasswordInput.getText().toString());
                 break;
         }
     }
 
     /**
-     * 登录方式
+     * 根据登录方式显示界面
      *
      * @param type
      */
@@ -164,6 +233,11 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
             loginView1.setVisibility(View.GONE);
             loginCode.setVisibility(View.GONE);
             loginCancelPhone.setVisibility(View.VISIBLE);
+            loginPhoneInput.setHint("请输入卡号或手机号");
+            loginPhoneInput.setText("");
+            loginPasswordInput.setText("");
+            loginPasswordInput.setHint("请输入密码");
+            loginPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         } else if (type == SHORTCUT_LOGIN) {
             /**快捷登录*/
             loginType = PASSWORD_LOGIN;
@@ -172,6 +246,11 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
             loginView1.setVisibility(View.VISIBLE);
             loginCode.setVisibility(View.VISIBLE);
             loginCancelPhone.setVisibility(View.GONE);
+            loginPhoneInput.setHint("请输入手机号");
+            loginPhoneInput.setText("");
+            loginPasswordInput.setText("");
+            loginPasswordInput.setHint("请输入验证码");
+            loginPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT);
         }
     }
 
@@ -190,57 +269,22 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
     }
 
     /**
-     * 获取短信验证码
+     * 登录按钮状态
+     *
+     * @param isSelect
      */
-    private void getSMSAuthCode(String phone) {
-        RequestCommonBean bean = new RequestCommonBean();
-        bean.setPhone(phone);
-        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.LOGIN_AUTH_CODE)
-                .time()
-                .bean(bean);
-        /**进行数据校验*/
-        Call<Bean<Integer>> vipCallBack = RetrofitRequest.service().smsAuthCode(restRequest.toRequestString());
-        vipCallBack.enqueue(new Callback<Bean<Integer>>() {
-            @Override
-            public void onResponse(Call<Bean<Integer>> call, Response<Bean<Integer>> response) {
-                if (response.body() != null) {
-                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Bean<Integer>> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * 确认按钮
-     */
-    private void login(String userName, String password) {
-        if (userName.equals("") || userName == null) {
-            Toast.makeText(this, getString(R.string.userNameHint), Toast.LENGTH_SHORT).show();
-            return;
+    private void loginBtnStatus(boolean isSelect) {
+        if (isSelect) {
+            /**按下后，没有数据返回不可点击*/
+            login.setClickable(false);
+            login.setSelected(false);
+            login.setTextColor(ContextCompat.getColor(this, R.color.white));
+        } else {
+            /**数据返回，可点击*/
+            login.setClickable(true);
+            login.setSelected(true);
+            login.setTextColor(ContextCompat.getColor(this, R.color.button_text));
         }
-        if (password.equals("") || password == null) {
-            Toast.makeText(this, getString(R.string.passwordHint), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        RequestCommonBean bean = new RequestCommonBean();
-        bean.setPhone(userName);
-        bean.setPassword(password);
-        bean.setLoginType(loginType);
-        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.LOGIN)
-                .time()
-                .bean(bean);
-        /**进行数据校验*/
-        Call<Bean<UserLoginBean>> vipCallBack = RetrofitRequest.service().login(restRequest.toRequestString());
-        vipCallBack.enqueue(this);
-
     }
 
     /**
@@ -248,7 +292,7 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
      *
      * @param bean
      */
-    private void into(UserLoginBean bean) {
+    private void into(MemberBean bean) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra(Constant.USER_INFO, bean);
         if (getIntent().getExtras() != null && (getIntent().getExtras().getInt(Constant.INTENT_FLAG) == Constant.LEAD_TO_LOGIN)) {
@@ -262,22 +306,21 @@ public class LoginActivity extends Activity implements Callback<Bean<UserLoginBe
     }
 
     @Override
-    public void onResponse(Call<Bean<UserLoginBean>> call, Response<Bean<UserLoginBean>> response) {
-        Bean<UserLoginBean> bean = response.body();
-        if (bean.getCode() == 0) {
-            Toast.makeText(this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+    public void onResponse(Call<Bean<MemberBean>> call, Response<Bean<MemberBean>> response) {
+        Bean<MemberBean> bean = response.body();
+        T.showShort(this, bean.getMessage());
+        loginBtnStatus(false);
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             MyApplication.isLogin = true;
+            MyApplication.memberCode = bean.getResult().getMemberCode();
             into(bean.getResult());
-        } else {
-            Toast.makeText(this, bean.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onFailure(Call<Bean<UserLoginBean>> call, Throwable t) {
-        Toast.makeText(this, getString(R.string.overTime), Toast.LENGTH_SHORT).show();
+    public void onFailure(Call<Bean<MemberBean>> call, Throwable t) {
+        loginBtnStatus(false);
+        T.showShort(this, getString(R.string.overTime));
     }
-
-
 }
 

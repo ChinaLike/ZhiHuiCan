@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -28,17 +29,17 @@ import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
-import cn.sczhckj.order.data.bean.table.OpenInfoBean;
+import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.event.CartNumberEvent;
+import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.listener.OnTableListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
+import cn.sczhckj.order.mode.impl.RefreshFoodImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +50,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenInfoBean>>, OnItemClickListener {
+public class RequiredFagment extends BaseFragment implements Callback<Bean<TableBean>>, OnItemClickListener {
 
     @Bind(R.id.person_choose)
     RecyclerView personChoose;
@@ -105,6 +106,10 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
      * 菜品适配器
      */
     private FoodAdapter mFoodAdapter;
+    /**
+     * 每一次点击菜品集合
+     */
+    private List<FoodBean> foodList=new ArrayList<>();
 
 
     @Override
@@ -171,7 +176,8 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
         bean.setDeviceId(deviceId);
         /**获取数据*/
         mTableMode.openInfo(bean, this);
-        loading(getContext().getResources().getString(R.string.loading));
+        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
+                getContext().getResources().getString(R.string.loading));
         initTab();
     }
 
@@ -225,16 +231,19 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
                     cateList = bean.getResult().getCates();
                     mTabCateAdapter.notifyDataSetChanged(cateList);
                 } else {
-                    loadingFail(getContext().getResources().getString(R.string.loadingFail));
+                    loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                            getContext().getResources().getString(R.string.loadingFail));
                 }
             } else {
-                loadingFail(getContext().getResources().getString(R.string.loadingFail));
+                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                        getContext().getResources().getString(R.string.loadingFail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<CateBean>> call, Throwable t) {
-            loadingFail(getContext().getResources().getString(R.string.loadingFail));
+            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                    getContext().getResources().getString(R.string.loadingFail));
         }
     };
 
@@ -244,25 +253,26 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
     private Callback<Bean<List<FoodBean>>> foodCallback = new Callback<Bean<List<FoodBean>>>() {
         @Override
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
-
             Bean<List<FoodBean>> bean = response.body();
-            L.d("子项被点击"+bean);
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
-                    loadingSuccess();
-                    mFoodAdapter.notifyDataSetChanged(bean.getResult());
+                    loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
+                    foodList = RefreshFoodImpl.getInstance().compare(orderList,disOrderList,bean.getResult());
+                    mFoodAdapter.notifyDataSetChanged(foodList);
                 } else {
-                    loadingFail(getContext().getResources().getString(R.string.loadingFail));
+                    loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                            getContext().getResources().getString(R.string.loadingFail));
                 }
             } else {
-                loadingFail(getContext().getResources().getString(R.string.loadingFail));
+                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                        getContext().getResources().getString(R.string.loadingFail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
-            L.d("子项被点击"+"1111111111111");
-            loadingFail(getContext().getResources().getString(R.string.loadingFail));
+            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                    getContext().getResources().getString(R.string.loadingFail));
         }
     };
 
@@ -285,16 +295,6 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
         EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 购物车数据变化后，通知菜品变化
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void cartEventBus(CartNumberEvent event) {
-
-    }
-
     @OnClick({R.id.loadingParent})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -314,8 +314,8 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
     }
 
     @Override
-    public void onResponse(Call<Bean<OpenInfoBean>> call, Response<Bean<OpenInfoBean>> response) {
-        Bean<OpenInfoBean> bean = response.body();
+    public void onResponse(Call<Bean<TableBean>> call, Response<Bean<TableBean>> response) {
+        Bean<TableBean> bean = response.body();
         if (bean != null) {
             if (bean.getCode() == ResponseCode.SUCCESS) {
                 /**设置桌面桌号、服务员、就餐人数*/
@@ -328,48 +328,19 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
                 mList.add(bean.getResult().getMaximum());
                 personAdapter.notifyDataSetChanged(mList);
             } else {
-                loadingFail(bean.getMessage());
+                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                        getContext().getResources().getString(R.string.loadingFail));
             }
         } else {
-            loadingFail(getContext().getResources().getString(R.string.loadingFail));
+            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                    getContext().getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
-    public void onFailure(Call<Bean<OpenInfoBean>> call, Throwable t) {
-        loadingFail(getContext().getResources().getString(R.string.loadingFail));
-    }
-
-    /**
-     * 加载中
-     */
-    private void loading(String str) {
-        loadingParent.setVisibility(View.VISIBLE);
-        contextParent.setVisibility(View.GONE);
-        loadingItemParent.setVisibility(View.VISIBLE);
-        loadingFail.setVisibility(View.GONE);
-        loadingTitle.setText(str);
-    }
-
-    /**
-     * 加载成功
-     */
-    private void loadingSuccess() {
-        loadingParent.setVisibility(View.GONE);
-        contextParent.setVisibility(View.VISIBLE);
-        loadingItemParent.setVisibility(View.VISIBLE);
-        loadingFail.setVisibility(View.GONE);
-    }
-
-    /**
-     * 加载失败
-     */
-    private void loadingFail(String str) {
-        loadingParent.setVisibility(View.VISIBLE);
-        contextParent.setVisibility(View.GONE);
-        loadingItemParent.setVisibility(View.GONE);
-        loadingFail.setVisibility(View.VISIBLE);
-        loadingFailTitle.setText(str);
+    public void onFailure(Call<Bean<TableBean>> call, Throwable t) {
+        loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                getContext().getResources().getString(R.string.loadingFail));
     }
 
     /**
@@ -386,4 +357,22 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<OpenI
         mFoodAdapter.setRequired(itemBean.getRequired());
         mFoodAdapter.setMaximum(itemBean.getMaximum());
     }
+
+
+    /**
+     * 菜品刷新
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshFoodBus(RefreshFoodEvent event) {
+        if (event.getBean()!=null) {
+            mFoodAdapter.notifyDataSetChanged(
+                    RefreshFoodImpl.getInstance().refreshFood(event.getBean(), foodList));
+        }else if (event.getBeanList()!=null){
+            mFoodAdapter.notifyDataSetChanged(
+                    RefreshFoodImpl.getInstance().refreshFood(event.getBeanList(), foodList));
+        }
+    }
+
 }

@@ -5,22 +5,22 @@ import java.util.List;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 
 /**
- * @describe: 刷新购物车事件
+ * @describe: 菜品刷新事件
  * @author: Like on 2016/11/16.
  * @Email: 572919350@qq.com
  */
 
-public class RefreshCartEvent {
+public class RefreshFoodEvent {
 
     private FoodBean bean;
 
     private List<FoodBean> beanList;
 
-    public RefreshCartEvent(FoodBean bean) {
+    public RefreshFoodEvent(FoodBean bean) {
         this.bean = bean;
     }
 
-    public RefreshCartEvent(List<FoodBean> beanList) {
+    public RefreshFoodEvent(List<FoodBean> beanList) {
         this.beanList = beanList;
     }
 

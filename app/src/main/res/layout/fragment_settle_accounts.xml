@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/table_info_height"
-            android:background="@color/white"
+            android:background="@color/background_gray_m"
             android:orientation="horizontal">
 
             <TextView

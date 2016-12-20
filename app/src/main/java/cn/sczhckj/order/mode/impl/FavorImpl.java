@@ -19,7 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * @ describe: 点赞
+ * @ describe: 点赞逻辑实现
  * @ author: Like on 2016/12/19.
  * @ email: 572919350@qq.com
  */

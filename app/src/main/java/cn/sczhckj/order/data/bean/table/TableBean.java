@@ -8,7 +8,7 @@ import java.util.List;
  * @Email: 572919350@qq.com
  */
 
-public class OpenInfoBean {
+public class TableBean {
 
     private Integer id;//台桌ID
     private String tableName;//台桌名称

@@ -15,8 +15,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.SettleAccountsDishesBean;
-import cn.sczhckj.order.data.bean.SettleAccountsDishesItemBean;
+import cn.sczhckj.order.data.bean.bill.BillBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.image.GlideLoading;
 
 /**
  * @describe: 结账界面清单数据适配
@@ -28,9 +29,9 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
 
-    private List<SettleAccountsDishesBean> mList;
+    private List<BillBean> mList;
 
-    public SettleAccountsAdapter(Context mContext, List<SettleAccountsDishesBean> mList) {
+    public SettleAccountsAdapter(Context mContext, List<BillBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -57,10 +58,10 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
      */
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (mList.get(groupPosition).getItemDishes() == null) {
+        if (mList.get(groupPosition).getFoods() == null) {
             return 0;
         } else {
-            return mList.get(groupPosition).getItemDishes().size();
+            return mList.get(groupPosition).getFoods().size();
         }
     }
 
@@ -71,13 +72,13 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
      * @return
      */
     @Override
-    public SettleAccountsDishesBean getGroup(int groupPosition) {
+    public BillBean getGroup(int groupPosition) {
         return mList.get(groupPosition);
     }
 
     @Override
-    public SettleAccountsDishesItemBean getChild(int groupPosition, int childPosition) {
-        return mList.get(groupPosition).getItemDishes().get(childPosition);
+    public FoodBean getChild(int groupPosition, int childPosition) {
+        return mList.get(groupPosition).getFoods().get(childPosition);
     }
 
     /**
@@ -125,14 +126,14 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(mContext).inflate(R.layout.item_expandable_list_one_classify, null, false);
-        ParentViewHolder holder=new ParentViewHolder(convertView);
+        ParentViewHolder holder = new ParentViewHolder(convertView);
         holder.name.setText(getGroup(groupPosition).getName().toString());
-        holder.number.setText("×"+getGroup(groupPosition).getTotalNumber()+"");
-        holder.totalPrice.setText("¥ "+getGroup(groupPosition).getTotalPrice());
+        holder.number.setText("×" + getGroup(groupPosition).getCount() + "");
+        holder.totalPrice.setText("¥ " + getGroup(groupPosition).getSum());
         holder.favorablePrice.setVisibility(View.INVISIBLE);
         holder.price.setVisibility(View.INVISIBLE);
         holder.image.setVisibility(View.INVISIBLE);
-        if (isExpanded){
+        if (isExpanded) {
             holder.tag.setImageResource(R.drawable.accounts_btn_details_sel);
         }
         return convertView;
@@ -151,22 +152,22 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(mContext).inflate(R.layout.item_expandable_list_two_classify, null, false);
-        ChildViewHolder holder=new ChildViewHolder(convertView);
-        holder.name.setText(getChild(groupPosition,childPosition).getName().toString());
-        holder.number.setText("×"+getChild(groupPosition,childPosition).getNumber());
-        if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null) {
-            holder.favorablePrice.setText("¥ " + getChild(groupPosition, childPosition).getPriceTypeBean().getPrice());
-        }
-        holder.price.setText("¥ "+getChild(groupPosition,childPosition).getPrice());
-        if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null) {
-            holder.totalPrice.setText("¥ " + (getChild(groupPosition, childPosition).getNumber() * getChild(groupPosition, childPosition).getPriceTypeBean().getPrice()));
-        }
-        if (getChild(groupPosition,childPosition).getPriceTypeBean()!=null){
+        ChildViewHolder holder = new ChildViewHolder(convertView);
+        holder.name.setText(getChild(groupPosition, childPosition).getName().toString());
+        holder.number.setText("×" + getChild(groupPosition, childPosition).getCount());
+        /**优惠后价格,没有优惠价原价与总价相等*/
+        holder.favorablePrice.setText("¥ " + getChild(groupPosition, childPosition).getPrice());
+        if (getChild(groupPosition, childPosition).getPriceImageUrl() != null) {
+            /**设置原价*/
+            holder.price.setText("¥ " + getChild(groupPosition, childPosition).getOriginPrice());
             holder.image.setVisibility(View.VISIBLE);
-            setFavorableImage(getChild(groupPosition,childPosition).getPriceTypeBean().getType(),holder.image);
-        }else {
+            GlideLoading.loadingDishes(mContext, getChild(groupPosition, childPosition).getPriceImageUrl(), holder.image);
+        } else {
+            holder.price.setVisibility(View.GONE);
             holder.image.setVisibility(View.INVISIBLE);
         }
+        /**设置Item总价*/
+        holder.totalPrice.setText("¥ "+getChild(groupPosition, childPosition).getCount()*getChild(groupPosition, childPosition).getPrice());
         return convertView;
     }
 
@@ -182,7 +183,7 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    public void notifyDataSetChanged(List<SettleAccountsDishesBean> mList) {
+    public void notifyDataSetChanged(List<BillBean> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }
@@ -240,19 +241,6 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
 
         ChildViewHolder(View view) {
             ButterKnife.bind(this, view);
-        }
-    }
-
-    /**
-     * 设置折扣标识
-     * @param type
-     * @param mImageView
-     */
-    private void setFavorableImage(int type ,ImageView mImageView){
-        if (type==0){
-            mImageView.setImageResource(R.drawable.vip);
-        }else if(type == 1){
-            mImageView.setImageResource(R.drawable.zhekou);
         }
     }
 

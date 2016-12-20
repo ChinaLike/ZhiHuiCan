@@ -92,7 +92,7 @@ public class CartService extends Service implements Callback<Bean<List<FoodBean>
         Bean<List<FoodBean>> bean = response.body();
         delay();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-//            EventBus.getDefault().post(new RefreshCartEvent(bean.getResult()));
+//            EventBus.getDefault().post(new RefreshFoodEvent(bean.getResult()));
         }
     }
 

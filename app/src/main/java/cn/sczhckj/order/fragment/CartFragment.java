@@ -38,13 +38,11 @@ import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
-import cn.sczhckj.order.data.bean.food.PriceBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
-import cn.sczhckj.order.data.event.RefreshCartEvent;
+import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
-import cn.sczhckj.order.data.listener.OnTotalNumberListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.OrderMode;
 import cn.sczhckj.order.mode.TableMode;
@@ -52,7 +50,6 @@ import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,15 +107,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     private CartAdapter mOrderAdapter;
 
     private OnButtonClickListener onButtonClickListener;
-
-    /**
-     * 下单的菜品，即已下单菜品
-     */
-    private List<FoodBean> orderList = new ArrayList<>();
-    /**
-     * 未下单的菜品，即购物车菜品
-     */
-    private List<FoodBean> disOrderList = new ArrayList<>();
 
     /**
      * 弹窗
@@ -259,7 +247,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * 刷新购物车
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshCart(RefreshCartEvent event) {
+    public void refreshCart(RefreshFoodEvent event) {
         buttonAttr(true);
         /**本地加菜*/
         if (event.getBean() != null) {

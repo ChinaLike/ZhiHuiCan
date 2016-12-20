@@ -211,6 +211,7 @@
 
                     <ImageView
                         android:id="@+id/details_dishes_minus"
+                        android:padding="15dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/open_btn_dishes_reduce" />
@@ -227,6 +228,7 @@
                         android:id="@+id/details_dishes_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="15dp"
                         android:src="@drawable/open_btn_dishes_add" />
 
                 </LinearLayout>

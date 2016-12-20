@@ -21,9 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,25 +30,24 @@ import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.CatesAdapter;
 import cn.sczhckj.order.adapter.FoodAdapter;
-import cn.sczhckj.order.adapter.TabCateAdapter;
 import cn.sczhckj.order.adapter.TabTableAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.food.CateBean;
-import cn.sczhckj.order.data.bean.ClassifyItemBean;
 import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.bean.food.CateBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
+import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
+import cn.sczhckj.order.mode.impl.RefreshFoodImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -108,14 +105,16 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 台桌分类数据请求
      */
     private TableMode mTableMode;
-
-
     /**
      * 默认显示第几个
      */
     private int defaultItem = 0;
 
     private LinearLayoutManager mLinearLayoutManager;
+    /**
+     * 临时菜品列表
+     */
+    private List<FoodBean> foodList = new ArrayList<>();
 
     /**
      * 是否显示提示
@@ -329,7 +328,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**菜品请求成功*/
                 /**处理适配数据*/
-                mFoodAdapter.notifyDataSetChanged(bean.getResult());
+                foodList = RefreshFoodImpl.getInstance().compare(orderList,disOrderList,bean.getResult());
+                mFoodAdapter.notifyDataSetChanged(foodList);
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                         getContext().getResources().getString(R.string.loadingFail));
@@ -433,40 +433,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     }
 
     /**
-     * 购物车数据变化监听
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void cartEventBus(CartNumberEvent event) {
-        FoodBean bean = event.getBean();
-        if (bean != null) {
-            Integer id = bean.getId();
-            String dishesName = bean.getName();
-            for (FoodBean item : parentDishesList) {
-                if (item.getId().equals(id) && item.getName().equals(dishesName)) {
-                    item.setCount(bean.getCount());
-                    mFoodAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    }
-
-    /**
-     * 菜品数量比较，如果过多，显示提示框
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void moreDishesHintEventBus(MoreDishesHintEvent event) {
-        int number = event.getNumber();
-        if (isHint) {
-            if (number > warmPromptNumber) {
-                mPopupWindow.showAtLocation(popView, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.6f);
-            }
-        }
-    }
-
-    /**
      * 初始化PopWindow
      */
     private void initPop() {
@@ -531,4 +497,56 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     public void onItemClick(View view, int position, Object bean) {
 
     }
+
+
+    /**
+     * 购物车数据变化监听
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void cartEventBus(CartNumberEvent event) {
+        FoodBean bean = event.getBean();
+        if (bean != null) {
+            Integer id = bean.getId();
+            String dishesName = bean.getName();
+            for (FoodBean item : parentDishesList) {
+                if (item.getId().equals(id) && item.getName().equals(dishesName)) {
+                    item.setCount(bean.getCount());
+                    mFoodAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+
+    /**
+     * 菜品数量比较，如果过多，显示提示框
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void moreDishesHintEventBus(MoreDishesHintEvent event) {
+        int number = event.getNumber();
+        if (isHint) {
+            if (number > warmPromptNumber) {
+                mPopupWindow.showAtLocation(popView, Gravity.CENTER, 0, 0);
+                backgroundAlpha(0.6f);
+            }
+        }
+    }
+
+    /**
+     * 菜品刷新
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshFoodBus(RefreshFoodEvent event) {
+        if (event.getBean()!=null) {
+            mFoodAdapter.notifyDataSetChanged(
+                    RefreshFoodImpl.getInstance().refreshFood(event.getBean(), foodList));
+        }else if (event.getBeanList()!=null){
+            mFoodAdapter.notifyDataSetChanged(
+                    RefreshFoodImpl.getInstance().refreshFood(event.getBeanList(), foodList));
+        }
+    }
+
 }

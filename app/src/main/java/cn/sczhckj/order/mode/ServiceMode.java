@@ -7,7 +7,6 @@ import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.service.ServiceBean;
-import cn.sczhckj.order.data.bean.table.OpenInfoBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;

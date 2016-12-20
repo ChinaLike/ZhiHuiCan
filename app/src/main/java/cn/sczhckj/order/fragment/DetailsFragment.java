@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -34,6 +35,7 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.impl.FavorImpl;
+import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.CarouselView;
 import cn.sczhckj.order.overwrite.TagCloudLayout;
@@ -94,6 +96,14 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
      * 点赞控件实现
      */
     private FavorImpl mFavorImpl;
+    /**
+     * 整个分类数据
+     */
+    private List<FoodBean> beanList = new ArrayList<>();
+    /**
+     * 菜品控制实现
+     */
+    private FoodControlImpl mFoodControl;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,9 +141,9 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         dishesSales.setText("月销量 " + mFoodBean.getSales());
         dishesLike.setText(mFoodBean.getFavors() + "");
         if (mFoodBean.isFavor()) {
-           detailsLike.setSelected(true);
+            detailsLike.setSelected(true);
             dishesLike.setTextColor(ContextCompat.getColor(getContext(), R.color.favor_sel));
-        }else {
+        } else {
             detailsLike.setSelected(false);
             dishesLike.setTextColor(ContextCompat.getColor(getContext(), R.color.favor_nor));
         }
@@ -167,6 +177,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         detailsBanner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppSystemUntil.height(getContext()) * 2 / 3));
         mFoodMode = new FoodMode();
         mFavorImpl = new FavorImpl(getContext());
+        mFoodControl = new FoodControlImpl(getContext());
     }
 
 
@@ -225,13 +236,15 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         switch (view.getId()) {
             case R.id.favor_parent:
                 /**点赞*/
-                mFavorImpl.favor(detailsLike,dishesLike,mFoodBean);
+                mFavorImpl.favor(detailsLike, dishesLike, mFoodBean);
                 break;
             case R.id.details_dishes_minus:
                 /**减菜*/
+                mFoodControl.minusFood(dishesMinus, detailsDishesNumber, mFoodBean);
                 break;
             case R.id.details_dishes_add:
                 /**加菜*/
+                mFoodControl.addFood(dishesAdd, detailsDishesNumber, mFoodBean, beanList);
                 break;
             case R.id.details_back:
                 /**返回*/
@@ -258,5 +271,14 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     @Override
     public void onFailure(Call<Bean<List<ImageBean>>> call, Throwable t) {
 
+    }
+
+    /**
+     * 设置整个分类的数据
+     *
+     * @param beanList
+     */
+    public void setBeanList(List<FoodBean> beanList) {
+        this.beanList = beanList;
     }
 }
