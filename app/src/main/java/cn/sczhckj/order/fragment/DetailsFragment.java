@@ -1,6 +1,5 @@
 package cn.sczhckj.order.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -12,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +19,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.adapter.BaseCommAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
-import cn.sczhckj.order.data.bean.food.PriceBean;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
-import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.FoodMode;
@@ -108,7 +102,6 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -185,7 +178,6 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        EventBus.getDefault().unregister(this);
     }
 
 
@@ -216,19 +208,6 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
                 return urlList.size();
             }
         }, 0);
-    }
-
-
-    /**
-     * 购物车添加数据变动
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void cartEventBus(CartNumberEvent event) {
-//        if (foodBean != null && event.getBean().getId().equals(foodBean.getId())) {
-//            detailsDishesNumber.setText(event.getBean().getCount() + "");
-//        }
     }
 
     @OnClick({R.id.favor_parent, R.id.details_dishes_minus, R.id.details_dishes_add, R.id.details_back, R.id.details_banner})

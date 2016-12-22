@@ -12,6 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -25,12 +29,14 @@ import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.service.ServiceBean;
+import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.ServiceMode;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import pl.droidsonroids.gif.GifDrawable;
@@ -83,6 +89,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -116,6 +123,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -235,5 +243,19 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
 
         }
     };
+
+    /**
+     * WebSocket推送
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        if (event.getType() == WebSocketEvent.TYPE_SERVICE_COMPLETE) {
+            T.showShort(getContext(), event.getBean().getMessage());
+            cancelService();
+            initView(true);
+        }
+    }
 
 }

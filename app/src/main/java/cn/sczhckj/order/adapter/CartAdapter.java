@@ -15,12 +15,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.PriceTypeBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
-import cn.sczhckj.order.data.bean.food.PriceBean;
 import cn.sczhckj.order.image.GlideLoading;
+import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.overwrite.RoundImageView;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 购物车数据适配
@@ -33,11 +32,29 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
     private List<FoodBean> mList;
 
     private Context mContext;
+    /**
+     * 已下单
+     */
+    public static final int ORDER_TYPE = 0;
+    /**
+     * 未下单
+     */
+    public static final int DIS_ORDER_TYPE = 1;
+
+    /**
+     * 显示类型，购物车不需要显示菜品进度，已下单需要显示
+     */
+    private int type = DIS_ORDER_TYPE;
+    /**
+     * 数量控制实现
+     */
+    private FoodControlImpl mFoodControl;
 
 
     public CartAdapter(List<FoodBean> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
+        mFoodControl = new FoodControlImpl(mContext);
     }
 
     @Override
@@ -58,51 +75,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
         holder.cartDishesTotalPrice.setText(bean.getCount() * bean.getPrice() + "");
         setPrice(holder.cartFavorableIamge, holder.cartDishesPrice, holder.cartDishesTotalPrice, bean);
         /**设置已完成数量*/
-        setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund, bean);
-//        if (bean.getPrices() == null || bean.getPrices().size() == 0) {
-//            holder.cartPrice.setText("¥" + bean.getPrice());
-//        } else {
-//            holder.cartFavorablePrice.setText("¥" + bean.getPrice());
-//            countFavorable(bean.getPriceType(), holder.cartPrice, holder.cartFavorable);
-//        }
-//        bean.setTotalPrice(countPrice(bean.getCount(), holder.cartPrice));
-//        holder.cartTotalPrice.setText("¥" + bean.getTotalPrice());
-//        /**加菜*/
-//        holder.cartAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                /**首先判断权限*/
-//                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-//                    int number = bean.getCount();
-//                    number++;
-//                    bean.setCount(number);
-//                    notifyDataSetChanged();
-//                    EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 0, bean));
-//                    countTotal();
-//                }
-//            }
-//        });
-//        /**减菜*/
-//        holder.cartMinus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                /**首先判断权限*/
-//                if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-//                    int number = bean.getCount();
-//                    if (number > 0) {
-//                        number--;
-//                        bean.setCount(number);
-//                        if (number == 0) {
-//                            mList.remove(bean);
-//                        }
-//                        notifyDataSetChanged();
-//                        EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 1, bean));
-//                        countTotal();
-//                    }
-//                }
-//            }
-//        });
-//        countTotal();
+        if (type == ORDER_TYPE) {
+            setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund, bean);
+        } else if (type == DIS_ORDER_TYPE) {
+            holder.cartDishesRefund.setImageResource(R.drawable.open_btn_dishes_reduce);
+            mFoodControl.minusFood(holder.cartDishesRefund, bean);
+        }
     }
 
     @Override
@@ -124,16 +102,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
      * @param bean       参数
      */
     private void setPrice(ImageView imageView, TextView price, TextView totalPrice, FoodBean bean) {
-//        if (bean.getPrices() != null && bean.getPrices().size() != 0) {
-//            for (PriceBean item : bean.getPrices()) {
-//                if (item.getActive() == Constant.PRICE_ACTIVE) {
-//                    price.setText(item.getPrice() + "");
-//                    totalPrice.setText(bean.getCount() * item.getPrice() + "");
-//                    GlideLoading.loadingDishes(mContext, item.getImageUrl(), imageView);
-//                }
-//            }
-//        }
-        price.setText(bean.getPrice()+"");
+        price.setText(bean.getPrice() + "");
         totalPrice.setText(bean.getCount() * bean.getPrice() + "");
         GlideLoading.loadingDishes(mContext, bean.getPriceImageUrl(), imageView);
     }
@@ -162,96 +131,22 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
         /**设置可退图标*/
         if (bean.getCount() == bean.getFinishCount()) {
             retIm.setImageResource(R.drawable.order_btn_foodback_dis);
+            retIm.setClickable(false);
         } else {
+            retIm.setClickable(true);
             retIm.setImageResource(R.drawable.order_btn_foodback_nor);
-        }
-    }
-
-//    /**
-//     * 计算锅底数量，菜品数量，总价
-//     */
-//    public void countTotal() {
-//        /**锅底数量*/
-//        int potNumber = 0;
-//        /**菜品数量*/
-//        int dishesNumber = 0;
-//        /**总价*/
-//        int totalPrice = 0;
-//        for (int i = 0; i < mList.size(); i++) {
-//            FoodBean bean = mList.get(i);
-//            if (bean.getType() == 0) {
-//                potNumber = potNumber + bean.getCount();
-//            } else {
-//                dishesNumber = dishesNumber + bean.getCount();
-//            }
-//            if (bean.getPriceType() != null && bean.getPriceType().size() != 0) {
-//                totalPrice = totalPrice + bean.getCount() * getFavortablePrice(bean.getPriceType());
-//            } else {
-//                totalPrice = totalPrice + bean.getCount() * bean.getPrice();
-//            }
-//        }
-//        onTotalNumberListener.totalNumber(totalPrice, potNumber, dishesNumber);
-//    }
-
-    /**
-     * 计算折扣
-     */
-    private void countFavorable(List<PriceTypeBean> priceTypeBeen, TextView textView, ImageView image) {
-        int price = getFavortablePrice(priceTypeBeen);
-        int type = getFavorableType(priceTypeBeen);
-        textView.setText("¥" + price);
-        for (int i = 0; i < priceTypeBeen.size(); i++) {
-            if (priceTypeBeen.get(i).getType() == type) {
-                GlideLoading.loadingDishes(mContext, priceTypeBeen.get(i).getImageUrl(), image);
-            }
+            mFoodControl.refund(retIm, bean);
         }
     }
 
     /**
-     * 获取优惠的ID
+     * 设置显示类型
      *
-     * @param priceTypeBeen
-     * @return
+     * @param type
      */
-    private int getFavorableType(List<PriceTypeBean> priceTypeBeen) {
-        int price = priceTypeBeen.get(0).getPrice();
-        int type = priceTypeBeen.get(0).getType();
-        for (int i = 0; i < priceTypeBeen.size(); i++) {
-            if (priceTypeBeen.get(i).getPrice() < price) {
-                price = priceTypeBeen.get(i).getPrice();
-                type = priceTypeBeen.get(i).getType();
-            }
-        }
-
-        return type;
+    public void setType(int type) {
+        this.type = type;
     }
-
-    /**
-     * 获取优惠价格
-     *
-     * @param priceTypeBeen
-     * @return
-     */
-    private int getFavortablePrice(List<PriceTypeBean> priceTypeBeen) {
-        int price = priceTypeBeen.get(0).getPrice();
-        for (int i = 0; i < priceTypeBeen.size(); i++) {
-            if (priceTypeBeen.get(i).getPrice() < price) {
-                price = priceTypeBeen.get(i).getPrice();
-            }
-        }
-        return price;
-    }
-
-    /**
-     * 计算总价
-     *
-     * @return
-     */
-    private int countPrice(int number, TextView text) {
-        int price = Integer.parseInt(text.getText().toString().replace("¥", ""));
-        return number * price;
-    }
-
 
     static class ShoppingCartViewHolder extends RecyclerView.ViewHolder {
 

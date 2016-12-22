@@ -21,11 +21,11 @@ import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.image.GlideLoading;
-import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.TagCloudLayout;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 菜品适配
@@ -42,8 +42,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      * 标签云数据适配
      */
     private TagCloudImpl mTagCloudImpl;
-
-    private DialogImpl dialog;
 
     /**
      * 本分类最大数量
@@ -68,7 +66,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         this.mContext = mContext;
         this.mList = mList;
         mTagCloudImpl = new TagCloudImpl(mContext);
-        dialog = new DialogImpl(mContext);
         mFavorImpl = new FavorImpl(mContext);
         mFoodControl = new FoodControlImpl(mContext);
     }
@@ -104,7 +101,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         /**默认菜品*/
         holder.dishesNumber.setText(bean.getCount() + "");
         /**菜品减少*/
-        mFoodControl.minusFood(holder.dishesMinus,holder.dishesNumber,bean);
+        mFoodControl.minusFood(holder.dishesMinus,bean);
         /**菜品添加*/
         mFoodControl.addFood(holder.dishesAdd,holder.dishesNumber,bean,mList);
         /**点击菜品图片进入详情*/

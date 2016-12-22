@@ -27,6 +27,7 @@ public class RequestCommonBean {
     private Integer foodId;//菜品ID
     private Integer serviceId;//服务ID
     private Integer recordId;//消费记录ID
+    private Integer count;//退菜数量
 
 
     /**
@@ -135,6 +136,14 @@ public class RequestCommonBean {
 
     public String getDeviceId() {
         return deviceId;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public void setDeviceId(String deviceId) {

@@ -27,8 +27,6 @@ public class FoodBean {
     private Integer finishCount;//已上数量
     private List<PriceBean> prices;//价格策略
     private boolean isFavor;//是否点赞
-    private Integer orderCount;//已下单数量
-    private Integer disOrderCount;//未下单数量
     private List<ImageBean> images;//图片轮播
 
 
@@ -169,22 +167,6 @@ public class FoodBean {
         this.originPrice = originPrice;
     }
 
-    public Integer getOrderCount() {
-        return orderCount;
-    }
-
-    public void setOrderCount(Integer orderCount) {
-        this.orderCount = orderCount;
-    }
-
-    public Integer getDisOrderCount() {
-        return disOrderCount;
-    }
-
-    public void setDisOrderCount(Integer disOrderCount) {
-        this.disOrderCount = disOrderCount;
-    }
-
     public List<ImageBean> getImages() {
         return images;
     }
@@ -213,8 +195,6 @@ public class FoodBean {
                 ", finishCount=" + finishCount +
                 ", prices=" + prices +
                 ", isFavor=" + isFavor +
-                ", orderCount=" + orderCount +
-                ", disOrderCount=" + disOrderCount +
                 ", images=" + images +
                 '}';
     }

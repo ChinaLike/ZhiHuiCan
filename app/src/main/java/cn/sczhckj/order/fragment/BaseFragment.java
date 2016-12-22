@@ -101,6 +101,10 @@ public abstract class BaseFragment extends Fragment {
      * 未下单的菜品，即购物车菜品
      */
     protected static List<FoodBean> disOrderList = new ArrayList<>();
+    /**
+     * 是否加菜
+     */
+    public static boolean isAddFood = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -217,6 +221,8 @@ public abstract class BaseFragment extends Fragment {
         /**清空购物车数据*/
         orderList = new ArrayList<>();
         disOrderList = new ArrayList<>();
+        /**设置默认是否加菜*/
+        isAddFood = false;
     }
 
     @Override

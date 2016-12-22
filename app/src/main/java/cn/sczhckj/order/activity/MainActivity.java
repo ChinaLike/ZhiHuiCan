@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,22 +24,28 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckj.order.Config;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.FavorableTypeBean;
+import cn.sczhckj.order.data.bean.OP;
 import cn.sczhckj.order.data.bean.PayTypeBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.event.ApplyForVipCardEvent;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.event.SettleAountsTypeEvent;
+import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.listener.OnTableListenner;
+import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.fragment.ApplyForVipCardFragment;
 import cn.sczhckj.order.fragment.BaseFragment;
@@ -55,10 +62,14 @@ import cn.sczhckj.order.fragment.SettleAccountsCartFragment;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
+import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.overwrite.NoScrollViewPager;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,7 +79,8 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements OnButtonClickListener, OnTableListenner, Callback<Bean<ResponseCommonBean>> {
+public class MainActivity extends BaseActivity implements OnButtonClickListener, OnTableListenner,
+        Callback<Bean<ResponseCommonBean>>, OnWebSocketListenner {
 
     /**
      * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
@@ -109,7 +121,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     /**
      * 用户ID
      */
-    private String userId ="";
+    private String userId = "";
     /**
      * 锅底选择，推荐菜品
      */
@@ -180,6 +192,10 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
      * 设置就餐人数
      */
     private int personCount = 0;
+    /**
+     * 通过WebSocket与客户端建立连接
+     */
+    private WebSocketImpl mWebSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +203,9 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
+
+        connectionWebSocket(AppSystemUntil.getAndroidID(this));
+
         isLogin();
         init();
         initLeftFragment();
@@ -199,7 +218,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         /**判断是否登录*/
         if (MyApplication.isLogin) {
             MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
-            userId = bean.getId()+"";
+            userId = bean.getId() + "";
             login(bean);
         }
     }
@@ -220,6 +239,17 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         adapter = new ViewPagerAdapter(mFm);
         adapter.setList(initFragment());
         viewPager.setAdapter(adapter);
+    }
+
+    /**
+     * 与服务器通过WebSocket连接
+     */
+    private void connectionWebSocket(String deviceId) {
+        mWebSocket = new WebSocketImpl();
+        /**连接菜品完成推送*/
+        mWebSocket.push(Config.URL_FOOD_SERVICE + deviceId, this);
+        /**完成服务终止推送*/
+        mWebSocket.push(Config.URL_SERVICE_SERVICE + deviceId, this);
     }
 
     /**
@@ -544,5 +574,41 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     @Override
     public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
         T.showShort(this, "设置失败，请重新设置！");
+    }
+
+    @Override
+    public void onBinaryMessage(byte[] payload) {
+
+    }
+
+    @Override
+    public void onClose(int code, String reason) {
+        /**断开后尝试再次连接*/
+        connectionWebSocket(AppSystemUntil.getAndroidID(this));
+    }
+
+    @Override
+    public void onOpen() {
+
+    }
+
+    @Override
+    public void onRawTextMessage(byte[] payload) {
+
+    }
+
+    @Override
+    public void onTextMessage(String payload) {
+        RestRequest<PushCommonBean> restRequest
+                = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
+        if (OP.PUSH_ARRIVE.equals(restRequest.getOp())) {
+            /**菜品完成*/
+            EventBus.getDefault().post(
+                    new WebSocketEvent(WebSocketEvent.TYPE_FOOD_ARRIVE, restRequest.getBean()));
+        } else if (OP.PUSH_COMPLETE.equals(restRequest.getOp())) {
+            /**服务完成*/
+            EventBus.getDefault().post(
+                    new WebSocketEvent(WebSocketEvent.TYPE_SERVICE_COMPLETE, restRequest.getBean()));
+        }
     }
 }

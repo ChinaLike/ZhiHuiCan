@@ -37,14 +37,13 @@ import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
-import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
-import cn.sczhckj.order.mode.impl.RefreshFoodImpl;
+import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
@@ -131,6 +130,15 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      */
     private static final float POP_WIDTH = 400;
     private static final float POP_HEIGHT = 230;
+
+    /**
+     * 当前点击的Item下标
+     */
+    private int currPosition;
+    /**
+     * 当前点击的Item参数
+     */
+    private Object currBean;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -328,7 +336,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**菜品请求成功*/
                 /**处理适配数据*/
-                foodList = RefreshFoodImpl.getInstance().compare(orderList,disOrderList,bean.getResult());
+                foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList,bean.getResult());
                 mFoodAdapter.notifyDataSetChanged(foodList);
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
@@ -393,8 +401,11 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * @param bean     一级分类对象
      * @param position 点击下标
      */
+
     @Override
     public void onItemClick(View view, Object bean, int position) {
+        currPosition = position;
+        currBean = bean;
         CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
         move(position);
         initFood(itemBean.getId());
@@ -498,25 +509,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
 
     }
 
-
-    /**
-     * 购物车数据变化监听
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void cartEventBus(CartNumberEvent event) {
-        FoodBean bean = event.getBean();
-        if (bean != null) {
-            Integer id = bean.getId();
-            String dishesName = bean.getName();
-            for (FoodBean item : parentDishesList) {
-                if (item.getId().equals(id) && item.getName().equals(dishesName)) {
-                    item.setCount(bean.getCount());
-                    mFoodAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    }
-
     /**
      * 菜品数量比较，如果过多，显示提示框
      *
@@ -525,7 +517,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void moreDishesHintEventBus(MoreDishesHintEvent event) {
         int number = event.getNumber();
-        if (isHint) {
+        if (isHint && isAddFood) {
             if (number > warmPromptNumber) {
                 mPopupWindow.showAtLocation(popView, Gravity.CENTER, 0, 0);
                 backgroundAlpha(0.6f);
@@ -534,18 +526,16 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     }
 
     /**
-     * 菜品刷新
+     * 购物车数据提交了
      *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshFoodBus(RefreshFoodEvent event) {
-        if (event.getBean()!=null) {
-            mFoodAdapter.notifyDataSetChanged(
-                    RefreshFoodImpl.getInstance().refreshFood(event.getBean(), foodList));
-        }else if (event.getBeanList()!=null){
-            mFoodAdapter.notifyDataSetChanged(
-                    RefreshFoodImpl.getInstance().refreshFood(event.getBeanList(), foodList));
+        if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
+            onItemClick(null, currBean, currPosition);
+        }else if (event.getType() == RefreshFoodEvent.MINUS_FOOD){
+            mFoodAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refreshFood(event.getBean(),foodList));
         }
     }
 

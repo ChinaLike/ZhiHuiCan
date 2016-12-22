@@ -11,13 +11,36 @@ import cn.sczhckj.order.data.bean.food.FoodBean;
  */
 
 public class RefreshFoodEvent {
+    /**
+     * 加菜
+     */
+    public static final int ADD_FOOD = 0;
+    /**
+     * 减菜
+     */
+    public static final int MINUS_FOOD = 1;
+    /**
+     * 数据提交了
+     */
+    public static final int CART_COMMIT = 2;
+    /**
+     * 退菜
+     */
+    public static final int CART_REFUND = 3;
 
     private FoodBean bean;
 
     private List<FoodBean> beanList;
 
-    public RefreshFoodEvent(FoodBean bean) {
+    private int type;
+
+    public RefreshFoodEvent(int type) {
+        this.type = type;
+    }
+
+    public RefreshFoodEvent(int type, FoodBean bean) {
         this.bean = bean;
+        this.type = type;
     }
 
     public RefreshFoodEvent(List<FoodBean> beanList) {
@@ -38,5 +61,13 @@ public class RefreshFoodEvent {
 
     public void setBeanList(List<FoodBean> beanList) {
         this.beanList = beanList;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

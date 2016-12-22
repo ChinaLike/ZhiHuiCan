@@ -33,20 +33,22 @@ import cn.sczhckj.order.activity.FavorableActivity;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.CartBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
-import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
-import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.event.CartNumberEvent;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
+import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
+import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.OrderMode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
+import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
@@ -172,6 +174,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     private void initOrder() {
         mOrderAdapter = new CartAdapter(orderList, getActivity());
+        mOrderAdapter.setType(CartAdapter.ORDER_TYPE);
         cartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
         cartOrder.setAdapter(mOrderAdapter);
         cartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
@@ -182,6 +185,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     private void initDisOrder() {
         mDisOrderAdapter = new CartAdapter(disOrderList, getActivity());
+        mDisOrderAdapter.setType(CartAdapter.DIS_ORDER_TYPE);
         disCartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
         disCartOrder.setAdapter(mDisOrderAdapter);
         disCartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
@@ -211,7 +215,11 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             orderParent.setVisibility(View.GONE);
             cartOrder.setVisibility(View.GONE);
         } else {
-            orderParent.setVisibility(View.VISIBLE);
+            if (list.size() == 0) {
+                orderParent.setVisibility(View.GONE);
+            } else {
+                orderParent.setVisibility(View.VISIBLE);
+            }
             cartOrder.setVisibility(View.VISIBLE);
         }
         /**判断购物车菜品*/
@@ -219,7 +227,11 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             disOrderParent.setVisibility(View.GONE);
             disCartOrder.setVisibility(View.GONE);
         } else {
-            disOrderParent.setVisibility(View.VISIBLE);
+            if (orderList.size() == 0) {
+                disOrderParent.setVisibility(View.GONE);
+            } else {
+                disOrderParent.setVisibility(View.VISIBLE);
+            }
             disCartOrder.setVisibility(View.VISIBLE);
         }
 
@@ -244,50 +256,43 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     }
 
     /**
-     * 刷新购物车
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshCart(RefreshFoodEvent event) {
-        buttonAttr(true);
-        /**本地加菜*/
-        if (event.getBean() != null) {
-            List<FoodBean> list = initList(event.getBean());
-            initCart(list);
-            mDisOrderAdapter.notifyDataSetChanged(list);
-            setFoodinfo(shoppingcartDishesNumber, shoppingcartTotalPrice, shoppingcartPartNumber, list);
-        }
-        /**后台加菜*/
-//        if (event.getBeanList() != null) {
-//            List<FoodBean> list = refreshMainTableAddDishes(event.getBeanList());
-//            /**在没有任何菜品时把锅底设置为0*/
-//            isEmptyList(list);
-//            isHaveData(list);
-//            mCartAdapter.notifyDataSetChanged(list);
-//        }
-    }
-
-    /**
-     * 通过菜品信息来判断是否已经添加次菜品，如果已经添加刷新数量，处理本地加菜
+     * 通过菜品信息来加菜
      *
      * @param bean
      */
-    private List<FoodBean> initList(FoodBean bean) {
-        if (disOrderList.size() == 0) {
-            disOrderList.add(bean);
-        } else {
-            boolean isAdd = false;
-            for (FoodBean item : disOrderList) {
-                /**只有ID和分类ID对应一样才是同一个菜品*/
-                if ((item.getId().equals(bean.getId())) && (item.getCateId().equals(bean.getCateId()))) {
-                    item.setCount(bean.getCount());
-                    isAdd = true;
-                }
-                if (item.getCount() == 0) {
-                    disOrderList.remove(item);
-                }
+    private List<FoodBean> addFood(FoodBean bean) {
+        int id = bean.getId();
+        int cateId = bean.getCateId();
+        boolean isAdd = false;
+        for (FoodBean item : disOrderList) {
+            if (item.getId() == id && item.getCateId() == cateId) {
+                item.setCount(item.getCount());
+                isAdd = true;
             }
-            if (!isAdd) {
-                disOrderList.add(bean);
+        }
+        if (!isAdd) {
+            bean.setCount(1);
+            disOrderList.add(bean);
+        }
+        return disOrderList;
+    }
+
+    /**
+     * 通过菜品信息来减菜
+     *
+     * @param bean
+     */
+    private List<FoodBean> minusFood(FoodBean bean) {
+        int id = bean.getId();
+        int cateId = bean.getCateId();
+        for (FoodBean item : disOrderList) {
+            if (item.getId() == id && item.getCateId() == cateId) {
+                int num = item.getCount();
+                if (num <= 0) {
+                    disOrderList.remove(item);
+                } else {
+                    item.setCount(num);
+                }
             }
         }
         return disOrderList;
@@ -318,44 +323,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         if (isOpen) {
             EventBus.getDefault().post(new MoreDishesHintEvent(number));
         }
-    }
-
-    /**
-     * 处理通过后台即主桌加菜
-     *
-     * @param beenList
-     * @return
-     */
-    private List<FoodBean> refreshMainTableAddDishes(List<FoodBean> beenList) {
-        Map<String, FoodBean> localMap = listToMap();
-        for (int i = 0; i < beenList.size(); i++) {
-            Integer id = beenList.get(i).getId();
-            FoodBean bean = beenList.get(i);
-            if (localMap.containsKey(id)) {
-                int postion = disOrderList.indexOf(localMap.get(id));
-                int number = disOrderList.get(postion).getCount() + bean.getCount();
-                disOrderList.get(postion).setCount(number);
-                bean.setCount(number);
-            } else {
-                disOrderList.add(bean);
-            }
-            /**刷新点菜界面数据*/
-            EventBus.getDefault().post(new CartNumberEvent(Constant.CART_NUMBER_EVENT, 0, bean));
-        }
-        return disOrderList;
-    }
-
-    /**
-     * 把List集合转换为Map集合
-     *
-     * @return
-     */
-    private Map<String, FoodBean> listToMap() {
-        Map<String, FoodBean> localMap = new HashMap<>();
-        for (int i = 0; i < disOrderList.size(); i++) {
-            localMap.put(disOrderList.get(i).getId() + "", disOrderList.get(i));
-        }
-        return localMap;
     }
 
     @Override
@@ -482,6 +449,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 /**关闭进度框*/
                 dismissProgress();
                 buttonAttr(false);
+
                 if (isOpen) {
                     /**已开桌*/
                     T.showShort(getContext(), bean.getMessage());
@@ -495,11 +463,10 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 }
                 /**以下处理购物车数据*/
                 cartToOrder();
-                mOrderAdapter.notifyDataSetChanged(orderList);
                 /**初始导航*/
                 setTitleStatus(cartOrderFlag, cartOrder);
-                /**显示已下单价格*/
-                setFoodinfo(shoppingcartDishesNumber, shoppingcartTotalPrice, shoppingcartPartNumber, orderList);
+                /**底部显示*/
+                baseInfoRefresh();
             } else {
                 commit("" + bean.getMessage());
             }
@@ -529,30 +496,52 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     }
 
     /**
+     * 菜品，价格合计，优惠显示刷新
+     */
+    private void baseInfoRefresh() {
+        if (disOrderList == null || disOrderList.size() == 0) {
+            /**显示已下单价格*/
+            setFoodinfo(shoppingcartDishesNumber, shoppingcartTotalPrice, shoppingcartPartNumber, orderList);
+        } else {
+            /**显示未下单价格*/
+            setFoodinfo(shoppingcartDishesNumber, shoppingcartTotalPrice, shoppingcartPartNumber, disOrderList);
+        }
+    }
+
+    /**
      * 购物车中数据转化到已下单中
      */
     private void cartToOrder() {
         for (FoodBean bean : disOrderList) {
-            orderList.add(bean);
+            int id = bean.getId();
+            int cateId = bean.getCateId();
+            boolean isAdd = false;
+            for (FoodBean item : orderList) {
+                if (item.getId() == id && item.getCateId() == cateId) {
+                    isAdd = true;
+                    item.setCount(item.getCount() + bean.getCount());
+                }
+            }
+            if (!isAdd) {
+                orderList.add(bean);
+            }
         }
         /**把购物车清空*/
         disOrderList = new ArrayList<>();
         mDisOrderAdapter.notifyDataSetChanged(disOrderList);
         initCart(disOrderList);
+        mOrderAdapter.notifyDataSetChanged(orderList);
+
+        /**数据提交成功*/
+        EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.CART_COMMIT));
     }
 
-    /**
-     * 当购物车数据有变化返回
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void cartEventBus(CartNumberEvent event) {
-        buttonAttr(true);
-    }
 
     @OnClick({R.id.shoppingcart_button, R.id.cart_favorable, R.id.order_parent, R.id.disOrder_parent})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.shoppingcart_button:
+                isAddFood = false;
                 /**数据提交前先进行信息验证*/
                 if (isOpen) {
                     /**已开桌，加菜*/
@@ -605,6 +594,82 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         } else {
             orderParent.setVisibility(View.GONE);
             disOrderParent.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 退菜
+     *
+     * @param bean
+     */
+    private void refund(final FoodBean bean) {
+        final RequestCommonBean requestCommonBean = new RequestCommonBean();
+        requestCommonBean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        requestCommonBean.setFoodId(bean.getId());
+        requestCommonBean.setCateId(bean.getCateId());
+        requestCommonBean.setCount(1);
+        requestCommonBean.setMemberCode(MyApplication.memberCode);
+        new FoodMode().refund(requestCommonBean, new Callback<Bean<ResponseCommonBean>>() {
+            @Override
+            public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+                Bean<ResponseCommonBean> rBean = response.body();
+                if (rBean != null && rBean.getCode() == ResponseCode.SUCCESS) {
+                    mOrderAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refund(bean, orderList));
+                    baseInfoRefresh();
+                } else {
+                    T.showShort(getContext(), rBean.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+                T.showShort(getContext(), "退菜失败");
+            }
+        });
+    }
+
+    /**
+     * 刷新购物车
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshFoodEventBus(RefreshFoodEvent event) {
+        buttonAttr(true);
+        if (event.getType() == RefreshFoodEvent.ADD_FOOD) {
+            /**加菜*/
+            disOrderList = addFood(event.getBean());
+            initCart(disOrderList);
+            mDisOrderAdapter.notifyDataSetChanged(disOrderList);
+            baseInfoRefresh();
+        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+            /**减菜*/
+            disOrderList = minusFood(event.getBean());
+            initCart(disOrderList);
+            mDisOrderAdapter.notifyDataSetChanged(disOrderList);
+            baseInfoRefresh();
+        } else if (event.getType() == RefreshFoodEvent.CART_REFUND) {
+            /**退菜*/
+            refund(event.getBean());
+        }
+
+    }
+
+    /**
+     * 推送已完成数量
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        if (event.getType() == WebSocketEvent.TYPE_FOOD_ARRIVE) {
+            int id = event.getBean().getId();
+            int cateId = event.getBean().getCateId();
+            for (FoodBean bean : orderList) {
+                if (bean.getId() == id && bean.getCateId() == cateId) {
+                    int finishCount = bean.getFinishCount() + event.getBean().getArriveCount();
+                    bean.setFinishCount(finishCount > bean.getCount() ? bean.getCount() : finishCount);
+                }
+            }
+            mOrderAdapter.notifyDataSetChanged(orderList);
         }
     }
 

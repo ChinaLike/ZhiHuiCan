@@ -9,10 +9,23 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
+import cn.sczhckj.order.data.response.ResponseCode;
+import cn.sczhckj.order.fragment.BaseFragment;
+import cn.sczhckj.order.mode.FoodMode;
+import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.until.show.T;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @ describe:  菜品数量控制实现
@@ -43,7 +56,7 @@ public class FoodControlImpl {
     }
 
     /**
-     * 添加菜品
+     * 添加菜品,菜品列表的加号
      *
      * @param addImg    加菜按钮
      * @param countText 数量显示文本
@@ -55,10 +68,10 @@ public class FoodControlImpl {
             @Override
             public void onClick(View v) {
                 if (verifyMaximum(mList)) {
-                    /**验证总数是否超标*/
+                    /**总数已经超过本菜品分类设定数量*/
                     maxDialog();
                 } else {
-                    /**验证单个数量是否超标*/
+                    /**总数未超标，验证单个菜品数量是否超标*/
                     isOverProof(bean, countText);
                 }
             }
@@ -78,26 +91,49 @@ public class FoodControlImpl {
             public void onClick(View v) {
                 /**总数量*/
                 int number = bean.getCount();
-                /**已下单数量*/
-                int orderCount = bean.getOrderCount()!=null?bean.getOrderCount():0;
-                /**未下单数量*/
-                int disOrder = bean.getDisOrderCount()!=null?bean.getDisOrderCount():0;
                 if (number > 0) {
-                    if (disOrder > 0) {
-                        /**可以直接减菜*/
-                        number--;
-                        disOrder--;
-                        bean.setDisOrderCount(disOrder);
-                        bean.setCount(number);
-                        countText.setText(number + "");
-                        EventBus.getDefault().post(new RefreshFoodEvent(bean));
-                    } else {
-                        /**退菜*/
-                        // TODO: 2016/12/20 做退菜处理
-                    }
-
-
+                    BaseFragment.isAddFood = false;
+                    number--;
+                    bean.setCount(number);
+                    countText.setText(number + "");
+                    EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.MINUS_FOOD, bean));
                 }
+            }
+        });
+    }
+
+    /**
+     * 减少菜品
+     *
+     * @param minusImg 减少按钮
+     * @param bean     参数对象
+     */
+    public void minusFood(ImageView minusImg, final FoodBean bean) {
+        minusImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int number = bean.getCount();
+                if (number > 0) {
+                    BaseFragment.isAddFood = false;
+                    number--;
+                    bean.setCount(number);
+                    EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.MINUS_FOOD, bean));
+                }
+            }
+        });
+    }
+
+    /**
+     * 退菜
+     *
+     * @param refundImg
+     * @param bean
+     */
+    public void refund(ImageView refundImg, final FoodBean bean) {
+        refundImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.CART_REFUND,bean));
             }
         });
     }
@@ -139,7 +175,7 @@ public class FoodControlImpl {
      * 判断锅底是否超过标准
      */
     private void isOverProof(FoodBean bean, TextView countText) {
-        /**首先判断是否是锅底再次判断是否已经选择规定锅底*/
+        /**判断最大数量，如果是0，则不限制点菜*/
         if (bean.getMaximum() == null || bean.getMaximum() == Constant.FOOD_DISASTRICT) {
             /**不限制数量*/
             setAddDishes(bean, countText);
@@ -162,11 +198,13 @@ public class FoodControlImpl {
      * @param countText
      */
     private void setAddDishes(FoodBean bean, TextView countText) {
+        BaseFragment.isAddFood = true;
         int number = bean.getCount();
         number++;
         bean.setCount(number);
         countText.setText(number + "");
-        EventBus.getDefault().post(new RefreshFoodEvent(bean));
+        /**发送广播，让购物车、必选菜品、下单点餐界面处理数据*/
+        EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.ADD_FOOD, bean));
     }
 
     /**

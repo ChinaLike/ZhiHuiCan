@@ -37,7 +37,7 @@ import cn.sczhckj.order.data.listener.OnTableListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
-import cn.sczhckj.order.mode.impl.RefreshFoodImpl;
+import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import retrofit2.Call;
@@ -109,7 +109,15 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     /**
      * 每一次点击菜品集合
      */
-    private List<FoodBean> foodList=new ArrayList<>();
+    private List<FoodBean> foodList = new ArrayList<>();
+    /**
+     * 当前点击的Item下标
+     */
+    private int currPosition;
+    /**
+     * 当前点击的Item参数
+     */
+    private Object currBean;
 
 
     @Override
@@ -257,7 +265,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
                     loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
-                    foodList = RefreshFoodImpl.getInstance().compare(orderList,disOrderList,bean.getResult());
+                    foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
                     mFoodAdapter.notifyDataSetChanged(foodList);
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
@@ -352,6 +360,8 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     @Override
     public void onItemClick(View view, int position, Object bean) {
+        currPosition = position;
+        currBean = bean;
         CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
         initFood(itemBean.getId());
         mFoodAdapter.setRequired(itemBean.getRequired());
@@ -360,18 +370,17 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
 
 
     /**
-     * 菜品刷新
+     * 购物车数据提交了
      *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshFoodBus(RefreshFoodEvent event) {
-        if (event.getBean()!=null) {
+        if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
+            onItemClick(null, currPosition, currBean);
+        }else if (event.getType() == RefreshFoodEvent.MINUS_FOOD){
             mFoodAdapter.notifyDataSetChanged(
-                    RefreshFoodImpl.getInstance().refreshFood(event.getBean(), foodList));
-        }else if (event.getBeanList()!=null){
-            mFoodAdapter.notifyDataSetChanged(
-                    RefreshFoodImpl.getInstance().refreshFood(event.getBeanList(), foodList));
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(),foodList));
         }
     }
 
