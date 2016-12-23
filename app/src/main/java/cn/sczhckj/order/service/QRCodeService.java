@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.event.QRCodeVerifyEvent;

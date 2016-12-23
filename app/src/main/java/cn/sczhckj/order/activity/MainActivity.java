@@ -29,13 +29,12 @@ import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.FavorableTypeBean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.PayTypeBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.event.ApplyForVipCardEvent;
@@ -53,10 +52,10 @@ import cn.sczhckj.order.fragment.CartFragment;
 import cn.sczhckj.order.fragment.DetailsFragment;
 import cn.sczhckj.order.fragment.EvaluateFragment;
 import cn.sczhckj.order.fragment.EvaluateListFragment;
-import cn.sczhckj.order.fragment.GiftFragment;
+import cn.sczhckj.order.fragment.TipFragment;
 import cn.sczhckj.order.fragment.GrouponFragment;
 import cn.sczhckj.order.fragment.MainFragment;
-import cn.sczhckj.order.fragment.QRCodeFragment;
+import cn.sczhckj.order.fragment.BillSuccessFragment;
 import cn.sczhckj.order.fragment.RequiredFagment;
 import cn.sczhckj.order.fragment.SettleAccountsCartFragment;
 import cn.sczhckj.order.image.GlideLoading;
@@ -66,7 +65,6 @@ import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.overwrite.NoScrollViewPager;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -154,11 +152,11 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     /**
      * 打赏界面
      */
-    private GiftFragment mGiftFragment;
+    private TipFragment mTipFragment;
     /**
      * 二维码支付界面
      */
-    private QRCodeFragment mQrCodeFragment;
+    private BillSuccessFragment mBillSuccessFragment;
     /**
      * 评价
      */
@@ -291,9 +289,9 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         /**团购券*/
         mGrouponFragment = new GrouponFragment();
         /**打赏*/
-        mGiftFragment = new GiftFragment();
+        mTipFragment = new TipFragment();
         /**二维码*/
-        mQrCodeFragment = new QRCodeFragment();
+        mBillSuccessFragment = new BillSuccessFragment();
         /**评价*/
         mEvaluateFragment = new EvaluateFragment();
         /**评价详情*/
@@ -304,8 +302,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         mList.add(mRequiredFagment);
         mList.add(mMainFragment);
         mList.add(mGrouponFragment);
-        mList.add(mGiftFragment);
-        mList.add(mQrCodeFragment);
+        mList.add(mTipFragment);
+        mList.add(mBillSuccessFragment);
         mList.add(mEvaluateFragment);
         mList.add(mDetailsFragment);
         mList.add(mApplyForVipCardFragment);
@@ -419,19 +417,19 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
             PayTypeBean payTypeBean = event.getPayTypeBean();
             int id = payTypeBean.getId();
             viewPager.setCurrentItem(FRAGMENT_QRCODE, false);
-            mQrCodeFragment.getCode(id, favorableType, mGrouponFragment.getGrouponList(), mSettleAccountsCartFragment.getGiftMoney());
+            mBillSuccessFragment.getCode(id, favorableType, mGrouponFragment.getGrouponList(), mSettleAccountsCartFragment.getGiftMoney());
             if (id == 0) {
                 /**现金*/
-                mQrCodeFragment.setData(getResources().getString(R.string.cash_title));
+                mBillSuccessFragment.setData(getResources().getString(R.string.cash_title));
             } else if (id == 1) {
                 /**微信*/
-                mQrCodeFragment.setData(getResources().getString(R.string.weixin_pay_title));
+                mBillSuccessFragment.setData(getResources().getString(R.string.weixin_pay_title));
             } else if (id == 2) {
                 /**银行卡*/
-                mQrCodeFragment.setData(getResources().getString(R.string.bank_card_title));
+                mBillSuccessFragment.setData(getResources().getString(R.string.bank_card_title));
             } else if (id == 3) {
                 /**支付宝*/
-                mQrCodeFragment.setData(getResources().getString(R.string.aliPay_title));
+                mBillSuccessFragment.setData(getResources().getString(R.string.aliPay_title));
             }
         } else if (event.getType() == SettleAountsTypeEvent.GTYPE) {
             /**打赏*/
@@ -583,8 +581,9 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     @Override
     public void onClose(int code, String reason) {
+        Log.d("ws=====", "reason:" + reason);
         /**断开后尝试再次连接*/
-        connectionWebSocket(AppSystemUntil.getAndroidID(this));
+//        connectionWebSocket(AppSystemUntil.getAndroidID(this));
     }
 
     @Override

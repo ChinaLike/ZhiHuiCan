@@ -27,7 +27,7 @@ import cn.sczhckj.order.adapter.PersonAdapter;
 import cn.sczhckj.order.adapter.TabCateAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.food.CateBean;
-import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;

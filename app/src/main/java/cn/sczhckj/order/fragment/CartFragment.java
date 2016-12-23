@@ -33,7 +33,7 @@ import cn.sczhckj.order.activity.FavorableActivity;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.CartBean;
@@ -231,6 +231,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 disOrderParent.setVisibility(View.GONE);
             } else {
                 disOrderParent.setVisibility(View.VISIBLE);
+                cartOrder.setVisibility(View.GONE);
+                cartOrderFlag.setSelected(true);
             }
             disCartOrder.setVisibility(View.VISIBLE);
         }

@@ -14,7 +14,7 @@ import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.network.RetrofitRequest;

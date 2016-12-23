@@ -1,15 +1,12 @@
 package cn.sczhckj.order.manage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.View;
 
-import cn.sczhckj.order.data.bean.FileConstant;
+import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.bean.VersionBean;
 import cn.sczhckj.order.overwrite.MyDialog;
-import cn.sczhckj.order.until.ConvertUtils;
 
 /**
  * @describe: 版本管理

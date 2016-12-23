@@ -74,7 +74,7 @@
                             </LinearLayout>
 
 
-                            <cn.sczhckj.order.overwrite.TagCloudLayout
+                            <cn.sczhckj.order.overwrite.TagFlowLayout
                                 android:id="@+id/details_favorable_recycler"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -211,9 +211,9 @@
 
                     <ImageView
                         android:id="@+id/details_dishes_minus"
-                        android:padding="15dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="15dp"
                         android:src="@drawable/open_btn_dishes_reduce" />
 
                     <TextView

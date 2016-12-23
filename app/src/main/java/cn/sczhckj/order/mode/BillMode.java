@@ -3,10 +3,9 @@ package cn.sczhckj.order.mode;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
-import cn.sczhckj.order.data.bean.service.ServiceBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;

@@ -97,4 +97,19 @@ public class PriceBean {
     public void setIsActive(Integer isActive) {
         this.isActive = isActive;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", price=" + price +
+                ", type=" + type +
+                ", memeberType='" + memeberType + '\'' +
+                ", title='" + title + '\'' +
+                ", color='" + color + '\'' +
+                ", imageId=" + imageId +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", isActive=" + isActive +
+                '}';
+    }
 }

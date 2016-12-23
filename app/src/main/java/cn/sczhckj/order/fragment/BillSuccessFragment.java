@@ -23,9 +23,9 @@ import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ListAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.ListBean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.QRCodeBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
@@ -47,7 +47,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCodeBean>> {
+public class BillSuccessFragment extends BaseFragment implements Callback<Bean<QRCodeBean>> {
 
 
     @Bind(R.id.code_pay_title)
@@ -81,7 +81,7 @@ public class QRCodeFragment extends BaseFragment implements Callback<Bean<QRCode
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_qr_code, null, false);
+        View view = inflater.inflate(R.layout.fragment_bill_success, null, false);
         ButterKnife.bind(this, view);
         return view;
     }

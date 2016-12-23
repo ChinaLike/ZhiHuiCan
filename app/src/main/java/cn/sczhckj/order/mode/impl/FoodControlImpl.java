@@ -9,23 +9,11 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.Constant;
-import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
-import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.fragment.BaseFragment;
-import cn.sczhckj.order.mode.FoodMode;
-import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
-import cn.sczhckj.order.until.show.T;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * @ describe:  菜品数量控制实现

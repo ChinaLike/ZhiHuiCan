@@ -15,7 +15,6 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.ClassifyItemBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 
 /**

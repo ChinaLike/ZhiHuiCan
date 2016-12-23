@@ -26,7 +26,7 @@ import cn.sczhckj.order.adapter.EvaluateHotWordAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.EvaluateBean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.EvaluateListEvent;
 import cn.sczhckj.order.data.network.RetrofitRequest;

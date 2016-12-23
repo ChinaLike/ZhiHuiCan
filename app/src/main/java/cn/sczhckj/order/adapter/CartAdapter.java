@@ -104,7 +104,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
     private void setPrice(ImageView imageView, TextView price, TextView totalPrice, FoodBean bean) {
         price.setText(bean.getPrice() + "");
         totalPrice.setText(bean.getCount() * bean.getPrice() + "");
-        GlideLoading.loadingDishes(mContext, bean.getPriceImageUrl(), imageView);
+        if (bean.getPriceImageUrl()!=null) {
+            imageView.setVisibility(View.VISIBLE);
+            GlideLoading.loadingDishes(mContext, bean.getPriceImageUrl(), imageView);
+        }else {
+            imageView.setVisibility(View.INVISIBLE);
+        }
     }
 
     /**

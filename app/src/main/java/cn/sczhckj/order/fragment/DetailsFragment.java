@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.image.GlideLoading;
@@ -32,7 +32,7 @@ import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.CarouselView;
-import cn.sczhckj.order.overwrite.TagCloudLayout;
+import cn.sczhckj.order.overwrite.TagFlowLayout;
 import cn.sczhckj.order.until.AppSystemUntil;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +54,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     @Bind(R.id.details_price)
     TextView detailsPrice;
     @Bind(R.id.details_favorable_recycler)
-    TagCloudLayout detailsFavorableRecycler;
+    TagFlowLayout detailsFavorableRecycler;
     @Bind(R.id.dishes_sales)
     TextView dishesSales;
     @Bind(R.id.details_like)
@@ -163,6 +163,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     private void initPrices() {
         mTagCloud = new TagCloudImpl(getContext());
         mTagCloud.setPrice(detailsFavorableRecycler, mFoodBean.getPrices());
+
     }
 
     @Override

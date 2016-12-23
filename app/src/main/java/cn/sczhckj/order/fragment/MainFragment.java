@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ViewPagerAdapter;
-import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 
 /**

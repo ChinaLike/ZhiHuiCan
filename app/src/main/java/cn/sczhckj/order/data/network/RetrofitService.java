@@ -3,8 +3,6 @@ package cn.sczhckj.order.data.network;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.ClassifyBean;
-import cn.sczhckj.order.data.bean.DetailsBean;
 import cn.sczhckj.order.data.bean.EvaluateBean;
 import cn.sczhckj.order.data.bean.GrouponBean;
 import cn.sczhckj.order.data.bean.QRCodeBean;
@@ -197,12 +195,7 @@ public interface RetrofitService {
     @POST("rest/openTable/openTableVerify")
     Call<Bean<ResponseCommonBean>> openTable(@Field("params") String params);
 
-    /**
-     * 消费者选择点菜方式后请求分类列表
-     */
-    @FormUrlEncoded
-    @POST("rest/order/claaify")
-    Call<Bean<ClassifyBean>> classify(@Field("params") String params);
+
 
     /**
      * 菜品信息
@@ -211,12 +204,7 @@ public interface RetrofitService {
     @POST("rest/order/dishesList")
     Call<Bean<List<FoodBean>>> dishes(@Field("params") String params);
 
-    /**
-     * 菜品详情
-     */
-    @FormUrlEncoded
-    @POST("rest/order/deatails")
-    Call<Bean<DetailsBean>> dishesDeatails(@Field("params") String params);
+
 
 
     /**

@@ -16,11 +16,11 @@ public class Config {
     /**
      * 菜品完成进度推送
      */
-    public static String URL_FOOD_SERVICE = "ws://192.168.0.50:8080/pad/food?username=";
+    public static String URL_FOOD_SERVICE = "ws://192.168.0.50:8080/pad/ws/food?username=";
 
     /**
      * 服务终止推送
      */
-    public static String URL_SERVICE_SERVICE = "ws://192.168.0.50:8080/pad/service?username=";
+    public static String URL_SERVICE_SERVICE = "ws://192.168.0.50:8080/pad/ws/service?username=";
 
 }

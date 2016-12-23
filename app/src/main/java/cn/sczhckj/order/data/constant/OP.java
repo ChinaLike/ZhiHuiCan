@@ -1,4 +1,4 @@
-package cn.sczhckj.order.data.bean;
+package cn.sczhckj.order.data.constant;
 
 /**
  * @describe: 业务请求参数

@@ -38,7 +38,7 @@ import cn.sczhckj.order.data.bean.VipFavorableBean;
 import cn.sczhckj.order.data.event.SettleAountsCartEvent;
 import cn.sczhckj.order.data.event.SettleAountsTypeEvent;
 import cn.sczhckj.order.data.listener.OnAccountsListenner;
-import cn.sczhckj.order.data.listener.OnGiftListenner;
+import cn.sczhckj.order.data.listener.OnTipListenner;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 
 /**
@@ -47,7 +47,7 @@ import cn.sczhckj.order.overwrite.DashlineItemDivider;
  * @Email: 572919350@qq.com
  */
 
-public class SettleAccountsCartFragment extends BaseFragment implements OnGiftListenner, OnAccountsListenner {
+public class SettleAccountsCartFragment extends BaseFragment implements OnTipListenner, OnAccountsListenner {
 
     @Bind(R.id.shoppingcart_total_price)
     TextView shoppingcartTotalPrice;

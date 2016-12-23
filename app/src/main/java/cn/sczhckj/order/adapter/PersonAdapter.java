@@ -15,8 +15,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.activity.MainActivity;
-import cn.sczhckj.order.data.bean.PersonBean;
 import cn.sczhckj.order.data.listener.OnTableListenner;
 import cn.sczhckj.order.fragment.RequiredFagment;
 

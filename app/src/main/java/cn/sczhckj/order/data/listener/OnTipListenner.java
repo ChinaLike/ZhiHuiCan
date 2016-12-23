@@ -6,7 +6,7 @@ package cn.sczhckj.order.data.listener;
  * @Email: 572919350@qq.com
  */
 
-public interface OnGiftListenner {
+public interface OnTipListenner {
 
     void money(int money);
 

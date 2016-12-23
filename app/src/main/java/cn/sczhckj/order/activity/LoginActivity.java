@@ -20,7 +20,7 @@ import butterknife.OnClick;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;

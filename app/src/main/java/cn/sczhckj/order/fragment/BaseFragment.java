@@ -23,11 +23,11 @@ import java.util.List;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.activity.MainActivity;
-import cn.sczhckj.order.data.bean.Constant;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
-import cn.sczhckj.order.data.listener.OnGiftListenner;
+import cn.sczhckj.order.data.listener.OnTipListenner;
 import cn.sczhckj.order.service.CartService;
 import cn.sczhckj.order.service.QRCodeService;
 
@@ -39,11 +39,10 @@ import cn.sczhckj.order.service.QRCodeService;
 
 public abstract class BaseFragment extends Fragment {
 
-    protected List<FoodBean> parentDishesList = new ArrayList<>();
     /**
      * 打赏接口
      */
-    protected static OnGiftListenner onGiftListenner;
+    protected static OnTipListenner onTipListenner;
 
     /**
      * 点餐方式，默认单桌点餐
@@ -129,8 +128,8 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract void init();
 
-    public void setOnGiftListenner(OnGiftListenner onGiftListenner) {
-        this.onGiftListenner = onGiftListenner;
+    public void setOnGiftListenner(OnTipListenner onTipListenner) {
+        this.onTipListenner = onTipListenner;
     }
 
     public int getFlag() {

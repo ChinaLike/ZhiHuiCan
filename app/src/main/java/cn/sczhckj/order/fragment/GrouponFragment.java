@@ -25,7 +25,7 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.GrouponAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.GrouponBean;
-import cn.sczhckj.order.data.bean.OP;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.GrouponVerifyEvent;
 import cn.sczhckj.order.data.event.SettleAountsTypeEvent;

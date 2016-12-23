@@ -22,7 +22,7 @@ import cn.sczhckj.order.data.event.SettleAountsTypeEvent;
  * @Email: 572919350@qq.com
  */
 
-public class GiftFragment extends BaseFragment {
+public class TipFragment extends BaseFragment {
 
     @Bind(R.id.gift_close)
     ImageView giftClose;
@@ -55,7 +55,7 @@ public class GiftFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_gift, null, false);
+        View view = inflater.inflate(R.layout.fragment_tip, null, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -114,8 +114,8 @@ public class GiftFragment extends BaseFragment {
                 break;
             case R.id.gift_button:
                 /**确认金额*/
-                if (onGiftListenner != null) {
-                    onGiftListenner.money(money);
+                if (onTipListenner != null) {
+                    onTipListenner.money(money);
                     EventBus.getDefault().post(new SettleAountsTypeEvent(SettleAountsTypeEvent.TTYPE));
                 }
                 break;

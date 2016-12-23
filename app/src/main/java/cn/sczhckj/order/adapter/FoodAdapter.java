@@ -17,15 +17,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.BottomChooseEvent;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
-import cn.sczhckj.order.overwrite.TagCloudLayout;
-import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 菜品适配
@@ -101,19 +99,20 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         /**默认菜品*/
         holder.dishesNumber.setText(bean.getCount() + "");
         /**菜品减少*/
-        mFoodControl.minusFood(holder.dishesMinus,bean);
+        mFoodControl.minusFood(holder.dishesMinus, bean);
         /**菜品添加*/
-        mFoodControl.addFood(holder.dishesAdd,holder.dishesNumber,bean,mList);
+        mFoodControl.addFood(holder.dishesAdd, holder.dishesNumber, bean, mList);
         /**点击菜品图片进入详情*/
         holder.dishesImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean,mList));
+                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean, mList));
             }
         });
 
         /**判断优惠类型,并显示*/
         mTagCloudImpl.setPrice(holder.dishesFavorableRecyclerView, bean.getPrices());
+
         /**判断是否喜欢，即收藏与否*/
         if (bean.isFavor()) {
             holder.dishesCollectIcon.setSelected(true);
@@ -190,7 +189,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         @Bind(R.id.dishes_add)
         ImageView dishesAdd;
         @Bind(R.id.dishes_favorable_recyclerView)
-        TagCloudLayout dishesFavorableRecyclerView;
+        RecyclerView dishesFavorableRecyclerView;
         @Bind(R.id.dishes_parent)
         LinearLayout parent;
         @Bind(R.id.dishes_favor_parent)

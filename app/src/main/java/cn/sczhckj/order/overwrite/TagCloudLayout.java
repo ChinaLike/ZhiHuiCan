@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import cn.sczhckj.order.helper.TagCloudConfiguration;
 
 /**
- * 标签云控件
+ * 标签云控件(存在Bug，只能显示一次)
  *
  * @ author: Like on 2016/12/13.
  */
@@ -61,7 +61,7 @@ public class TagCloudLayout extends ViewGroup {
         this.removeAllViews();
 
         for (int i = 0; i < mAdapter.getCount(); i++) {
-            View view = mAdapter.getView(i,null,null);
+            View view = mAdapter.getView(i, null, null);
             final int position = i;
             view.setOnClickListener(new OnClickListener() {
                 @Override
@@ -153,10 +153,10 @@ public class TagCloudLayout extends ViewGroup {
         return new LayoutParams(this.getContext(), attrs);
     }
 
-    public void setAdapter(BaseAdapter adapter){
-        if (mAdapter == null){
+    public void setAdapter(BaseAdapter adapter) {
+        if (mAdapter == null) {
             mAdapter = adapter;
-            if (mObserver == null){
+            if (mObserver == null) {
                 mObserver = new DataChangeObserver();
                 mAdapter.registerDataSetObserver(mObserver);
             }
