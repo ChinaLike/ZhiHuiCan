@@ -7,7 +7,7 @@ import cn.sczhckj.order.data.bean.EvaluateBean;
 import cn.sczhckj.order.data.bean.GrouponBean;
 import cn.sczhckj.order.data.bean.QRCodeBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.VersionBean;
+import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
@@ -181,28 +181,7 @@ public interface RetrofitService {
     Call<Bean<VersionBean>> version(@Field("params") String params);
 
 
-    /**
-     * 获取短信验证码
-     */
-    @FormUrlEncoded
-    @POST("rest/user/smsAuthCode")
-    Call<Bean<Integer>> smsAuthCode(@Field("params") String params);
 
-    /**
-     * 购物车数据提交
-     */
-    @FormUrlEncoded
-    @POST("rest/openTable/openTableVerify")
-    Call<Bean<ResponseCommonBean>> openTable(@Field("params") String params);
-
-
-
-    /**
-     * 菜品信息
-     */
-    @FormUrlEncoded
-    @POST("rest/order/dishesList")
-    Call<Bean<List<FoodBean>>> dishes(@Field("params") String params);
 
 
 
@@ -249,12 +228,7 @@ public interface RetrofitService {
     @POST("rest/user/applyForVip")
     Call<Bean<ResponseCommonBean>> applyForVip(@Field("params") String params);
 
-    /**
-     * 刷新购物车菜品
-     */
-    @FormUrlEncoded
-    @POST("rest/refresh/cartDishes")
-    Call<Bean<List<FoodBean>>> refreshCartDishes(@Field("params") String params);
+
 
     /**
      * 刷新二维码是否验证成功

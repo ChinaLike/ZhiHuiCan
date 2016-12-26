@@ -17,11 +17,12 @@ import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.bean.VersionBean;
+import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -117,7 +118,7 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
         Bean<VersionBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             if (bean.getResult() != null) {
-                if (bean.getResult().getVersionCode()>mVersionManager.getVersionCode(LeadActivity.this)) {
+                if (bean.getResult().getCode()>mVersionManager.getVersionCode(LeadActivity.this)) {
                     mVersionManager.version(LeadActivity.this, bean.getResult());
                     mVersionManager.setOnDialogClickListener(this);
                 }else {

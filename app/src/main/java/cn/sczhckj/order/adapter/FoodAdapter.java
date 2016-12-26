@@ -49,6 +49,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      * 本分类是否必选
      */
     private int required = 0;
+    /**
+     * 分类权限，默认可以选择
+     */
+    private int catePermiss = Constant.PERMISS_AGREE;
 
     /**
      * 点赞实现
@@ -130,15 +134,23 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         });
 
         /**权限判定,该桌是否可以点餐*/
-        if (bean.getPermiss() == Constant.PREMISS_AGREE) {
-            /**可以点菜*/
-            holder.dishesAdd.setClickable(true);
-            holder.dishesMinus.setClickable(true);
-        } else {
-            /**不可以点菜*/
+        if (catePermiss == Constant.PERMISS_AGREE) {
+            /**首先判断分类是否可以点菜，可以点菜*/
+            if (bean.getPermiss() == Constant.PERMISS_AGREE) {
+                /**可以点菜*/
+                holder.dishesAdd.setClickable(true);
+                holder.dishesMinus.setClickable(true);
+            } else {
+                /**不可以点菜*/
+                mFoodControl.buttonClick(holder.dishesAdd);
+                mFoodControl.buttonClick(holder.dishesMinus);
+            }
+        } else if (catePermiss == Constant.PERMISS_DISAGREE) {
+            /**该分类都不可以点菜*/
             mFoodControl.buttonClick(holder.dishesAdd);
             mFoodControl.buttonClick(holder.dishesMinus);
         }
+
 
     }
 
@@ -166,6 +178,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
     public void setRequired(int required) {
         this.required = required;
         mFoodControl.setRequired(required);
+    }
+
+    /**
+     * 设置分类权限
+     *
+     * @param catePermiss
+     */
+    public void setCatePermiss(int catePermiss) {
+        this.catePermiss = catePermiss;
     }
 
     static class DishesHolder extends RecyclerView.ViewHolder {

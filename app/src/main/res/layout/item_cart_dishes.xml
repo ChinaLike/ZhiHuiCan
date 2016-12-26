@@ -108,6 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:lines="1"
                 android:textColor="@color/text_color_default"
                 android:textSize="@dimen/cart_dishes_name_size" />
 

@@ -2,6 +2,8 @@ package cn.sczhckj.order.data.bean;
 
 import java.io.Serializable;
 
+import cn.sczhckj.order.data.bean.food.PriceBean;
+
 /**
  * @describe: 结账界面单品清单
  * @author: Like on 2016/11/13.
@@ -18,7 +20,7 @@ public class SettleAccountsDishesItemBean implements Serializable {
 
     private int price;
 
-    private PriceTypeBean priceTypeBean;
+    private PriceBean priceBean;
 
     public String getId() {
         return id;
@@ -52,12 +54,12 @@ public class SettleAccountsDishesItemBean implements Serializable {
         this.price = price;
     }
 
-    public PriceTypeBean getPriceTypeBean() {
-        return priceTypeBean;
+    public PriceBean getPriceTypeBean() {
+        return priceBean;
     }
 
-    public void setPriceTypeBean(PriceTypeBean priceTypeBean) {
-        this.priceTypeBean = priceTypeBean;
+    public void setPriceTypeBean(PriceBean priceTypeBean) {
+        this.priceBean = priceTypeBean;
     }
 
     @Override
@@ -67,7 +69,7 @@ public class SettleAccountsDishesItemBean implements Serializable {
                 ", name='" + name + '\'' +
                 ", number=" + number +
                 ", price=" + price +
-                ", priceTypeBean=" + priceTypeBean +
+                ", priceTypeBean=" + priceBean +
                 '}';
     }
 }

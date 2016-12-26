@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.View;
 
+import cn.sczhckj.order.Config;
 import cn.sczhckj.order.data.constant.FileConstant;
-import cn.sczhckj.order.data.bean.VersionBean;
+import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.overwrite.MyDialog;
 
 /**
@@ -73,7 +74,7 @@ public class VersionManager {
      * @param bean
      */
     public void version(Context mContext, VersionBean bean) {
-        if (getVersionCode(mContext) < bean.getVersionCode()) {
+        if (getVersionCode(mContext) < bean.getCode()) {
             /**服务器有更新*/
             updataVersion(mContext, bean);
         }
@@ -83,7 +84,7 @@ public class VersionManager {
      * 提示当前有新版本
      */
     public void updataVersion(final Context mContext, final VersionBean bean) {
-        String context = "当前版本：" + getVersionName(mContext) + "\n最新版本：" + bean.getVersionName() + "\n更新大小：" + bean.getVersionSize() + "M";
+        String context = "当前版本：" + getVersionName(mContext) + "\n最新版本：" + bean.getName() + "\n更新大小：" + bean.getSize() + "M";
         final MyDialog dialog = new MyDialog(mContext);
         dialog.setTitle("版本更新");
         dialog.setContextText(context);
@@ -99,7 +100,7 @@ public class VersionManager {
             @Override
             public void onClick(View v) {
                 downLoadDialog(mContext);
-                downLoadManager.retrofitDownload(bean.getHost(),bean.getUrl(), FileConstant.APK_NME, downLoadDialog,mContext);
+                downLoadManager.retrofitDownload(Config.HOST,bean.getUrl(), FileConstant.APK_NME, downLoadDialog,mContext);
                 onDialogClickListener.show();
                 dialog.dismiss();
             }

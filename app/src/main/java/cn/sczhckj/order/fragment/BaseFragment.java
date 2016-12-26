@@ -23,12 +23,11 @@ import java.util.List;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.activity.MainActivity;
-import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.listener.OnTipListenner;
-import cn.sczhckj.order.service.CartService;
 import cn.sczhckj.order.service.QRCodeService;
 
 /**
@@ -236,14 +235,6 @@ public abstract class BaseFragment extends Fragment {
     protected void startQRCodeService() {
         mQRCodeIntent = new Intent(getActivity(), QRCodeService.class);
         getActivity().startService(mQRCodeIntent);
-    }
-
-    /**
-     * 开启购物车刷新服务
-     */
-    protected void startCartService() {
-        mCartIntent = new Intent(getActivity(), CartService.class);
-        getActivity().startService(mCartIntent);
     }
 
     /**

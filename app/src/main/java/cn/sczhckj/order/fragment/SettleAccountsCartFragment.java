@@ -202,7 +202,7 @@ public class SettleAccountsCartFragment extends BaseFragment implements OnTipLis
             List<SettleAccountsDishesItemBean> list = bean.getItemDishes();
             for (SettleAccountsDishesItemBean item : list) {
                 if (item.getPriceTypeBean() != null) {
-                    total = total + (item.getPrice() - item.getPriceTypeBean().getPrice()) * item.getNumber();
+//                    total = total + (item.getPrice() - item.getPriceTypeBean().getPrice()) * item.getNumber();
                 }
             }
         }

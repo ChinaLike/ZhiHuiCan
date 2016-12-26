@@ -40,11 +40,6 @@
         </activity>
 
         <service
-            android:name=".service.CartService"
-            android:exported="false">
-
-        </service>
-        <service
             android:name=".service.QRCodeService"
             android:exported="false">
 

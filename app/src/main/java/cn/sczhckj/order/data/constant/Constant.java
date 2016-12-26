@@ -83,8 +83,8 @@ public interface Constant {
     /**
      * 点菜权限
      */
-    int PREMISS_AGREE = 1;//可以操作点菜
-    int PREMISS_DISAGREE = 0;//不可以操作点菜
+    int PERMISS_AGREE = 1;//可以操作点菜
+    int PERMISS_DISAGREE = 0;//不可以操作点菜
 
     /**
      * 点菜类型 字段orderType

@@ -121,7 +121,7 @@ public class FoodControlImpl {
         refundImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.CART_REFUND,bean));
+                EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.CART_REFUND, bean));
             }
         });
     }
@@ -201,11 +201,13 @@ public class FoodControlImpl {
      * @param button
      */
     public void buttonClick(final ImageView button) {
-
+        if (dialog != null && dialog.getDialog().isShowing()) {
+            dialog.getDialog().dismiss();
+        }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button.setClickable(false);
+//                button.setClickable(false);
                 dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
                         mContext.getResources().getString(R.string.dialog_context1),
                         mContext.getResources().getString(R.string.dialog_cacel)).show();

@@ -363,9 +363,11 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         currPosition = position;
         currBean = bean;
         CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
-        initFood(itemBean.getId());
         mFoodAdapter.setRequired(itemBean.getRequired());
         mFoodAdapter.setMaximum(itemBean.getMaximum());
+        mFoodAdapter.setCatePermiss(itemBean.getPermiss());
+        initFood(itemBean.getId());
+
     }
 
 

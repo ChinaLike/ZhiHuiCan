@@ -407,12 +407,15 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         currPosition = position;
         currBean = bean;
         CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
-        move(position);
-        initFood(itemBean.getId());
         /**设置是否必选*/
         mFoodAdapter.setRequired(itemBean.getRequired());
         /**设置最大数量*/
         mFoodAdapter.setMaximum(itemBean.getMaximum());
+        /**设置分类权限*/
+        mFoodAdapter.setCatePermiss(itemBean.getPermiss());
+        move(position);
+        initFood(itemBean.getId());
+
     }
 
     /**
