@@ -39,18 +39,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".service.QRCodeService"
-            android:exported="false">
-
-        </service>
-
-        <activity
-            android:name=".activity.FavorableActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="landscape">
-
-        </activity>
     </application>
 
 </manifest>

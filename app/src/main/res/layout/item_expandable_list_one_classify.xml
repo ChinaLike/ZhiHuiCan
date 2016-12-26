@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:id="@+id/parent"
     android:paddingBottom="10dp"
     android:paddingTop="10dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:paddingLeft="20dp"
         android:layout_weight="4"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="20dp">
 
         <ImageView
             android:id="@+id/el1_favorable_image"
-            android:visibility="invisible"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/zhekou" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/el1_dishes_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textColor="#666666"
             android:layout_marginLeft="5dp"
-            android:textSize="@dimen/cart_title_text_size" />
+            android:textColor="@color/text_color_default"
+            android:textSize="@dimen/text_size_smart_s" />
 
         <ImageView
             android:id="@+id/tag"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/accounts_btn_details_nor"/>
+            android:src="@drawable/accounts_btn_details_nor" />
 
     </LinearLayout>
 
@@ -45,37 +44,58 @@
         android:id="@+id/el1_dishes_number"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_weight="1"
-        android:textColor="#666666"
-        android:textSize="@dimen/cart_title_text_size" />
+        android:gravity="center"
+        android:textColor="@color/text_color_default" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_weight="2">
+        android:layout_weight="2"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/el1_favorable_price"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/el1_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"/>
+            android:layout_marginLeft="5dp" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/el1_total_price"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:textColor="@color/text_color_red"
+        android:layout_weight="2"
         android:gravity="center"
-        android:textSize="@dimen/cart_title_text_size"
-        android:layout_weight="2" />
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥"
+                android:textColor="@color/text_color_red"
+                android:textSize="@dimen/cart_dishes_RMB" />
+
+            <TextView
+                android:id="@+id/el1_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_red" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
 </LinearLayout>

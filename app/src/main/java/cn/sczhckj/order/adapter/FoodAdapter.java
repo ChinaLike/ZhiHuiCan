@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.event.BottomChooseEvent;
+import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
@@ -110,7 +110,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         holder.dishesImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_IN, bean, mList));
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.DISHES_DETAILS_IN,bean,mList));
             }
         });
 

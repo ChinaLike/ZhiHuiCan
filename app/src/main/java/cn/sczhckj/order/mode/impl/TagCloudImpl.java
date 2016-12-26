@@ -114,4 +114,18 @@ public class TagCloudImpl {
         }
     }
 
+    /**
+     * 设置热词
+     * @param recyclerView
+     * @param mList
+     */
+    private void setWord(final TagFlowLayout recyclerView,List<Integer> mList){
+        recyclerView.setAdapter(new TagAdapter<Integer>(mList) {
+            @Override
+            public View getView(FlowLayout parent, int position, Integer o) {
+                return null;
+            }
+        });
+    }
+
 }

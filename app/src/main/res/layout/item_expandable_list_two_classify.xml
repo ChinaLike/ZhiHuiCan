@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#FAFAFA"
     android:orientation="horizontal"
     android:paddingBottom="10dp"
-    android:background="#FAFAFA"
     android:paddingTop="10dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:paddingLeft="40dp"
         android:layout_weight="4"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="40dp">
 
         <ImageView
             android:id="@+id/el2_favorable_image"
@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:textColor="#999999"/>
+            android:textColor="#999999"
+            android:textSize="@dimen/text_size_smart_s" />
 
     </LinearLayout>
 
@@ -35,38 +36,76 @@
         android:id="@+id/el2_dishes_number"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_weight="1"
-        android:textColor="#999999" />
+        android:gravity="center"
+        android:textColor="#999999"
+        android:textSize="@dimen/text_size_smart_s" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="2"
         android:gravity="center"
-        android:layout_weight="2">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/el2_favorable_price"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#999999"/>
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥"
+                android:textColor="#999999"
+                android:textSize="@dimen/cart_dishes_RMB" />
+
+            <TextView
+                android:id="@+id/el2_favorable_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#999999"
+                android:textSize="@dimen/text_size_smart_s" />
+        </LinearLayout>
+
 
         <cn.sczhckj.order.overwrite.SlantTextView
             android:id="@+id/el2_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textSize="12sp"
-            android:textColor="@color/text_color_gray"/>
+            android:textColor="@color/text_color_gray"
+            android:textSize="9sp" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/el2_total_price"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="#666666"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥"
+                android:textColor="#666666"
+                android:textSize="@dimen/cart_dishes_RMB" />
+
+            <TextView
+                android:id="@+id/el2_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="@dimen/text_size_smart_s" />
+        </LinearLayout>
+    </LinearLayout>
+
 
 </LinearLayout>

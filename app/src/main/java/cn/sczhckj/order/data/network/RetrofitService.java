@@ -3,12 +3,9 @@ package cn.sczhckj.order.data.network;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.EvaluateBean;
-import cn.sczhckj.order.data.bean.GrouponBean;
-import cn.sczhckj.order.data.bean.QRCodeBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
+import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
@@ -182,45 +179,6 @@ public interface RetrofitService {
 
 
 
-
-
-
-
-    /**
-     * 团购券验证
-     */
-    @FormUrlEncoded
-    @POST("rest/accounts/accountsGroupon")
-    Call<Bean<GrouponBean>> verifyGroup(@Field("params") String params);
-
-    /**
-     * 结账
-     */
-    @FormUrlEncoded
-    @POST("rest/accounts/accountsPay")
-    Call<Bean<QRCodeBean>> pay(@Field("params") String params);
-
-    /**
-     * 评价请求数据
-     */
-    @FormUrlEncoded
-    @POST("rest/accounts/accountsEvaluateShow")
-    Call<Bean<List<EvaluateBean>>> getEvaluate(@Field("params") String params);
-
-    /**
-     * 评价发送数据
-     */
-    @FormUrlEncoded
-    @POST("rest/accounts/accountsEvaluate")
-    Call<Bean<ResponseCommonBean>> postEvaluate(@Field("params") String params);
-
-    /**
-     * 服务呼叫
-     */
-    @FormUrlEncoded
-    @POST("rest/sercive")
-    Call<Bean<ResponseCommonBean>> service(@Field("params") String params);
-
     /**
      * 申请办理VIP
      */
@@ -228,14 +186,6 @@ public interface RetrofitService {
     @POST("rest/user/applyForVip")
     Call<Bean<ResponseCommonBean>> applyForVip(@Field("params") String params);
 
-
-
-    /**
-     * 刷新二维码是否验证成功
-     */
-    @FormUrlEncoded
-    @POST("rest/refresh/QRCodeVerify")
-    Call<Bean<ResponseCommonBean>> refreshQRCodeIsVerify(@Field("params") String params);
 
 
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,35 +28,26 @@ import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.bean.FavorableTypeBean;
-import cn.sczhckj.order.data.constant.OP;
-import cn.sczhckj.order.data.bean.PayTypeBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;
-import cn.sczhckj.order.data.event.ApplyForVipCardEvent;
-import cn.sczhckj.order.data.event.BottomChooseEvent;
-import cn.sczhckj.order.data.event.CloseServiceEvent;
-import cn.sczhckj.order.data.event.SettleAountsTypeEvent;
+import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.data.constant.OP;
+import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.listener.OnTableListenner;
 import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
-import cn.sczhckj.order.fragment.ApplyForVipCardFragment;
 import cn.sczhckj.order.fragment.BaseFragment;
+import cn.sczhckj.order.fragment.BillFragment;
+import cn.sczhckj.order.fragment.CardFragment;
 import cn.sczhckj.order.fragment.CartFragment;
 import cn.sczhckj.order.fragment.DetailsFragment;
-import cn.sczhckj.order.fragment.EvaluateFragment;
-import cn.sczhckj.order.fragment.EvaluateListFragment;
-import cn.sczhckj.order.fragment.TipFragment;
-import cn.sczhckj.order.fragment.GrouponFragment;
+import cn.sczhckj.order.fragment.FavorableFragment;
 import cn.sczhckj.order.fragment.MainFragment;
-import cn.sczhckj.order.fragment.BillSuccessFragment;
 import cn.sczhckj.order.fragment.RequiredFagment;
-import cn.sczhckj.order.fragment.SettleAccountsCartFragment;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
@@ -80,9 +70,6 @@ import retrofit2.Response;
 public class MainActivity extends BaseActivity implements OnButtonClickListener, OnTableListenner,
         Callback<Bean<ResponseCommonBean>>, OnWebSocketListenner {
 
-    /**
-     * Item=0，放置开桌锅底选择，推荐菜品；Item=1，点菜主界面
-     */
     @Bind(R.id.viewPager)
     NoScrollViewPager viewPager;
     @Bind(R.id.table_number)
@@ -130,51 +117,31 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     private MainFragment mMainFragment;
 
     /**
-     * 菜品评价列表
-     */
-    private EvaluateListFragment mEvaluateListFragment;
-
-    /**
      * 购物车
      */
     private CartFragment mCartFragment;
+    /**
+     * 优惠列表
+     */
+    private FavorableFragment mFavorableFragment;
+
+    /**
+     * 办卡界面
+     */
+    private CardFragment mCardFragment;
 
     /**
      * 结账
      */
-    private SettleAccountsCartFragment mSettleAccountsCartFragment;
-
-    /**
-     * 团购券
-     */
-    private GrouponFragment mGrouponFragment;
-
-    /**
-     * 打赏界面
-     */
-    private TipFragment mTipFragment;
-    /**
-     * 二维码支付界面
-     */
-    private BillSuccessFragment mBillSuccessFragment;
-    /**
-     * 评价
-     */
-    private EvaluateFragment mEvaluateFragment;
+    private BillFragment mBillFragment;
     /**
      * 菜品详情
      */
     private DetailsFragment mDetailsFragment;
     /**
-     * 申请办理VIP
-     */
-    private ApplyForVipCardFragment mApplyForVipCardFragment;
-    /**
      * 桌号
      */
     public static String table;
-
-    private int favorableType = 0;
 
     /**
      * 用餐人数
@@ -201,9 +168,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-
+        /**注册WebSocket*/
         connectionWebSocket(AppSystemUntil.getAndroidID(this));
-
         isLogin();
         init();
         initLeftFragment();
@@ -221,21 +187,17 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         }
     }
 
-    /**
-     * 获取网络数据
-     */
-    @Override
-    protected void initNetData() {
-
-    }
-
     @Override
     protected void init() {
         mDialog = new DialogImpl(this);
         personNumber = 0;
+        initViewPager();
+    }
+
+    private void initViewPager() {
         mFm = getSupportFragmentManager();
         adapter = new ViewPagerAdapter(mFm);
-        adapter.setList(initFragment());
+        adapter.setList(initRightFragment());
         viewPager.setAdapter(adapter);
     }
 
@@ -262,11 +224,11 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         mCartFragment.setOnButtonClickListener(this);
         mList.add(mCartFragment);
         /**结账*/
-        mSettleAccountsCartFragment = new SettleAccountsCartFragment();
-        mList.add(mSettleAccountsCartFragment);
-        /**评价列表*/
-        mEvaluateListFragment = new EvaluateListFragment();
-        mList.add(mEvaluateListFragment);
+        mBillFragment = new BillFragment();
+        mList.add(mBillFragment);
+        /**优惠列表*/
+        mFavorableFragment = new FavorableFragment();
+        mList.add(mFavorableFragment);
 
         adapter.setList(mList);
         cart.setAdapter(adapter);
@@ -274,11 +236,11 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
 
     /**
-     * 初始化Fragment
+     * 初始化右侧数据
      *
      * @return
      */
-    private List<Fragment> initFragment() {
+    private List<Fragment> initRightFragment() {
         List<Fragment> mList = new ArrayList<>();
         /**锅底必选*/
         mRequiredFagment = new RequiredFagment();
@@ -286,28 +248,16 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         mRequiredFagment.setUserId(userId);
         /**菜品选择主页*/
         mMainFragment = new MainFragment();
-        /**团购券*/
-        mGrouponFragment = new GrouponFragment();
-        /**打赏*/
-        mTipFragment = new TipFragment();
-        /**二维码*/
-        mBillSuccessFragment = new BillSuccessFragment();
-        /**评价*/
-        mEvaluateFragment = new EvaluateFragment();
-        /**评价详情*/
+        /**菜品详情*/
         mDetailsFragment = new DetailsFragment();
-        /**申请办理VIP*/
-        mApplyForVipCardFragment = new ApplyForVipCardFragment();
+        /**办卡界面*/
+        mCardFragment = new CardFragment();
 
         mList.add(mRequiredFagment);
         mList.add(mMainFragment);
-        mList.add(mGrouponFragment);
-        mList.add(mTipFragment);
-        mList.add(mBillSuccessFragment);
-        mList.add(mEvaluateFragment);
         mList.add(mDetailsFragment);
-        mList.add(mApplyForVipCardFragment);
-
+        mList.add(mCardFragment);
+        /**预加载所有*/
         viewPager.setOffscreenPageLimit(mList.size());
 
         return mList;
@@ -341,8 +291,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         MyApplication.isLogin = false;
         /**退出时暂停Glide请求*/
         Glide.with(getApplicationContext()).pauseRequests();
-        /**销毁时关闭服务*/
-        EventBus.getDefault().post(new CloseServiceEvent());
         /**人数清零*/
         personNumber = 0;
     }
@@ -352,117 +300,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         super.onResume();
         /**Activity重新获取焦点时，开启Glide请求*/
         Glide.with(getApplicationContext()).resumeRequests();
-    }
-
-    /**
-     * 根据底部菜单按钮，置换左边试图
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void bottomEventBus(BottomChooseEvent event) {
-        tableInfoParent.setVisibility(View.VISIBLE);
-        if (event.getType() == Constant.BOTTOM_ORDER) {
-            cart.setCurrentItem(CART_DISHES, false);
-        } else if (event.getType() == Constant.BOTTOM_SERVICE) {
-
-        } else if (event.getType() == Constant.BOTTOM_SETTLE_ACCOUNTS) {
-            cart.setCurrentItem(CART_SETTLT_AOUNTS, false);
-//            mSettleAccountsCartFragment.showPop();
-        } else if (event.getType() == Constant.DISHES_DETAILS_IN) {
-            /**进入菜品详情*/
-            tableInfoParent.setVisibility(View.GONE);
-            viewPager.setCurrentItem(FRAGMENT_DETAILS, false);
-            mDetailsFragment.setData(event.getBean());
-            mDetailsFragment.setBeanList(event.getBeanList());
-        } else if (event.getType() == Constant.DISHES_DETAILS_OUT) {
-            /**退出菜品详情*/
-            if (BaseFragment.isOpen) {
-                viewPager.setCurrentItem(FRAGMENT_MAIN, false);
-            } else {
-                viewPager.setCurrentItem(FRAGMENT_POT_TYPE, false);
-            }
-        }
-    }
-
-    /**
-     * 支付方式信息录入
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void settleAountsTypeEvent(SettleAountsTypeEvent event) {
-        if (event.getType() == SettleAountsTypeEvent.FTYPE) {
-            FavorableTypeBean favorableTypeBean = event.getFavorableTypeBean();
-            int id = favorableTypeBean.getId();
-            if (id == 0) {
-                /**会员*/
-                if (!MyApplication.isLogin) {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    intent.putExtra(Constant.INTENT_FLAG, Constant.MAIN_TO_LOGIN);
-                    startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
-                } else {
-                    favorableType = favorableTypeBean.getId();
-                }
-            } else if (id == 1) {
-                /**店内促销*/
-                favorableType = favorableTypeBean.getId();
-
-            } else if (id == 2) {
-                /**团购券*/
-                favorableType = favorableTypeBean.getId();
-                viewPager.setCurrentItem(FRAGMENT_GROUPON, false);
-            }
-        } else if (event.getType() == SettleAountsTypeEvent.PTYPE) {
-            PayTypeBean payTypeBean = event.getPayTypeBean();
-            int id = payTypeBean.getId();
-            viewPager.setCurrentItem(FRAGMENT_QRCODE, false);
-            mBillSuccessFragment.getCode(id, favorableType, mGrouponFragment.getGrouponList(), mSettleAccountsCartFragment.getGiftMoney());
-            if (id == 0) {
-                /**现金*/
-                mBillSuccessFragment.setData(getResources().getString(R.string.cash_title));
-            } else if (id == 1) {
-                /**微信*/
-                mBillSuccessFragment.setData(getResources().getString(R.string.weixin_pay_title));
-            } else if (id == 2) {
-                /**银行卡*/
-                mBillSuccessFragment.setData(getResources().getString(R.string.bank_card_title));
-            } else if (id == 3) {
-                /**支付宝*/
-                mBillSuccessFragment.setData(getResources().getString(R.string.aliPay_title));
-            }
-        } else if (event.getType() == SettleAountsTypeEvent.GTYPE) {
-            /**打赏*/
-            viewPager.setCurrentItem(FRAGMENT_GIFT, false);
-        } else if (event.getType() == SettleAountsTypeEvent.TTYPE) {
-            viewPager.setCurrentItem(FRAGMENT_MAIN, false);
-        } else if (event.getType() == SettleAountsTypeEvent.ETYPE) {
-            viewPager.setCurrentItem(FRAGMENT_EVALUATE, false);
-            cart.setCurrentItem(CART_EVALUATE_LIST, false);
-            mEvaluateListFragment.setData(mMainFragment.getBillFragment().getBillList());
-        }
-    }
-
-    /**
-     * 申请办理会员卡
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void applyForVipEventBus(ApplyForVipCardEvent event) {
-        if (event.getType() == event.APPLY) {
-            /**申请办理VIP*/
-            viewPager.setCurrentItem(APPLY_FOR_VIP_CARD, false);
-            if (mApplyForVipCardFragment != null) {
-                mApplyForVipCardFragment.setData(event.getmList());
-            }
-        } else if (event.getType() == event.CANCEL_APPLY) {
-            /**取消办理VIP*/
-            viewPager.setCurrentItem(FRAGMENT_MAIN, false);
-        } else if (event.getType() == event.CLOSE) {
-            /**取消办理VIP*/
-            viewPager.setCurrentItem(FRAGMENT_MAIN, false);
-        }
     }
 
     @Override
@@ -581,7 +418,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
 
     @Override
     public void onClose(int code, String reason) {
-        Log.d("ws=====", "reason:" + reason);
         /**断开后尝试再次连接*/
 //        connectionWebSocket(AppSystemUntil.getAndroidID(this));
     }
@@ -610,4 +446,53 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                     new WebSocketEvent(WebSocketEvent.TYPE_SERVICE_COMPLETE, restRequest.getBean()));
         }
     }
+
+    /**
+     * 界面切换事件
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void switchViewEventBus(SwitchViewEvent event) {
+        switch (event.getType()) {
+            case SwitchViewEvent.BOTTOM_ORDER:
+                /**点菜*/
+                tableInfoParent.setVisibility(View.VISIBLE);
+                cart.setCurrentItem(CART_DISHES, false);
+                break;
+            case SwitchViewEvent.BOTTOM_SERVICE:
+                /**服务*/
+                tableInfoParent.setVisibility(View.VISIBLE);
+                break;
+            case SwitchViewEvent.BOTTOM_BILL:
+                /**结账*/
+                tableInfoParent.setVisibility(View.VISIBLE);
+                cart.setCurrentItem(CART_BILL, false);
+                mBillFragment.setData(null);
+                break;
+            case SwitchViewEvent.DISHES_DETAILS_IN:
+                /**进入菜品详情*/
+                tableInfoParent.setVisibility(View.GONE);
+                viewPager.setCurrentItem(FRAGMENT_DETAILS, false);
+                mDetailsFragment.setData(event.getBean());
+                mDetailsFragment.setBeanList(event.getBeanList());
+                break;
+            case SwitchViewEvent.DISHES_DETAILS_OUT:
+                /**退出菜品详情*/
+                tableInfoParent.setVisibility(View.VISIBLE);
+                if (BaseFragment.isOpen) {
+                    viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+                } else {
+                    viewPager.setCurrentItem(FRAGMENT_REQUIRED, false);
+                }
+                break;
+            case SwitchViewEvent.FAVORABLE:
+                /**更多优惠*/
+                cart.setCurrentItem(CART_FAVORABLE,false);
+                viewPager.setCurrentItem(FRAGMENT_CARD,false);
+                break;
+        }
+
+    }
+
 }

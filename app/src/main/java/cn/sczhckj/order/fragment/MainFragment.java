@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.event.BottomChooseEvent;
+import cn.sczhckj.order.data.event.SwitchViewEvent;
 
 /**
  * @describe: 开桌后主界面
@@ -84,9 +84,9 @@ public class MainFragment extends BaseFragment {
      */
     private ServiceFragment mServiceFragment;
     /**
-     * 结账
+     * 评价
      */
-    private BillFragment mBillFragment;
+    private EvaluateFragment mEvaluateFragment;
 
     private FragmentManager mFm;
 
@@ -155,7 +155,7 @@ public class MainFragment extends BaseFragment {
      * 初始化结账界面
      */
     private void initSettleAccountsFragment() {
-        mBillFragment = new BillFragment();
+        mEvaluateFragment = new EvaluateFragment();
     }
 
     /**
@@ -165,12 +165,12 @@ public class MainFragment extends BaseFragment {
         mFm = getChildFragmentManager();
         fragmentList.add(mOrderFragment);
         fragmentList.add(mServiceFragment);
-        fragmentList.add(mBillFragment);
+        fragmentList.add(mEvaluateFragment);
         adapter = new ViewPagerAdapter(mFm);
         adapter.setList(fragmentList);
         mainBottomViewPager.setAdapter(adapter);
         /**预加载所有*/
-        mainBottomViewPager.setOffscreenPageLimit(3);
+        mainBottomViewPager.setOffscreenPageLimit(fragmentList.size());
     }
 
     /**
@@ -203,18 +203,18 @@ public class MainFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.main_order:
                 index = 0;
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_ORDER));
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_ORDER));
                 break;
             case R.id.main_service:
                 index = 1;
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_SERVICE));
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_SERVICE));
                 break;
             case R.id.main_settle_accounts:
                 index = 2;
-                if (mBillFragment != null) {
-                    mBillFragment.setData(null);
+                if (mEvaluateFragment != null) {
+                    mEvaluateFragment.setData(null);
                 }
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.BOTTOM_SETTLE_ACCOUNTS));
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_BILL));
                 break;
             case R.id.main_alone_order:
                 /**单桌点菜*/
@@ -231,16 +231,12 @@ public class MainFragment extends BaseFragment {
         imageViews[index].setSelected(true);
         textViews[index].setSelected(true);
         if (index != current) {
-            mainBottomViewPager.setCurrentItem(index);
+            mainBottomViewPager.setCurrentItem(index,false);
             imageViews[current].setSelected(false);
             textViews[current].setSelected(false);
             current = index;
         }
 
-    }
-
-    public BillFragment getBillFragment() {
-        return mBillFragment;
     }
 
 }

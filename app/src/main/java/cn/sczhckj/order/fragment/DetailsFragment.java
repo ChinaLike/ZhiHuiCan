@@ -23,8 +23,7 @@ import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
-import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.event.BottomChooseEvent;
+import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.FoodMode;
@@ -228,7 +227,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
                 break;
             case R.id.details_back:
                 /**返回*/
-                EventBus.getDefault().post(new BottomChooseEvent(Constant.DISHES_DETAILS_OUT));
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.DISHES_DETAILS_OUT));
                 break;
             case R.id.details_banner:
                 /**请求失败，重新请求*/

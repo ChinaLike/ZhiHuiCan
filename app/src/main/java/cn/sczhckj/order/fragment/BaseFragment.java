@@ -1,6 +1,5 @@
 package cn.sczhckj.order.fragment;
 
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,8 +14,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +23,7 @@ import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.event.CloseServiceEvent;
 import cn.sczhckj.order.data.listener.OnTipListenner;
-import cn.sczhckj.order.service.QRCodeService;
 
 /**
  * @describe:
@@ -68,14 +63,6 @@ public abstract class BaseFragment extends Fragment {
     private TextView loadingText;
 
     private TextView loadingFailText;
-    /**
-     * 购物车刷新
-     */
-    private Intent mCartIntent;
-    /**
-     * 二维码扫描
-     */
-    private Intent mQRCodeIntent;
 
     /**
      * 分类集合
@@ -202,8 +189,6 @@ public abstract class BaseFragment extends Fragment {
         getActivity().finish();
         /**设置为未登录模式*/
         MyApplication.isLogin = false;
-        /**销毁时关闭服务*/
-        EventBus.getDefault().post(new CloseServiceEvent());
         /**人数清零*/
         MainActivity.personNumber = 0;
         /**设置默认点餐为单桌点餐*/
@@ -230,14 +215,6 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 开启扫码服务
-     */
-    protected void startQRCodeService() {
-        mQRCodeIntent = new Intent(getActivity(), QRCodeService.class);
-        getActivity().startService(mQRCodeIntent);
-    }
-
-    /**
      * 加载中
      *
      * @param loadingParent     显示加载区域控件
@@ -247,7 +224,7 @@ public abstract class BaseFragment extends Fragment {
      * @param loadingTitle      加载成功提示语
      * @param str
      */
-    protected void loading(LinearLayout loadingParent, LinearLayout contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail, TextView loadingTitle, String str) {
+    protected void loading(LinearLayout loadingParent, View contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail, TextView loadingTitle, String str) {
         loadingParent.setVisibility(View.VISIBLE);
         contextParent.setVisibility(View.GONE);
         loadingItemParent.setVisibility(View.VISIBLE);
@@ -263,7 +240,7 @@ public abstract class BaseFragment extends Fragment {
      * @param loadingItemParent 加载区域父类
      * @param loadingFail       加载失败控件
      */
-    protected void loadingSuccess(LinearLayout loadingParent, LinearLayout contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail) {
+    protected void loadingSuccess(LinearLayout loadingParent, View contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail) {
         loadingParent.setVisibility(View.GONE);
         contextParent.setVisibility(View.VISIBLE);
         loadingItemParent.setVisibility(View.VISIBLE);
@@ -280,7 +257,7 @@ public abstract class BaseFragment extends Fragment {
      * @param loadingFailTitle  加载失败提示语
      * @param str
      */
-    protected void loadingFail(LinearLayout loadingParent, LinearLayout contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail, TextView loadingFailTitle, String str) {
+    protected void loadingFail(LinearLayout loadingParent, View contextParent, LinearLayout loadingItemParent, LinearLayout loadingFail, TextView loadingFailTitle, String str) {
         loadingParent.setVisibility(View.VISIBLE);
         contextParent.setVisibility(View.GONE);
         loadingItemParent.setVisibility(View.GONE);

@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.activity.FavorableActivity;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
@@ -41,6 +40,7 @@ import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
+import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
@@ -563,8 +563,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 break;
             case R.id.cart_favorable:
                 /**更多优惠*/
-                Intent intent = new Intent(getActivity(), FavorableActivity.class);
-                getContext().startActivity(intent);
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.FAVORABLE));
                 break;
 
             case R.id.order_parent:

@@ -2,40 +2,24 @@ package cn.sczhckj.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RatingBar;
-import android.widget.Toast;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.adapter.EvaluateHotWordAdapter;
-import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.bean.EvaluateBean;
-import cn.sczhckj.order.data.constant.OP;
-import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.event.EvaluateListEvent;
-import cn.sczhckj.order.data.network.RetrofitRequest;
-import cn.sczhckj.order.data.response.ResponseCode;
-import cn.sczhckj.platform.rest.io.RestRequest;
-import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import cn.sczhckj.order.adapter.ReviewAdapter;
+import cn.sczhckj.order.mode.impl.TagCloudImpl;
+import cn.sczhckj.order.overwrite.TagFlowLayout;
 
 /**
  * @describe: 评价界面, 获取服务器评价信息
@@ -45,37 +29,40 @@ import retrofit2.Response;
 
 public class EvaluateFragment extends BaseFragment {
 
-    @Bind(R.id.ratingBar1)
-    RatingBar ratingBar1;
-    @Bind(R.id.ratingBar2)
-    RatingBar ratingBar2;
-    @Bind(R.id.ratingBar3)
-    RatingBar ratingBar3;
-    @Bind(R.id.ratingBar4)
-    RatingBar ratingBar4;
-    @Bind(R.id.evaluate_other)
-    RecyclerView evaluateOther;
+
+    @Bind(R.id.loading_progress)
+    ProgressBar loadingProgress;
+    @Bind(R.id.loading_title)
+    TextView loadingTitle;
+    @Bind(R.id.loading_parent)
+    LinearLayout loadingItemParent;
+    @Bind(R.id.loading_fail_title)
+    TextView loadingFailTitle;
+    @Bind(R.id.loading_fail)
+    LinearLayout loadingFail;
+    @Bind(R.id.loadingParent)
+    LinearLayout loadingParent;
     @Bind(R.id.evaluate_finish)
     Button evaluateFinish;
+    @Bind(R.id.evaluate_list)
+    RecyclerView evaluateList;
+    @Bind(R.id.words_cloud)
+    TagFlowLayout wordsCloud;
+    @Bind(R.id.contextParent)
+    RelativeLayout contextParent;
 
-    private String id = "0";
     /**
-     * 热词ID
+     * 热词实现类
      */
-    private int hotWordId =-1;
+    private TagCloudImpl mTagCloud;
     /**
-     * 用户输入意见
+     * 评价适配器
      */
-    private String opinion = "";
-
-    private EvaluateHotWordAdapter adapter;
-
-    private List<EvaluateBean> mList = new ArrayList<>();
+    private ReviewAdapter mReviewAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -89,111 +76,37 @@ public class EvaluateFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        init();
     }
 
     @Override
     public void setData(Object object) {
-
+        initEvaluate();
     }
 
     @Override
     public void init() {
-        adapter = new EvaluateHotWordAdapter(getContext(), mList);
-        evaluateOther.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        evaluateOther.setAdapter(adapter);
-        getEvaluate(id);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-
-    /**
-     * 根据对应评价菜品选择对应的参数
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void listEvent(EvaluateListEvent event) {
-        id = event.getBean().getId();
-        getEvaluate(id);
+        mTagCloud = new TagCloudImpl(getContext());
+        initEvaluateAdapter();
     }
 
     /**
-     * 获取评价信息
-     *
-     * @param id
+     * 初始化评价适配器
      */
-    private void getEvaluate(String id) {
-        RequestCommonBean bean=new RequestCommonBean();
-        bean.setId(id);
-        RestRequest<RequestCommonBean> restRequest= JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.ACCOUNTS_EVALUATE_SHOW)
-                .time()
-                .bean(bean);
-
-        Call<Bean<List<EvaluateBean>>> getEvaluateCall = RetrofitRequest.service().getEvaluate(restRequest.toRequestString());
-        getEvaluateCall.enqueue(new Callback<Bean<List<EvaluateBean>>>() {
-            @Override
-            public void onResponse(Call<Bean<List<EvaluateBean>>> call, Response<Bean<List<EvaluateBean>>> response) {
-                Bean<List<EvaluateBean>> bean = response.body();
-                if (bean != null&&bean.getCode()== ResponseCode.SUCCESS) {
-                    mList = bean.getResult();
-                    adapter.notifyDataSetChanged(mList);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Bean<List<EvaluateBean>>> call, Throwable t) {
-                try {
-                    Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    private void initEvaluateAdapter() {
+        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
+                getContext().getResources().getString(R.string.loading));
+        mReviewAdapter = new ReviewAdapter(getContext(), null);
+        evaluateList.setLayoutManager(new LinearLayoutManager(getContext()));
+        evaluateList.setAdapter(mReviewAdapter);
     }
 
     /**
-     * 上传评价信息
+     * 初始化评价数据
      */
-    private void postEvaluate() {
-        RequestCommonBean bean=new RequestCommonBean();
-        bean.setId(id);
-        bean.setRatingBar1(ratingBar1.getRating());
-        bean.setRatingBar2(ratingBar2.getRating());
-        bean.setRatingBar3(ratingBar3.getRating());
-        bean.setRatingBar4(ratingBar4.getRating());
-        bean.setHotWordId(hotWordId);
-        bean.setOpinion(opinion);
+    private void initEvaluate() {
 
-        RestRequest<RequestCommonBean> restRequest=JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.ACCOUNTS_EVALUATE)
-                .time()
-                .bean(bean);
-
-        Call<Bean<ResponseCommonBean>> postEvaluateCall = RetrofitRequest.service().postEvaluate(restRequest.toRequestString());
-        postEvaluateCall.enqueue(new Callback<Bean<ResponseCommonBean>>() {
-            @Override
-            public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
-                Bean<ResponseCommonBean> beanBean=response.body();
-                if (beanBean!=null&&beanBean.getCode()==ResponseCode.SUCCESS) {
-                    Toast.makeText(getContext(), beanBean.getMessage(), Toast.LENGTH_SHORT).show();
-                    /**成功评价后关闭*/
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-                Toast.makeText(getContext(), getString(R.string.overTime), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
+
 
     @Override
     public void onDestroyView() {
@@ -201,8 +114,16 @@ public class EvaluateFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick(R.id.evaluate_finish)
-    public void onClick() {
-        postEvaluate();
+    @OnClick({R.id.loadingParent, R.id.evaluate_finish})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.loadingParent:
+                /**重新加载*/
+                setData(null);
+                break;
+            case R.id.evaluate_finish:
+                /**提交评价*/
+                break;
+        }
     }
 }

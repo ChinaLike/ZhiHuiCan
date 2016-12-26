@@ -4,147 +4,78 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <Button
-        android:id="@+id/evaluate_finish"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:padding="25dp"
-        android:background="@drawable/shape_button_full_yellow_login"
-        android:text="完成"
-        android:textColor="@color/button_text"
-        android:textSize="@dimen/text_size_mediu" />
-
-
-    <ScrollView
-        android:id="@+id/evaluate_parent"
+    <LinearLayout
+        android:id="@+id/loadingParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/evaluate_finish"
-        android:visibility="visible">
+        android:gravity="center">
 
-        <LinearLayout
+        <include layout="@layout/item_loading" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/contextParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/evaluate_finish"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button_full_yellow_login"
+            android:padding="25dp"
+            android:text="确认"
+            android:textColor="@color/button_text"
+            android:textSize="@dimen/text_size_mediu" />
+
+
+        <ScrollView
+            android:id="@+id/evaluate_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="@string/evaluate_title"
-                android:textColor="@color/text_color_m"
-                android:textSize="@dimen/text_size_mediu" />
+            android:layout_above="@id/evaluate_finish"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="bottom"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/evaluate_data1" />
+                    android:background="@color/background_gray_m"
+                    android:lines="1"
+                    android:padding="20dp"
+                    android:text="@string/evaluate_title"
+                    android:textColor="@color/text_color_m"
+                    android:textSize="@dimen/text_size_mediu_s" />
 
-                <RatingBar
-                    android:id="@+id/ratingBar1"
-                    style="@style/roomRatingBar"
-                    android:layout_width="wrap_content"
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hint_line"
+                    android:background="@color/hint_color" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/evaluate_list"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="4"
-                    android:stepSize="0.5" />
+                    android:layout_margin="20dp" />
+
+                <cn.sczhckj.order.overwrite.TagFlowLayout
+                    android:id="@+id/words_cloud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/evaluate_data2" />
-
-                <RatingBar
-                    android:id="@+id/ratingBar2"
-                    style="@style/roomRatingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="4"
-
-                    android:stepSize="0.5" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/evaluate_data3" />
-
-                <RatingBar
-                    android:id="@+id/ratingBar3"
-                    style="@style/roomRatingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="4"
-                    android:stepSize="0.5" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/evaluate_data4" />
-
-                <RatingBar
-                    android:id="@+id/ratingBar4"
-                    style="@style/roomRatingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="4"
-                    android:stepSize="0.5" />
-
-            </LinearLayout>
-
-            <cn.sczhckj.order.overwrite.NoScrollRecyclerview
-                android:id="@+id/evaluate_other"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp" />
-
-
-        </LinearLayout>
-
-    </ScrollView>
+        </ScrollView>
+    </RelativeLayout>
 
 
 </RelativeLayout>

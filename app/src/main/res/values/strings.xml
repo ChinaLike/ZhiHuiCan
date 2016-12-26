@@ -32,7 +32,7 @@
     <!--购物车按钮-->
     <string name="openTable">开桌</string>
     <string name="order">点菜</string>
-    <string name="settle_accounts">确认结账</string>
+    <string name="settle_accounts">结账</string>
     <string name="choose_good">选好了</string>
 
     <string name="order_type_text_hint">请选择一种点菜方式</string>

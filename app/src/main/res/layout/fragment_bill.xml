@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/loadingParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <include layout="@layout/item_loading" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/cart_loading_success"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:id="@+id/cart_top_parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cart_top"
+            android:layout_alignParentTop="true"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="35dp"
+                android:text="@string/dishes"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/numbers"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/price"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/totalPrice"
+                android:textColor="@color/text_color_m"
+                android:textSize="@dimen/cart_title_text_size"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cart_bottom_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_left">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="打赏"
+                    android:textColor="@color/button_text"
+                    android:textSize="@dimen/text_size_smart_s" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/cart_tip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="应付:"
+                        android:textColor="@color/button_text"
+                        android:textSize="@dimen/text_size_smart_s" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB" />
+
+                    <TextView
+                        android:id="@+id/cart_total_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="0"
+                        android:textColor="@color/text_color_red" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/hint_line"
+                    android:layout_height="25dp"
+                    android:background="@color/view_color" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="打赏:"
+                        android:textColor="@color/button_text"
+                        android:textSize="@dimen/text_size_smart_s" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB" />
+
+                    <TextView
+                        android:id="@+id/cart_tip_money"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:lines="1"
+                        android:text="0"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB_price" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/hint_line"
+                    android:layout_height="25dp"
+                    android:background="@color/view_color" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="优惠:"
+                        android:textColor="@color/button_text"
+                        android:textSize="@dimen/text_size_smart_s" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB" />
+
+                    <TextView
+                        android:id="@+id/cart_favor_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="0"
+                        android:textColor="@color/text_color_red"
+                        android:textSize="@dimen/text_size_RMB_price" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/shoppingcart_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_left"
+                android:background="@drawable/selector_shape_button_yellow"
+                android:text="@string/settle_accounts"
+                android:textColor="@color/button_text"
+                android:textSize="@dimen/button_size" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/cart_top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hint_line"
+            android:layout_below="@id/cart_top_parent"
+            android:background="@color/view_color" />
+
+        <View
+            android:id="@+id/cart_bottom_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hint_line"
+            android:layout_above="@id/cart_bottom_parent"
+            android:background="@color/view_color" />
+
+
+        <ImageView
+            android:id="@+id/cart_favorable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cart_bottom_view"
+            android:src="@drawable/both_btn_favorable" />
+
+        <ExpandableListView
+            android:id="@+id/cart_bill_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/cart_bottom_view"
+            android:layout_below="@id/cart_top_view" />
+
+    </RelativeLayout>
+</RelativeLayout>

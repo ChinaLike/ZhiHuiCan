@@ -129,10 +129,10 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         ParentViewHolder holder = new ParentViewHolder(convertView);
         holder.name.setText(getGroup(groupPosition).getName().toString());
         holder.number.setText("×" + getGroup(groupPosition).getCount() + "");
-        holder.totalPrice.setText("¥ " + getGroup(groupPosition).getSum());
+        holder.totalPrice.setText("" + getGroup(groupPosition).getSum());
         holder.favorablePrice.setVisibility(View.INVISIBLE);
         holder.price.setVisibility(View.INVISIBLE);
-        holder.image.setVisibility(View.INVISIBLE);
+        holder.image.setVisibility(View.GONE);
         if (isExpanded) {
             holder.tag.setImageResource(R.drawable.accounts_btn_details_sel);
         }
@@ -156,8 +156,9 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         holder.name.setText(getChild(groupPosition, childPosition).getName().toString());
         holder.number.setText("×" + getChild(groupPosition, childPosition).getCount());
         /**优惠后价格,没有优惠价原价与总价相等*/
-        holder.favorablePrice.setText("¥ " + getChild(groupPosition, childPosition).getPrice());
-        if (getChild(groupPosition, childPosition).getPriceImageUrl() != null) {
+        holder.favorablePrice.setText("" + getChild(groupPosition, childPosition).getPrice());
+        if (getChild(groupPosition, childPosition).getPriceImageUrl() != null &&
+                getChild(groupPosition, childPosition).getOriginPrice() > getChild(groupPosition, childPosition).getPrice()) {
             /**设置原价*/
             holder.price.setText("¥ " + getChild(groupPosition, childPosition).getOriginPrice());
             holder.image.setVisibility(View.VISIBLE);
@@ -167,7 +168,7 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
             holder.image.setVisibility(View.INVISIBLE);
         }
         /**设置Item总价*/
-        holder.totalPrice.setText("¥ "+getChild(groupPosition, childPosition).getCount()*getChild(groupPosition, childPosition).getPrice());
+        holder.totalPrice.setText("" + getChild(groupPosition, childPosition).getCount() * getChild(groupPosition, childPosition).getPrice());
         return convertView;
     }
 
