@@ -3,7 +3,7 @@ package cn.sczhckj.order.helper;
 import android.os.Looper;
 import android.os.Message;
 
-import cn.sczhckj.order.data.bean.ProgressBean;
+import cn.sczhckj.order.data.bean.device.ProgressBean;
 
 /**
  * @describe: 继承于ProgressHandler，用来发送和处理消息

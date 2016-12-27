@@ -22,7 +22,6 @@ import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -93,10 +92,8 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
     private void getVersion() {
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(this));
-        bean.setVersionCode(mVersionManager.getVersionCode(LeadActivity.this));
-        bean.setVersionName(mVersionManager.getVersionName(LeadActivity.this));
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.VERSION)
+                .op(OP.DEVICE_UPDATE)
                 .time()
                 .bean(bean);
         /**进行数据校验*/

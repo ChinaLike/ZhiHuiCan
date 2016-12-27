@@ -1,11 +1,11 @@
 package cn.sczhckj.order.mode;
 
-import java.util.List;
-
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.bean.bill.BillBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.bean.card.CardInfoBean;
+import cn.sczhckj.order.data.bean.eval.EvalBean;
+import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -13,42 +13,40 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 /**
- * @ describe:  结账
- * @ author: Like on 2016/12/19.
+ * @ describe: 评价数据请求
+ * @ author: Like on 2016/12/27.
  * @ email: 572919350@qq.com
  */
 
-public class BillMode {
+public class EvalMode {
 
     /**
-     * 获取结账清单
+     * 获取评价信息
      *
      * @param bean     参数对象
      * @param callback 回调
      */
-    public void bill(RequestCommonBean bean, Callback<Bean<List<BillBean>>> callback) {
+    public void evalInfo(RequestCommonBean bean, Callback<Bean<EvalBean>> callback) {
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.BILL_BILL)
+                .op(OP.EVAL_INFO)
                 .time()
                 .bean(bean);
-        Call<Bean<List<BillBean>>> billCall = RetrofitRequest.service().bill(restRequest.toRequestString());
+        Call<Bean<EvalBean>> billCall = RetrofitRequest.service().evalInfo(restRequest.toRequestString());
         billCall.enqueue(callback);
     }
 
     /**
-     * 获取结账清单
+     * 提交评价
      *
      * @param bean     参数对象
      * @param callback 回调
      */
-    public void awards(RequestCommonBean bean, Callback<Bean<List<Integer>>> callback) {
+    public void evalCommit(RequestCommonBean bean, Callback<Bean<ResponseCommonBean>> callback) {
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.BILL_AWARDS)
+                .op(OP.EVAL_COMMIT)
                 .time()
                 .bean(bean);
-        Call<Bean<List<Integer>>> billCall = RetrofitRequest.service().awards(restRequest.toRequestString());
+        Call<Bean<ResponseCommonBean>> billCall = RetrofitRequest.service().evalCommit(restRequest.toRequestString());
         billCall.enqueue(callback);
     }
-
-
 }

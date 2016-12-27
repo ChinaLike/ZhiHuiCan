@@ -5,7 +5,9 @@ import java.util.List;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
+import cn.sczhckj.order.data.bean.card.CardInfoBean;
 import cn.sczhckj.order.data.bean.device.VersionBean;
+import cn.sczhckj.order.data.bean.eval.EvalBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
@@ -112,6 +114,13 @@ public interface RetrofitService {
     Call<Bean<ResponseCommonBean>> order(@Field("p") String p);
 
     /**
+     * 刷新菜品
+     */
+    @FormUrlEncoded
+    @POST("rest/order/refresh")
+    Call<Bean<List<FoodBean>>> refresh(@Field("p") String p);
+
+    /**
      * 服务列表
      */
     @FormUrlEncoded
@@ -138,6 +147,13 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("rest/bill/bill")
     Call<Bean<List<BillBean>>> bill(@Field("p") String p);
+
+    /**
+     * 打赏参数
+     */
+    @FormUrlEncoded
+    @POST("rest/bill/awards")
+    Call<Bean<List<Integer>>> awards(@Field("p") String p);
 
     /**
      * 用户登录
@@ -167,25 +183,40 @@ public interface RetrofitService {
     @POST("rest/user/info")
     Call<Bean<MemberBean>> userInfo(@Field("p") String p);
 
+    /**
+     * 优惠信息列表
+     */
+    @FormUrlEncoded
+    @POST("rest/card/info")
+    Call<Bean<CardInfoBean>> cardInfo(@Field("p") String p);
 
+    /**
+     * 用户办卡申请
+     */
+    @FormUrlEncoded
+    @POST("rest/card/apply")
+    Call<Bean<ResponseCommonBean>> apply(@Field("p") String p);
 
+    /**
+     * 获取评价信息
+     */
+    @FormUrlEncoded
+    @POST("rest/eval/items")
+    Call<Bean<EvalBean>> evalInfo(@Field("p") String p);
+
+    /**
+     * 提交评价
+     */
+    @FormUrlEncoded
+    @POST("rest/eval/commit")
+    Call<Bean<ResponseCommonBean>> evalCommit(@Field("p") String p);
 
     /**
      * 版本管理信息
      */
     @FormUrlEncoded
-    @POST("rest/device/version")
-    Call<Bean<VersionBean>> version(@Field("params") String params);
-
-
-
-    /**
-     * 申请办理VIP
-     */
-    @FormUrlEncoded
-    @POST("rest/user/applyForVip")
-    Call<Bean<ResponseCommonBean>> applyForVip(@Field("params") String params);
-
+    @POST("rest/device/update")
+    Call<Bean<VersionBean>> version(@Field("p") String p);
 
 
 }

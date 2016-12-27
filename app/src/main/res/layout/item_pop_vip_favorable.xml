@@ -4,30 +4,45 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingBottom="15dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
     android:paddingTop="15dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/vip_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="普通会员:"
-            android:textColor="#999999" />
+            android:gravity="bottom"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/vip_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="¥ 450"
-            android:textColor="@color/yellow" />
+            <TextView
+                android:id="@+id/vip_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="普通会员:"
+                android:textColor="@color/text_color_default"
+                android:textSize="@dimen/cart_dishes_name_size" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥"
+                android:textColor="#f54a23"
+                android:textSize="@dimen/cart_dishes_RMB" />
+
+            <TextView
+                android:id="@+id/vip_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#f54a23"
+                android:textSize="@dimen/text_size_s_m" />
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -49,25 +64,41 @@
             android:layout_weight="1"
             android:gravity="center_vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="优惠:"
-                android:textColor="#999999" />
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/vip_favorable_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="¥ 68"
-                android:textColor="@color/yellow" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="优惠:"
+                    android:textColor="@color/text_color_default"
+                    android:textSize="@dimen/cart_dishes_name_size" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¥"
+                    android:textColor="#f54a23"
+                    android:textSize="@dimen/cart_dishes_RMB" />
+
+                <TextView
+                    android:id="@+id/vip_favorable_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#f54a23"
+                    android:textSize="@dimen/text_size_s_m" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.6"
             android:gravity="center">
 
             <Button
@@ -75,7 +106,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:background="@drawable/selector_shape_button_orange_red"
+                android:background="@drawable/selector_shape_button_favor"
                 android:text="@string/button_vip_no_select"
                 android:textColor="@color/white"
                 android:textSize="10sp" />

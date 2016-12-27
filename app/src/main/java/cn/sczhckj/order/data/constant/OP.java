@@ -66,12 +66,12 @@ public interface OP {
     /**
      * 退菜
      */
-    String FOOD_REFUND  = "refund ";
+    String FOOD_REFUND = "refund ";
 
     /**
      * 点赞
      */
-    String FOOD_FAVOR  = "favor ";
+    String FOOD_FAVOR = "favor ";
 
     /**
      * 菜品图片
@@ -91,126 +91,75 @@ public interface OP {
     /**
      * 刷新菜品
      */
-    String ORDER_REFRESH= "refresh";
+    String ORDER_REFRESH = "refresh";
 
     /**
      * 获取服务类型
      */
-    String SERVICE_SERVICES= "services";
+    String SERVICE_SERVICES = "services";
 
     /**
      * 呼叫服务
      */
-    String SERVICE_CALL= "call";
+    String SERVICE_CALL = "call";
 
     /**
      * 终止服务
      */
-    String SERVICE_ABORT= "abort";
+    String SERVICE_ABORT = "abort";
 
     /**
      * 推送 上菜信息
      */
-    String PUSH_ARRIVE= "arrive";
+    String PUSH_ARRIVE = "arrive";
 
     /**
      * 推送 服务完成
      */
-    String PUSH_COMPLETE= "complete";
+    String PUSH_COMPLETE = "complete";
+
+    /**
+     * 推送 上锁
+     */
+    String PUSH_LOCK = "lock";
+
+    /**
+     * 推送 解锁
+     */
+    String PUSH_UNLOCK = "unLock";
 
     /**
      * 获取结账清单
      */
-    String BILL_BILL= "bill";
-
-
-
-
+    String BILL_BILL = "bill";
 
     /**
-     * 版本
+     * 打赏参数
      */
-    String VERSION = "version";
+    String BILL_AWARDS = "awards";
 
     /**
-     * 登录
+     * 优惠信息列表
      */
-    String LOGIN = "login";
+    String CARD_INFO = "info";
+    /**
+     * 用户办卡申请
+     */
+    String CARD_APPLY = "apply";
 
     /**
-     * 获取短信验证码
+     * 优惠信息列表
      */
-    String LOGIN_AUTH_CODE = "loginAuthCode";
+    String EVAL_INFO = "items";
+    /**
+     * 提交评价
+     */
+    String EVAL_COMMIT = "commit";
 
     /**
-     * 办理VIP
+     * Apk版本更新
      */
-    String APPLY_FOR_VIP = "applyForVip";
+    String DEVICE_UPDATE = "update";
 
-
-    /**
-     * 开桌数据显示
-     */
-    String OPEN_TABLE_VERIFY = "openTable";
-
-    /**
-     * 点菜界面分类显示
-     */
-    String ORDER_CLASSIFY_SHOW = "orderClassifyShow";
-
-    /**
-     * 点菜界面菜品显示
-     */
-    String ORDER_DISHES_SHOW = "orderDishesShow";
-
-    /**
-     * 菜品详情显示
-     */
-    String DISHES_DETAILS = "dishesDetails";
-
-    /**
-     * 结账清单数据请求
-     */
-    String ACCOUNTS_LIST = "accountsList";
-
-    /**
-     * 结账时电子优惠券验证
-     */
-    String ACCOUNTS_GROUPON = "accountsGroupon";
-
-    /**
-     * 结账时所有信息验证完后，开始结账
-     */
-    String ACCOUNTS_PAY = "accountsPay";
-
-    /**
-     * 评价数据请求
-     */
-    String ACCOUNTS_EVALUATE_SHOW = "accountsEvaluateShow";
-
-    /**
-     * 评价数据提交
-     */
-    String ACCOUNTS_EVALUATE = "accountsEvaluate";
-
-    /**
-     * 呼叫服务
-     */
-    String SERVICE = "service";
-
-    /**
-     * 刷新购物车
-     */
-    String REFRESH_CART = "refreshCart";
-
-    /**
-     * 刷新二维码
-     */
-    String REFRESH_QRCODE = "refreshQRCode";
-
-    /**
-     * 有虎类型验证
-     */
-    String ACCOUNTS_FAVORABLE_TYPE = "accountsFavorableType";
 
 }

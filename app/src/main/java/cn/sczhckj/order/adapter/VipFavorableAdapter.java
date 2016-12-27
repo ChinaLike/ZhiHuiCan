@@ -1,6 +1,7 @@
 package cn.sczhckj.order.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.VipFavorableBean;
-import cn.sczhckj.order.data.event.ApplyForVipCardEvent;
+import cn.sczhckj.order.data.bean.card.CardInfoBean;
+import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.data.event.SwitchViewEvent;
 
 /**
  * @describe: 这种会员优惠价格一览表显示，并实现办理卡片
@@ -27,11 +29,11 @@ import cn.sczhckj.order.data.event.ApplyForVipCardEvent;
 
 public class VipFavorableAdapter extends RecyclerView.Adapter<VipFavorableAdapter.VipFavorableHolder> {
 
-    private List<VipFavorableBean> mList;
+    private List<CardInfoBean.Card> mList;
 
     private Context mContext;
 
-    public VipFavorableAdapter(List<VipFavorableBean> mList, Context mContext) {
+    public VipFavorableAdapter(List<CardInfoBean.Card> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
     }
@@ -43,46 +45,41 @@ public class VipFavorableAdapter extends RecyclerView.Adapter<VipFavorableAdapte
 
     @Override
     public void onBindViewHolder(final VipFavorableHolder holder, int position) {
-        final VipFavorableBean bean=mList.get(position);
-        holder.vipName.setText(bean.getName());
-        holder.vipPrice.setText("¥ "+bean.getPrice());
-        holder.vipFavorablePrice.setText("¥ "+bean.getFavorablePrice());
-        if (bean.getIsThis()==0){
+        final CardInfoBean.Card bean = mList.get(position);
+        holder.vipName.setText(bean.getName() + ":");
+        holder.vipPrice.setText("" + bean.getPrice());
+        holder.vipFavorablePrice.setText("" + (bean.getOriginPrice() - bean.getPrice()));
+        if (bean.getIsLock() == Constant.LOCK) {
             holder.vipChoose.setVisibility(View.VISIBLE);
             holder.transactionVip.setVisibility(View.GONE);
-        }else {
+        } else {
             holder.vipChoose.setVisibility(View.GONE);
             holder.transactionVip.setVisibility(View.VISIBLE);
         }
-        if (bean.isSelect()){
+        if (bean.isSelect()) {
             holder.transactionVip.setSelected(true);
-            holder.transactionVip.setText(mContext.getResources().getString(R.string.button_vip_select));
-        }else {
+            holder.transactionVip.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+        } else {
             holder.transactionVip.setSelected(false);
-            holder.transactionVip.setText(mContext.getResources().getString(R.string.button_vip_no_select));
+            holder.transactionVip.setTextColor(0xFFFC8E50);
         }
         /**办理会员卡*/
         holder.transactionVip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (VipFavorableBean item:mList) {
+                for (CardInfoBean.Card item : mList) {
                     item.setSelect(false);
                 }
-                if (holder.transactionVip.isSelected()){
-                    /**取消办卡*/
-                    EventBus.getDefault().post(new ApplyForVipCardEvent(ApplyForVipCardEvent.CANCEL_APPLY,bean.getId()));
-                }else {
-                    /**申请办卡*/
-                    bean.setSelect(true);
-                    EventBus.getDefault().post(new ApplyForVipCardEvent(ApplyForVipCardEvent.APPLY,bean.getId(),mList));
-                }
+                /**申请办卡*/
+                bean.setSelect(true);
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.FAVORABLE_CARD, bean));
                 notifyDataSetChanged();
             }
         });
 
     }
 
-    public void notifyDataSetChanged(List<VipFavorableBean> mList) {
+    public void notifyDataSetChanged(List<CardInfoBean.Card> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }

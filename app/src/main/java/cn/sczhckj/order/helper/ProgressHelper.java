@@ -2,7 +2,7 @@ package cn.sczhckj.order.helper;
 
 import java.io.IOException;
 
-import cn.sczhckj.order.data.bean.ProgressBean;
+import cn.sczhckj.order.data.bean.device.ProgressBean;
 import cn.sczhckj.order.data.listener.OnProgressListener;
 import cn.sczhckj.order.overwrite.ProgressResponseBody;
 import okhttp3.Interceptor;

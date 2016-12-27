@@ -118,4 +118,10 @@ public interface Constant {
     int TABLE_TYPE_MAIN = 1;//主桌点餐
     int TABLE_TYPE_AUX = 2;//辅桌点餐
 
+    /**
+     * 当前VIP是否解锁 字段isLock
+     */
+    int UNLOCK = 1;//解锁
+    int LOCK = 0;//未解锁
+
 }

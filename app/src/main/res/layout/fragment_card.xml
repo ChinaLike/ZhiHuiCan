@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/apply_for_vip_parent"
-    android:visibility="gone"
     android:layout_height="match_parent"
-    android:padding="20dp">
+    android:background="@color/background_gray_m">
 
-    <Button
-        android:id="@+id/apply_for_vip_card_confirm"
-        style="?android:attr/borderlessButtonStyle"
+    <LinearLayout
+        android:id="@+id/contentParent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/selector_shape_button_yellow"
-        android:padding="15dp"
-        android:text="确定"
-        android:textColor="@color/button_text"
-        android:textSize="@dimen/button_size" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/apply_for_vip_card_confirm"
-        android:layout_alignParentTop="true">
+        <WebView
+            android:id="@+id/card_presentation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/background_gray_m" />
 
         <LinearLayout
+            android:id="@+id/card_info_parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_bg_group"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/shape_bg_favorable"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:padding="30dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -53,18 +51,18 @@
                         android:textSize="@dimen/text_size_mediu_s" />
 
                     <EditText
-                        android:id="@+id/apply_for_vip_card_name_input"
+                        android:id="@+id/card_input_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:background="@null"
-                        android:hint="请输入您的姓名"
+                        android:hint="请输入您的姓名(可选)"
                         android:lines="1"
                         android:textColorHint="@color/edit_text_hint_color"
                         android:textSize="@dimen/text_size_mediu_s" />
 
                     <ImageView
-                        android:id="@+id/apply_for_vip_card_name_cancel"
+                        android:id="@+id/card_input_name_cancel"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
@@ -77,13 +75,13 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/hint_line"
-                    android:background="#EEEEEE" />
+                    android:background="@color/hint_color" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:padding="30dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -97,19 +95,19 @@
 
 
                     <EditText
-                        android:id="@+id/apply_for_vip_card_phone_input"
+                        android:id="@+id/card_input_phone"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:background="@null"
-                        android:hint="请输入您的电话号码"
+                        android:hint="请输入您的电话号码(可选)"
                         android:inputType="phone"
                         android:lines="1"
                         android:textColorHint="@color/edit_text_hint_color"
                         android:textSize="@dimen/text_size_mediu_s" />
 
                     <ImageView
-                        android:id="@+id/apply_for_vip_card_phone_cancel"
+                        android:id="@+id/card_input_phone_cancel"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
@@ -120,21 +118,42 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:text="会员类型"
-                android:textSize="@dimen/text_size_mediu_s" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/apply_for_vip_card_recycler"
-                android:layout_marginTop="25dp"
+            <Button
+                android:id="@+id/apply_for_vip_card_confirm"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="20dp"
+                android:background="@drawable/selector_shape_button_yellow"
+                android:padding="15dp"
+                android:text="确定"
+                android:textColor="@color/button_text"
+                android:textSize="@dimen/button_size" />
 
         </LinearLayout>
 
-    </ScrollView>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/card_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="15dp"
+        android:src="@drawable/card_close" />
+
+    <LinearLayout
+        android:id="@+id/loadingParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <include layout="@layout/item_loading" />
+
+    </LinearLayout>
 
 </RelativeLayout>

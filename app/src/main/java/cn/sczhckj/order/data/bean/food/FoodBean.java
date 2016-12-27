@@ -16,6 +16,7 @@ public class FoodBean {
     private Integer permiss;//选择权限，0-不可选，1-可选
     private Integer maximum;//最大可选数量，0-不控制
     private Double price;//当前价格，无优惠价格时，等于 originPrice
+    private Integer type;//价格类型ID
     private String priceImageUrl;//价格图标
     private Double originPrice;//原始价格
     private Integer imageId;//缩略图ID，Android端不用
@@ -175,6 +176,14 @@ public class FoodBean {
         this.images = images;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -184,6 +193,7 @@ public class FoodBean {
                 ", permiss=" + permiss +
                 ", maximum=" + maximum +
                 ", price=" + price +
+                ", type=" + type +
                 ", priceImageUrl='" + priceImageUrl + '\'' +
                 ", originPrice=" + originPrice +
                 ", imageId=" + imageId +

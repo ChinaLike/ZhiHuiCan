@@ -161,6 +161,14 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
      * 通过WebSocket与客户端建立连接
      */
     private WebSocketImpl mWebSocket;
+    /**
+     * 左侧进入前标识
+     */
+    private int leftTag = CART_DISHES;
+    /**
+     * 右侧进入前标识
+     */
+    private int rightTag = FRAGMENT_REQUIRED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -334,6 +342,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(this));
         bean.setNumber(number);
+        bean.setRecordId(MyApplication.recordId);
         TableMode tableMode = new TableMode();
         tableMode.setPersonNum(bean, this);
     }
@@ -350,27 +359,29 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                 break;
             case R.id.table_person_parent:
                 /**设置台桌人数*/
-                mDialog.editTextDialog().setInputType(InputType.TYPE_CLASS_NUMBER);
-                mDialog.setEditDialog("人数设置", null, "请输入人数")
-                        .setRightButton("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    personCount = Integer.parseInt(mDialog.editTextDialog().getEditText().toString());
-                                } catch (NumberFormatException e) {
-                                    e.printStackTrace();
-                                    personCount = personNumber;
+                if (BaseFragment.isOpen) {
+                    mDialog.editTextDialog().setInputType(InputType.TYPE_CLASS_NUMBER);
+                    mDialog.setEditDialog("人数设置", null, "请输入人数")
+                            .setRightButton("确定", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try {
+                                        personCount = Integer.parseInt(mDialog.editTextDialog().getEditText().toString());
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                        personCount = personNumber;
+                                    }
+                                    initSetPerson(personCount);
+                                    mDialog.editTextDialog().dismiss();
                                 }
-                                initSetPerson(personCount);
-                                mDialog.editTextDialog().dismiss();
-                            }
-                        })
-                        .setLeftButton("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDialog.editTextDialog().dismiss();
-                            }
-                        }).show();
+                            })
+                            .setLeftButton("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mDialog.editTextDialog().dismiss();
+                                }
+                            }).show();
+                }
                 break;
         }
     }
@@ -456,21 +467,29 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     public void switchViewEventBus(SwitchViewEvent event) {
         switch (event.getType()) {
             case SwitchViewEvent.BOTTOM_ORDER:
+                leftTag = CART_DISHES;
+                rightTag = FRAGMENT_MAIN;
                 /**点菜*/
                 tableInfoParent.setVisibility(View.VISIBLE);
                 cart.setCurrentItem(CART_DISHES, false);
                 break;
             case SwitchViewEvent.BOTTOM_SERVICE:
+                leftTag = CART_DISHES;
+                rightTag = FRAGMENT_MAIN;
                 /**服务*/
                 tableInfoParent.setVisibility(View.VISIBLE);
                 break;
             case SwitchViewEvent.BOTTOM_BILL:
+                leftTag = CART_BILL;
+                rightTag = FRAGMENT_MAIN;
                 /**结账*/
                 tableInfoParent.setVisibility(View.VISIBLE);
                 cart.setCurrentItem(CART_BILL, false);
                 mBillFragment.setData(null);
                 break;
             case SwitchViewEvent.DISHES_DETAILS_IN:
+                leftTag = CART_DISHES;
+                rightTag = FRAGMENT_DETAILS;
                 /**进入菜品详情*/
                 tableInfoParent.setVisibility(View.GONE);
                 viewPager.setCurrentItem(FRAGMENT_DETAILS, false);
@@ -478,18 +497,32 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                 mDetailsFragment.setBeanList(event.getBeanList());
                 break;
             case SwitchViewEvent.DISHES_DETAILS_OUT:
+                leftTag = CART_DISHES;
                 /**退出菜品详情*/
                 tableInfoParent.setVisibility(View.VISIBLE);
                 if (BaseFragment.isOpen) {
+                    rightTag = FRAGMENT_MAIN;
                     viewPager.setCurrentItem(FRAGMENT_MAIN, false);
                 } else {
+                    rightTag = FRAGMENT_REQUIRED;
                     viewPager.setCurrentItem(FRAGMENT_REQUIRED, false);
                 }
                 break;
             case SwitchViewEvent.FAVORABLE:
                 /**更多优惠*/
-                cart.setCurrentItem(CART_FAVORABLE,false);
-                viewPager.setCurrentItem(FRAGMENT_CARD,false);
+                cart.setCurrentItem(CART_FAVORABLE, false);
+                mFavorableFragment.setData(null);
+                viewPager.setCurrentItem(FRAGMENT_CARD, false);
+                mCardFragment.setData(null);
+                break;
+            case SwitchViewEvent.FAVORABLE_OUT:
+                /**更多优惠退出*/
+                cart.setCurrentItem(leftTag, false);
+                viewPager.setCurrentItem(rightTag, false);
+                break;
+            case SwitchViewEvent.FAVORABLE_CARD:
+                /**办卡*/
+                mCardFragment.card(event.getCard());
                 break;
         }
 

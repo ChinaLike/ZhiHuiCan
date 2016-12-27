@@ -2,6 +2,7 @@ package cn.sczhckj.order.data.event;
 
 import java.util.List;
 
+import cn.sczhckj.order.data.bean.card.CardInfoBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 
 /**
@@ -35,13 +36,22 @@ public class SwitchViewEvent {
      * 更多优惠
      */
     public static final int FAVORABLE = 5;
-
+    /**
+     * 更多优惠退出
+     */
+    public static final int FAVORABLE_OUT = 6;
+    /**
+     * 办卡
+     */
+    public static final int FAVORABLE_CARD = 7;
 
     private int type;
 
     private FoodBean bean;
 
     private List<FoodBean> beanList;
+
+    private CardInfoBean.Card card;
 
     public SwitchViewEvent(int type) {
         this.type = type;
@@ -61,6 +71,11 @@ public class SwitchViewEvent {
         this.type = type;
         this.bean = bean;
         this.beanList = beanList;
+    }
+
+    public SwitchViewEvent(int type, CardInfoBean.Card card) {
+        this.type = type;
+        this.card = card;
     }
 
     public int getType() {
@@ -85,5 +100,13 @@ public class SwitchViewEvent {
 
     public void setBeanList(List<FoodBean> beanList) {
         this.beanList = beanList;
+    }
+
+    public CardInfoBean.Card getCard() {
+        return card;
+    }
+
+    public void setCard(CardInfoBean.Card card) {
+        this.card = card;
     }
 }

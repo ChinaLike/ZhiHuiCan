@@ -52,6 +52,7 @@ import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -156,7 +157,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Override
     public void init() {
         /**首先把购物车图标置为不可点*/
-        buttonAttr(false);
         mDialog = new DialogImpl(getContext());
         mOrderMode = new OrderMode();
         mTableMode = new TableMode();
@@ -330,8 +330,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
-        EventBus.getDefault().unregister(this);
+//        ButterKnife.unbind(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -346,7 +346,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         bean.setPassword(password);
         bean.setMemberCode(MyApplication.memberCode);
         bean.setPersonCount(MainActivity.personNumber);
-        bean.setCart(infoSwitch());
+        bean.setFoods(infoSwitch());
         mTableMode.open(bean, this);
     }
 
@@ -358,7 +358,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         bean.setMemberCode(MyApplication.memberCode);
-        bean.setCart(infoSwitch());
+        bean.setRecordId(MyApplication.recordId);
+        bean.setFoods(infoSwitch());
         mOrderMode.order(bean, this);
     }
 
@@ -374,6 +375,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             cart.setId(bean.getId());
             cart.setCateId(bean.getCateId());
             cart.setNumber(bean.getCount());
+            cart.setType(bean.getType());
             cart.setPrice(bean.getPrice());
             cartList.add(cart);
         }

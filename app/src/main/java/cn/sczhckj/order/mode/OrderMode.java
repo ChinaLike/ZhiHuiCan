@@ -1,7 +1,10 @@
 package cn.sczhckj.order.mode;
 
+import java.util.List;
+
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
@@ -31,6 +34,22 @@ public class OrderMode {
                 .time()
                 .bean(bean);
         Call<Bean<ResponseCommonBean>> commonCall = RetrofitRequest.service().order(restRequest.toRequestString());
+        commonCall.enqueue(callback);
+    }
+
+
+    /**
+     * 刷新菜品
+     *
+     * @param bean     参数对象
+     * @param callback 回调
+     */
+    public void refresh(RequestCommonBean bean, Callback<Bean<List<FoodBean>>> callback) {
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.ORDER_REFRESH)
+                .time()
+                .bean(bean);
+        Call<Bean<List<FoodBean>>> commonCall = RetrofitRequest.service().refresh(restRequest.toRequestString());
         commonCall.enqueue(callback);
     }
 

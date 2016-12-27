@@ -1,17 +1,21 @@
 package cn.sczhckj.order.mode.impl;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.List;
 
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.BaseCommAdapter;
 import cn.sczhckj.order.adapter.TagCloudAdapter;
+import cn.sczhckj.order.data.bean.eval.EvalItemBean;
 import cn.sczhckj.order.data.bean.food.PriceBean;
+import cn.sczhckj.order.data.listener.OnTagClickListenner;
 import cn.sczhckj.order.overwrite.FlowLayout;
 import cn.sczhckj.order.adapter.TagAdapter;
 import cn.sczhckj.order.overwrite.TagCloudLayout;
@@ -116,14 +120,26 @@ public class TagCloudImpl {
 
     /**
      * 设置热词
+     *
      * @param recyclerView
      * @param mList
      */
-    private void setWord(final TagFlowLayout recyclerView,List<Integer> mList){
-        recyclerView.setAdapter(new TagAdapter<Integer>(mList) {
+    public void setWord(final TagFlowLayout recyclerView, final List<EvalItemBean> mList, final OnTagClickListenner onTagClickListenner) {
+        recyclerView.setAdapter(new TagAdapter<EvalItemBean>(mList) {
             @Override
-            public View getView(FlowLayout parent, int position, Integer o) {
-                return null;
+            public View getView(FlowLayout parent, final int position, final EvalItemBean bean) {
+                final View view = LayoutInflater.from(mContext).inflate(R.layout.item_word, recyclerView, false);
+                /**设置内容*/
+                final Button btn = (Button) view.findViewById(R.id.iten_word);
+                btn.setText(bean.getName());
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onTagClickListenner.onTagClick(btn, position, bean);
+                    }
+                });
+
+                return view;
             }
         });
     }

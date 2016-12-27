@@ -3,22 +3,22 @@
     <item android:state_selected="false">
         <shape>
             <!-- 填充的颜色：这里设置背景透明 -->
-            <solid android:color="@color/yellow" />
+            <solid android:color="#F0F0F0" />
             <corners android:radius="@dimen/corners" />
 
         </shape>
 
     </item>
 
-    <item  android:state_selected="true">
+    <item android:state_selected="true">
         <shape>
             <!-- 填充的颜色：这里设置背景透明 -->
             <solid android:color="@color/text_color_red" />
             <corners android:radius="@dimen/corners" />
+            <gradient android:angle="45" android:endColor="#F55E5F" android:startColor="#FE893C" />
 
         </shape>
     </item>
-
 
 
 </selector>

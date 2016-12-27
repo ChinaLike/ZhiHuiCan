@@ -4,6 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/table_info_total">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="更多优惠"
+            android:textColor="@color/text_color_default"
+            android:textSize="@dimen/cart_title_text_size" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="@dimen/table_info_total"
+            android:layout_height="@dimen/table_info_total"
+            android:padding="15dp"
+            android:src="@drawable/open_btn_back" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hint_line"
+        android:background="@color/hint_color" />
+
     <LinearLayout
         android:id="@+id/loadingParent"
         android:layout_width="match_parent"
@@ -16,33 +43,13 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/favor_recy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/table_info_total">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="更多优惠"
-                android:textColor="@color/text_color_default"
-                android:textSize="@dimen/cart_title_text_size" />
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="@dimen/table_info_total"
-                android:layout_height="@dimen/table_info_total"
-                android:padding="15dp"
-                android:src="@drawable/open_btn_back" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
+        android:background="@color/background_gray_m"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 
 
 </LinearLayout>

@@ -33,6 +33,7 @@ import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
+import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.BillMode;
 import cn.sczhckj.order.until.AppSystemUntil;
@@ -47,7 +48,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class BillFragment extends BaseFragment implements Callback<Bean<List<BillBean>>> {
+public class BillFragment extends BaseFragment implements Callback<Bean<List<BillBean>>> ,OnItemClickListener{
 
 
     @Bind(R.id.loading_progress)
@@ -151,6 +152,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      */
     private void initTipAdapter() {
         mTipAdapter = new TipAdapter(getContext(), null);
+        mTipAdapter.setOnItemClickListener(this);
         //设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -174,7 +176,10 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      * 初始化打赏数据
      */
     private void initTip() {
-
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setMemberCode(MyApplication.memberCode);
+        mBillMode.awards(bean, awardsCallback);
     }
 
     /**
@@ -257,4 +262,30 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
                 getContext().getResources().getString(R.string.loadingFail));
     }
 
+    /**
+     * 打赏回调
+     */
+    Callback<Bean<List<Integer>>> awardsCallback = new Callback<Bean<List<Integer>>>() {
+        @Override
+        public void onResponse(Call<Bean<List<Integer>>> call, Response<Bean<List<Integer>>> response) {
+            Bean<List<Integer>> bean = response.body();
+            if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                mTipAdapter.notifyDataSetChanged(bean.getResult());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Bean<List<Integer>>> call, Throwable t) {
+
+        }
+    };
+
+    @Override
+    public void onItemClick(View view, int position, Object bean) {
+        if (position == -1){
+            tipMoney.setText("0");
+        }else {
+            tipMoney.setText(""+bean);
+        }
+    }
 }

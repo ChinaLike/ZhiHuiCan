@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import cn.sczhckj.order.data.bean.ProgressBean;
+import cn.sczhckj.order.data.bean.device.ProgressBean;
 
 /**
  * @describe:
