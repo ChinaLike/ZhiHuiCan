@@ -3,6 +3,7 @@ package cn.sczhckj.order.mode;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
@@ -48,6 +49,21 @@ public class BillMode {
                 .bean(bean);
         Call<Bean<List<Integer>>> billCall = RetrofitRequest.service().awards(restRequest.toRequestString());
         billCall.enqueue(callback);
+    }
+
+    /**
+     * 结账提交
+     *
+     * @param bean     参数对象
+     * @param callback 回调
+     */
+    public void billCommit(RequestCommonBean bean, Callback<Bean<ResponseCommonBean>> callback){
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.BILL_COMMIT)
+                .time()
+                .bean(bean);
+        Call<Bean<ResponseCommonBean>> call = RetrofitRequest.service().billCommit(restRequest.toRequestString());
+        call.enqueue(callback);
     }
 
 

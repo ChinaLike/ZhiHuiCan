@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +25,14 @@ import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
+import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
+import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.CarouselView;
 import cn.sczhckj.order.overwrite.TagFlowLayout;
@@ -101,6 +105,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -178,6 +183,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -260,4 +266,20 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     public void setBeanList(List<FoodBean> beanList) {
         this.beanList = beanList;
     }
+
+    /**
+     * 数据更新
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshFoodBus(RefreshFoodEvent event) {
+//        if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
+//            onItemClick(null, currPosition, currBean);
+//        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+//            mFoodAdapter.notifyDataSetChanged(
+//                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+//        }
+    }
+
 }

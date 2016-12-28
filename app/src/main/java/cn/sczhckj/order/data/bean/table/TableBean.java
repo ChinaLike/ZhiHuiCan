@@ -11,7 +11,7 @@ import java.util.List;
 public class TableBean {
 
     private Integer id;//台桌ID
-    private String tableName;//台桌名称
+    private String name;//台桌名称
     private Integer maximum;//最大人数，即本桌默认的人数
     private String waiter;//服务员
     private List<Integer> persons;//候选人数
@@ -25,11 +25,11 @@ public class TableBean {
     }
 
     public String getTableName() {
-        return tableName;
+        return name;
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        this.name = tableName;
     }
 
     public Integer getMaximum() {
@@ -60,7 +60,7 @@ public class TableBean {
     public String toString() {
         return "{" +
                 "id=" + id +
-                ", tableName='" + tableName + '\'' +
+                ", tableName='" + name + '\'' +
                 ", maximum=" + maximum +
                 ", waiter='" + waiter + '\'' +
                 ", persons=" + persons +

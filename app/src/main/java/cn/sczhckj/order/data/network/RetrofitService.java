@@ -156,6 +156,13 @@ public interface RetrofitService {
     Call<Bean<List<Integer>>> awards(@Field("p") String p);
 
     /**
+     * 结账提交
+     */
+    @FormUrlEncoded
+    @POST("rest/bill/commit")
+    Call<Bean<ResponseCommonBean>> billCommit(@Field("p") String p);
+
+    /**
      * 用户登录
      */
     @FormUrlEncoded

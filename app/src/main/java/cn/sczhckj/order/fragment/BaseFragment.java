@@ -169,13 +169,12 @@ public abstract class BaseFragment extends Fragment {
      * 初始化进度加载框
      */
     protected void initLoadingPop() {
-        Log.d("PopWindow", "init");
-        loadingView = LayoutInflater.from(getContext()).inflate(R.layout.item_loading, null, false);
+        loadingView = LayoutInflater.from(getContext()).inflate(R.layout.item_pop_loading, null, false);
         loading = (LinearLayout) loadingView.findViewById(R.id.loading_parent);
         loading_fail = (LinearLayout) loadingView.findViewById(R.id.loading_fail);
         loadingText = (TextView) loadingView.findViewById(R.id.loading_title);
         loadingFailText = (TextView) loadingView.findViewById(R.id.loading_fail_title);
-        loadingPop = new PopupWindow(loadingView, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
+        loadingPop = new PopupWindow(loadingView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT, true);
         loadingPop.setFocusable(true);
         loadingPop.setTouchable(true);
         loadingPop.setOutsideTouchable(false);

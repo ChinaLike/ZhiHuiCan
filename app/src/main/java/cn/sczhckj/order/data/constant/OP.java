@@ -66,12 +66,12 @@ public interface OP {
     /**
      * 退菜
      */
-    String FOOD_REFUND = "refund ";
+    String FOOD_REFUND = "refund";
 
     /**
      * 点赞
      */
-    String FOOD_FAVOR = "favor ";
+    String FOOD_FAVOR = "favor";
 
     /**
      * 菜品图片
@@ -137,6 +137,11 @@ public interface OP {
      * 打赏参数
      */
     String BILL_AWARDS = "awards";
+
+    /**
+     * 打赏参数
+     */
+    String BILL_COMMIT = "commit";
 
     /**
      * 优惠信息列表

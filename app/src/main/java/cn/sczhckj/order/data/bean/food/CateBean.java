@@ -2,6 +2,9 @@ package cn.sczhckj.order.data.bean.food;
 
 import java.util.List;
 
+import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.until.TextUntils;
+
 /**
  * @describe: 分类属性
  * @author: Like on 2016/12/12.
@@ -14,7 +17,7 @@ public class CateBean {
     private List<CateItemBean> cates;
 
     public Integer getDefaultCate() {
-        return defaultCate;
+        return TextUntils.empty(defaultCate, 0);
     }
 
     public void setDefaultCate(Integer defaultCate) {
@@ -29,7 +32,7 @@ public class CateBean {
         this.cates = cates;
     }
 
-    public class    CateItemBean{
+    public class CateItemBean {
         private Integer id;//分类ID
         private String name;//分类名字
         private Integer required;//是否必选
@@ -53,7 +56,7 @@ public class CateBean {
         }
 
         public Integer getRequired() {
-            return required;
+            return TextUntils.empty(required);
         }
 
         public void setRequired(Integer required) {
@@ -61,7 +64,7 @@ public class CateBean {
         }
 
         public Integer getPermiss() {
-            return permiss;
+            return TextUntils.empty(permiss, Constant.PERMISS_AGREE);
         }
 
         public void setPermiss(Integer permiss) {
@@ -69,7 +72,7 @@ public class CateBean {
         }
 
         public Integer getMaximum() {
-            return maximum;
+            return TextUntils.empty(maximum, 0);
         }
 
         public void setMaximum(Integer maximum) {

@@ -26,8 +26,8 @@ public class GlideLoading {
         Glide
                 .with(mContext.getApplicationContext())
                 .load(url)
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.loading_faild)
+                .placeholder(R.drawable.order_status_loading)
+                .error(R.drawable.order_status_loadingfaild)
                 .into(imageView);
     }
 
@@ -58,8 +58,8 @@ public class GlideLoading {
         Glide
                 .with(mContext.getApplicationContext())
                 .load(url)
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.loading_faild)
+                .placeholder(R.drawable.service_status_loading)
+                .error(R.drawable.service_status_loadingfaild)
                 .into(imageView);
     }
 

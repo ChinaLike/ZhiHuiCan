@@ -2,6 +2,9 @@ package cn.sczhckj.order.data.bean.food;
 
 import java.util.List;
 
+import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.until.TextUntils;
+
 /**
  * @describe: 菜品属性
  * @author: Like on 2016/12/13.
@@ -31,7 +34,6 @@ public class FoodBean {
     private List<ImageBean> images;//图片轮播
 
 
-
     public Integer getId() {
         return id;
     }
@@ -57,7 +59,7 @@ public class FoodBean {
     }
 
     public Integer getPermiss() {
-        return permiss;
+        return TextUntils.empty(permiss, Constant.PERMISS_AGREE);
     }
 
     public void setPermiss(Integer permiss) {
@@ -65,7 +67,7 @@ public class FoodBean {
     }
 
     public Integer getMaximum() {
-        return maximum;
+        return TextUntils.empty(maximum);
     }
 
     public void setMaximum(Integer maximum) {
@@ -73,7 +75,7 @@ public class FoodBean {
     }
 
     public Double getPrice() {
-        return price;
+        return TextUntils.empty(price);
     }
 
     public void setPrice(Double price) {
@@ -97,7 +99,7 @@ public class FoodBean {
     }
 
     public Long getSales() {
-        return sales;
+        return TextUntils.empty(sales);
     }
 
     public void setSales(Long sales) {
@@ -105,7 +107,7 @@ public class FoodBean {
     }
 
     public Long getFavors() {
-        return favors;
+        return TextUntils.empty(favors);
     }
 
     public void setFavors(Long favors) {
@@ -113,7 +115,7 @@ public class FoodBean {
     }
 
     public Integer getStockout() {
-        return stockout;
+        return TextUntils.empty(stockout);
     }
 
     public void setStockout(Integer stockout) {
@@ -121,7 +123,7 @@ public class FoodBean {
     }
 
     public Integer getCount() {
-        return count;
+        return TextUntils.empty(count);
     }
 
     public void setCount(Integer count) {
@@ -145,7 +147,7 @@ public class FoodBean {
     }
 
     public Integer getFinishCount() {
-        return finishCount;
+        return TextUntils.empty(finishCount);
     }
 
     public void setFinishCount(Integer finishCount) {
@@ -161,7 +163,7 @@ public class FoodBean {
     }
 
     public Double getOriginPrice() {
-        return originPrice;
+        return TextUntils.empty(originPrice);
     }
 
     public void setOriginPrice(Double originPrice) {
@@ -177,7 +179,7 @@ public class FoodBean {
     }
 
     public Integer getType() {
-        return type;
+        return TextUntils.empty(type);
     }
 
     public void setType(Integer type) {

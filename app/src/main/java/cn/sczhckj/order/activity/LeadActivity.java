@@ -9,18 +9,25 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckj.order.Config;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.device.VersionBean;
+import cn.sczhckj.order.data.event.WebSocketEvent;
+import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.manage.VersionManager;
+import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -35,7 +42,7 @@ import retrofit2.Response;
  * @ Email: 572919350@qq.com
  */
 
-public class LeadActivity extends Activity implements Callback<Bean<VersionBean>>, VersionManager.OnDialogClickListener {
+public class LeadActivity extends Activity implements Callback<Bean<VersionBean>>, VersionManager.OnDialogClickListener, OnWebSocketListenner {
 
     @Bind(R.id.right)
     Button right;
@@ -58,6 +65,7 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
         mVersionManager = new VersionManager(LeadActivity.this);
         buttonIsClick(false);
         getVersion();
+        regsWebSocket();
     }
 
     @OnClick({R.id.right, R.id.deny})
@@ -101,6 +109,11 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
         vipCallBack.enqueue(this);
     }
 
+    private void regsWebSocket() {
+        WebSocketImpl mWebSocket = new WebSocketImpl();
+        mWebSocket.push(Config.URL_LOCK_SERVICE+AppSystemUntil.getAndroidID(this), this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -115,10 +128,10 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
         Bean<VersionBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             if (bean.getResult() != null) {
-                if (bean.getResult().getCode()>mVersionManager.getVersionCode(LeadActivity.this)) {
+                if (bean.getResult().getCode() > mVersionManager.getVersionCode(LeadActivity.this)) {
                     mVersionManager.version(LeadActivity.this, bean.getResult());
                     mVersionManager.setOnDialogClickListener(this);
-                }else {
+                } else {
                     buttonIsClick(true);
                 }
             } else {
@@ -160,5 +173,41 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
     @Override
     public void dismiss() {
         buttonIsClick(true);
+    }
+
+    @Override
+    public void onBinaryMessage(byte[] payload) {
+
+    }
+
+    @Override
+    public void onClose(int code, String reason) {
+
+    }
+
+    @Override
+    public void onOpen() {
+
+    }
+
+    @Override
+    public void onRawTextMessage(byte[] payload) {
+
+    }
+
+    @Override
+    public void onTextMessage(String payload) {
+        RestRequest<PushCommonBean> restRequest
+                = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
+        if (OP.PUSH_LOCK.equals(restRequest.getOp())) {
+            /**锁定界面*/
+            Intent intent=new Intent(LeadActivity.this,LockActivity.class);
+            intent.putExtra(Constant.LOCK_TITLE,restRequest.getBean().getMessage());
+            startActivity(intent);
+        } else if (OP.PUSH_UNLOCK.equals(restRequest.getOp())) {
+            /**解锁界面*/
+            EventBus.getDefault().post(
+                    new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
+        }
     }
 }

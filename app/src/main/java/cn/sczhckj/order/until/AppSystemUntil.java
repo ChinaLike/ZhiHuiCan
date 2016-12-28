@@ -36,7 +36,8 @@ public class AppSystemUntil {
      * @return
      */
     public static String getAndroidID(Context mContext) {
-        return Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
+//        return Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
+        return "1234567890";
     }
 
     /**

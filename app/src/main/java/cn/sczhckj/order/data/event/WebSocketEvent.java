@@ -17,12 +17,20 @@ public class WebSocketEvent {
      * 服务完成
      */
     public static final int TYPE_SERVICE_COMPLETE = 1;
+    /**
+     * 锁定界面
+     */
+    public static final int TYPE_LOCK = 2;
+    /**
+     * 解锁界面
+     */
+    public static final int TYPE_UNLOCK = 3;
 
     private PushCommonBean bean;
 
     private int type;
 
-    public WebSocketEvent(int type,PushCommonBean bean) {
+    public WebSocketEvent(int type, PushCommonBean bean) {
         this.bean = bean;
         this.type = type;
     }

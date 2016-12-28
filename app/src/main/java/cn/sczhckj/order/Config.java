@@ -23,4 +23,10 @@ public class Config {
      */
     public static String URL_SERVICE_SERVICE = "ws://192.168.0.50:8080/pad/ws/service?username=";
 
+    /**
+     * 解锁、锁定界面推送
+     */
+    public static String URL_LOCK_SERVICE = "ws://192.168.0.50:8080/pad/ws/lock?username=";
+
+
 }

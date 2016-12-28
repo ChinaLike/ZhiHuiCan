@@ -1,5 +1,7 @@
 package cn.sczhckj.order.data.bean.food;
 
+import cn.sczhckj.order.until.TextUntils;
+
 /**
  * @describe: 价格策略属性，即优惠类型等
  * @author: Like on 2016/12/13.
@@ -27,7 +29,7 @@ public class PriceBean {
     }
 
     public Double getPrice() {
-        return price;
+        return TextUntils.empty(price);
     }
 
     public void setPrice(Double price) {
@@ -35,7 +37,7 @@ public class PriceBean {
     }
 
     public Integer getType() {
-        return type;
+        return TextUntils.empty(type);
     }
 
     public void setType(Integer type) {
@@ -74,14 +76,6 @@ public class PriceBean {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getActive() {
-        return isActive;
-    }
-
-    public void setActive(Integer isActive) {
-        this.isActive = isActive;
-    }
-
     public String getMemeberType() {
         return memeberType;
     }
@@ -91,7 +85,7 @@ public class PriceBean {
     }
 
     public Integer getIsActive() {
-        return isActive;
+        return TextUntils.empty(isActive);
     }
 
     public void setIsActive(Integer isActive) {

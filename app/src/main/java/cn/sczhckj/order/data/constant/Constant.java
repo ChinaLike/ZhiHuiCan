@@ -32,6 +32,9 @@ public interface Constant {
     String USER_INFO = "userInfo";
     String INTENT_FLAG = "flag";
 
+    /**锁住Intent传递字段*/
+    String LOCK_TITLE="lock";
+
     /**
      * 首页锅底，推荐菜品等
      */

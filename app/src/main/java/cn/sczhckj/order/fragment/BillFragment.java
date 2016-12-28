@@ -1,6 +1,5 @@
 package cn.sczhckj.order.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +29,7 @@ import cn.sczhckj.order.adapter.SettleAccountsAdapter;
 import cn.sczhckj.order.adapter.TipAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
@@ -38,6 +38,7 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.BillMode;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
+import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +49,7 @@ import retrofit2.Response;
  * @Email: 572919350@qq.com
  */
 
-public class BillFragment extends BaseFragment implements Callback<Bean<List<BillBean>>> ,OnItemClickListener{
+public class BillFragment extends BaseFragment implements Callback<Bean<List<BillBean>>>, OnItemClickListener {
 
 
     @Bind(R.id.loading_progress)
@@ -183,6 +184,17 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     }
 
     /**
+     * 初始化结账
+     */
+    private void initCommit() {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setMemberCode(MyApplication.memberCode);
+        bean.setRecordId(MyApplication.recordId);
+        mBillMode.billCommit(bean, commitCallback);
+    }
+
+    /**
      * 初始化更多优惠的位置
      */
     private void initFavorableLocation() {
@@ -230,6 +242,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         switch (view.getId()) {
             case R.id.shoppingcart_button:
                 /**结账*/
+                initCommit();
                 break;
             case R.id.cart_favorable:
                 /**更多优惠*/
@@ -280,12 +293,31 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         }
     };
 
+    /**
+     * 结账回调
+     */
+    Callback<Bean<ResponseCommonBean>> commitCallback = new Callback<Bean<ResponseCommonBean>>() {
+        @Override
+        public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
+            Bean<ResponseCommonBean> bean = response.body();
+            T.showShort(getContext(), bean.getMessage());
+            if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                finish();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+            T.showShort(getContext(), "结账失败，请重新提交");
+        }
+    };
+
     @Override
     public void onItemClick(View view, int position, Object bean) {
-        if (position == -1){
+        if (position == -1) {
             tipMoney.setText("0");
-        }else {
-            tipMoney.setText(""+bean);
+        } else {
+            tipMoney.setText("" + bean);
         }
     }
 }
