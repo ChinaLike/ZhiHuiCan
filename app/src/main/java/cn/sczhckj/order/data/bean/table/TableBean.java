@@ -14,7 +14,10 @@ public class TableBean {
     private String name;//台桌名称
     private Integer maximum;//最大人数，即本桌默认的人数
     private String waiter;//服务员
+    private Integer status;//台桌状态 1-不可用 2-未开台 3-预定 4-空桌 5-已开桌 6-已上菜 7-结帐中 8-打扫中
+    private String remark;//消息内容
     private List<Integer> persons;//候选人数
+    private Integer recordId;//消费记录ID
 
     public Integer getId() {
         return id;
@@ -48,6 +51,22 @@ public class TableBean {
         this.waiter = waiter;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public List<Integer> getPersons() {
         return persons;
     }
@@ -56,14 +75,25 @@ public class TableBean {
         this.persons = persons;
     }
 
+    public Integer getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "id=" + id +
-                ", tableName='" + name + '\'' +
+                ", name='" + name + '\'' +
                 ", maximum=" + maximum +
                 ", waiter='" + waiter + '\'' +
+                ", status=" + status +
+                ", remark='" + remark + '\'' +
                 ", persons=" + persons +
+                ", recordId=" + recordId +
                 '}';
     }
 }

@@ -9,22 +9,11 @@ package cn.sczhckj.order.data.constant;
 public interface Constant {
 
     /**
-     * 购物车数量加减时发布的事件标识
+     * 底部按钮
      */
-    int CART_NUMBER_EVENT = 0;
-
-    /**
-     * 开桌
-     */
-    int OPEN_TABLE = 0;
-    /**
-     * 点菜
-     */
-    int ORDER = 1;
-    /**
-     * 结账
-     */
-    int SETTLE_ACCOUNTS = 2;
+    int OPEN_TABLE = 0;//开桌
+    int ORDER = 1;//点菜
+    int SETTLE_ACCOUNTS = 2;//结账
 
     /**
      * 用户登录信息传递
@@ -32,45 +21,11 @@ public interface Constant {
     String USER_INFO = "userInfo";
     String INTENT_FLAG = "flag";
 
-    /**锁住Intent传递字段*/
-    String LOCK_TITLE="lock";
-
     /**
-     * 首页锅底，推荐菜品等
+     * Intent传递字段
      */
-    String ID = "id";
-    String DEVICE_ID = "deviceId";
-    /**
-     * 开桌数据请求
-     */
-    String TABLE = "table";
-    String TYPE = "type";
-    String PARAMS = "params";
-    String PERSON = "person";
-
-    /**
-     * VIP申请
-     */
-    String APPLY_FOR_VIP_NAME = "name";
-    String APPLY_FOR_VIP_PHONE = "phone";
-    String APPLY_FOR_VIP_TYPE = "type";
-
-    /**
-     * 主菜单底部按钮和详情界面
-     */
-    int BOTTOM_ORDER = 0x501;
-    int BOTTOM_SERVICE = 0x502;
-    int BOTTOM_SETTLE_ACCOUNTS = 0x503;
-    int DISHES_DETAILS_IN = 0x504;
-    int DISHES_DETAILS_OUT = 0x505;
-
-    /**
-     * 支付方式
-     */
-    int CASH = 0;
-    int WEIXIN = 1;
-    int BANK_CART = 2;
-    int ALIPAY = 3;
+    String LOCK_TITLE = "lock";
+    String INTENT_TABLE_STATUS = "status";
 
     /**
      * 界面间传递Flag
@@ -126,5 +81,19 @@ public interface Constant {
      */
     int UNLOCK = 1;//解锁
     int LOCK = 0;//未解锁
+
+    /**
+     * 台桌状态
+     */
+    int TABLE_STATUS_DISABLE = 1;//不可用
+    int TABLE_STATUS_NO_OPEN = 2;//未开台
+    int TABLE_STATUS_RESERVE = 3;//预定
+    int TABLE_STATUS_EMPTY = 4;//空桌
+    int TABLE_STATUS_OPEN = 5;//已开桌
+    int TABLE_STATUS_FOOD = 6;//已上菜
+    int TABLE_STATUS_BILL = 7;//结帐中
+    int TABLE_STATUS_SWEEP = 8;//打扫中
+    int TABLE_STATUS_OTHER = -1;//其他
+
 
 }

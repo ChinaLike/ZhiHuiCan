@@ -25,6 +25,10 @@ public class WebSocketEvent {
      * 解锁界面
      */
     public static final int TYPE_UNLOCK = 3;
+    /**
+     * 结账完成
+     */
+    public static final int TYPE_BILL_FINISH = 4;
 
     private PushCommonBean bean;
 

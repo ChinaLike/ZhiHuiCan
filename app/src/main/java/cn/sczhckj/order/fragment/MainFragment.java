@@ -26,6 +26,7 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 开桌后主界面
@@ -111,7 +112,7 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        init();
+
     }
 
     @Override
@@ -193,6 +194,12 @@ public class MainFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        init();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
@@ -231,7 +238,7 @@ public class MainFragment extends BaseFragment {
         imageViews[index].setSelected(true);
         textViews[index].setSelected(true);
         if (index != current) {
-            mainBottomViewPager.setCurrentItem(index,false);
+            mainBottomViewPager.setCurrentItem(index, false);
             imageViews[current].setSelected(false);
             textViews[current].setSelected(false);
             current = index;

@@ -178,10 +178,9 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      * 初始化开桌信息
      */
     private void initTableInfo() {
-        deviceId = AppSystemUntil.getAndroidID(getContext());
         RequestCommonBean bean = new RequestCommonBean();
         bean.setUserId(userId);
-        bean.setDeviceId(deviceId);
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         /**获取数据*/
         mTableMode.openInfo(bean, this);
         loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
@@ -194,7 +193,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     private void initTab() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(deviceId);
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         bean.setOrderType(Constant.ORDER_TYPE_OPEN);
         mFoodMode.cates(bean, cateCallback);
     }
@@ -206,7 +205,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     private void initFood(int cateId) {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(deviceId);
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         bean.setCateId(cateId);
         mFoodMode.foods(bean, foodCallback);
     }

@@ -129,6 +129,11 @@ public interface OP {
     String PUSH_UNLOCK = "unLock";
 
     /**
+     * 推送 结账完成
+     */
+    String PUSH_BILL_FINISH = "billFinish";
+
+    /**
      * 获取结账清单
      */
     String BILL_BILL = "bill";
@@ -139,7 +144,7 @@ public interface OP {
     String BILL_AWARDS = "awards";
 
     /**
-     * 打赏参数
+     * 结账
      */
     String BILL_COMMIT = "commit";
 

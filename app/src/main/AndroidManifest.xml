@@ -17,10 +17,21 @@
         android:supportsRtl="true"
         android:theme="@style/NotitleTheme">
         <activity
+            android:name=".activity.InitActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
-            
+
         </activity>
         <activity
             android:name=".activity.MainActivity"
@@ -32,11 +43,7 @@
             android:name=".activity.LeadActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LockActivity"
@@ -44,6 +51,7 @@
             android:screenOrientation="landscape">
 
         </activity>
+
     </application>
 
 </manifest>

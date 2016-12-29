@@ -177,7 +177,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
      */
     private void callService(int serviceId) {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(deviceId);
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         bean.setServiceId(serviceId);
         mServiceMode.call(bean, requestCommonBeanCallback);
 
@@ -190,7 +190,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
      */
     private void cancelService() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(deviceId);
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         mServiceMode.abort(bean, requestCommonBeanCallback);
     }
 

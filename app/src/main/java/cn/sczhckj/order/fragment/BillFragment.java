@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
+import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.BillMode;
@@ -108,6 +111,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -170,6 +174,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         bean.setMemberCode(MyApplication.memberCode);
+        bean.setRecordId(MyApplication.recordId);
         mBillMode.bill(bean, this);
     }
 
@@ -229,6 +234,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -320,4 +326,17 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             tipMoney.setText("" + bean);
         }
     }
+
+    /**
+     * 结账完成
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        if (event.getType() == WebSocketEvent.TYPE_BILL_FINISH) {
+            finish();
+        }
+    }
+
 }

@@ -274,12 +274,14 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshFoodBus(RefreshFoodEvent event) {
-//        if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
-//            onItemClick(null, currPosition, currBean);
-//        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
-//            mFoodAdapter.notifyDataSetChanged(
-//                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
-//        }
+        if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
+            detailsDishesNumber.setText("0");
+            mFoodBean.setCount(0);
+        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+            FoodBean bean=event.getBean();
+            detailsDishesNumber.setText(bean.getCount()+"");
+            mFoodBean.setCount(bean.getCount());
+        }
     }
 
 }

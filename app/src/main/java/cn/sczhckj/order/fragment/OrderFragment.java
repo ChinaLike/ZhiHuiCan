@@ -39,6 +39,7 @@ import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
+import cn.sczhckj.order.data.event.RefreshViewEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;

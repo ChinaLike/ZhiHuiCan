@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'zhihuican'
+            keyPassword 'zhc888888'
+            storeFile file('E:/Work/ZhiHuiCan/keystore.jks')
+            storePassword 'zhc888888'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "25.0.0"
     defaultConfig {
@@ -15,6 +23,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     dexOptions {
@@ -43,5 +52,5 @@ dependencies {
     compile files('libs/log4j-1.2.17.jar')
     compile files('libs/slf4j-api-1.6.6.jar')
     compile files('libs/commons-lang-2.6.jar')
-    compile group: 'pl.droidsonroids.gif', name: 'android-gif-drawable', version: '1.2.3'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
 }

@@ -9,31 +9,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.sczhckj.order.Config;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.constant.OP;
-import cn.sczhckj.order.data.bean.RequestCommonBean;
-import cn.sczhckj.order.data.bean.device.VersionBean;
-import cn.sczhckj.order.data.event.WebSocketEvent;
-import cn.sczhckj.order.data.listener.OnWebSocketListenner;
-import cn.sczhckj.order.data.network.RetrofitRequest;
-import cn.sczhckj.order.data.response.ResponseCode;
-import cn.sczhckj.order.manage.VersionManager;
-import cn.sczhckj.order.mode.impl.WebSocketImpl;
-import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.platform.rest.io.RestRequest;
-import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * @ Describe:引导界面，提供用户VIP登录，用户可选择登录，也可不选择登录，不登录路直接跳转选菜界面，如果
@@ -42,7 +22,7 @@ import retrofit2.Response;
  * @ Email: 572919350@qq.com
  */
 
-public class LeadActivity extends Activity implements Callback<Bean<VersionBean>>, VersionManager.OnDialogClickListener, OnWebSocketListenner {
+public class LeadActivity extends Activity {
 
     @Bind(R.id.right)
     Button right;
@@ -55,17 +35,40 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
     @Bind(R.id.lead_isVip)
     TextView leadIsVip;
 
-    private VersionManager mVersionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
-        mVersionManager = new VersionManager(LeadActivity.this);
-        buttonIsClick(false);
-        getVersion();
-        regsWebSocket();
+        disposeIntent();
+    }
+
+    /**
+     * 处理Intent状态
+     */
+    private void disposeIntent() {
+        int status = getIntent().getExtras().getInt(Constant.INTENT_TABLE_STATUS, Constant.TABLE_STATUS_OTHER);
+        Intent intent = new Intent(LeadActivity.this, MainActivity.class);
+        switch (status) {
+            case Constant.TABLE_STATUS_OPEN:
+                /**已开桌*/
+            case Constant.TABLE_STATUS_FOOD:
+                /**已上菜和已开桌处理同级*/
+                intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OPEN);
+                startActivity(intent);
+                break;
+            case Constant.TABLE_STATUS_BILL:
+                /**结帐中*/
+                intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_BILL);
+                startActivity(intent);
+                break;
+            case Constant.TABLE_STATUS_EMPTY:
+                /**空桌*/
+            default:
+                /**其他*/
+                break;
+        }
     }
 
     @OnClick({R.id.right, R.id.deny})
@@ -74,140 +77,44 @@ public class LeadActivity extends Activity implements Callback<Bean<VersionBean>
         switch (view.getId()) {
             case R.id.right:
                 /**选择是，即先登录*/
-                right.setSelected(true);
-                right.setTextColor(ContextCompat.getColor(this, R.color.text_color_main_select));
-                deny.setSelected(false);
-                deny.setTextColor(ContextCompat.getColor(this, R.color.white));
+                initButton(right, true);
+                initButton(deny, false);
                 intent = new Intent(LeadActivity.this, LoginActivity.class);
                 intent.putExtra(Constant.INTENT_FLAG, Constant.LEAD_TO_LOGIN);
                 startActivity(intent);
                 break;
             case R.id.deny:
                 /**暂时未登录*/
-                right.setSelected(false);
-                right.setTextColor(ContextCompat.getColor(this, R.color.white));
-                deny.setSelected(true);
-                deny.setTextColor(ContextCompat.getColor(this, R.color.text_color_main_select));
+                initButton(deny, true);
+                initButton(right, false);
                 intent = new Intent(LeadActivity.this, MainActivity.class);
+                intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OTHER);
                 startActivity(intent);
                 break;
         }
     }
 
-    /**
-     * 获取当前网络上的版本信息
-     */
-    private void getVersion() {
-        RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(this));
-        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
-                .op(OP.DEVICE_UPDATE)
-                .time()
-                .bean(bean);
-        /**进行数据校验*/
-        Call<Bean<VersionBean>> vipCallBack = RetrofitRequest.service().version(restRequest.toRequestString());
-        vipCallBack.enqueue(this);
-    }
-
-    private void regsWebSocket() {
-        WebSocketImpl mWebSocket = new WebSocketImpl();
-        mWebSocket.push(Config.URL_LOCK_SERVICE+AppSystemUntil.getAndroidID(this), this);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        right.setSelected(false);
-        right.setTextColor(ContextCompat.getColor(this, R.color.white));
-        deny.setSelected(false);
-        deny.setTextColor(ContextCompat.getColor(this, R.color.white));
+        initButton(deny, false);
+        initButton(right, false);
     }
-
-    @Override
-    public void onResponse(Call<Bean<VersionBean>> call, Response<Bean<VersionBean>> response) {
-        Bean<VersionBean> bean = response.body();
-        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            if (bean.getResult() != null) {
-                if (bean.getResult().getCode() > mVersionManager.getVersionCode(LeadActivity.this)) {
-                    mVersionManager.version(LeadActivity.this, bean.getResult());
-                    mVersionManager.setOnDialogClickListener(this);
-                } else {
-                    buttonIsClick(true);
-                }
-            } else {
-                buttonIsClick(true);
-            }
-        }
-    }
-
-    @Override
-    public void onFailure(Call<Bean<VersionBean>> call, Throwable t) {
-        buttonIsClick(true);
-    }
-
 
     /**
-     * 设置按钮是否可以点击
+     * 按键状态
      *
-     * @param isClick
+     * @param btn
+     * @param isSelect
      */
-    private void buttonIsClick(boolean isClick) {
-        right.setClickable(isClick);
-        deny.setClickable(isClick);
-        if (isClick) {
-            leadWelcome.setVisibility(View.VISIBLE);
-            leadProgress.setVisibility(View.GONE);
-            leadIsVip.setText("是否会员？");
+    private void initButton(Button btn, boolean isSelect) {
+        btn.setSelected(isSelect);
+        if (isSelect) {
+            btn.setTextColor(ContextCompat.getColor(this, R.color.text_color_main_select));
         } else {
-            leadWelcome.setVisibility(View.GONE);
-            leadProgress.setVisibility(View.VISIBLE);
-            leadIsVip.setText("数据初始化中...");
+            btn.setTextColor(ContextCompat.getColor(this, R.color.white));
         }
     }
 
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void dismiss() {
-        buttonIsClick(true);
-    }
-
-    @Override
-    public void onBinaryMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onClose(int code, String reason) {
-
-    }
-
-    @Override
-    public void onOpen() {
-
-    }
-
-    @Override
-    public void onRawTextMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onTextMessage(String payload) {
-        RestRequest<PushCommonBean> restRequest
-                = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
-        if (OP.PUSH_LOCK.equals(restRequest.getOp())) {
-            /**锁定界面*/
-            Intent intent=new Intent(LeadActivity.this,LockActivity.class);
-            intent.putExtra(Constant.LOCK_TITLE,restRequest.getBean().getMessage());
-            startActivity(intent);
-        } else if (OP.PUSH_UNLOCK.equals(restRequest.getOp())) {
-            /**解锁界面*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
-        }
-    }
 }

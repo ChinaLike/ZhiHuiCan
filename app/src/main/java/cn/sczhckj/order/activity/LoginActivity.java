@@ -110,6 +110,7 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
             T.showShort(this, getString(R.string.passwordHint));
             return;
         }
+        loginBtnStatus(true);
         RequestCommonBean bean = new RequestCommonBean();
         if (loginType == PASSWORD_LOGIN) {
             bean.setMemberCode(number);
@@ -213,7 +214,7 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
                 loginPasswordInput.setText("");
                 break;
             case R.id.login:
-                loginBtnStatus(true);
+
                 initLogin(loginPhoneInput.getText().toString(), loginPasswordInput.getText().toString());
                 break;
         }

@@ -1,6 +1,5 @@
 package cn.sczhckj.order.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -32,12 +31,12 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.adapter.CartAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.CartBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
@@ -48,7 +47,6 @@ import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.OrderMode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
-import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
@@ -167,6 +165,9 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         mTableMode = new TableMode();
         initOrder();
         initDisOrder();
+
+        initRefresh();
+
     }
 
     @Override
@@ -553,20 +554,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * 购物车中数据转化到已下单中
      */
     private void cartToOrder(List<FoodBean> mList) {
-//        for (FoodBean bean : disOrderList) {
-//            int id = bean.getId();
-//            int cateId = bean.getCateId();
-//            boolean isAdd = false;
-//            for (FoodBean item : orderList) {
-//                if (item.getId() == id && item.getCateId() == cateId) {
-//                    isAdd = true;
-//                    item.setCount(item.getCount() + bean.getCount());
-//                }
-//            }
-//            if (!isAdd) {
-//                orderList.add(bean);
-//            }
-//        }
+
         /**把购物车清空*/
         orderList = mList;
         disOrderList = new ArrayList<>();
@@ -660,17 +648,18 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
                 Bean<ResponseCommonBean> rBean = response.body();
                 if (rBean != null && rBean.getCode() == ResponseCode.SUCCESS) {
-                    mOrderAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refund(bean, orderList));
+                    /**本地刷新*/
+//                    mOrderAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refund(bean, orderList));
+                    /**调用后台刷新*/
+                    initRefresh();
                     baseInfoRefresh();
                 } else {
-                    L.d("退菜1："+bean);
                     T.showShort(getContext(), rBean == null ? "退菜失败" : rBean.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-                L.d("退菜："+t.toString());
                 T.showShort(getContext(), "退菜失败");
             }
         });

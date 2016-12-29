@@ -34,6 +34,7 @@ import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.constant.OP;
+import cn.sczhckj.order.data.event.RefreshViewEvent;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
@@ -55,6 +56,7 @@ import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.overwrite.NoScrollViewPager;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -181,6 +183,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         isLogin();
         init();
         initLeftFragment();
+
     }
 
     /**
@@ -195,11 +198,31 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         }
     }
 
+    /**
+     * 处理Intent
+     */
+    private void disposeIntent() {
+        int status = getIntent().getExtras().getInt(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OTHER);
+        switch (status) {
+            case Constant.TABLE_STATUS_OPEN:
+                /**进入消费中*/
+                viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_ORDER));
+                break;
+            case Constant.TABLE_STATUS_BILL:
+                /**进入结账*/
+                viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_BILL));
+                break;
+        }
+    }
+
     @Override
     protected void init() {
         mDialog = new DialogImpl(this);
         personNumber = 0;
         initViewPager();
+
     }
 
     private void initViewPager() {
@@ -293,8 +316,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        /**重置界面标识*/
-        BaseFragment.flag = 0;
         /**退出该界面时退出登录*/
         MyApplication.isLogin = false;
         /**退出时暂停Glide请求*/
@@ -308,6 +329,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         super.onResume();
         /**Activity重新获取焦点时，开启Glide请求*/
         Glide.with(getApplicationContext()).resumeRequests();
+
+        disposeIntent();
     }
 
     @Override

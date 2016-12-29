@@ -23,7 +23,6 @@ import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.listener.OnTipListenner;
 
 /**
  * @describe:
@@ -34,23 +33,9 @@ import cn.sczhckj.order.data.listener.OnTipListenner;
 public abstract class BaseFragment extends Fragment {
 
     /**
-     * 打赏接口
-     */
-    protected static OnTipListenner onTipListenner;
-
-    /**
      * 点餐方式，默认单桌点餐
      */
     public static int orderType = Constant.ORDER_TYPE_ALONE;
-
-    /**
-     * 界面标识  0-锅底必选  1-点菜界面
-     */
-    public static int flag = 0;
-    /**
-     * 设备ID
-     */
-    public static String deviceId;
 
     protected View loadingView;
 
@@ -114,14 +99,6 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract void init();
 
-    public void setOnGiftListenner(OnTipListenner onTipListenner) {
-        this.onTipListenner = onTipListenner;
-    }
-
-    public int getFlag() {
-        return flag;
-    }
-
     /**
      * 显示进度加载框
      */
@@ -139,7 +116,6 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void showProgress(String loadingText) {
         if (!loadingPop.isShowing()) {
-            Log.d("PopWindow", "show");
             loading.setVisibility(View.VISIBLE);
             loading_fail.setVisibility(View.GONE);
             loadingPop.showAtLocation(loadingView, Gravity.CENTER, 0, 0);
@@ -151,8 +127,9 @@ public abstract class BaseFragment extends Fragment {
      * 隐藏进度加载框
      */
     protected void dismissProgress() {
-        Log.d("PopWindow", "dismiss");
-        loadingPop.dismiss();
+        if (loadingPop.isShowing()) {
+            loadingPop.dismiss();
+        }
     }
 
     /**
