@@ -199,7 +199,7 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
                     new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
         } else if (OP.PUSH_BILL_FINISH.equals(restRequest.getOp())) {
             /**结账完成*/
-            EventBus.getDefault().post(WebSocketEvent.TYPE_BILL_FINISH);
+            EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.TYPE_BILL_FINISH));
         }
     }
 
@@ -240,7 +240,8 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
             initParent.setClickable(true);
             Bean<TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                MyApplication.recordId = bean.getResult().getRecordId();
+                MyApplication.setRecordId(bean.getResult().getRecordId());
+                MyApplication.setStatus(bean.getResult().getStatus());
                 initTableStatus(bean.getResult().getStatus(), bean.getResult().getRemark());
                 initText.setText("初始化成功");
             } else {

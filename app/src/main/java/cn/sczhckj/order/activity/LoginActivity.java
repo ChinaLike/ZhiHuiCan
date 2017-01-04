@@ -312,8 +312,8 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
         T.showShort(this, bean.getMessage());
         loginBtnStatus(false);
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            MyApplication.isLogin = true;
-            MyApplication.memberCode = bean.getResult().getMemberCode();
+            MyApplication.setIsLogin(true);
+            MyApplication.setMemberCode(bean.getResult().getMemberCode());
             into(bean.getResult());
         }
     }

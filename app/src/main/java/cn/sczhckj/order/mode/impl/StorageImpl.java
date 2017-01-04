@@ -25,7 +25,7 @@ public class StorageImpl {
      * 设置数据
      *
      * @param key
-     * @param value
+     * @param value 需要设置的值
      */
     public void setData(String key, Object value) {
         if (value instanceof Integer) {
@@ -48,7 +48,7 @@ public class StorageImpl {
      * 获取数据
      *
      * @param key
-     * @param defaultValue
+     * @param defaultValue 默认值，如果为null时返回全部
      * @return
      */
     public Object getData(String key, Object defaultValue) {
@@ -69,6 +69,14 @@ public class StorageImpl {
             return sharedPreferences.getStringSet(key, (Set<String>) defaultValue);
         }
 
+    }
+
+    /**
+     * 清除所有信息
+     */
+    public void clear() {
+        editor.clear();
+        editor.commit();
     }
 
 }

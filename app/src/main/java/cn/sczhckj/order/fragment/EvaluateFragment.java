@@ -28,6 +28,7 @@ import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.eval.EvalBean;
 import cn.sczhckj.order.data.bean.eval.EvalItemBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.listener.OnTagClickListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
@@ -105,6 +106,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
+        setData(null);
     }
 
     @Override

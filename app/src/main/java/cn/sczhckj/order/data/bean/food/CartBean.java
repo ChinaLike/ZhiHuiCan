@@ -12,7 +12,8 @@ public class CartBean {
     private Integer cateId;//一级分类
     private Integer number;//数量
     private Integer type;//价格类型ID
-    private Double price;//价格
+    private Double price;//执行价格
+    private Double originPrice;//原始价格
 
     public Integer getId() {
         return id;
@@ -54,6 +55,14 @@ public class CartBean {
         this.price = price;
     }
 
+    public Double getOriginPrice() {
+        return originPrice;
+    }
+
+    public void setOriginPrice(Double originPrice) {
+        this.originPrice = originPrice;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -62,6 +71,7 @@ public class CartBean {
                 ", number=" + number +
                 ", type=" + type +
                 ", price=" + price +
+                ", originPrice=" + originPrice +
                 '}';
     }
 }

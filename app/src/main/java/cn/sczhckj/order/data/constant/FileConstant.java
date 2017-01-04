@@ -7,6 +7,16 @@ package cn.sczhckj.order.data.constant;
  */
 
 public interface FileConstant {
+
+    /**
+     * APK下载
+     */
     String APK_NME = "ZhuiHuiCan.apk";
+
+    /**
+     * 数据保存-Share表
+     */
+    String USER = "tab_user";
+
 
 }

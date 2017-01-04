@@ -86,6 +86,7 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
+        initFavor();
     }
 
     @Override

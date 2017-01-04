@@ -66,7 +66,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
             public void onClick(View v) {
                 int n = holder.getLayoutPosition();
                 upData(n);
-                mOnItemClickListener.onItemClick(v,bean, n);
+                mOnItemClickListener.onItemClick(v, bean, n);
             }
         });
 
@@ -79,7 +79,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList == null ? 0 : mList.size();
     }
 
     static class ClassifyViewHolder extends RecyclerView.ViewHolder {
@@ -108,7 +108,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view,Object bean, int position);
+        void onItemClick(View view, Object bean, int position);
     }
 
     /**
@@ -131,6 +131,7 @@ public class CatesAdapter extends RecyclerView.Adapter<CatesAdapter.ClassifyView
 
     /**
      * 设置默认选中分类
+     *
      * @param current
      */
     public void setCurrent(int current) {

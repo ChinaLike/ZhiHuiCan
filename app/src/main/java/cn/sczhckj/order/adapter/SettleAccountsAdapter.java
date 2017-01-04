@@ -18,6 +18,7 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.image.GlideLoading;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 结账界面清单数据适配
@@ -157,10 +158,10 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         holder.number.setText("×" + getChild(groupPosition, childPosition).getCount());
         /**优惠后价格,没有优惠价原价与总价相等*/
         holder.favorablePrice.setText("" + getChild(groupPosition, childPosition).getPrice());
-        if (getChild(groupPosition, childPosition).getPriceImageUrl() != null &&
-                getChild(groupPosition, childPosition).getOriginPrice() > getChild(groupPosition, childPosition).getPrice()) {
+        if (getChild(groupPosition, childPosition).getOriginPrice() > getChild(groupPosition, childPosition).getPrice()) {
             /**设置原价*/
             holder.price.setText("¥ " + getChild(groupPosition, childPosition).getOriginPrice());
+            holder.price.setVisibility(View.VISIBLE);
             holder.image.setVisibility(View.VISIBLE);
             GlideLoading.loadingDishes(mContext, getChild(groupPosition, childPosition).getPriceImageUrl(), holder.image);
         } else {

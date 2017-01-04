@@ -138,8 +138,8 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        init();
-        initAdapter();
+            init();
+            initAdapter();
     }
 
     @Override
@@ -379,9 +379,9 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     public void refreshFoodBus(RefreshFoodEvent event) {
         if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
             onItemClick(null, currPosition, currBean);
-        }else if (event.getType() == RefreshFoodEvent.MINUS_FOOD){
+        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
             mFoodAdapter.notifyDataSetChanged(
-                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(),foodList));
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         }
     }
 

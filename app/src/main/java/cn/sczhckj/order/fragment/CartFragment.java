@@ -107,8 +107,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     private CartAdapter mOrderAdapter;
 
-    private OnButtonClickListener onButtonClickListener;
-
     /**
      * 弹窗
      */
@@ -165,9 +163,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         mTableMode = new TableMode();
         initOrder();
         initDisOrder();
-
         initRefresh();
-
     }
 
     @Override
@@ -401,6 +397,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             cart.setNumber(bean.getCount());
             cart.setType(bean.getType());
             cart.setPrice(bean.getPrice());
+            cart.setOriginPrice(bean.getOriginPrice());
             cartList.add(cart);
         }
         return cartList;
@@ -465,10 +462,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 }).show();
     }
 
-    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
-        this.onButtonClickListener = onButtonClickListener;
-    }
-
     @Override
     public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
         Bean<ResponseCommonBean> bean = response.body();
@@ -478,12 +471,14 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 /**已开桌*/
                 T.showShort(getContext(), bean.getMessage());
             } else {
-                /**未开桌*/
-                onButtonClickListener.onClick(Constant.ORDER, bean.getResult().getShowType());
+                /**未开桌*//**设置点菜方式*/
+                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, bean.getResult().getShowType());
                 /**设置菜品过多提醒*/
                 warmPromptNumber = bean.getResult().getFoodCountHint() != null ? bean.getResult().getFoodCountHint() : 0;
+                MyApplication.mStorage.setData(Constant.STORAGR_HINT, warmPromptNumber);
                 /**设置消费记录ID*/
-                MyApplication.recordId = bean.getResult().getRecordId();
+                MyApplication.setRecordId(bean.getResult().getRecordId());
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.MAIN, bean.getResult().getShowType()));
             }
             /**刷新购物车数据*/
             initRefresh();

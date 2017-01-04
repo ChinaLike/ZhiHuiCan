@@ -28,6 +28,16 @@ public interface Constant {
     String INTENT_TABLE_STATUS = "status";
 
     /**
+     * 存储字段
+     */
+    String STORAGR_IS_LOGIN = "isLogin";//是否登录
+    String STORAGR_MEMBER_CODE = "memberCode";//用户编码
+    String STORAGR_RECORDID = "recordId";//消费记录ID
+    String STORAGR_PERSON = "person";//就餐人数
+    String STORAGR_HINT = "hint";//菜品过多提醒
+    String STORAGR_SHOW_TYPE = "showType";//是否显示点菜方式
+
+    /**
      * 界面间传递Flag
      */
     int LEAD_TO_LOGIN = 0x100;
@@ -50,6 +60,12 @@ public interface Constant {
     int ORDER_TYPE_OPEN = 0;//开桌点餐
     int ORDER_TYPE_ALONE = 1;//单桌点餐
     int ORDER_TYPE_MERGE = 2;//并卓点餐
+
+    /**
+     * 是否显示点菜类型 字段showType
+     */
+    int DIS_SHOW_TYPE = 1;//不显示
+    int SHOW_TYPE = 0;//显示
 
     /**
      * 取价 字段active

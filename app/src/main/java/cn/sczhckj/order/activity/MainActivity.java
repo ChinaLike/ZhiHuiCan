@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,7 +36,6 @@ import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.constant.OP;
-import cn.sczhckj.order.data.event.RefreshViewEvent;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnButtonClickListener;
@@ -53,10 +54,8 @@ import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
-import cn.sczhckj.order.overwrite.NoScrollViewPager;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -69,11 +68,10 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class MainActivity extends BaseActivity implements OnButtonClickListener, OnTableListenner,
+public class MainActivity extends BaseActivity implements OnTableListenner,
         Callback<Bean<ResponseCommonBean>>, OnWebSocketListenner {
 
-    @Bind(R.id.viewPager)
-    NoScrollViewPager viewPager;
+
     @Bind(R.id.table_number)
     TextView tableName;
     @Bind(R.id.waitress)
@@ -82,8 +80,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     ImageView noLogin;
     @Bind(R.id.has_login)
     LinearLayout hasLogin;
-    @Bind(R.id.cart)
-    NoScrollViewPager cart;
     @Bind(R.id.table_info_parent)
     RelativeLayout tableInfoParent;
     @Bind(R.id.header)
@@ -96,15 +92,10 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     TextView tablePersonNum;
     @Bind(R.id.table_person_parent)
     LinearLayout tablePersonParent;
-    /**
-     * 事物管理器
-     */
-    private FragmentManager mFm;
-    /**
-     * 适配Adapter
-     */
-    private ViewPagerAdapter adapter;
-
+    @Bind(R.id.cart_area)
+    FrameLayout cartArea;
+    @Bind(R.id.content_area)
+    FrameLayout contentArea;
     /**
      * 用户ID
      */
@@ -182,8 +173,6 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         connectionWebSocket(AppSystemUntil.getAndroidID(this));
         isLogin();
         init();
-        initLeftFragment();
-
     }
 
     /**
@@ -206,12 +195,12 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
         switch (status) {
             case Constant.TABLE_STATUS_OPEN:
                 /**进入消费中*/
-                viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+                initMainFragment();
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_ORDER));
                 break;
             case Constant.TABLE_STATUS_BILL:
                 /**进入结账*/
-                viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+                initMainFragment();
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_BILL));
                 break;
         }
@@ -221,15 +210,8 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     protected void init() {
         mDialog = new DialogImpl(this);
         personNumber = 0;
-        initViewPager();
-
-    }
-
-    private void initViewPager() {
-        mFm = getSupportFragmentManager();
-        adapter = new ViewPagerAdapter(mFm);
-        adapter.setList(initRightFragment());
-        viewPager.setAdapter(adapter);
+        initCartFragment();
+        initRequiredFragment();
     }
 
     /**
@@ -244,80 +226,154 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
     }
 
     /**
-     * 初始化左侧数据
+     * 初始化左侧-购物车
      */
-    private void initLeftFragment() {
-        List<Fragment> mList = new ArrayList<>();
-        mFm = getSupportFragmentManager();
-        adapter = new ViewPagerAdapter(mFm);
-        /**购物车*/
-        mCartFragment = new CartFragment();
-        mCartFragment.setOnButtonClickListener(this);
-        mList.add(mCartFragment);
-        /**结账*/
-        mBillFragment = new BillFragment();
-        mList.add(mBillFragment);
-        /**优惠列表*/
-        mFavorableFragment = new FavorableFragment();
-        mList.add(mFavorableFragment);
-
-        adapter.setList(mList);
-        cart.setAdapter(adapter);
+    private void initCartFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mCartFragment == null) {
+            mCartFragment = new CartFragment();
+            transaction.add(R.id.cart_area, mCartFragment);
+        }
+        hideLeftFragment(transaction);
+        transaction.show(mCartFragment);
+        transaction.commit();
     }
-
 
     /**
-     * 初始化右侧数据
-     *
-     * @return
+     * 初始化左侧-结账
      */
-    private List<Fragment> initRightFragment() {
-        List<Fragment> mList = new ArrayList<>();
-        /**锅底必选*/
-        mRequiredFagment = new RequiredFagment();
-        mRequiredFagment.setOnTableListenner(this);
-        mRequiredFagment.setUserId(userId);
-        /**菜品选择主页*/
-        mMainFragment = new MainFragment();
-        /**菜品详情*/
-        mDetailsFragment = new DetailsFragment();
-        /**办卡界面*/
-        mCardFragment = new CardFragment();
-
-        mList.add(mRequiredFagment);
-        mList.add(mMainFragment);
-        mList.add(mDetailsFragment);
-        mList.add(mCardFragment);
-        /**预加载所有*/
-        viewPager.setOffscreenPageLimit(mList.size());
-
-        return mList;
+    private void initBillFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mBillFragment == null) {
+            mBillFragment = new BillFragment();
+            transaction.add(R.id.cart_area, mBillFragment);
+        }else {
+            mBillFragment.setData(null);
+        }
+        hideLeftFragment(transaction);
+        transaction.show(mBillFragment);
+        transaction.commit();
     }
 
-
-    @Override
-    public void onClick(int type, int isShow) {
-        if (tableInfoParent.getVisibility() == View.GONE) {
-            tableInfoParent.setVisibility(View.VISIBLE);
+    /**
+     * 初始化左侧-优惠列表
+     */
+    private void initFavorableFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mFavorableFragment == null) {
+            mFavorableFragment = new FavorableFragment();
+            transaction.add(R.id.cart_area, mFavorableFragment);
+        }else {
+            mFavorableFragment.setData(null);
         }
-        /**开桌成功后回调*/
-        if (type == Constant.ORDER) {
-            viewPager.setCurrentItem(FRAGMENT_MAIN, false);
-            if (isShow == 0) {
-                mMainFragment.showOrderType();
-            } else {
-                mMainFragment.getData();
-            }
+        hideLeftFragment(transaction);
+        transaction.show(mFavorableFragment);
+        transaction.commit();
+    }
+
+    /**
+     * 初始化右侧-必选菜品
+     */
+    private void initRequiredFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mRequiredFagment == null) {
+            mRequiredFagment = new RequiredFagment();
+            mRequiredFagment.setOnTableListenner(this);
+            mRequiredFagment.setUserId(userId);
+            transaction.add(R.id.content_area, mRequiredFagment);
+        }
+        hideRightFragment(transaction);
+        transaction.show(mRequiredFagment);
+        transaction.commit();
+    }
+
+    /**
+     * 初始化右侧-菜品主页列表
+     */
+    private void initMainFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mMainFragment == null) {
+            mMainFragment = new MainFragment();
+            transaction.add(R.id.content_area, mMainFragment);
+        }
+        hideRightFragment(transaction);
+        transaction.show(mMainFragment);
+        transaction.commit();
+    }
+
+    /**
+     * 初始化右侧-菜品详情
+     */
+    private void initDetailsFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mDetailsFragment == null) {
+            mDetailsFragment = new DetailsFragment();
+            transaction.add(R.id.content_area, mDetailsFragment);
+        }
+        hideRightFragment(transaction);
+        transaction.show(mDetailsFragment);
+        transaction.commit();
+    }
+
+    /**
+     * 初始化右侧-办理会员
+     */
+    private void initCardFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mCardFragment == null) {
+            mCardFragment = new CardFragment();
+            transaction.add(R.id.content_area, mCardFragment);
+        }else {
+            mCardFragment.setData(null);
+        }
+        hideRightFragment(transaction);
+        transaction.show(mCardFragment);
+        transaction.commit();
+    }
+
+    /**
+     * 隐藏左侧Fragment
+     *
+     * @param transaction
+     */
+    private void hideLeftFragment(FragmentTransaction transaction) {
+        if (mCartFragment != null) {
+            transaction.hide(mCartFragment);
+        }
+        if (mBillFragment != null) {
+            transaction.hide(mBillFragment);
+        }
+        if (mFavorableFragment != null) {
+            transaction.hide(mFavorableFragment);
         }
     }
 
+    /**
+     * 隐藏右侧Fragment
+     *
+     * @param transaction
+     */
+    private void hideRightFragment(FragmentTransaction transaction) {
+        if (mRequiredFagment != null) {
+            transaction.hide(mRequiredFagment);
+        }
+        if (mDetailsFragment != null) {
+            transaction.hide(mDetailsFragment);
+        }
+        if (mMainFragment != null) {
+            transaction.hide(mMainFragment);
+        }
+        if (mCardFragment != null) {
+            transaction.hide(mCardFragment);
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         /**退出该界面时退出登录*/
-        MyApplication.isLogin = false;
+        MyApplication.setIsLogin(false);
         /**退出时暂停Glide请求*/
         Glide.with(getApplicationContext()).pauseRequests();
         /**人数清零*/
@@ -434,6 +490,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
             /**设置菜品过多提醒*/
             if (bean.getResult() != null && bean.getResult().getFoodCountHint() != null) {
                 BaseFragment.warmPromptNumber = bean.getResult().getFoodCountHint();
+                MyApplication.mStorage.setData(Constant.STORAGR_HINT, BaseFragment.warmPromptNumber);
             }
         } else {
             T.showShort(this, bean.getMessage());
@@ -494,7 +551,7 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                 rightTag = FRAGMENT_MAIN;
                 /**点菜*/
                 tableInfoParent.setVisibility(View.VISIBLE);
-                cart.setCurrentItem(CART_DISHES, false);
+                initCartFragment();
                 break;
             case SwitchViewEvent.BOTTOM_SERVICE:
                 leftTag = CART_DISHES;
@@ -507,16 +564,15 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                 rightTag = FRAGMENT_MAIN;
                 /**结账*/
                 tableInfoParent.setVisibility(View.VISIBLE);
-                cart.setCurrentItem(CART_BILL, false);
-                mBillFragment.setData(null);
+                initBillFragment();
                 break;
             case SwitchViewEvent.DISHES_DETAILS_IN:
                 leftTag = CART_DISHES;
                 rightTag = FRAGMENT_DETAILS;
                 /**进入菜品详情*/
                 tableInfoParent.setVisibility(View.GONE);
-                viewPager.setCurrentItem(FRAGMENT_DETAILS, false);
-                mDetailsFragment.setData(event.getBean());
+                initDetailsFragment();
+                mDetailsFragment.setFoodBean(event.getBean());
                 mDetailsFragment.setBeanList(event.getBeanList());
                 break;
             case SwitchViewEvent.DISHES_DETAILS_OUT:
@@ -525,27 +581,42 @@ public class MainActivity extends BaseActivity implements OnButtonClickListener,
                 tableInfoParent.setVisibility(View.VISIBLE);
                 if (BaseFragment.isOpen) {
                     rightTag = FRAGMENT_MAIN;
-                    viewPager.setCurrentItem(FRAGMENT_MAIN, false);
+                    initMainFragment();
                 } else {
                     rightTag = FRAGMENT_REQUIRED;
-                    viewPager.setCurrentItem(FRAGMENT_REQUIRED, false);
+                    initRequiredFragment();
                 }
                 break;
             case SwitchViewEvent.FAVORABLE:
                 /**更多优惠*/
-                cart.setCurrentItem(CART_FAVORABLE, false);
-                mFavorableFragment.setData(null);
-                viewPager.setCurrentItem(FRAGMENT_CARD, false);
-                mCardFragment.setData(null);
+                initFavorableFragment();
+                initCardFragment();
                 break;
             case SwitchViewEvent.FAVORABLE_OUT:
                 /**更多优惠退出*/
-                cart.setCurrentItem(leftTag, false);
-                viewPager.setCurrentItem(rightTag, false);
+                if (leftTag == CART_DISHES){
+                    initCartFragment();
+                }else {
+                    initBillFragment();
+                }
+                if (rightTag == FRAGMENT_REQUIRED){
+                    initRequiredFragment();
+                }else if (rightTag == FRAGMENT_DETAILS){
+                    initDetailsFragment();
+                }else {
+                    initMainFragment();
+                }
+
                 break;
             case SwitchViewEvent.FAVORABLE_CARD:
                 /**办卡*/
                 mCardFragment.card(event.getCard());
+                break;
+            case SwitchViewEvent.MAIN:
+                /**主页*/
+                leftTag = CART_DISHES;
+                rightTag = FRAGMENT_MAIN;
+                initMainFragment();
                 break;
         }
 

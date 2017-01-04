@@ -33,6 +33,7 @@ public class RequestCommonBean {
     private String name;//用户姓名
     private List<Integer> words;//热词
     private List<EvalItemBean> items;//评价星星
+    private Integer awards;//打赏金额
 
     public String getMemberCode() {
         return memberCode;
@@ -186,6 +187,14 @@ public class RequestCommonBean {
         this.words = words;
     }
 
+    public Integer getAwards() {
+        return awards;
+    }
+
+    public void setAwards(Integer awards) {
+        this.awards = awards;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -208,6 +217,7 @@ public class RequestCommonBean {
                 ", name='" + name + '\'' +
                 ", words=" + words +
                 ", items=" + items +
+                ", awards=" + awards +
                 '}';
     }
 }

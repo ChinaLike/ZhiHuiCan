@@ -34,6 +34,10 @@ public class WebSocketEvent {
 
     private int type;
 
+    public WebSocketEvent(int type) {
+        this.type = type;
+    }
+
     public WebSocketEvent(int type, PushCommonBean bean) {
         this.bean = bean;
         this.type = type;

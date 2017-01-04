@@ -34,6 +34,7 @@ import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
@@ -41,6 +42,7 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.BillMode;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -107,6 +109,18 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      * 打赏适配
      */
     private TipAdapter mTipAdapter;
+    /**
+     * 总价
+     */
+    private Double totalP = 0.0;
+    /**
+     * 总优惠
+     */
+    private Double totalF = 0.0;
+    /**
+     * 打赏金额
+     */
+    private int awards = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,10 +140,13 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
+        initBill();
+        initTip();
     }
 
     @Override
     public void setData(Object object) {
+        /**费消费中执行*/
         initBill();
         initTip();
     }
@@ -196,6 +213,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         bean.setMemberCode(MyApplication.memberCode);
         bean.setRecordId(MyApplication.recordId);
+        bean.setAwards(awards);
         mBillMode.billCommit(bean, commitCallback);
     }
 
@@ -214,19 +232,19 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      */
     private void compute(List<BillBean> list) {
         /**总价*/
-        Double totalPrice = 0.0;
+        totalP = 0.0;
         /**总优惠*/
-        Double totalFavorPrice = 0.0;
+        totalF = 0.0;
         for (BillBean beanP : list) {
-            totalPrice = totalPrice + beanP.getSum();
+            totalP = totalP + beanP.getSum();
             for (FoodBean beanC : beanP.getFoods()) {
-                totalFavorPrice = totalFavorPrice + (beanC.getOriginPrice() - beanC.getPrice()) * beanC.getCount();
+                totalF = totalF + (beanC.getOriginPrice() - beanC.getPrice()) * beanC.getCount();
             }
         }
         /**设置总价*/
-        this.totalPrice.setText("" + totalPrice);
+        this.totalPrice.setText("" + totalP);
         /**设置总优惠*/
-        this.favorPrice.setText("" + totalFavorPrice);
+        this.favorPrice.setText("" + totalF);
     }
 
 
@@ -308,7 +326,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             Bean<ResponseCommonBean> bean = response.body();
             T.showShort(getContext(), bean.getMessage());
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                finish();
+//                finish();
             }
         }
 
@@ -321,9 +339,13 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     @Override
     public void onItemClick(View view, int position, Object bean) {
         if (position == -1) {
+            awards = 0;
             tipMoney.setText("0");
+            totalPrice.setText("" + totalP);
         } else {
+            awards = (int) bean;
             tipMoney.setText("" + bean);
+            totalPrice.setText("" + (totalP + (Integer) bean));
         }
     }
 

@@ -23,6 +23,7 @@ import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe:
@@ -37,17 +38,17 @@ public abstract class BaseFragment extends Fragment {
      */
     public static int orderType = Constant.ORDER_TYPE_ALONE;
 
-    protected View loadingView;
+    protected View popLoadingView;
 
-    private PopupWindow loadingPop;
+    private PopupWindow mPopupWindow;
 
-    protected LinearLayout loading;
+    protected LinearLayout popLoading;
 
-    protected LinearLayout loading_fail;
+    protected LinearLayout popLoadingFail;
 
-    private TextView loadingText;
+    private TextView popLoadingText;
 
-    private TextView loadingFailText;
+    private TextView popLoadingFailText;
 
     /**
      * 分类集合
@@ -93,6 +94,7 @@ public abstract class BaseFragment extends Fragment {
         if (cateList == null) {
             cateList = new ArrayList<>();
         }
+        setIsOpen();
     }
 
     public abstract void setData(Object object);
@@ -100,14 +102,25 @@ public abstract class BaseFragment extends Fragment {
     public abstract void init();
 
     /**
+     * 设置是否开桌
+     */
+    private void setIsOpen() {
+        if (MyApplication.status == Constant.TABLE_STATUS_OPEN
+                || MyApplication.status == Constant.TABLE_STATUS_FOOD
+                || MyApplication.status == Constant.TABLE_STATUS_BILL) {
+            isOpen = true;
+        }
+    }
+
+    /**
      * 显示进度加载框
      */
     protected void showProgress() {
-        if (!loadingPop.isShowing()) {
+        if (!mPopupWindow.isShowing()) {
             Log.d("PopWindow", "show");
-            loading.setVisibility(View.VISIBLE);
-            loading_fail.setVisibility(View.GONE);
-            loadingPop.showAtLocation(loadingView, Gravity.CENTER, 0, 0);
+            popLoading.setVisibility(View.VISIBLE);
+            popLoadingFail.setVisibility(View.GONE);
+            mPopupWindow.showAtLocation(popLoadingView, Gravity.CENTER, 0, 0);
         }
     }
 
@@ -115,11 +128,11 @@ public abstract class BaseFragment extends Fragment {
      * 显示进度加载框
      */
     protected void showProgress(String loadingText) {
-        if (!loadingPop.isShowing()) {
-            loading.setVisibility(View.VISIBLE);
-            loading_fail.setVisibility(View.GONE);
-            loadingPop.showAtLocation(loadingView, Gravity.CENTER, 0, 0);
-            this.loadingText.setText(loadingText);
+        if (!mPopupWindow.isShowing()) {
+            popLoading.setVisibility(View.VISIBLE);
+            popLoadingFail.setVisibility(View.GONE);
+            mPopupWindow.showAtLocation(popLoadingView, Gravity.CENTER, 0, 0);
+            this.popLoadingText.setText(loadingText);
         }
     }
 
@@ -127,8 +140,8 @@ public abstract class BaseFragment extends Fragment {
      * 隐藏进度加载框
      */
     protected void dismissProgress() {
-        if (loadingPop.isShowing()) {
-            loadingPop.dismiss();
+        if (mPopupWindow.isShowing()) {
+            mPopupWindow.dismiss();
         }
     }
 
@@ -136,26 +149,26 @@ public abstract class BaseFragment extends Fragment {
      * 加载失败
      */
     protected void loadingFail(String loadingFailText, View.OnClickListener onClickListener) {
-        loading.setVisibility(View.GONE);
-        loading_fail.setVisibility(View.VISIBLE);
-        this.loadingFailText.setText(loadingFailText);
-        loading_fail.setOnClickListener(onClickListener);
+        popLoading.setVisibility(View.GONE);
+        popLoadingFail.setVisibility(View.VISIBLE);
+        this.popLoadingFailText.setText(loadingFailText);
+        popLoadingFail.setOnClickListener(onClickListener);
     }
 
     /**
      * 初始化进度加载框
      */
     protected void initLoadingPop() {
-        loadingView = LayoutInflater.from(getContext()).inflate(R.layout.item_pop_loading, null, false);
-        loading = (LinearLayout) loadingView.findViewById(R.id.loading_parent);
-        loading_fail = (LinearLayout) loadingView.findViewById(R.id.loading_fail);
-        loadingText = (TextView) loadingView.findViewById(R.id.loading_title);
-        loadingFailText = (TextView) loadingView.findViewById(R.id.loading_fail_title);
-        loadingPop = new PopupWindow(loadingView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT, true);
-        loadingPop.setFocusable(true);
-        loadingPop.setTouchable(true);
-        loadingPop.setOutsideTouchable(false);
-        loadingPop.setBackgroundDrawable(new ColorDrawable(0));
+        popLoadingView = LayoutInflater.from(getContext()).inflate(R.layout.item_pop_loading, null, false);
+        popLoading = (LinearLayout) popLoadingView.findViewById(R.id.loading_parent);
+        popLoadingFail = (LinearLayout) popLoadingView.findViewById(R.id.loading_fail);
+        popLoadingText = (TextView) popLoadingView.findViewById(R.id.loading_title);
+        popLoadingFailText = (TextView) popLoadingView.findViewById(R.id.loading_fail_title);
+        mPopupWindow = new PopupWindow(popLoadingView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT, true);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.setOutsideTouchable(false);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
     }
 
     /**
@@ -164,30 +177,38 @@ public abstract class BaseFragment extends Fragment {
     protected void finish() {
         getActivity().finish();
         /**设置为未登录模式*/
-        MyApplication.isLogin = false;
+        MyApplication.setIsLogin(false);
         /**人数清零*/
         MainActivity.personNumber = 0;
         /**设置默认点餐为单桌点餐*/
         orderType = Constant.ORDER_TYPE_ALONE;
         /**清空用户编码记录*/
-        MyApplication.memberCode = null;
+        MyApplication.setMemberCode(null);
         /**设置菜品过多界线*/
         warmPromptNumber = 0;
         /**是否开桌*/
         isOpen = false;
         /**消费记录ID*/
-        MyApplication.recordId = null;
+        MyApplication.setRecordId(null);
         /**清空购物车数据*/
         orderList = new ArrayList<>();
         disOrderList = new ArrayList<>();
         /**设置默认是否加菜*/
         isAddFood = false;
+        clearStorage();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         finish();
+    }
+
+    /**
+     * 正常结账后，清除所有用户数据
+     */
+    private void clearStorage() {
+        MyApplication.mStorage.clear();
     }
 
     /**
@@ -239,6 +260,21 @@ public abstract class BaseFragment extends Fragment {
         loadingItemParent.setVisibility(View.GONE);
         loadingFail.setVisibility(View.VISIBLE);
         loadingFailTitle.setText(str);
+    }
+
+    /**
+     * 是否消费中（包括已开桌，上菜中，结账中）
+     * @return
+     */
+    protected boolean isConsuming(){
+        if (MyApplication.status == Constant.TABLE_STATUS_OPEN
+                || MyApplication.status == Constant.TABLE_STATUS_FOOD
+                || MyApplication.status == Constant.TABLE_STATUS_BILL) {
+            warmPromptNumber = (int) MyApplication.mStorage.getData(Constant.STORAGR_HINT,0);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

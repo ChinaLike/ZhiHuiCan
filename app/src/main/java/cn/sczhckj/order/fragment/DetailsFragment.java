@@ -37,6 +37,7 @@ import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.CarouselView;
 import cn.sczhckj.order.overwrite.TagFlowLayout;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,11 +121,11 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
+        setData(null);
     }
 
     @Override
     public void setData(Object object) {
-        mFoodBean = (FoodBean) object;
         initBanner(mFoodBean.getId(), mFoodBean.getCateId());
         initBase();
     }
@@ -176,6 +177,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         mFoodMode = new FoodMode();
         mFavorImpl = new FavorImpl(getContext());
         mFoodControl = new FoodControlImpl(getContext());
+
     }
 
 
@@ -247,6 +249,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     @Override
     public void onResponse(Call<Bean<List<ImageBean>>> call, Response<Bean<List<ImageBean>>> response) {
         Bean<List<ImageBean>> bean = response.body();
+        L.d("======"+bean.getResult().toString());
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             isSuccess = true;
             bannerAdapter(bean.getResult());
@@ -267,6 +270,10 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         this.beanList = beanList;
     }
 
+    public void setFoodBean(FoodBean mFoodBean) {
+        this.mFoodBean = mFoodBean;
+    }
+
     /**
      * 数据更新
      *
@@ -278,8 +285,8 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
             detailsDishesNumber.setText("0");
             mFoodBean.setCount(0);
         } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
-            FoodBean bean=event.getBean();
-            detailsDishesNumber.setText(bean.getCount()+"");
+            FoodBean bean = event.getBean();
+            detailsDishesNumber.setText(bean.getCount() + "");
             mFoodBean.setCount(bean.getCount());
         }
     }

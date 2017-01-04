@@ -44,8 +44,14 @@ public class SwitchViewEvent {
      * 办卡
      */
     public static final int FAVORABLE_CARD = 7;
+    /**
+     * 主页显示
+     */
+    public static final int MAIN = 8;
 
     private int type;
+
+    private int orderType;
 
     private FoodBean bean;
 
@@ -60,6 +66,11 @@ public class SwitchViewEvent {
     public SwitchViewEvent(int type, FoodBean bean) {
         this.type = type;
         this.bean = bean;
+    }
+
+    public SwitchViewEvent(int type, int orderType) {
+        this.type = type;
+        this.orderType = orderType;
     }
 
     public SwitchViewEvent(List<FoodBean> beanList, int type) {
@@ -108,5 +119,13 @@ public class SwitchViewEvent {
 
     public void setCard(CardInfoBean.Card card) {
         this.card = card;
+    }
+
+    public int getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(int orderType) {
+        this.orderType = orderType;
     }
 }

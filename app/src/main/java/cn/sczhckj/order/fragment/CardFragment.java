@@ -104,6 +104,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
+        initFavor();
     }
 
     @Override

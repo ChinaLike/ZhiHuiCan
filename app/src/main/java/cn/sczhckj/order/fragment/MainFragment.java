@@ -3,12 +3,12 @@ package cn.sczhckj.order.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,14 +16,13 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Field;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.until.show.L;
@@ -62,10 +61,10 @@ public class MainFragment extends BaseFragment {
     Button mainAloneOrder;
     @Bind(R.id.main_merger_order)
     Button mainMergerOrder;
-    @Bind(R.id.main_bottom_viewPager)
-    ViewPager mainBottomViewPager;
     @Bind(R.id.main_hint_choose)
     LinearLayout mainHintChoose;
+    @Bind(R.id.main_bottom_viewPager)
+    FrameLayout mainBottomViewPager;
 
     private int index = 0;
 
@@ -89,13 +88,6 @@ public class MainFragment extends BaseFragment {
      */
     private EvaluateFragment mEvaluateFragment;
 
-    private FragmentManager mFm;
-
-    private List<Fragment> fragmentList = new ArrayList<>();
-
-    private ViewPagerAdapter adapter;
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +104,15 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        if (isConsuming()) {
+            if (MyApplication.status == Constant.TABLE_STATUS_BILL) {
+                index = 2;
+            } else {
+                index = 0;
+            }
+            current = index;
+        }
+        init();
     }
 
     @Override
@@ -131,65 +131,85 @@ public class MainFragment extends BaseFragment {
         textViews[2] = mainSettleAccountsText;
         imageViews[index].setSelected(true);
         textViews[index].setSelected(true);
-        /**初始化界面*/
-        initOrderFragment();
-        initServiceFragment();
-        initSettleAccountsFragment();
-        initViewPager();
+        if (index == 0) {
+            showOrderType((Integer) MyApplication.mStorage.getData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE));
+        } else if (index == 1) {
+            initServiceFragment();
+        } else if (index == 2) {
+            initBillFragment();
+        }
     }
 
     /**
      * 初始化点菜界面
      */
-    private void initOrderFragment() {
-        mOrderFragment = new OrderFragment();
+    public void initOrderFragment() {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        if (mOrderFragment == null) {
+            mOrderFragment = new OrderFragment();
+            transaction.add(R.id.main_bottom_viewPager, mOrderFragment);
+        }
+        hideFragment(transaction);
+        transaction.show(mOrderFragment);
+        transaction.commit();
     }
 
     /**
      * 初始化服务界面
      */
-    private void initServiceFragment() {
-        mServiceFragment = new ServiceFragment();
+    public void initServiceFragment() {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        if (mServiceFragment == null) {
+            mServiceFragment = new ServiceFragment();
+            transaction.add(R.id.main_bottom_viewPager, mServiceFragment);
+        }
+        hideFragment(transaction);
+        transaction.show(mServiceFragment);
+        transaction.commit();
     }
 
     /**
      * 初始化结账界面
      */
-    private void initSettleAccountsFragment() {
-        mEvaluateFragment = new EvaluateFragment();
+    public void initBillFragment() {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        if (mEvaluateFragment == null) {
+            mEvaluateFragment = new EvaluateFragment();
+            transaction.add(R.id.main_bottom_viewPager, mEvaluateFragment);
+        }
+        hideFragment(transaction);
+        transaction.show(mEvaluateFragment);
+        transaction.commit();
     }
 
     /**
-     * 加载界面初始化
+     * 隐藏界面
+     *
+     * @param transaction
      */
-    private void initViewPager() {
-        mFm = getChildFragmentManager();
-        fragmentList.add(mOrderFragment);
-        fragmentList.add(mServiceFragment);
-        fragmentList.add(mEvaluateFragment);
-        adapter = new ViewPagerAdapter(mFm);
-        adapter.setList(fragmentList);
-        mainBottomViewPager.setAdapter(adapter);
-        /**预加载所有*/
-        mainBottomViewPager.setOffscreenPageLimit(fragmentList.size());
-    }
-
-    /**
-     * 显示点菜方式
-     */
-    public void showOrderType() {
-        mainHintChoose.setVisibility(View.VISIBLE);
-        mainBottomViewPager.setVisibility(View.GONE);
-    }
-
-    /**
-     * 加载网络数据
-     */
-    public void getData() {
-        mainHintChoose.setVisibility(View.GONE);
-        mainBottomViewPager.setVisibility(View.VISIBLE);
+    private void hideFragment(FragmentTransaction transaction) {
         if (mOrderFragment != null) {
-            mOrderFragment.init();
+            transaction.hide(mOrderFragment);
+        }
+        if (mServiceFragment != null) {
+            transaction.hide(mServiceFragment);
+        }
+        if (mEvaluateFragment != null) {
+            transaction.hide(mEvaluateFragment);
+        }
+    }
+
+    /**
+     * 是否显示点菜方式
+     */
+    public void showOrderType(int showType) {
+        if (showType == Constant.SHOW_TYPE) {
+            mainHintChoose.setVisibility(View.VISIBLE);
+            mainBottomViewPager.setVisibility(View.GONE);
+        } else {
+            mainHintChoose.setVisibility(View.GONE);
+            mainBottomViewPager.setVisibility(View.VISIBLE);
+            initOrderFragment();
         }
     }
 
@@ -210,40 +230,54 @@ public class MainFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.main_order:
                 index = 0;
+                initOrderFragment();
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_ORDER));
                 break;
             case R.id.main_service:
                 index = 1;
+                initServiceFragment();
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_SERVICE));
                 break;
             case R.id.main_settle_accounts:
                 index = 2;
-                if (mEvaluateFragment != null) {
-                    mEvaluateFragment.setData(null);
-                }
+                initBillFragment();
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_BILL));
                 break;
             case R.id.main_alone_order:
                 /**单桌点菜*/
                 orderType = Constant.ORDER_TYPE_ALONE;
-                getData();
+                showOrderType(Constant.DIS_SHOW_TYPE);
                 break;
             case R.id.main_merger_order:
                 /**并卓点餐*/
                 orderType = Constant.ORDER_TYPE_MERGE;
-                getData();
+                showOrderType(Constant.DIS_SHOW_TYPE);
                 break;
         }
 
         imageViews[index].setSelected(true);
         textViews[index].setSelected(true);
         if (index != current) {
-            mainBottomViewPager.setCurrentItem(index, false);
             imageViews[current].setSelected(false);
             textViews[current].setSelected(false);
             current = index;
         }
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package cn.sczhckj.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,7 @@ import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.event.RefreshViewEvent;
+import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
@@ -48,6 +51,8 @@ import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
+import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,9 +64,6 @@ import retrofit2.Response;
  */
 
 public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemClickListener, OnItemClickListener {
-
-
-    private final String TAG = getClass().getSimpleName();
 
 
     @Bind(R.id.dishes_tab)
@@ -146,7 +148,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         super.onCreate(savedInstanceState);
         /**注册事件监听*/
         EventBus.getDefault().register(this);
-
     }
 
     @Nullable
@@ -164,19 +165,23 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        init();
     }
 
     @Override
     public void init() {
-        isOpen = true;
-        initLoading(true);
+        mFoodMode = new FoodMode();
+        mTableMode = new TableMode();
         initCateAdapter();
         initTabAdapter();
         initFoodAdapter();
-        mFoodMode = new FoodMode();
-        mTableMode = new TableMode();
         initCate();
         initTab();
     }
@@ -184,21 +189,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     @Override
     public void setData(Object object) {
 
-    }
-
-    /**
-     * 初始化进度加载框
-     *
-     * @param isShow 是否显示
-     */
-    private void initLoading(boolean isShow) {
-        if (isShow) {
-            loadingParent.setVisibility(View.VISIBLE);
-            contextParent.setVisibility(View.GONE);
-        } else {
-            loadingParent.setVisibility(View.GONE);
-            contextParent.setVisibility(View.VISIBLE);
-        }
     }
 
     /**
@@ -219,6 +209,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 初始化头部Tab适配器
      */
     private void initTabAdapter() {
+        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
+                getContext().getResources().getString(R.string.loading));
         mTabTableAdapter = new TabTableAdapter(getContext(), null);
         mTabTableAdapter.setOnItemClickListener(this);
         LinearLayoutManager mLayoutManager =
@@ -278,7 +270,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             Bean<CateBean> bean = response.body();
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
-                    initLoading(false);
                     loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
                     /**加载成功*/
                     defaultItem = bean.getResult().getDefaultCate();//设置默认显示
@@ -286,6 +277,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                     mCatesAdapter.notifyDataSetChanged(bean.getResult().getCates());
                     /**请求默认*/
                     initFood(bean.getResult().getCates().get(defaultItem).getId());
+
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                             getContext().getResources().getString(R.string.loadingFail));
@@ -337,7 +329,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**菜品请求成功*/
                 /**处理适配数据*/
-                foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList,bean.getResult());
+
+                foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
                 mFoodAdapter.notifyDataSetChanged(foodList);
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
@@ -538,8 +531,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     public void refreshFoodBus(RefreshFoodEvent event) {
         if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
             onItemClick(null, currBean, currPosition);
-        }else if (event.getType() == RefreshFoodEvent.MINUS_FOOD){
-            mFoodAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refreshFood(event.getBean(),foodList));
+        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+            mFoodAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         }
     }
 
