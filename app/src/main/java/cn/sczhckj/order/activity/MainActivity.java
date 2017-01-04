@@ -32,6 +32,7 @@ import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
+import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.constant.Constant;
@@ -247,7 +248,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         if (mBillFragment == null) {
             mBillFragment = new BillFragment();
             transaction.add(R.id.cart_area, mBillFragment);
-        }else {
+        } else {
             mBillFragment.setData(null);
         }
         hideLeftFragment(transaction);
@@ -263,7 +264,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         if (mFavorableFragment == null) {
             mFavorableFragment = new FavorableFragment();
             transaction.add(R.id.cart_area, mFavorableFragment);
-        }else {
+        } else {
             mFavorableFragment.setData(null);
         }
         hideLeftFragment(transaction);
@@ -304,11 +305,17 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     /**
      * 初始化右侧-菜品详情
      */
-    private void initDetailsFragment() {
+    private void initDetailsFragment(FoodBean bean,List<FoodBean> mList) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (mDetailsFragment == null) {
             mDetailsFragment = new DetailsFragment();
+            mDetailsFragment.setFoodBean(bean);
+            mDetailsFragment.setBeanList(mList);
             transaction.add(R.id.content_area, mDetailsFragment);
+        }else {
+            mDetailsFragment.setFoodBean(bean);
+            mDetailsFragment.setBeanList(mList);
+            mDetailsFragment.setData(null);
         }
         hideRightFragment(transaction);
         transaction.show(mDetailsFragment);
@@ -323,7 +330,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         if (mCardFragment == null) {
             mCardFragment = new CardFragment();
             transaction.add(R.id.content_area, mCardFragment);
-        }else {
+        } else {
             mCardFragment.setData(null);
         }
         hideRightFragment(transaction);
@@ -571,9 +578,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 rightTag = FRAGMENT_DETAILS;
                 /**进入菜品详情*/
                 tableInfoParent.setVisibility(View.GONE);
-                initDetailsFragment();
-                mDetailsFragment.setFoodBean(event.getBean());
-                mDetailsFragment.setBeanList(event.getBeanList());
+                initDetailsFragment(event.getBean(),event.getBeanList());
                 break;
             case SwitchViewEvent.DISHES_DETAILS_OUT:
                 leftTag = CART_DISHES;
@@ -594,19 +599,18 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 break;
             case SwitchViewEvent.FAVORABLE_OUT:
                 /**更多优惠退出*/
-                if (leftTag == CART_DISHES){
+                if (leftTag == CART_DISHES) {
                     initCartFragment();
-                }else {
+                } else {
                     initBillFragment();
                 }
-                if (rightTag == FRAGMENT_REQUIRED){
+                if (rightTag == FRAGMENT_REQUIRED) {
                     initRequiredFragment();
-                }else if (rightTag == FRAGMENT_DETAILS){
-                    initDetailsFragment();
-                }else {
+                } else if (rightTag == FRAGMENT_DETAILS) {
+                    initDetailsFragment(event.getBean(),event.getBeanList());
+                } else {
                     initMainFragment();
                 }
-
                 break;
             case SwitchViewEvent.FAVORABLE_CARD:
                 /**办卡*/

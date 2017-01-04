@@ -54,6 +54,10 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
      * 台桌信息获取
      */
     private TableMode mTableMode;
+    /**
+     * WebSocket实现
+     */
+    private WebSocketImpl mWebSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +164,7 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
      * 注册WebSocket
      */
     private void regsWebSocket() {
-        WebSocketImpl mWebSocket = new WebSocketImpl();
+        mWebSocket = new WebSocketImpl();
         mWebSocket.push(Config.URL_LOCK_SERVICE + AppSystemUntil.getAndroidID(this), this);
     }
 

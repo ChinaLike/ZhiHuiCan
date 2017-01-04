@@ -327,6 +327,8 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             T.showShort(getContext(), bean.getMessage());
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
 //                finish();
+            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+                T.showShort(getContext(), bean.getMessage());
             }
         }
 

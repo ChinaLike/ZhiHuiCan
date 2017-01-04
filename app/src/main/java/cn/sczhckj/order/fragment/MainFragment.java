@@ -230,18 +230,24 @@ public class MainFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.main_order:
                 index = 0;
-                initOrderFragment();
-                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_ORDER));
+                if (index != current) {
+                    initOrderFragment();
+                    EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_ORDER));
+                }
                 break;
             case R.id.main_service:
                 index = 1;
-                initServiceFragment();
-                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_SERVICE));
+                if (index != current) {
+                    initServiceFragment();
+                    EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_SERVICE));
+                }
                 break;
             case R.id.main_settle_accounts:
                 index = 2;
-                initBillFragment();
-                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_BILL));
+                if (index != current) {
+                    initBillFragment();
+                    EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_BILL));
+                }
                 break;
             case R.id.main_alone_order:
                 /**单桌点菜*/
@@ -254,10 +260,9 @@ public class MainFragment extends BaseFragment {
                 showOrderType(Constant.DIS_SHOW_TYPE);
                 break;
         }
-
-        imageViews[index].setSelected(true);
-        textViews[index].setSelected(true);
         if (index != current) {
+            imageViews[index].setSelected(true);
+            textViews[index].setSelected(true);
             imageViews[current].setSelected(false);
             textViews[current].setSelected(false);
             current = index;

@@ -207,7 +207,13 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
                 GlideLoading.loadingDishes(getContext(), urlList.get(position).getImageUrl(), imageView);
                 TextView context = (TextView) view.findViewById(R.id.context);
-                context.setText(urlList.get(position).getRemark());
+                LinearLayout layout = (LinearLayout) view.findViewById(R.id.context_parent);
+                if (urlList.get(position).getRemark() == null || urlList.get(position).getRemark().equals("")) {
+                    layout.setVisibility(View.GONE);
+                } else {
+                    layout.setVisibility(View.VISIBLE);
+                    context.setText(urlList.get(position).getRemark());
+                }
                 return view;
             }
 
@@ -249,7 +255,6 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     @Override
     public void onResponse(Call<Bean<List<ImageBean>>> call, Response<Bean<List<ImageBean>>> response) {
         Bean<List<ImageBean>> bean = response.body();
-        L.d("======"+bean.getResult().toString());
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             isSuccess = true;
             bannerAdapter(bean.getResult());

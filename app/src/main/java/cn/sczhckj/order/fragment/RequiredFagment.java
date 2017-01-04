@@ -40,6 +40,7 @@ import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +57,6 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     RecyclerView personChoose;
     @Bind(R.id.dishes_choose)
     RecyclerView dishesChoose;
-
     @Bind(R.id.contextParent)
     LinearLayout contextParent;
     @Bind(R.id.loading_title)
@@ -119,7 +119,6 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     private Object currBean;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,8 +137,8 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-            init();
-            initAdapter();
+        init();
+        initAdapter();
     }
 
     @Override
@@ -380,6 +379,11 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
             onItemClick(null, currPosition, currBean);
         } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+            /**减菜*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+        } else if (event.getType() == RefreshFoodEvent.ADD_FOOD) {
+            /**加菜*/
             mFoodAdapter.notifyDataSetChanged(
                     FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         }

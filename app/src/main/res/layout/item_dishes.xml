@@ -3,7 +3,7 @@
     xmlns:beyole="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dishes_parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="122dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="10dp">

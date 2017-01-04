@@ -277,7 +277,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                     mCatesAdapter.notifyDataSetChanged(bean.getResult().getCates());
                     /**请求默认*/
                     initFood(bean.getResult().getCates().get(defaultItem).getId());
-
+                    currPosition = defaultItem;
+                    currBean = bean.getResult().getCates().get(defaultItem);
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                             getContext().getResources().getString(R.string.loadingFail));
@@ -329,7 +330,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**菜品请求成功*/
                 /**处理适配数据*/
-
                 foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
                 mFoodAdapter.notifyDataSetChanged(foodList);
             } else {
@@ -532,7 +532,13 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
             onItemClick(null, currBean, currPosition);
         } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
-            mFoodAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+            /**减菜*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+        } else if (event.getType() == RefreshFoodEvent.ADD_FOOD) {
+            /**加菜*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         }
     }
 

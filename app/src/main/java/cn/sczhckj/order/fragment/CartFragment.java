@@ -130,6 +130,10 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * 单次退菜数量
      */
     private final int COUNT = 1;
+    /**
+     * 是否退菜
+     */
+    private boolean isCommit = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -247,15 +251,19 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * @param isClick
      */
     private void buttonAttr(boolean isClick) {
-        shoppingcartButton.setClickable(isClick);
-        if (isClick) {
-            /**可选状态*/
-            shoppingcartButton.setSelected(false);
-            shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.button_text));
-        } else {
-            /**变为灰色*/
-            shoppingcartButton.setSelected(true);
-            shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color_999999));
+        if (disOrderList.size()>0){
+            shoppingcartButton.setClickable(true);
+        }else {
+            shoppingcartButton.setClickable(isClick);
+            if (isClick) {
+                /**可选状态*/
+                shoppingcartButton.setSelected(false);
+                shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.button_text));
+            } else {
+                /**变为灰色*/
+                shoppingcartButton.setSelected(true);
+                shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color_999999));
+            }
         }
 
         if (!isOpen) {
@@ -296,17 +304,19 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     private List<FoodBean> minusFood(FoodBean bean) {
         int id = bean.getId();
         int cateId = bean.getCateId();
+        List<FoodBean> mList = new ArrayList<>();
+        mList.addAll(disOrderList);
         for (FoodBean item : disOrderList) {
             if (item.getId() == id && item.getCateId() == cateId) {
                 int num = item.getCount();
-                if (num <= 0) {
-                    disOrderList.remove(item);
-                } else {
+                mList.remove(item);
+                if (num > 0) {
                     item.setCount(num);
+                    mList.add(item);
                 }
             }
         }
-        return disOrderList;
+        return mList;
     }
 
     /**
@@ -465,8 +475,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Override
     public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
         Bean<ResponseCommonBean> bean = response.body();
-
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            isCommit = true;
             if (isOpen) {
                 /**已开桌*/
                 T.showShort(getContext(), bean.getMessage());
@@ -549,10 +559,11 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * 购物车中数据转化到已下单中
      */
     private void cartToOrder(List<FoodBean> mList) {
-
         /**把购物车清空*/
         orderList = mList;
-        disOrderList = new ArrayList<>();
+        if (isCommit) {
+            disOrderList = new ArrayList<>();
+        }
         mDisOrderAdapter.notifyDataSetChanged(disOrderList);
         initCart(disOrderList);
         mOrderAdapter.notifyDataSetChanged(orderList);
@@ -631,6 +642,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * @param bean
      */
     private void refund(final FoodBean bean) {
+        showProgress("退菜中...");
         final RequestCommonBean requestCommonBean = new RequestCommonBean();
         requestCommonBean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
         requestCommonBean.setFoodId(bean.getId());
@@ -643,18 +655,19 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
                 Bean<ResponseCommonBean> rBean = response.body();
                 if (rBean != null && rBean.getCode() == ResponseCode.SUCCESS) {
-                    /**本地刷新*/
-//                    mOrderAdapter.notifyDataSetChanged(FoodRefreshImpl.getInstance().refund(bean, orderList));
+                    isCommit = false;
                     /**调用后台刷新*/
                     initRefresh();
                     baseInfoRefresh();
                 } else {
+                    dismissProgress();
                     T.showShort(getContext(), rBean == null ? "退菜失败" : rBean.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+                dismissProgress();
                 T.showShort(getContext(), "退菜失败");
             }
         });

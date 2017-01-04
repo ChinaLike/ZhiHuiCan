@@ -20,10 +20,12 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
+import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 菜品适配
@@ -110,7 +112,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         holder.dishesImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.DISHES_DETAILS_IN,bean,mList));
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.DISHES_DETAILS_IN, bean, mList));
             }
         });
 
@@ -125,7 +127,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
             holder.dishesCollectIcon.setSelected(false);
             holder.dishesCollect.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
         }
-        /**收藏标识点击事件*/
+        /**点赞标识点击事件*/
         holder.favorParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
