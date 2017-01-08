@@ -42,6 +42,7 @@
             android:name=".activity.LockActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"></activity>
+        <service android:name=".service.HeartService"></service>
     </application>
 
 </manifest>

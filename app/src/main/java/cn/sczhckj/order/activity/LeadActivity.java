@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.service.HeartService;
 
 /**
  * @ Describe:引导界面，提供用户VIP登录，用户可选择登录，也可不选择登录，不登录路直接跳转选菜界面，如果
@@ -34,6 +35,7 @@ public class LeadActivity extends Activity {
     ProgressBar leadProgress;
     @Bind(R.id.lead_isVip)
     TextView leadIsVip;
+
 
 
     @Override
@@ -102,6 +104,11 @@ public class LeadActivity extends Activity {
         initButton(right, false);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     /**
      * 按键状态
      *
@@ -116,5 +123,6 @@ public class LeadActivity extends Activity {
             btn.setTextColor(ContextCompat.getColor(this, R.color.white));
         }
     }
+
 
 }

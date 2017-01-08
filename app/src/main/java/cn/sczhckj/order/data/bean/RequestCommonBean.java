@@ -30,7 +30,7 @@ public class RequestCommonBean {
     private Integer recordId;//消费记录ID
     private Integer count;//退菜数量
     private Integer cardId;//申请卡片类型
-    private String name;//用户姓名
+    private String name;//用户姓名，在后厨端作为菜品名称
     private List<Integer> words;//热词
     private List<EvalItemBean> items;//评价星星
     private Integer awards;//打赏金额

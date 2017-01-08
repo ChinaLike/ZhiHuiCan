@@ -1,11 +1,18 @@
 package cn.sczhckj.order.image;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
+import java.io.OutputStream;
 
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: Glide加载图片
@@ -22,13 +29,28 @@ public class GlideLoading {
      * @param url       图片地址
      * @param imageView 控件
      */
-    public static void loadingDishes(Context mContext, String url, ImageView imageView) {
-        Glide
-                .with(mContext.getApplicationContext())
-                .load(url)
-                .placeholder(R.drawable.order_status_loading)
-                .error(R.drawable.order_status_loadingfaild)
-                .into(imageView);
+    public static void loadingDishes(Context mContext, String url, final ImageView imageView) {
+        if (url == null || "".equals(url)) {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .placeholder(R.drawable.order_status_loading)
+                    .error(R.drawable.order_status_loadingfaild)
+                    .into(imageView);
+        } else {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .asBitmap()
+                    .placeholder(R.drawable.order_status_loading)
+                    .error(R.drawable.order_status_loadingfaild)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+        }
     }
 
     /**
@@ -38,13 +60,28 @@ public class GlideLoading {
      * @param url       地址
      * @param imageView 控件
      */
-    public static void loadingHeader(Context mContext, String url, ImageView imageView) {
-        Glide
-                .with(mContext.getApplicationContext())
-                .load(url)
-                .placeholder(R.drawable.both_btn_login_nor)
-                .error(R.drawable.both_btn_login_faild)
-                .into(imageView);
+    public static void loadingHeader(Context mContext, String url, final ImageView imageView) {
+        if (url == null || "".equals(url)) {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .placeholder(R.drawable.both_btn_login_nor)
+                    .error(R.drawable.both_btn_login_faild)
+                    .into(imageView);
+        } else {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .asBitmap()
+                    .placeholder(R.drawable.both_btn_login_nor)
+                    .error(R.drawable.both_btn_login_faild)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+        }
     }
 
     /**
@@ -54,13 +91,28 @@ public class GlideLoading {
      * @param url       图片地址
      * @param imageView 控件
      */
-    public static void loadingService(Context mContext, String url, ImageView imageView) {
-        Glide
-                .with(mContext.getApplicationContext())
-                .load(url)
-                .placeholder(R.drawable.service_status_loading)
-                .error(R.drawable.service_status_loadingfaild)
-                .into(imageView);
+    public static void loadingService(Context mContext, String url, final ImageView imageView) {
+        if (url == null || "".equals(url)) {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .placeholder(R.drawable.service_status_loading)
+                    .error(R.drawable.service_status_loadingfaild)
+                    .into(imageView);
+        } else {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .asBitmap()
+                    .placeholder(R.drawable.service_status_loading)
+                    .error(R.drawable.service_status_loadingfaild)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+        }
     }
 
 

@@ -187,6 +187,7 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
                 break;
             case R.id.login_set:
                 /**用户设置*/
+
                 break;
             case R.id.login_numberLogin:
                 /**账号登录*/

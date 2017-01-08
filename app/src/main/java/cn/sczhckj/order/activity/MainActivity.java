@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -56,6 +57,7 @@ import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.overwrite.RoundImageView;
+import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
@@ -162,7 +164,11 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     /**
      * 右侧进入前标识
      */
-    private int rightTag = FRAGMENT_REQUIRED;
+    private int rightTag = FRAGMENT_REQUIRED;    /**
+     * 心跳检测
+     */
+    private Intent intent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +178,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         EventBus.getDefault().register(this);
         /**注册WebSocket*/
         connectionWebSocket(AppSystemUntil.getAndroidID(this));
+        startHeart();
         isLogin();
         init();
     }
@@ -385,6 +392,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         Glide.with(getApplicationContext()).pauseRequests();
         /**人数清零*/
         personNumber = 0;
+
+        stopService(intent);
     }
 
     @Override
@@ -395,6 +404,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
         disposeIntent();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -626,4 +636,20 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     }
 
+    /**
+     * 开启心跳
+     */
+    private void startHeart() {
+        intent = new Intent(MainActivity.this, HeartService.class);
+        startService(intent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            //监控/拦截/屏蔽返回键
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

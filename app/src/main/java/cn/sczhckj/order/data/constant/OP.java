@@ -133,6 +133,12 @@ public interface OP {
      */
     String PUSH_BILL_FINISH = "billFinish";
 
+
+    /**
+     * APP推送 心跳
+     */
+    String PUSH_HEART = "heart";
+
     /**
      * 获取结账清单
      */

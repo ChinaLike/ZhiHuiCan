@@ -113,6 +113,7 @@ public class MainFragment extends BaseFragment {
             current = index;
         }
         init();
+        setBottomBtn(false);
     }
 
     @Override
@@ -207,6 +208,7 @@ public class MainFragment extends BaseFragment {
             mainHintChoose.setVisibility(View.VISIBLE);
             mainBottomViewPager.setVisibility(View.GONE);
         } else {
+            setBottomBtn(true);
             mainHintChoose.setVisibility(View.GONE);
             mainBottomViewPager.setVisibility(View.VISIBLE);
             initOrderFragment();
@@ -251,11 +253,13 @@ public class MainFragment extends BaseFragment {
                 break;
             case R.id.main_alone_order:
                 /**单桌点菜*/
+                setBottomBtn(true);
                 orderType = Constant.ORDER_TYPE_ALONE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
                 break;
             case R.id.main_merger_order:
                 /**并卓点餐*/
+                setBottomBtn(true);
                 orderType = Constant.ORDER_TYPE_MERGE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
                 break;
@@ -268,6 +272,17 @@ public class MainFragment extends BaseFragment {
             current = index;
         }
 
+    }
+
+    /**
+     * 设置底部菜单是否可点击
+     *
+     * @param isClick
+     */
+    private void setBottomBtn(boolean isClick) {
+        mainOrder.setClickable(isClick);
+        mainService.setClickable(isClick);
+        mainSettleAccounts.setClickable(isClick);
     }
 
     @Override

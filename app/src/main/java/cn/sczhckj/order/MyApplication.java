@@ -5,6 +5,7 @@ import android.app.Application;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.mode.impl.StorageImpl;
+import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.until.show.L;
 
 /**
@@ -57,17 +58,17 @@ public class MyApplication extends Application {
 
     public static void setIsLogin(boolean isLogin) {
         MyApplication.isLogin = isLogin;
-        mStorage.setData(Constant.STORAGR_IS_LOGIN,isLogin);
+        mStorage.setData(Constant.STORAGR_IS_LOGIN, isLogin);
     }
 
     public static void setMemberCode(String memberCode) {
         MyApplication.memberCode = memberCode;
-        mStorage.setData(Constant.STORAGR_MEMBER_CODE,memberCode);
+        mStorage.setData(Constant.STORAGR_MEMBER_CODE, memberCode);
     }
 
     public static void setRecordId(Integer recordId) {
         MyApplication.recordId = recordId;
-        mStorage.setData(Constant.STORAGR_RECORDID,recordId);
+        mStorage.setData(Constant.STORAGR_RECORDID, recordId);
     }
 
     public static void setStatus(int status) {

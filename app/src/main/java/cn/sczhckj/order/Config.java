@@ -28,5 +28,10 @@ public class Config {
      */
     public static String URL_LOCK_SERVICE = "ws://192.168.0.50:8080/pad/ws/lock?username=";
 
+    /**
+     * 心跳检测
+     */
+    public static String URL_HEART_SERVICE = "ws://192.168.0.50:8080/pad/ws/heart?username=";
+
 
 }
