@@ -35,6 +35,10 @@ public class MyApplication extends Application {
      * 台桌状态
      */
     public static int status = Constant.TABLE_STATUS_EMPTY;
+    /**
+     * 菜品过多提醒
+     */
+    public static int foodCountHint;
 
     @Override
     public void onCreate() {
@@ -69,6 +73,11 @@ public class MyApplication extends Application {
     public static void setRecordId(Integer recordId) {
         MyApplication.recordId = recordId;
         mStorage.setData(Constant.STORAGR_RECORDID, recordId);
+    }
+
+    public static void setFoodCountHint(int foodCountHint) {
+        MyApplication.foodCountHint = foodCountHint;
+        mStorage.setData(Constant.STORAGR_HINT, foodCountHint);
     }
 
     public static void setStatus(int status) {

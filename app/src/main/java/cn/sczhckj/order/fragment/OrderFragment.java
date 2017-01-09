@@ -47,6 +47,7 @@ import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
+import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;

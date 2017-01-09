@@ -5,12 +5,15 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.fragment.BaseFragment;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.T;
@@ -46,18 +49,64 @@ public class FavorImpl {
      */
     public void favor(ImageView favorImg, TextView favorText, FoodBean bean) {
         if (bean.isFavor()) {
-            favorImg.setSelected(false);
-            favorText.setText((bean.getFavors() - 1) + "");
-            bean.setFavors(bean.getFavors() - 1);
-            favorText.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
-            bean.setFavor(false);
+            /**已点赞*/
+//            favorImg.setSelected(false);
+//            favorText.setText((bean.getFavors() - 1) + "");
+//            bean.setFavors(bean.getFavors() - 1);
+//            favorText.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
+//            bean.setFavor(false);
         } else {
+            /**未点赞*/
+            BaseFragment.favorFood.add(bean);
             favorImg.setSelected(true);
             favorText.setText((bean.getFavors() + 1) + "");
             bean.setFavors(bean.getFavors() + 1);
             favorText.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
             bean.setFavor(true);
             initFavor(bean);
+        }
+    }
+
+    /**
+     * 点赞视图处理
+     *
+     * @param imageView 点赞图标
+     * @param textView  点赞数
+     * @param bean      参数
+     */
+    public void favorView(ImageView imageView, TextView textView, FoodBean bean) {
+        int foodId = bean.getId();
+        int catesId = bean.getCateId();
+        imageView.setSelected(false);
+        textView.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
+        for (FoodBean item : BaseFragment.favorFood) {
+            if (foodId == item.getId() && catesId == item.getCateId()) {
+                imageView.setSelected(true);
+                textView.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
+            }
+        }
+    }
+
+    /**
+     * 点赞属性处理
+     *
+     * @param list  获取到的集合
+     * @param mList 已点赞的集合
+     */
+    public static List<FoodBean> favorAttr(List<FoodBean> list, List<FoodBean> mList) {
+        if (mList == null || mList.size() == 0) {
+            return list;
+        } else {
+            for (FoodBean itemP : list) {
+                int foodId = itemP.getId();
+                int catesId = itemP.getCateId();
+                for (FoodBean itemC : mList) {
+                    if (itemC.getId() == foodId && itemC.getCateId() == catesId) {
+                        itemP.setFavor(true);
+                    }
+                }
+            }
+            return list;
         }
     }
 

@@ -18,6 +18,7 @@ public class TableBean {
     private String remark;//消息内容
     private List<Integer> persons;//候选人数
     private Integer recordId;//消费记录ID
+    private Integer foodCountHint;//菜品过多提醒,只有status=3,5,6,7,8有效，其余时候可不返回
 
     public Integer getId() {
         return id;
@@ -83,6 +84,14 @@ public class TableBean {
         this.recordId = recordId;
     }
 
+    public Integer getFoodCountHint() {
+        return foodCountHint;
+    }
+
+    public void setFoodCountHint(Integer foodCountHint) {
+        this.foodCountHint = foodCountHint;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -94,6 +103,7 @@ public class TableBean {
                 ", remark='" + remark + '\'' +
                 ", persons=" + persons +
                 ", recordId=" + recordId +
+                ", foodCountHint=" + foodCountHint +
                 '}';
     }
 }

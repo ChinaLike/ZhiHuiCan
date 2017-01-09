@@ -58,6 +58,10 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
      * WebSocket实现
      */
     private WebSocketImpl mWebSocket;
+    /**
+     * 版本类型0-点菜端 1-后厨端
+     */
+    private final int VERSION_TYPE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,7 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
         initParent.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(this));
+        bean.setType(VERSION_TYPE);
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.DEVICE_UPDATE)
                 .time()
@@ -246,6 +251,8 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 MyApplication.setRecordId(bean.getResult().getRecordId());
                 MyApplication.setStatus(bean.getResult().getStatus());
+                MyApplication.setFoodCountHint(bean.getResult().getFoodCountHint() == null
+                        ? 0 : bean.getResult().getFoodCountHint());
                 initTableStatus(bean.getResult().getStatus(), bean.getResult().getRemark());
                 initText.setText("初始化成功");
             } else {

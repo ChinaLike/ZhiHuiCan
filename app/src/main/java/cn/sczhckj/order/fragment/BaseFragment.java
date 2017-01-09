@@ -76,6 +76,10 @@ public abstract class BaseFragment extends Fragment {
      * 是否加菜
      */
     public static boolean isAddFood = false;
+    /**
+     * 已点赞菜品
+     */
+    public static List<FoodBean> favorFood = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -196,6 +200,8 @@ public abstract class BaseFragment extends Fragment {
         /**设置默认是否加菜*/
         isAddFood = false;
         clearStorage();
+        /**清除已点赞菜品*/
+        favorFood = new ArrayList<>();
     }
 
     @Override
@@ -264,13 +270,14 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * 是否消费中（包括已开桌，上菜中，结账中）
+     *
      * @return
      */
-    protected boolean isConsuming(){
+    protected boolean isConsuming() {
         if (MyApplication.status == Constant.TABLE_STATUS_OPEN
                 || MyApplication.status == Constant.TABLE_STATUS_FOOD
                 || MyApplication.status == Constant.TABLE_STATUS_BILL) {
-            warmPromptNumber = (int) MyApplication.mStorage.getData(Constant.STORAGR_HINT,0);
+            warmPromptNumber = (int) MyApplication.mStorage.getData(Constant.STORAGR_HINT, 0);
             return true;
         } else {
             return false;

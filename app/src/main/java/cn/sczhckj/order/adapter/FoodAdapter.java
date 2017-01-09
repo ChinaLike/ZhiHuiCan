@@ -21,6 +21,7 @@ import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
+import cn.sczhckj.order.fragment.BaseFragment;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
@@ -85,7 +86,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      * @param mList
      */
     public void notifyDataSetChanged(List<FoodBean> mList) {
-        this.mList = mList;
+        this.mList = FavorImpl.favorAttr(mList, BaseFragment.favorFood);
         notifyDataSetChanged();
     }
 

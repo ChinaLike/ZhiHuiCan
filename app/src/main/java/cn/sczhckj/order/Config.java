@@ -8,30 +8,32 @@ package cn.sczhckj.order;
 
 public class Config {
 
+    public static final String IP="192.168.0.50";
+
     /**
      * 主机
      */
-    public static String HOST = "http://192.168.0.50:8080/pad/";
+    public static String HOST = "http://"+IP+":8080/pad/";
 
     /**
      * 菜品完成进度推送
      */
-    public static String URL_FOOD_SERVICE = "ws://192.168.0.50:8080/pad/ws/food?username=";
+    public static String URL_FOOD_SERVICE = "ws://"+IP+":8080/pad/ws/food?username=";
 
     /**
      * 服务终止推送
      */
-    public static String URL_SERVICE_SERVICE = "ws://192.168.0.50:8080/pad/ws/service?username=";
+    public static String URL_SERVICE_SERVICE = "ws://"+IP+":8080/pad/ws/service?username=";
 
     /**
      * 解锁、锁定界面推送
      */
-    public static String URL_LOCK_SERVICE = "ws://192.168.0.50:8080/pad/ws/lock?username=";
+    public static String URL_LOCK_SERVICE = "ws://"+IP+":8080/pad/ws/lock?username=";
 
     /**
      * 心跳检测
      */
-    public static String URL_HEART_SERVICE = "ws://192.168.0.50:8080/pad/ws/heart?username=";
+    public static String URL_HEART_SERVICE = "ws://"+IP+":8080/pad/ws/heart?username=";
 
 
 }

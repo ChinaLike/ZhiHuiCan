@@ -1,6 +1,7 @@
 package cn.sczhckj.order.data.bean;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.sczhckj.order.data.bean.eval.EvalItemBean;
 import cn.sczhckj.order.data.bean.food.CartBean;
@@ -34,6 +35,7 @@ public class RequestCommonBean {
     private List<Integer> words;//热词
     private List<EvalItemBean> items;//评价星星
     private Integer awards;//打赏金额
+    private Integer type;//类型，用于版本检测0-点菜端 1-后厨端
 
     public String getMemberCode() {
         return memberCode;
@@ -195,6 +197,14 @@ public class RequestCommonBean {
         this.awards = awards;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -218,6 +228,8 @@ public class RequestCommonBean {
                 ", words=" + words +
                 ", items=" + items +
                 ", awards=" + awards +
+                ", type=" + type +
                 '}';
     }
+
 }
