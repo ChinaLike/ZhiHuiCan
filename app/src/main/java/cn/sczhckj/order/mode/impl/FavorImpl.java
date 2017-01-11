@@ -5,6 +5,8 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import cn.sczhckj.order.MyApplication;
@@ -13,6 +15,7 @@ import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.fragment.BaseFragment;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.until.AppSystemUntil;
@@ -132,6 +135,7 @@ public class FavorImpl {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null) {
                 T.showShort(mContext, bean.getMessage());
+                EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.FAVOR_FOOD));
             }
         }
 

@@ -532,14 +532,17 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     public void refreshFoodBus(RefreshFoodEvent event) {
         if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
             onItemClick(null, currBean, currPosition);
-        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD && event.getFrom() != RefreshFoodEvent.FROM_FOOD) {
             /**减菜*/
             mFoodAdapter.notifyDataSetChanged(
                     FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
-        } else if (event.getType() == RefreshFoodEvent.ADD_FOOD) {
+        } else if (event.getType() == RefreshFoodEvent.ADD_FOOD && event.getFrom() != RefreshFoodEvent.FROM_FOOD) {
             /**加菜*/
             mFoodAdapter.notifyDataSetChanged(
                     FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+        }else if (event.getType() == RefreshFoodEvent.FAVOR_FOOD){
+            /**点赞*/
+            onItemClick(null, currBean, currPosition);
         }
     }
 

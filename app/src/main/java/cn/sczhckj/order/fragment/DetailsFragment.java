@@ -233,11 +233,11 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
                 break;
             case R.id.details_dishes_minus:
                 /**减菜*/
-                mFoodControl.minusFood(dishesMinus, detailsDishesNumber, mFoodBean);
+                mFoodControl.minusFood(dishesMinus, detailsDishesNumber, mFoodBean,RefreshFoodEvent.FROM_DETAILS);
                 break;
             case R.id.details_dishes_add:
                 /**加菜*/
-                mFoodControl.addFood(dishesAdd, detailsDishesNumber, mFoodBean, beanList);
+                mFoodControl.addFood(dishesAdd, detailsDishesNumber, mFoodBean, beanList,RefreshFoodEvent.FROM_DETAILS);
                 break;
             case R.id.details_back:
                 /**返回*/

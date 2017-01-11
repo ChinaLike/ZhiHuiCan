@@ -2,8 +2,6 @@ package cn.sczhckj.order.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -20,7 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -29,7 +26,6 @@ import butterknife.OnClick;
 import cn.sczhckj.order.Config;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.adapter.ViewPagerAdapter;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
@@ -40,7 +36,6 @@ import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
-import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.listener.OnTableListenner;
 import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
@@ -154,9 +149,13 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private int personCount = 0;
     /**
-     * 通过WebSocket与客户端建立连接
+     * 通过WebSocket与客户端建立连接（菜品）
      */
-    private WebSocketImpl mWebSocket;
+    private WebSocketImpl mFoodWebSocket;
+    /**
+     * 通过WebSocket与客户端建立连接（服务）
+     */
+    private WebSocketImpl mServiceWebSocket;
     /**
      * 左侧进入前标识
      */
@@ -164,7 +163,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     /**
      * 右侧进入前标识
      */
-    private int rightTag = FRAGMENT_REQUIRED;    /**
+    private int rightTag = FRAGMENT_REQUIRED;
+    /**
      * 心跳检测
      */
     private Intent intent;
@@ -226,11 +226,12 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 与服务器通过WebSocket连接
      */
     private void connectionWebSocket(String deviceId) {
-        mWebSocket = new WebSocketImpl();
+        mFoodWebSocket = new WebSocketImpl();
         /**连接菜品完成推送*/
-        mWebSocket.push(Config.URL_FOOD_SERVICE + deviceId, this);
+        mFoodWebSocket.push(Config.URL_FOOD_SERVICE + deviceId, this);
+        mServiceWebSocket = new WebSocketImpl();
         /**完成服务终止推送*/
-        mWebSocket.push(Config.URL_SERVICE_SERVICE + deviceId, this);
+        mServiceWebSocket.push(Config.URL_SERVICE_SERVICE + deviceId, this);
     }
 
     /**
@@ -312,14 +313,14 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     /**
      * 初始化右侧-菜品详情
      */
-    private void initDetailsFragment(FoodBean bean,List<FoodBean> mList) {
+    private void initDetailsFragment(FoodBean bean, List<FoodBean> mList) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (mDetailsFragment == null) {
             mDetailsFragment = new DetailsFragment();
             mDetailsFragment.setFoodBean(bean);
             mDetailsFragment.setBeanList(mList);
             transaction.add(R.id.content_area, mDetailsFragment);
-        }else {
+        } else {
             mDetailsFragment.setFoodBean(bean);
             mDetailsFragment.setBeanList(mList);
             mDetailsFragment.setData(null);
@@ -527,7 +528,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Override
     public void onClose(int code, String reason) {
         /**断开后尝试再次连接*/
-//        connectionWebSocket(AppSystemUntil.getAndroidID(this));
+        mServiceWebSocket.reConnection();
+        mFoodWebSocket.reConnection();
     }
 
     @Override
@@ -588,7 +590,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 rightTag = FRAGMENT_DETAILS;
                 /**进入菜品详情*/
                 tableInfoParent.setVisibility(View.GONE);
-                initDetailsFragment(event.getBean(),event.getBeanList());
+                initDetailsFragment(event.getBean(), event.getBeanList());
                 break;
             case SwitchViewEvent.DISHES_DETAILS_OUT:
                 leftTag = CART_DISHES;
@@ -617,7 +619,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 if (rightTag == FRAGMENT_REQUIRED) {
                     initRequiredFragment();
                 } else if (rightTag == FRAGMENT_DETAILS) {
-                    initDetailsFragment(event.getBean(),event.getBeanList());
+                    initDetailsFragment(event.getBean(), event.getBeanList());
                 } else {
                     initMainFragment();
                 }
@@ -646,7 +648,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             //监控/拦截/屏蔽返回键
             return false;
         }

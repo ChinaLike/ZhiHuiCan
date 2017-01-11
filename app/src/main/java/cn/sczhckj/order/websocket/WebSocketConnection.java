@@ -139,7 +139,9 @@ public class WebSocketConnection implements WebSocket {
 
 
     public void sendTextMessage(String payload) {
-        mWriter.forward(new WebSocketMessage.TextMessage(payload));
+        if (mWriter != null && payload != null) {
+            mWriter.forward(new WebSocketMessage.TextMessage(payload));
+        }
     }
 
 

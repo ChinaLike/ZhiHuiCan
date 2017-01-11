@@ -16,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.overwrite.RoundImageView;
@@ -79,7 +80,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
             setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund, bean);
         } else if (type == DIS_ORDER_TYPE) {
             holder.cartDishesRefund.setImageResource(R.drawable.open_btn_dishes_reduce);
-            mFoodControl.minusFood(holder.cartDishesRefund, bean);
+            mFoodControl.minusFood(holder.cartDishesRefund, bean, RefreshFoodEvent.FROM_CART);
         }
     }
 

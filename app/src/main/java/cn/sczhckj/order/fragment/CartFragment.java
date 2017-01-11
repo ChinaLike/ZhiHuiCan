@@ -489,6 +489,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 /**设置消费记录ID*/
                 MyApplication.setRecordId(bean.getResult().getRecordId());
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.MAIN, bean.getResult().getShowType()));
+                isOpen = true;
             }
             /**刷新购物车数据*/
             initRefresh();
@@ -512,7 +513,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
             Bean<List<FoodBean>> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                isOpen = true;
                 /**关闭进度框*/
                 dismissProgress();
                 cartToOrder(bean.getResult());

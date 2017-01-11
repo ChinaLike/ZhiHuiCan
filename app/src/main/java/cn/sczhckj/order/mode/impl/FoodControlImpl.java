@@ -51,7 +51,7 @@ public class FoodControlImpl {
      * @param bean      菜品数据
      * @param mList     该分类所有菜目
      */
-    public void addFood(ImageView addImg, final TextView countText, final FoodBean bean, final List<FoodBean> mList) {
+    public void addFood(ImageView addImg, final TextView countText, final FoodBean bean, final List<FoodBean> mList, final int from) {
         addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +60,7 @@ public class FoodControlImpl {
                     maxDialog();
                 } else {
                     /**总数未超标，验证单个菜品数量是否超标*/
-                    isOverProof(bean, countText);
+                    isOverProof(bean, countText, from);
                 }
             }
         });
@@ -73,7 +73,7 @@ public class FoodControlImpl {
      * @param countText 数量显示文本
      * @param bean      菜品数据
      */
-    public void minusFood(ImageView minusImg, final TextView countText, final FoodBean bean) {
+    public void minusFood(ImageView minusImg, final TextView countText, final FoodBean bean, final int from) {
         minusImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +84,7 @@ public class FoodControlImpl {
                     number--;
                     bean.setCount(number);
                     countText.setText(number + "");
-                    EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.MINUS_FOOD, bean));
+                    EventBus.getDefault().post(new RefreshFoodEvent(from, RefreshFoodEvent.MINUS_FOOD, bean));
                 }
             }
         });
@@ -96,7 +96,7 @@ public class FoodControlImpl {
      * @param minusImg 减少按钮
      * @param bean     参数对象
      */
-    public void minusFood(ImageView minusImg, final FoodBean bean) {
+    public void minusFood(ImageView minusImg, final FoodBean bean, final int from) {
         minusImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +105,7 @@ public class FoodControlImpl {
                     BaseFragment.isAddFood = false;
                     number--;
                     bean.setCount(number);
-                    EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.MINUS_FOOD, bean));
+                    EventBus.getDefault().post(new RefreshFoodEvent(from, RefreshFoodEvent.MINUS_FOOD, bean));
                 }
             }
         });
@@ -162,11 +162,11 @@ public class FoodControlImpl {
     /**
      * 判断锅底是否超过标准
      */
-    private void isOverProof(FoodBean bean, TextView countText) {
+    private void isOverProof(FoodBean bean, TextView countText, int from) {
         /**判断最大数量，如果是0，则不限制点菜*/
         if (bean.getMaximum() == null || bean.getMaximum() == Constant.FOOD_DISASTRICT) {
             /**不限制数量*/
-            setAddDishes(bean, countText);
+            setAddDishes(bean, countText, from);
         } else {
             if (bean.getCount() >= bean.getMaximum()) {
                 /**限制数量*/
@@ -174,7 +174,7 @@ public class FoodControlImpl {
                         mContext.getResources().getString(R.string.dialog_context),
                         mContext.getResources().getString(R.string.dialog_cacel)).show();
             } else {
-                setAddDishes(bean, countText);
+                setAddDishes(bean, countText, from);
             }
         }
     }
@@ -185,14 +185,14 @@ public class FoodControlImpl {
      * @param bean
      * @param countText
      */
-    private void setAddDishes(FoodBean bean, TextView countText) {
+    private void setAddDishes(FoodBean bean, TextView countText, int from) {
         BaseFragment.isAddFood = true;
         int number = bean.getCount();
         number++;
         bean.setCount(number);
         countText.setText(number + "");
         /**发送广播，让购物车、必选菜品、下单点餐界面处理数据*/
-        EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.ADD_FOOD, bean));
+        EventBus.getDefault().post(new RefreshFoodEvent(from, RefreshFoodEvent.ADD_FOOD, bean));
     }
 
     /**

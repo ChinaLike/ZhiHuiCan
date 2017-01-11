@@ -43,7 +43,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mWebSocket.push(Config.URL_HEART_SERVICE+AppSystemUntil.getAndroidID(getApplicationContext()), this);
+        mWebSocket.push(Config.URL_HEART_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
         sendMessage(mWebSocket);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -76,10 +76,10 @@ public class HeartService extends Service implements OnWebSocketListenner {
         long time = System.currentTimeMillis();
         JSONObject object = new JSONObject();
         try {
-            object.put("op", OP.PUSH_HEART+"");
-            object.put("time", time+"");
+            object.put("op", OP.PUSH_HEART + "");
+            object.put("time", time + "");
             JSONObject params = new JSONObject();
-            params.put("deviceId", AppSystemUntil.getAndroidID(getApplicationContext())+"");
+            params.put("deviceId", AppSystemUntil.getAndroidID(getApplicationContext()) + "");
             object.put("params", params);
             return object.toString();
         } catch (JSONException e) {
@@ -95,6 +95,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onClose(int code, String reason) {
+        mWebSocket.reConnection();
     }
 
     @Override

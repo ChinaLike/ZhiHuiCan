@@ -45,6 +45,8 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
     TextView initText;
     @Bind(R.id.init_parent)
     RelativeLayout initParent;
+    @Bind(R.id.deviceid)
+    TextView deviceid;
 
     /**
      * 版本管理
@@ -68,14 +70,21 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
         ButterKnife.bind(this);
+        /**显示设备ID*/
+        deviceid.setText("设备ID：" + AppSystemUntil.getAndroidID(this));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         init();
     }
 
     private void init() {
+        initText.setText("数据初始化中...");
         mTableMode = new TableMode();
         mVersionManager = new VersionManager(InitActivity.this);
         regsWebSocket();
-        getVersion();
     }
 
     /**
@@ -180,12 +189,13 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
 
     @Override
     public void onClose(int code, String reason) {
-
+        initText.setText("初始化失败，点击重新初始化...");
     }
 
     @Override
     public void onOpen() {
-
+        /**当WebSocket连接成功时在获取版本信息*/
+        getVersion();
     }
 
     @Override
@@ -215,7 +225,8 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
 
     @OnClick(R.id.init_parent)
     public void onClick() {
-        getVersion();
+        initText.setText("数据初始化中...");
+        mWebSocket.reConnection();
     }
 
     @Override

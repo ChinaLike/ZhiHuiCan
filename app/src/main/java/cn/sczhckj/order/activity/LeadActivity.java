@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -14,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.service.HeartService;
+import cn.sczhckj.order.until.AppSystemUntil;
 
 /**
  * @ Describe:引导界面，提供用户VIP登录，用户可选择登录，也可不选择登录，不登录路直接跳转选菜界面，如果
@@ -37,13 +38,13 @@ public class LeadActivity extends Activity {
     TextView leadIsVip;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
         disposeIntent();
+
     }
 
     /**
@@ -124,5 +125,13 @@ public class LeadActivity extends Activity {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //监控/拦截/屏蔽返回键
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 }

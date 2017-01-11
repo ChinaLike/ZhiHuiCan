@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.fragment.BaseFragment;
@@ -93,6 +94,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
     @Override
     public void onBindViewHolder(final DishesHolder holder, int position) {
         final FoodBean bean = mList.get(position);
+        L.d("food details:" + bean.toString());
         /**菜品缩略图*/
         GlideLoading.loadingDishes(mContext, bean.getImageUrl(), holder.dishesImage);
         /**菜品名字*/
@@ -106,9 +108,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         /**默认菜品*/
         holder.dishesNumber.setText(bean.getCount() + "");
         /**菜品减少*/
-        mFoodControl.minusFood(holder.dishesMinus, bean);
+        mFoodControl.minusFood(holder.dishesMinus, holder.dishesNumber, bean, RefreshFoodEvent.FROM_FOOD);
         /**菜品添加*/
-        mFoodControl.addFood(holder.dishesAdd, holder.dishesNumber, bean, mList);
+        mFoodControl.addFood(holder.dishesAdd, holder.dishesNumber, bean, mList, RefreshFoodEvent.FROM_FOOD);
         /**点击菜品图片进入详情*/
         holder.dishesImage.setOnClickListener(new View.OnClickListener() {
             @Override

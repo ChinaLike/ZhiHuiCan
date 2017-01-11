@@ -182,18 +182,22 @@ public abstract class BaseFragment extends Fragment {
         getActivity().finish();
         /**设置为未登录模式*/
         MyApplication.setIsLogin(false);
+        /**清空用户编码记录*/
+        MyApplication.setMemberCode(null);
+        /**消费记录ID*/
+        MyApplication.setRecordId(null);
+        /**设置台桌状态*/
+        MyApplication.setStatus(Constant.TABLE_STATUS_EMPTY);
+        /**设置菜品过多提醒*/
+        MyApplication.setFoodCountHint(0);
         /**人数清零*/
         MainActivity.personNumber = 0;
         /**设置默认点餐为单桌点餐*/
         orderType = Constant.ORDER_TYPE_ALONE;
-        /**清空用户编码记录*/
-        MyApplication.setMemberCode(null);
         /**设置菜品过多界线*/
         warmPromptNumber = 0;
         /**是否开桌*/
         isOpen = false;
-        /**消费记录ID*/
-        MyApplication.setRecordId(null);
         /**清空购物车数据*/
         orderList = new ArrayList<>();
         disOrderList = new ArrayList<>();

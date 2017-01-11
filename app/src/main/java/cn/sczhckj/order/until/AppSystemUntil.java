@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.view.WindowManager;
 
+import cn.sczhckj.order.until.show.L;
+
 /**
  * @ Describe:获取系统有关数据
  * Created by Like on 2016/11/3.
@@ -36,8 +38,8 @@ public class AppSystemUntil {
      * @return
      */
     public static String getAndroidID(Context mContext) {
-//        return Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
-        return "1234567890";
+        String deviceID = Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
+        return deviceID;
     }
 
     /**
