@@ -10,13 +10,15 @@ public class VersionBean {
 
     private Integer code;//版本号
 
-    private String name;//版本名字
+    private String name;//APK名称
 
     private String size;//版本大小
 
     private String content;//版本更新内容
 
     private String url;//版本更新下载地址
+
+    private String version;//版本
 
     public Integer getCode() {
         return code;
@@ -58,6 +60,14 @@ public class VersionBean {
         this.url = url;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -66,6 +76,7 @@ public class VersionBean {
                 ", size='" + size + '\'' +
                 ", content='" + content + '\'' +
                 ", url='" + url + '\'' +
+                ", version='" + version + '\'' +
                 '}';
     }
 }

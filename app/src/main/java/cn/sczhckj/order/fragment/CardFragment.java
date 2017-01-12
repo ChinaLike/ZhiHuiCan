@@ -122,9 +122,9 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
      */
     private void initFavor() {
         loading(loadingParent, contentParent, loadingItemParent, loadingFail, loadingTitle,
-                getContext().getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.loading));
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         mCardMode.info(bean, this);
     }
@@ -226,14 +226,14 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
             loadingWeb(url);
         } else {
             loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<CardInfoBean>> call, Throwable t) {
         loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
-                getContext().getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.loadingFail));
     }
 
     /**
@@ -246,7 +246,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 applyForVipCardConfirm.setText("确定");
                 applyForVipCardConfirm.setClickable(true);
-                T.showShort(getContext(), bean.getMessage());
+                T.showShort(mContext, bean.getMessage());
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.FAVORABLE_OUT));
             } else {
                 applyForVipCardConfirm.setText("提交失败，点击重新提交");

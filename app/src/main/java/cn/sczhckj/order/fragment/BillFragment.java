@@ -165,7 +165,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     private void initBillAdapter() {
         //设置 属性 GroupIndicator 去掉默认向下的箭头
         cartBillList.setGroupIndicator(null);
-        mSettleAccountsAdapter = new SettleAccountsAdapter(getContext(), mList);
+        mSettleAccountsAdapter = new SettleAccountsAdapter(mContext, mList);
         cartBillList.setAdapter(mSettleAccountsAdapter);
     }
 
@@ -173,10 +173,10 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      * 初始化打赏适配器
      */
     private void initTipAdapter() {
-        mTipAdapter = new TipAdapter(getContext(), null);
+        mTipAdapter = new TipAdapter(mContext, null);
         mTipAdapter.setOnItemClickListener(this);
         //设置布局管理器
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         cartTip.setLayoutManager(linearLayoutManager);
         cartTip.setAdapter(mTipAdapter);
@@ -187,9 +187,9 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      */
     private void initBill() {
         loading(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingTitle,
-                getContext().getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.loading));
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         bean.setRecordId(MyApplication.recordId);
         mBillMode.bill(bean, this);
@@ -200,7 +200,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      */
     private void initTip() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         mBillMode.awards(bean, awardsCallback);
     }
@@ -210,7 +210,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      */
     private void initCommit() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         bean.setRecordId(MyApplication.recordId);
         bean.setAwards(awards);
@@ -221,8 +221,8 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      * 初始化更多优惠的位置
      */
     private void initFavorableLocation() {
-        cartFavorable.setTranslationX((float) (AppSystemUntil.width(getContext()) * 0.25));
-        cartFavorable.setTranslationY(ConvertUtils.dip2px(getContext(), -8));
+        cartFavorable.setTranslationX((float) (AppSystemUntil.width(mContext) * 0.25));
+        cartFavorable.setTranslationY(ConvertUtils.dip2px(mContext, -8));
     }
 
     /**
@@ -255,12 +255,6 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
     @OnClick({R.id.shoppingcart_button, R.id.cart_favorable, R.id.loadingParent})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -289,14 +283,14 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             mSettleAccountsAdapter.notifyDataSetChanged(mList);
         } else {
             loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<List<BillBean>>> call, Throwable t) {
         loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
-                getContext().getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.loadingFail));
     }
 
     /**
@@ -324,17 +318,17 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         @Override
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
-            T.showShort(getContext(), bean.getMessage());
+            T.showShort(mContext, bean.getMessage());
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
 //                finish();
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-                T.showShort(getContext(), bean.getMessage());
+                T.showShort(mContext, bean.getMessage());
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-            T.showShort(getContext(), "结账失败，请重新提交");
+            T.showShort(mContext, "结账失败，请重新提交");
         }
     };
 

@@ -84,25 +84,33 @@ public class VersionManager {
      * 提示当前有新版本
      */
     public void updataVersion(final Context mContext, final VersionBean bean) {
-        String context = "当前版本：" + getVersionName(mContext) + "\n最新版本：" + bean.getName() + "\n更新大小：" + bean.getSize() + "M";
+        String context = "当前版本：" + getVersionName(mContext)
+                + "\n最新版本：" + bean.getVersion()
+                + "\n更新大小：" + bean.getSize()
+                + "\n更新内容:" + bean.getContent();
         final MyDialog dialog = new MyDialog(mContext);
         dialog.setTitle("版本更新");
         dialog.setContextText(context);
-        dialog.setNegativeButton("暂不更新", new View.OnClickListener() {
+        dialog.setNegativeButton("马上更新", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downLoadDialog(mContext);
+                downLoadManager.isMkdir();
+                if (bean.getName() == null) {
+                    downLoadManager.retrofitDownload(Config.HOST, bean.getUrl(), FileConstant.APK_NAME, downLoadDialog, mContext);
+                } else {
+                    downLoadManager.retrofitDownload(Config.HOST, bean.getUrl(), bean.getName(), downLoadDialog, mContext);
+                }
+                onDialogClickListener.show();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setPositiveButton("暂不更新", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 onDialogClickListener.dismiss();
-            }
-        });
-
-        dialog.setPositiveButton("马上更新", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downLoadDialog(mContext);
-                downLoadManager.retrofitDownload(Config.HOST,bean.getUrl(), FileConstant.APK_NME, downLoadDialog,mContext);
-                onDialogClickListener.show();
-                dialog.dismiss();
             }
         });
         /**点击外部不能关闭*/

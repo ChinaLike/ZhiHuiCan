@@ -11,7 +11,12 @@ public interface FileConstant {
     /**
      * APK下载
      */
-    String APK_NME = "ZhuiHuiCan.apk";
+    String APK_NAME = "ZhiHuiCan.apk";
+
+    /**
+     * 文件存放的子目录
+     */
+    String PATH = "ZHCDownload/";
 
     /**
      * 数据保存-Share表

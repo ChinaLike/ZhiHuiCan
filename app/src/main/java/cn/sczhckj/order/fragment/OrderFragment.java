@@ -163,17 +163,13 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initPop();
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        init();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        init();
     }
 
     @Override
@@ -196,14 +192,14 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 初始化分类适配器
      */
     private void initCateAdapter() {
-        mCatesAdapter = new CatesAdapter(getContext(), null, defaultItem);
+        mCatesAdapter = new CatesAdapter(mContext, null, defaultItem);
         /**添加Item点击监听*/
         mCatesAdapter.addOnItemClickListener(this);
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager = new LinearLayoutManager(mContext);
         dishesClassify.setLayoutManager(mLinearLayoutManager);
         dishesClassify.setAdapter(mCatesAdapter);
         dishesClassify.addItemDecoration(
-                new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.line_s), 5, 1));
+                new DashlineItemDivider(ContextCompat.getColor(mContext, R.color.line_s), 5, 1));
     }
 
     /**
@@ -211,11 +207,11 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      */
     private void initTabAdapter() {
         loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                getContext().getResources().getString(R.string.loading));
-        mTabTableAdapter = new TabTableAdapter(getContext(), null);
+                mContext.getResources().getString(R.string.loading));
+        mTabTableAdapter = new TabTableAdapter(mContext, null);
         mTabTableAdapter.setOnItemClickListener(this);
         LinearLayoutManager mLayoutManager =
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         dishesTab.setLayoutManager(mLayoutManager);
         dishesTab.setAdapter(mTabTableAdapter);
     }
@@ -224,11 +220,11 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 初始化菜品适配器
      */
     private void initFoodAdapter() {
-        mFoodAdapter = new FoodAdapter(getContext(), null);
-        dishesShow.setLayoutManager(new LinearLayoutManager(getContext()));
+        mFoodAdapter = new FoodAdapter(mContext, null);
+        dishesShow.setLayoutManager(new LinearLayoutManager(mContext));
         dishesShow.setAdapter(mFoodAdapter);
         dishesShow.addItemDecoration(
-                new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.line_s), 100000, 1));
+                new DashlineItemDivider(ContextCompat.getColor(mContext, R.color.line_s), 100000, 1));
     }
 
     /**
@@ -236,7 +232,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      */
     private void initCate() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setOrderType(orderType);
         mFoodMode.cates(bean, cateCallback);
     }
@@ -246,7 +242,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      */
     private void initTab() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setOrderType(RequiredFagment.orderType);
         mTableMode.info(bean, tableInfoCallback);
     }
@@ -256,7 +252,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      */
     private void initFood(int cateId) {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setCateId(cateId);
         bean.setMemberCode(MyApplication.memberCode);
         mFoodMode.foods(bean, foodCallback);
@@ -282,18 +278,18 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                     currBean = bean.getResult().getCates().get(defaultItem);
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            getContext().getResources().getString(R.string.loadingFail));
+                            mContext.getResources().getString(R.string.loadingFail));
                 }
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getContext().getResources().getString(R.string.loadingFail));
+                        mContext.getResources().getString(R.string.loadingFail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<CateBean>> call, Throwable t) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     };
 
@@ -310,14 +306,14 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                 mTabTableAdapter.notifyDataSetChanged(bean.getResult().getTables());
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getContext().getResources().getString(R.string.loadingFail));
+                        mContext.getResources().getString(R.string.loadingFail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<InfoBean>> call, Throwable t) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     };
 
@@ -335,14 +331,14 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                 mFoodAdapter.notifyDataSetChanged(foodList);
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getContext().getResources().getString(R.string.loadingFail));
+                        mContext.getResources().getString(R.string.loadingFail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     };
 
@@ -399,18 +395,19 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
 
     @Override
     public void onItemClick(View view, Object bean, int position) {
-        currPosition = position;
-        currBean = bean;
-        CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
-        /**设置是否必选*/
-        mFoodAdapter.setRequired(itemBean.getRequired());
-        /**设置最大数量*/
-        mFoodAdapter.setMaximum(itemBean.getMaximum());
-        /**设置分类权限*/
-        mFoodAdapter.setCatePermiss(itemBean.getPermiss());
-        move(position);
-        initFood(itemBean.getId());
-
+        if (bean != null) {
+            currPosition = position;
+            currBean = bean;
+            CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
+            /**设置是否必选*/
+            mFoodAdapter.setRequired(itemBean.getRequired());
+            /**设置最大数量*/
+            mFoodAdapter.setMaximum(itemBean.getMaximum());
+            /**设置分类权限*/
+            mFoodAdapter.setCatePermiss(itemBean.getPermiss());
+            move(position);
+            initFood(itemBean.getId());
+        }
     }
 
     /**
@@ -445,8 +442,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 初始化PopWindow
      */
     private void initPop() {
-        popView = LayoutInflater.from(getContext()).inflate(R.layout.pop_more_dishes, null);
-        mPopupWindow = new PopupWindow(popView, ConvertUtils.dip2px(getContext(), POP_WIDTH), ConvertUtils.dip2px(getContext(), POP_HEIGHT), true);
+        popView = LayoutInflater.from(mContext).inflate(R.layout.pop_more_dishes, null);
+        mPopupWindow = new PopupWindow(popView, ConvertUtils.dip2px(mContext, POP_WIDTH), ConvertUtils.dip2px(mContext, POP_HEIGHT), true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setTouchable(true);
         mPopupWindow.setOutsideTouchable(true);
@@ -540,7 +537,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             /**加菜*/
             mFoodAdapter.notifyDataSetChanged(
                     FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
-        }else if (event.getType() == RefreshFoodEvent.FAVOR_FOOD){
+        } else if (event.getType() == RefreshFoodEvent.FAVOR_FOOD) {
             /**点赞*/
             onItemClick(null, currBean, currPosition);
         }

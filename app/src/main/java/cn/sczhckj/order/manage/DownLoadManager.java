@@ -11,10 +11,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.network.DownloadApi;
 import cn.sczhckj.order.helper.DownloadProgressHandler;
 import cn.sczhckj.order.helper.ProgressHelper;
 import cn.sczhckj.order.overwrite.MyDialog;
+import cn.sczhckj.order.until.show.L;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,7 +49,6 @@ public class DownLoadManager {
         DownloadApi retrofit = retrofitBuilder
                 .client(builder.build())
                 .build().create(DownloadApi.class);
-
         ProgressHelper.setProgressHandler(new DownloadProgressHandler() {
             @Override
             protected void onProgress(long bytesRead, long contentLength, boolean done) {
@@ -56,7 +57,7 @@ public class DownLoadManager {
                 dialog.setProgressText(String.format("%1s Kb/%2s Kb", (int) (bytesRead / 1024), (int) (contentLength / 1024)));
                 if (done) {
                     dialog.dismiss();
-                    File file = new File(Environment.getExternalStorageDirectory()+"/Download/", apkName);
+                    File file = new File(Environment.getExternalStorageDirectory()+"/"+ FileConstant.PATH, apkName);
                     autoInstall(mContext,file);
                 }
             }
@@ -68,7 +69,7 @@ public class DownLoadManager {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     InputStream is = response.body().byteStream();
-                    File file = new File(Environment.getExternalStorageDirectory()+"/Download/", apkName);
+                    File file = new File(Environment.getExternalStorageDirectory()+"/"+ FileConstant.PATH, apkName);
                     FileOutputStream fos = new FileOutputStream(file);
                     BufferedInputStream bis = new BufferedInputStream(is);
                     byte[] buffer = new byte[1024];
@@ -96,12 +97,22 @@ public class DownLoadManager {
      * 自动安装
      */
     private void autoInstall(Context mContext, File file) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(android.content.Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file),
-                "application/vnd.android.package-archive");
-        mContext.startActivity(intent);
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(android.content.Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file),
+                    "application/vnd.android.package-archive");
+            mContext.startActivity(intent);
+    }
+
+    /**
+     * 判断文件是否存在，不存在就创建
+     */
+    public void isMkdir(){
+        File file = new File(Environment.getExternalStorageDirectory()+"/"+ FileConstant.PATH);
+        if (!file.exists()){
+            file.mkdir();
+        }
     }
 
 }

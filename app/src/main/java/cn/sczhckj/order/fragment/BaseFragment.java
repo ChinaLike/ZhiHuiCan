@@ -1,5 +1,6 @@
 package cn.sczhckj.order.fragment;
 
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,6 +51,8 @@ public abstract class BaseFragment extends Fragment {
 
     private TextView popLoadingFailText;
 
+    public Context mContext;
+
     /**
      * 分类集合
      */
@@ -84,6 +87,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getContext();
     }
 
     @Nullable

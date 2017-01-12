@@ -104,9 +104,9 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
      * 初始化更多优惠适配器
      */
     private void initAdapter() {
-        mAdapter = new VipFavorableAdapter(null, getContext());
-        favorRecy.setLayoutManager(new LinearLayoutManager(getContext()));
-        favorRecy.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
+        mAdapter = new VipFavorableAdapter(null, mContext);
+        favorRecy.setLayoutManager(new LinearLayoutManager(mContext));
+        favorRecy.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(mContext, R.color.cart_line), 100000, 1));
         favorRecy.setAdapter(mAdapter);
     }
 
@@ -115,9 +115,9 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
      */
     private void initFavor() {
         loading(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingTitle,
-                getContext().getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.loading));
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         mCardMode.info(bean, this);
     }
@@ -151,13 +151,13 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
             mAdapter.notifyDataSetChanged(bean.getResult().getCards());
         } else {
             loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<CardInfoBean>> call, Throwable t) {
         loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
-                getContext().getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.loadingFail));
     }
 }

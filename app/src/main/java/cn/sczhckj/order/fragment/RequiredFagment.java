@@ -153,22 +153,22 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     private void initAdapter() {
         /**Tab栏*/
-        mTabCateAdapter = new TabCateAdapter(getContext(), null);
+        mTabCateAdapter = new TabCateAdapter(mContext, null);
         mTabCateAdapter.setOnItemClickListener(this);
-        LinearLayoutManager tabManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager tabManager = new LinearLayoutManager(mContext);
         tabManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         requiredTab.setLayoutManager(tabManager);
         requiredTab.setAdapter(mTabCateAdapter);
         /**就餐人数选择*/
-        personAdapter = new PersonAdapter(getContext(), null);
-        personChoose.setLayoutManager(new LinearLayoutManager(getContext()));
-        personChoose.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.hint_color_dash), 5, 1, DEFAULT_PERSON));
+        personAdapter = new PersonAdapter(mContext, null);
+        personChoose.setLayoutManager(new LinearLayoutManager(mContext));
+        personChoose.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(mContext, R.color.hint_color_dash), 5, 1, DEFAULT_PERSON));
         personChoose.setAdapter(personAdapter);
         personAdapter.setOnTableListenner(mOnTableListenner);
         /**菜品*/
-        mFoodAdapter = new FoodAdapter(getContext(), null);
-        dishesChoose.setLayoutManager(new LinearLayoutManager(getContext()));
-        dishesChoose.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.line_s), 100000, 1));
+        mFoodAdapter = new FoodAdapter(mContext, null);
+        dishesChoose.setLayoutManager(new LinearLayoutManager(mContext));
+        dishesChoose.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(mContext, R.color.line_s), 100000, 1));
         dishesChoose.setAdapter(mFoodAdapter);
 
     }
@@ -179,11 +179,11 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     private void initTableInfo() {
         RequestCommonBean bean = new RequestCommonBean();
         bean.setUserId(userId);
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         /**获取数据*/
         mTableMode.openInfo(bean, this);
         loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                getContext().getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.loading));
         initTab();
     }
 
@@ -192,7 +192,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     private void initTab() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setOrderType(Constant.ORDER_TYPE_OPEN);
         mFoodMode.cates(bean, cateCallback);
     }
@@ -204,7 +204,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     private void initFood(int cateId) {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setCateId(cateId);
         mFoodMode.foods(bean, foodCallback);
     }
@@ -238,18 +238,18 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                     mTabCateAdapter.notifyDataSetChanged(cateList);
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            getContext().getResources().getString(R.string.loadingFail));
+                            mContext.getResources().getString(R.string.loadingFail));
                 }
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getContext().getResources().getString(R.string.loadingFail));
+                        mContext.getResources().getString(R.string.loadingFail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<CateBean>> call, Throwable t) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     };
 
@@ -267,18 +267,18 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                     mFoodAdapter.notifyDataSetChanged(foodList);
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            getContext().getResources().getString(R.string.loadingFail));
+                            mContext.getResources().getString(R.string.loadingFail));
                 }
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getContext().getResources().getString(R.string.loadingFail));
+                        mContext.getResources().getString(R.string.loadingFail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     };
 
@@ -335,18 +335,18 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                 personAdapter.notifyDataSetChanged(mList);
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getContext().getResources().getString(R.string.loadingFail));
+                       mContext.getResources().getString(R.string.loadingFail));
             }
         } else {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<TableBean>> call, Throwable t) {
         loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                getContext().getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.loadingFail));
     }
 
     /**
@@ -358,14 +358,15 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
      */
     @Override
     public void onItemClick(View view, int position, Object bean) {
-        currPosition = position;
-        currBean = bean;
-        CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
-        mFoodAdapter.setRequired(itemBean.getRequired());
-        mFoodAdapter.setMaximum(itemBean.getMaximum());
-        mFoodAdapter.setCatePermiss(itemBean.getPermiss());
-        initFood(itemBean.getId());
-
+        if (bean != null) {
+            currPosition = position;
+            currBean = bean;
+            CateBean.CateItemBean itemBean = (CateBean.CateItemBean) bean;
+            mFoodAdapter.setRequired(itemBean.getRequired());
+            mFoodAdapter.setMaximum(itemBean.getMaximum());
+            mFoodAdapter.setCatePermiss(itemBean.getPermiss());
+            initFood(itemBean.getId());
+        }
     }
 
 

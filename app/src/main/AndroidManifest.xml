@@ -18,6 +18,7 @@
         android:theme="@style/NotitleTheme">
         <activity
             android:name=".activity.InitActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -26,28 +27,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.HOME" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--<category android:name="android.intent.category.HOME" />-->
             <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".activity.LoginActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.LeadActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.LockActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"></activity>
+
         <service android:name=".service.HeartService"></service>
     </application>
 

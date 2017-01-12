@@ -54,6 +54,7 @@ import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -181,7 +182,16 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         startHeart();
         isLogin();
         init();
+        disposeIntent();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /**Activity重新获取焦点时，开启Glide请求*/
+        Glide.with(getApplicationContext()).resumeRequests();
+    }
+
 
     /**
      * 判断是否登录，登录刷新个人信息
@@ -397,14 +407,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         stopService(intent);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        /**Activity重新获取焦点时，开启Glide请求*/
-        Glide.with(getApplicationContext()).resumeRequests();
 
-        disposeIntent();
-    }
 
 
     @Override

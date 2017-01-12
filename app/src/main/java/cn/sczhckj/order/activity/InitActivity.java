@@ -243,6 +243,8 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
             } else {
                 initTableInfo();
             }
+        } else {
+            initTableInfo();
         }
     }
 

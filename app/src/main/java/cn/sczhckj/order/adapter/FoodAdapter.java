@@ -94,7 +94,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
     @Override
     public void onBindViewHolder(final DishesHolder holder, int position) {
         final FoodBean bean = mList.get(position);
-        L.d("food details:" + bean.toString());
         /**菜品缩略图*/
         GlideLoading.loadingDishes(mContext, bean.getImageUrl(), holder.dishesImage);
         /**菜品名字*/

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +61,22 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
     TextView serviceHint;
     @Bind(R.id.service_call_parent)
     RelativeLayout serviceCallParent;
+    @Bind(R.id.loading_title)
+    TextView loadingTitle;
+    @Bind(R.id.loading_parent)
+    LinearLayout loadingItemParent;
+    @Bind(R.id.loading_fail_title)
+    TextView loadingFailTitle;
+    @Bind(R.id.loading_fail)
+    LinearLayout loadingFail;
+    @Bind(R.id.loadingParent)
+    LinearLayout loadingParent;
+    @Bind(R.id.service_phone)
+    ImageView servicePhone;
+    @Bind(R.id.service_parent)
+    LinearLayout serviceParent;
+    @Bind(R.id.context_parent)
+    RelativeLayout contextParent;
 
     /**
      * 初始化GIF图片
@@ -108,6 +125,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
 
     @Override
     public void init() {
+        loading(loadingParent, contextParent,loadingItemParent,loadingFail,loadingTitle,"正在初始化服务中...");
         initAdapter();
         mServiceMode = new ServiceMode();
         initList();
@@ -141,9 +159,9 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
      * 初始化列表适配器
      */
     private void initAdapter() {
-        mServiceAdapter = new ServiceAdapter(null, getContext());
+        mServiceAdapter = new ServiceAdapter(null, mContext);
         mServiceAdapter.setOnItemClickListener(this);
-        serviceList.setLayoutManager(new GridLayoutManager(getContext(), ROW_COUNT));
+        serviceList.setLayoutManager(new GridLayoutManager(mContext, ROW_COUNT));
         serviceList.setAdapter(mServiceAdapter);
     }
 
@@ -152,7 +170,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
      */
     private void initList() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         mServiceMode.services(bean, this);
     }
 
@@ -177,7 +195,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
      */
     private void callService(int serviceId) {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setServiceId(serviceId);
         mServiceMode.call(bean, requestCommonBeanCallback);
 
@@ -190,26 +208,42 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
      */
     private void cancelService() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         mServiceMode.abort(bean, requestCommonBeanCallback);
     }
 
-    @OnClick(R.id.service_parent)
-    public void onClick() {
-        cancelService();
-        initView(true);
+    @OnClick({R.id.loadingParent,R.id.service_parent})
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.loadingParent:
+                /**重新加载*/
+                initList();
+                break;
+            case R.id.service_parent:
+                /**关闭服务*/
+                cancelService();
+                initView(true);
+                break;
+        }
+
     }
 
     @Override
     public void onResponse(Call<Bean<List<ServiceBean>>> call, Response<Bean<List<ServiceBean>>> response) {
         Bean<List<ServiceBean>> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
             mServiceAdapter.notifyDataSetChanged(bean.getResult());
+        }else {
+            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<List<ServiceBean>>> call, Throwable t) {
+        loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                mContext.getResources().getString(R.string.loadingFail));
     }
 
     @Override
@@ -246,7 +280,7 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (event.getType() == WebSocketEvent.TYPE_SERVICE_COMPLETE) {
-            T.showShort(getContext(), event.getBean().getMessage());
+            T.showShort(mContext, event.getBean().getMessage());
             cancelService();
             initView(true);
         }

@@ -35,6 +35,13 @@ android {
     dexOptions {
         incremental true
     }
+    /**编译成指定名称*/
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.each {
+                output -> output.outputFile = new File(output.outputFile.parent, "ZhiHuiCan"+defaultConfig.versionName+".apk")
+            }
+    }
 
 }
 

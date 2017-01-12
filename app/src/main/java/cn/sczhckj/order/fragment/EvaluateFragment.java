@@ -117,7 +117,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
 
     @Override
     public void init() {
-        mTagCloud = new TagCloudImpl(getContext());
+        mTagCloud = new TagCloudImpl(mContext);
         mEvalMode = new EvalMode();
         initEvaluateAdapter();
     }
@@ -126,8 +126,8 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
      * 初始化评价适配器
      */
     private void initEvaluateAdapter() {
-        mEvalAdapter = new EvalAdapter(getContext(), null);
-        evaluateList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mEvalAdapter = new EvalAdapter(mContext, null);
+        evaluateList.setLayoutManager(new LinearLayoutManager(mContext));
         evaluateList.setAdapter(mEvalAdapter);
     }
 
@@ -136,9 +136,9 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
      */
     private void initEvaluate() {
         loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                getContext().getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.loading));
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         mEvalMode.evalInfo(bean, this);
     }
 
@@ -149,7 +149,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         evaluateFinish.setText("评价提交中...");
         evaluateFinish.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         bean.setWords(wordList);
         bean.setItems(mEvalAdapter.getmList());
@@ -186,14 +186,14 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
             mTagCloud.setWord(wordsCloud, bean.getResult().getWords(), this);
         } else {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getContext().getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.loadingFail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<EvalBean>> call, Throwable t) {
         loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                getContext().getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.loadingFail));
     }
 
     /**
@@ -228,7 +228,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
             wordList.remove(item.getId());
         } else {
             btn.setSelected(true);
-            btn.setTextColor(ContextCompat.getColor(getContext(), R.color.button_text));
+            btn.setTextColor(ContextCompat.getColor(mContext, R.color.button_text));
             wordList.add(item.getId());
         }
     }

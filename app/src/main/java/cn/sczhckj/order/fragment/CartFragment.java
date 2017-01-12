@@ -1,5 +1,7 @@
 package cn.sczhckj.order.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -96,7 +98,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Bind(R.id.disOrder_parent)
     LinearLayout disOrderParent;
 
-
     /**
      * 未下单适配器
      */
@@ -162,7 +163,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Override
     public void init() {
         /**首先把购物车图标置为不可点*/
-        mDialog = new DialogImpl(getContext());
+        mDialog = new DialogImpl(mContext);
         mOrderMode = new OrderMode();
         mTableMode = new TableMode();
         initOrder();
@@ -183,7 +184,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         mOrderAdapter.setType(CartAdapter.ORDER_TYPE);
         cartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
         cartOrder.setAdapter(mOrderAdapter);
-        cartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
+        cartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(mContext, R.color.cart_line), 100000, 1));
     }
 
     /**
@@ -194,15 +195,15 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         mDisOrderAdapter.setType(CartAdapter.DIS_ORDER_TYPE);
         disCartOrder.setLayoutManager(new LinearLayoutManager(getActivity()));
         disCartOrder.setAdapter(mDisOrderAdapter);
-        disCartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(getContext(), R.color.cart_line), 100000, 1));
+        disCartOrder.addItemDecoration(new DashlineItemDivider(ContextCompat.getColor(mContext, R.color.cart_line), 100000, 1));
     }
 
     /**
      * 初始化更多优惠的位置
      */
     private void initFavorableLocation() {
-        cartFavorable.setTranslationX((float) (AppSystemUntil.width(getContext()) * 0.25));
-        cartFavorable.setTranslationY(ConvertUtils.dip2px(getContext(), -8));
+        cartFavorable.setTranslationX((float) (AppSystemUntil.width(mContext) * 0.25));
+        cartFavorable.setTranslationY(ConvertUtils.dip2px(mContext, -8));
     }
 
     /**
@@ -251,18 +252,18 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * @param isClick
      */
     private void buttonAttr(boolean isClick) {
-        if (disOrderList.size()>0){
+        if (disOrderList.size() > 0) {
             shoppingcartButton.setClickable(true);
-        }else {
+        } else {
             shoppingcartButton.setClickable(isClick);
             if (isClick) {
                 /**可选状态*/
                 shoppingcartButton.setSelected(false);
-                shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.button_text));
+                shoppingcartButton.setTextColor(ContextCompat.getColor(mContext, R.color.button_text));
             } else {
                 /**变为灰色*/
                 shoppingcartButton.setSelected(true);
-                shoppingcartButton.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color_999999));
+                shoppingcartButton.setTextColor(ContextCompat.getColor(mContext, R.color.text_color_999999));
             }
         }
 
@@ -361,7 +362,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     private void openTable(String password) {
         showProgress("数据提交中，请稍后...");
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setPassword(password);
         bean.setMemberCode(MyApplication.memberCode);
         bean.setPersonCount(MainActivity.personNumber);
@@ -375,7 +376,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     private void order() {
         showProgress("数据提交中，请稍后...");
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         bean.setRecordId(MyApplication.recordId);
         bean.setFoods(infoSwitch());
@@ -387,7 +388,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     private void initRefresh() {
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.memberCode);
         bean.setRecordId(MyApplication.recordId);
         mOrderMode.refresh(bean, refreshFoodCallback);
@@ -479,7 +480,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             isCommit = true;
             if (isOpen) {
                 /**已开桌*/
-                T.showShort(getContext(), bean.getMessage());
+                T.showShort(mContext, bean.getMessage());
             } else {
                 /**未开桌*//**设置点菜方式*/
                 MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, bean.getResult().getShowType());
@@ -644,7 +645,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     private void refund(final FoodBean bean) {
         showProgress("退菜中...");
         final RequestCommonBean requestCommonBean = new RequestCommonBean();
-        requestCommonBean.setDeviceId(AppSystemUntil.getAndroidID(getContext()));
+        requestCommonBean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         requestCommonBean.setFoodId(bean.getId());
         requestCommonBean.setCateId(bean.getCateId());
         requestCommonBean.setCount(COUNT);
@@ -661,14 +662,14 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                     baseInfoRefresh();
                 } else {
                     dismissProgress();
-                    T.showShort(getContext(), rBean == null ? "退菜失败" : rBean.getMessage());
+                    T.showShort(mContext, rBean == null ? "退菜失败" : rBean.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
                 dismissProgress();
-                T.showShort(getContext(), "退菜失败");
+                T.showShort(mContext, "退菜失败");
             }
         });
     }
@@ -717,5 +718,4 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             mOrderAdapter.notifyDataSetChanged(orderList);
         }
     }
-
 }

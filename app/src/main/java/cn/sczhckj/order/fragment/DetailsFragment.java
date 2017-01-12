@@ -140,10 +140,10 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         dishesLike.setText(mFoodBean.getFavors() + "");
         if (mFoodBean.isFavor()) {
             detailsLike.setSelected(true);
-            dishesLike.setTextColor(ContextCompat.getColor(getContext(), R.color.favor_sel));
+            dishesLike.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
         } else {
             detailsLike.setSelected(false);
-            dishesLike.setTextColor(ContextCompat.getColor(getContext(), R.color.favor_nor));
+            dishesLike.setTextColor(ContextCompat.getColor(mContext, R.color.favor_nor));
         }
         detailsDishesNumber.setText(mFoodBean.getCount() + "");
         initPrices();
@@ -166,17 +166,17 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
      * 初始化价格表
      */
     private void initPrices() {
-        mTagCloud = new TagCloudImpl(getContext());
+        mTagCloud = new TagCloudImpl(mContext);
         mTagCloud.setPrice(detailsFavorableRecycler, mFoodBean.getPrices());
 
     }
 
     @Override
     public void init() {
-        detailsBanner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppSystemUntil.height(getContext()) * 2 / 3));
+        detailsBanner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppSystemUntil.height(mContext) * 2 / 3));
         mFoodMode = new FoodMode();
-        mFavorImpl = new FavorImpl(getContext());
-        mFoodControl = new FoodControlImpl(getContext());
+        mFavorImpl = new FavorImpl(mContext);
+        mFoodControl = new FoodControlImpl(mContext);
 
     }
 
@@ -203,9 +203,9 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
 
             @Override
             public View getView(int position) {
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.item_image, null);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_image, null);
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
-                GlideLoading.loadingDishes(getContext(), urlList.get(position).getImageUrl(), imageView);
+                GlideLoading.loadingDishes(mContext, urlList.get(position).getImageUrl(), imageView);
                 TextView context = (TextView) view.findViewById(R.id.context);
                 LinearLayout layout = (LinearLayout) view.findViewById(R.id.context_parent);
                 if (urlList.get(position).getRemark() == null || urlList.get(position).getRemark().equals("")) {
