@@ -36,6 +36,8 @@ public class RequestCommonBean {
     private List<EvalItemBean> items;//评价星星
     private Integer awards;//打赏金额
     private Integer type;//类型，用于版本检测0-点菜端 1-后厨端
+    private Integer priceTypeID;//价格类型ID
+    private Integer operateID;//操作类型ID，0-普通退菜（平板）1-特权退菜（收银）
 
     public String getMemberCode() {
         return memberCode;
@@ -205,6 +207,22 @@ public class RequestCommonBean {
         this.type = type;
     }
 
+    public Integer getPriceTypeID() {
+        return priceTypeID;
+    }
+
+    public void setPriceTypeID(Integer priceTypeID) {
+        this.priceTypeID = priceTypeID;
+    }
+
+    public Integer getOperateID() {
+        return operateID;
+    }
+
+    public void setOperateID(Integer operateID) {
+        this.operateID = operateID;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -229,7 +247,8 @@ public class RequestCommonBean {
                 ", items=" + items +
                 ", awards=" + awards +
                 ", type=" + type +
+                ", priceTypeID=" + priceTypeID +
+                ", operateID=" + operateID +
                 '}';
     }
-
 }

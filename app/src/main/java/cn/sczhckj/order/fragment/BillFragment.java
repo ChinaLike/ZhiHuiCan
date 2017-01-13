@@ -318,7 +318,9 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         @Override
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
-            T.showShort(mContext, bean.getMessage());
+            if (bean != null && bean.getMessage() != null) {
+                T.showShort(mContext, bean.getMessage());
+            }
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
 //                finish();
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {

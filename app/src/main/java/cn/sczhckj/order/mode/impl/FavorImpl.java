@@ -60,13 +60,19 @@ public class FavorImpl {
 //            bean.setFavor(false);
         } else {
             /**未点赞*/
-            BaseFragment.favorFood.add(bean);
-            favorImg.setSelected(true);
-            favorText.setText((bean.getFavors() + 1) + "");
-            bean.setFavors(bean.getFavors() + 1);
-            favorText.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
-            bean.setFavor(true);
-            initFavor(bean);
+            if (BaseFragment.isOpen) {
+                /**开桌后才能点赞*/
+                BaseFragment.favorFood.add(bean);
+                favorImg.setSelected(true);
+                favorText.setText((bean.getFavors() + 1) + "");
+                bean.setFavors(bean.getFavors() + 1);
+                favorText.setTextColor(ContextCompat.getColor(mContext, R.color.favor_sel));
+                bean.setFavor(true);
+                initFavor(bean);
+            } else {
+                /**未开桌点赞提醒*/
+                T.showShort(mContext, mContext.getString(R.string.favor_non_open));
+            }
         }
     }
 
@@ -141,7 +147,6 @@ public class FavorImpl {
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-
         }
     };
 

@@ -198,7 +198,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         detailsBanner.setAdapter(new CarouselView.Adapter() {
             @Override
             public boolean isEmpty() {
-                return urlList.size() == 0;
+                return urlList == null || urlList.size() == 0;
             }
 
             @Override
@@ -233,11 +233,11 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
                 break;
             case R.id.details_dishes_minus:
                 /**减菜*/
-                mFoodControl.minusFood(dishesMinus, detailsDishesNumber, mFoodBean,RefreshFoodEvent.FROM_DETAILS);
+                mFoodControl.minusFood(dishesMinus, detailsDishesNumber, mFoodBean, RefreshFoodEvent.FROM_DETAILS);
                 break;
             case R.id.details_dishes_add:
                 /**加菜*/
-                mFoodControl.addFood(dishesAdd, detailsDishesNumber, mFoodBean, beanList,RefreshFoodEvent.FROM_DETAILS);
+                mFoodControl.addFood(dishesAdd, detailsDishesNumber, mFoodBean, beanList, RefreshFoodEvent.FROM_DETAILS);
                 break;
             case R.id.details_back:
                 /**返回*/
@@ -255,15 +255,22 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     @Override
     public void onResponse(Call<Bean<List<ImageBean>>> call, Response<Bean<List<ImageBean>>> response) {
         Bean<List<ImageBean>> bean = response.body();
+
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             isSuccess = true;
-            bannerAdapter(bean.getResult());
+            if (bean.getResult() != null || bean.getResult().size() > 0) {
+                bannerAdapter(bean.getResult());
+            }
+        } else {
+            isSuccess = false;
+            bannerAdapter(new ArrayList<ImageBean>());
         }
     }
 
     @Override
     public void onFailure(Call<Bean<List<ImageBean>>> call, Throwable t) {
-
+        isSuccess = false;
+        bannerAdapter(new ArrayList<ImageBean>());
     }
 
     /**

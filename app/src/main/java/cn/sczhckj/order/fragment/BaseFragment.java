@@ -292,4 +292,22 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    /**
+     * 存储点菜方式
+     *
+     * @param orderType
+     */
+    public static void setOrderType(int orderType) {
+        BaseFragment.orderType = orderType;
+        MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE, orderType);
+    }
+
+    /**
+     * 获取点菜方式
+     *
+     * @return
+     */
+    public static int getOrderType() {
+        return (int) MyApplication.mStorage.getData(Constant.STORAGR_ORDER_TYPE, Constant.ORDER_TYPE_ALONE);
+    }
 }

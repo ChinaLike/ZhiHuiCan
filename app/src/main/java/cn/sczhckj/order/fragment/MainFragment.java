@@ -114,6 +114,9 @@ public class MainFragment extends BaseFragment {
         }
         init();
         setBottomBtn(false);
+        /**获取点菜方式*/
+        getOrderType();
+
     }
 
     @Override
@@ -256,12 +259,20 @@ public class MainFragment extends BaseFragment {
                 setBottomBtn(true);
                 orderType = Constant.ORDER_TYPE_ALONE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
+                /**如果已经点击，再次进来不显示点菜方式*/
+                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
+                /**设置已选择点菜*/
+                BaseFragment.setOrderType(orderType);
                 break;
             case R.id.main_merger_order:
                 /**并卓点餐*/
                 setBottomBtn(true);
                 orderType = Constant.ORDER_TYPE_MERGE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
+                /**如果已经点击，再次进来不显示点菜方式*/
+                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
+                /**设置已选择点菜*/
+                BaseFragment.setOrderType(orderType);
                 break;
         }
         if (index != current) {

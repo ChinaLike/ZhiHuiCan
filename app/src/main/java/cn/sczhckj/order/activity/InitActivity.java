@@ -7,6 +7,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,8 +30,8 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
+import cn.sczhckj.order.service.WebSocketService;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -39,7 +41,7 @@ import retrofit2.Response;
 /**
  * 初始化台桌信息，版本信息
  */
-public class InitActivity extends Activity implements OnWebSocketListenner, Callback<Bean<VersionBean>>, VersionManager.OnDialogClickListener {
+public class InitActivity extends Activity implements Callback<Bean<VersionBean>>, VersionManager.OnDialogClickListener {
 
     @Bind(R.id.init_text)
     TextView initText;
@@ -57,10 +59,6 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
      */
     private TableMode mTableMode;
     /**
-     * WebSocket实现
-     */
-    private WebSocketImpl mWebSocket;
-    /**
      * 版本类型0-点菜端 1-后厨端
      */
     private final int VERSION_TYPE = 0;
@@ -69,6 +67,7 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
+        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         /**显示设备ID*/
         deviceid.setText("设备ID：" + AppSystemUntil.getAndroidID(this));
@@ -85,6 +84,12 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
         mTableMode = new TableMode();
         mVersionManager = new VersionManager(InitActivity.this);
         regsWebSocket();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -178,55 +183,14 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
      * 注册WebSocket
      */
     private void regsWebSocket() {
-        mWebSocket = new WebSocketImpl();
-        mWebSocket.push(Config.URL_LOCK_SERVICE + AppSystemUntil.getAndroidID(this), this);
-    }
-
-    @Override
-    public void onBinaryMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onClose(int code, String reason) {
-        initText.setText("初始化失败，点击重新初始化...");
-    }
-
-    @Override
-    public void onOpen() {
-        /**当WebSocket连接成功时在获取版本信息*/
-        getVersion();
-    }
-
-    @Override
-    public void onRawTextMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onTextMessage(String payload) {
-        RestRequest<PushCommonBean> restRequest
-                = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
-        if (OP.PUSH_LOCK.equals(restRequest.getOp())) {
-            /**锁定界面*/
-            Intent intent = new Intent(InitActivity.this, LockActivity.class);
-            intent.putExtra(Constant.LOCK_TITLE, restRequest.getBean().getMessage());
-            startActivity(intent);
-        } else if (OP.PUSH_UNLOCK.equals(restRequest.getOp())) {
-            /**解锁界面*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
-        } else if (OP.PUSH_BILL_FINISH.equals(restRequest.getOp())) {
-            /**结账完成*/
-            EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.TYPE_BILL_FINISH));
-        }
+        Intent intent = new Intent(InitActivity.this, WebSocketService.class);
+        startService(intent);
     }
 
 
     @OnClick(R.id.init_parent)
     public void onClick() {
         initText.setText("数据初始化中...");
-        mWebSocket.reConnection();
     }
 
     @Override
@@ -289,6 +253,20 @@ public class InitActivity extends Activity implements OnWebSocketListenner, Call
     @Override
     public void dismiss() {
         initTableInfo();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        if (WebSocketEvent.INIT_SUCCESS == event.getType()) {
+            /**初始化成功，当WebSocket连接成功时在获取版本信息*/
+            getVersion();
+        } else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
+            /**锁定界面有关*/
+            Intent intent = new Intent(InitActivity.this, LockActivity.class);
+            intent.putExtra(Constant.LOCK_TITLE, event.getMessage());
+            startActivity(intent);
+        }
+
     }
 
 }

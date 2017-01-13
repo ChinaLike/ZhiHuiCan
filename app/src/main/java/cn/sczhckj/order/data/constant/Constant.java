@@ -35,7 +35,8 @@ public interface Constant {
     String STORAGR_RECORDID = "recordId";//消费记录ID
     String STORAGR_PERSON = "person";//就餐人数
     String STORAGR_HINT = "hint";//菜品过多提醒
-    String STORAGR_SHOW_TYPE = "showType";//是否显示点菜方式
+    String STORAGR_SHOW_TYPE = "isShow";//是否显示点菜方式
+    String STORAGR_ORDER_TYPE = "orderType";//已选择点菜方式
 
     /**
      * 界面间传递Flag
@@ -97,6 +98,11 @@ public interface Constant {
      */
     int UNLOCK = 1;//解锁
     int LOCK = 0;//未解锁
+
+    /**
+     * 操作类型ID
+     */
+    int OPERATE_ID = 0;//0-普通退菜（平板）1-特权退菜（收银）
 
     /**
      * 台桌状态

@@ -74,4 +74,7 @@
     <string name="dialog_context2">尊敬的顾客您好！\n您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
     <string name="dialog_cacel">好的</string>
 
+    <!--点赞-->
+    <string name="favor_non_open">开桌后才能对菜品点赞</string>
+
 </resources>

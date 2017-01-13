@@ -29,12 +29,27 @@ public class WebSocketEvent {
      * 结账完成
      */
     public static final int TYPE_BILL_FINISH = 4;
+    /**
+     * 检测WebSocket是否链接
+     */
+    public static final int CHECK_WEBSOCKET = 5;
+    /**
+     * 初始化成功
+     */
+    public static final int INIT_SUCCESS = 6;
 
     private PushCommonBean bean;
 
     private int type;
 
+    private String message;
+
     public WebSocketEvent(int type) {
+        this.type = type;
+    }
+
+    public WebSocketEvent(int type, String message) {
+        this.message = message;
         this.type = type;
     }
 
@@ -57,5 +72,13 @@ public class WebSocketEvent {
 
     public void setBean(PushCommonBean bean) {
         this.bean = bean;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

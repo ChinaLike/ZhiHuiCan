@@ -21,7 +21,7 @@ public class WebSocketImpl {
      * @param url                  通道地址
      * @param onWebSocketListenner 监听
      */
-    public void push(String url, final OnWebSocketListenner onWebSocketListenner) {
+    public void connect(String url, final OnWebSocketListenner onWebSocketListenner) {
         connection = new WebSocketConnection();
         try {
             connection.connect(url, new WebSocketConnectionHandler() {
@@ -33,6 +33,7 @@ public class WebSocketImpl {
 
                 @Override
                 public void onClose(int code, String reason) {
+                    connection.disconnect();
                     /**链接关闭*/
                     onWebSocketListenner.onClose(code, reason);
                 }
@@ -84,6 +85,15 @@ public class WebSocketImpl {
         if (connection != null && !connection.isConnected()) {
             connection.reconnect();
         }
+    }
+
+    /**
+     * 判断WebSocket是否链接
+     *
+     * @return
+     */
+    public boolean isConnected() {
+        return connection.isConnected();
     }
 
 }

@@ -651,6 +651,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         requestCommonBean.setCount(COUNT);
         requestCommonBean.setMemberCode(MyApplication.memberCode);
         requestCommonBean.setRecordId(MyApplication.recordId);
+        requestCommonBean.setOperateID(Constant.OPERATE_ID);
+        requestCommonBean.setPriceTypeID(bean.getType());
         new FoodMode().refund(requestCommonBean, new Callback<Bean<ResponseCommonBean>>() {
             @Override
             public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
@@ -679,20 +681,23 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshFoodEventBus(RefreshFoodEvent event) {
-        buttonAttr(true);
+        /**把按钮状态buttonAttr(true)写在里面，避免了其他命令影响按钮状态*/
         if (event.getType() == RefreshFoodEvent.ADD_FOOD) {
+            buttonAttr(true);
             /**加菜*/
             disOrderList = addFood(event.getBean());
             initCart(disOrderList);
             mDisOrderAdapter.notifyDataSetChanged(disOrderList);
             baseInfoRefresh();
         } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+            buttonAttr(true);
             /**减菜*/
             disOrderList = minusFood(event.getBean());
             initCart(disOrderList);
             mDisOrderAdapter.notifyDataSetChanged(disOrderList);
             baseInfoRefresh();
         } else if (event.getType() == RefreshFoodEvent.CART_REFUND) {
+            buttonAttr(true);
             /**退菜*/
             refund(event.getBean());
         }

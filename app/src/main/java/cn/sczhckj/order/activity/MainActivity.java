@@ -54,7 +54,6 @@ import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
@@ -238,10 +237,10 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     private void connectionWebSocket(String deviceId) {
         mFoodWebSocket = new WebSocketImpl();
         /**连接菜品完成推送*/
-        mFoodWebSocket.push(Config.URL_FOOD_SERVICE + deviceId, this);
+        mFoodWebSocket.connect(Config.URL_FOOD_SERVICE + deviceId, this);
         mServiceWebSocket = new WebSocketImpl();
         /**完成服务终止推送*/
-        mServiceWebSocket.push(Config.URL_SERVICE_SERVICE + deviceId, this);
+        mServiceWebSocket.connect(Config.URL_SERVICE_SERVICE + deviceId, this);
     }
 
     /**
@@ -408,8 +407,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -531,8 +528,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Override
     public void onClose(int code, String reason) {
         /**断开后尝试再次连接*/
-        mServiceWebSocket.reConnection();
-        mFoodWebSocket.reConnection();
+//        mServiceWebSocket.reConnection();
+//        mFoodWebSocket.reConnection();
     }
 
     @Override

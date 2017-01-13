@@ -5,18 +5,17 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.sczhckj.order.Config;
+import cn.sczhckj.order.data.bean.push.HeartBean;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.platform.rest.io.RestRequest;
+import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 
 /**
  * @ describe:  心跳检测
@@ -26,7 +25,7 @@ import cn.sczhckj.order.until.show.L;
 
 public class HeartService extends Service implements OnWebSocketListenner {
 
-    private final int TIME = 60 * 1000;
+    private final int TIME = 20 * 1000;
 
     private WebSocketImpl mWebSocket = new WebSocketImpl();
 
@@ -43,7 +42,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mWebSocket.push(Config.URL_HEART_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+        mWebSocket.connect(Config.URL_HEART_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
         sendMessage(mWebSocket);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -73,20 +72,16 @@ public class HeartService extends Service implements OnWebSocketListenner {
      * @return
      */
     private String msg() {
-        long time = System.currentTimeMillis();
-        JSONObject object = new JSONObject();
-        try {
-            object.put("op", OP.PUSH_HEART + "");
-            object.put("time", time + "");
-            JSONObject params = new JSONObject();
-            params.put("deviceId", AppSystemUntil.getAndroidID(getApplicationContext()) + "");
-            object.put("params", params);
-            return object.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        HeartBean bean = new HeartBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(getApplicationContext()));
+        bean.setIp(AppSystemUntil.ip(getApplicationContext()));
 
-        return "";
+        RestRequest<HeartBean> restRequest = JSONRestRequest.Builder.build(HeartBean.class)
+                .op(OP.PUSH_HEART)
+                .time()
+                .bean(bean);
+
+        return restRequest.toRequestString();
     }
 
     @Override
@@ -95,7 +90,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onClose(int code, String reason) {
-        mWebSocket.reConnection();
+
     }
 
     @Override
@@ -109,4 +104,5 @@ public class HeartService extends Service implements OnWebSocketListenner {
     @Override
     public void onTextMessage(String payload) {
     }
+
 }
