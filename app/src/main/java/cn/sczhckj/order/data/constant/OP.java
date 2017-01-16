@@ -133,11 +133,36 @@ public interface OP {
      */
     String PUSH_BILL_FINISH = "billFinish";
 
-
     /**
      * APP推送 心跳
      */
     String PUSH_HEART = "heart";
+
+    /**
+     * 通知刷新菜品数据
+     */
+    String PUSH_REFRESH_FOOD = "refreshFood";
+
+    /**
+     * 通知刷新用户数据
+     */
+    String PUSH_REFRESH_USER = "refreshUser";
+    /**
+     * 通知刷新点菜记录
+     */
+    String PUSH_REFRESH_RECORD = "refreshRecord";
+    /**
+     * 单桌点菜
+     */
+    String PUSH_ALONE_ORDER = "aloneOrder";
+    /**
+     * 并桌
+     */
+    String PUSH_MERGE_TABLE = "mergeTable";
+    /**
+     * 版本检查
+     */
+    String PUSH_CHECK_VERSION = "checkVersion";
 
     /**
      * 获取结账清单

@@ -172,7 +172,7 @@ public class FoodControlImpl {
                 /**限制数量*/
                 dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
                         mContext.getResources().getString(R.string.dialog_context),
-                        mContext.getResources().getString(R.string.dialog_cacel)).show();
+                        mContext.getResources().getString(R.string.dialog_cancel)).show();
             } else {
                 setAddDishes(bean, countText, from);
             }
@@ -210,7 +210,7 @@ public class FoodControlImpl {
 //                button.setClickable(false);
                 dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
                         mContext.getResources().getString(R.string.dialog_context1),
-                        mContext.getResources().getString(R.string.dialog_cacel)).show();
+                        mContext.getResources().getString(R.string.dialog_cancel)).show();
             }
         });
     }

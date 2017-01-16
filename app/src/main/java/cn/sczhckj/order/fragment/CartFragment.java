@@ -705,13 +705,14 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     }
 
     /**
-     * 推送已完成数量
+     * 推送已完成数量,通知事件
      *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (event.getType() == WebSocketEvent.TYPE_FOOD_ARRIVE) {
+            /**菜品完成*/
             int id = event.getBean().getId();
             int cateId = event.getBean().getCateId();
             for (FoodBean bean : orderList) {
@@ -721,6 +722,14 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 }
             }
             mOrderAdapter.notifyDataSetChanged(orderList);
+        } else if (WebSocketEvent.REFRESH_RECORD == event.getType()) {
+            /**刷新点菜记录的已下单*/
+            if (isOpen){
+                /**开桌后才会刷新已下单*/
+                initRefresh();
+            }
+            /**刷新点菜记录的未下单*/
+            //TODO: 2017-01-16 这里是不是应该添加单个菜品刷新接口，还是通过foodId和cateId来请求所有数据一一比较刷新
         }
     }
 }

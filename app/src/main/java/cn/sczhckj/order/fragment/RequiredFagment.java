@@ -32,6 +32,7 @@ import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
+import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.listener.OnTableListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
@@ -335,7 +336,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                 personAdapter.notifyDataSetChanged(mList);
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                       mContext.getResources().getString(R.string.loadingFail));
+                        mContext.getResources().getString(R.string.loadingFail));
             }
         } else {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
@@ -392,5 +393,18 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
             onItemClick(null, currPosition, currBean);
         }
     }
+
+    /**
+     * 通知事件
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        if (WebSocketEvent.REFRESH_FOOD == event.getType()) {
+            /**刷新菜品数据*/
+            onItemClick(null, currPosition, currBean);
+        }
+    }
+
 
 }

@@ -35,5 +35,9 @@ public class Config {
      */
     public static String URL_HEART_SERVICE = "ws://"+IP+":8080/pad/ws/heart?username=";
 
+    /**
+     * 数据刷新
+     */
+    public static String URL_REFRESH_SERVICE = "ws://"+IP+":8080/pad/ws/refresh?username=";
 
 }

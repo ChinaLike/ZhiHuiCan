@@ -36,8 +36,8 @@
     <string name="choose_good">选好了</string>
 
     <string name="order_type_text_hint">请选择一种点菜方式</string>
-    <string name="order_one">如果您是独自就餐，没有选择选择与其他餐桌合并；或者您已与其他餐桌合并，但想要各自点餐，请选择</string>
-    <string name="order_more">如果您是与其它餐桌合且想要一起点餐，请选择</string>
+    <string name="order_one">如果您是独自就餐，没有选择与其他餐桌合并；或者您已与其他餐桌合并，但想要各自点餐，请选择</string>
+    <string name="order_more">如果您是与其它餐桌合并且想要一起点餐，请选择</string>
     <string name="one_order">单桌点餐</string>
     <string name="more_order">并桌点餐</string>
     <string name="choose_order_type">点菜方式选择</string>
@@ -72,7 +72,8 @@
     <string name="dialog_context">尊敬的顾客您好！\n您选择的菜品已经达到限制数量,不能再\n选择了，给你带来的不便还请谅解！</string>
     <string name="dialog_context1">尊敬的顾客您好！\n您没有足够的权限点次菜品，具体事宜请你\n联系主桌！还请谅解！</string>
     <string name="dialog_context2">尊敬的顾客您好！\n您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
-    <string name="dialog_cacel">好的</string>
+    <string name="dialog_cancel">好的</string>
+    <string name="dialog_merge">\t\t如果你选择了并桌点餐，您每点一份餐将会给辅桌分发一份，但本桌数量显示任然是一份！</string>
 
     <!--点赞-->
     <string name="favor_non_open">开桌后才能对菜品点赞</string>

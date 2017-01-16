@@ -30,14 +30,36 @@ public class WebSocketEvent {
      */
     public static final int TYPE_BILL_FINISH = 4;
     /**
-     * 检测WebSocket是否链接
-     */
-    public static final int CHECK_WEBSOCKET = 5;
-    /**
      * 初始化成功
      */
-    public static final int INIT_SUCCESS = 6;
-
+    public static final int INIT_SUCCESS = 5;
+    /**
+     * 通知刷新菜品
+     */
+    public static final int REFRESH_FOOD = 6;
+    /**
+     * 通知刷新用户
+     */
+    public static final int REFRESH_USER = 7;
+    /**
+     * 通知刷新点菜记录
+     */
+    public static final int REFRESH_RECORD = 8;
+    /**
+     * 单桌点菜
+     */
+    public static final int ALONE_ORDER = 9;
+    /**
+     * 并桌
+     */
+    public static final int MERGE_TABLE = 10;
+    /**
+     * 版本检查
+     */
+    public static final int CHECK_VERSION = 11;
+    /**
+     * 通用Bean
+     */
     private PushCommonBean bean;
 
     private int type;

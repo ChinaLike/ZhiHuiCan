@@ -43,6 +43,7 @@ import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.event.RefreshViewEvent;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
+import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
@@ -540,6 +541,28 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         } else if (event.getType() == RefreshFoodEvent.FAVOR_FOOD) {
             /**点赞*/
             onItemClick(null, currBean, currPosition);
+        }
+    }
+
+    /**
+     * 通知事件
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        if (WebSocketEvent.REFRESH_FOOD == event.getType()) {
+            /**刷新菜品数据*/
+            onItemClick(null, currBean, currPosition);
+        } else if (WebSocketEvent.ALONE_ORDER == event.getType()) {
+            /**单独点餐*/
+            orderType = Constant.ORDER_TYPE_ALONE;
+            MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE,orderType);
+            // TODO: 2017-01-16 变更状态栏等信息
+
+        } else if (WebSocketEvent.MERGE_TABLE == event.getType()) {
+            /**并桌*/
+            // TODO: 2017-01-16 处理并桌等信息
         }
     }
 

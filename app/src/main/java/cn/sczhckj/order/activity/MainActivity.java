@@ -23,21 +23,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.sczhckj.order.Config;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
-import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.user.MemberBean;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnTableListenner;
-import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.fragment.BaseFragment;
 import cn.sczhckj.order.fragment.BillFragment;
@@ -50,13 +46,10 @@ import cn.sczhckj.order.fragment.RequiredFagment;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
-import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.T;
-import cn.sczhckj.platform.rest.io.RestRequest;
-import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +60,7 @@ import retrofit2.Response;
  * @ Email: 572919350@qq.com
  */
 public class MainActivity extends BaseActivity implements OnTableListenner,
-        Callback<Bean<ResponseCommonBean>>, OnWebSocketListenner {
+        Callback<Bean<ResponseCommonBean>> {
 
 
     @Bind(R.id.table_number)
@@ -149,14 +142,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private int personCount = 0;
     /**
-     * 通过WebSocket与客户端建立连接（菜品）
-     */
-    private WebSocketImpl mFoodWebSocket;
-    /**
-     * 通过WebSocket与客户端建立连接（服务）
-     */
-    private WebSocketImpl mServiceWebSocket;
-    /**
      * 左侧进入前标识
      */
     private int leftTag = CART_DISHES;
@@ -176,8 +161,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        /**注册WebSocket*/
-        connectionWebSocket(AppSystemUntil.getAndroidID(this));
         startHeart();
         isLogin();
         init();
@@ -199,7 +182,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         /**判断是否登录*/
         if (MyApplication.isLogin) {
             MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
-            userId = bean.getId() + "";
             login(bean);
         }
     }
@@ -229,18 +211,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         personNumber = 0;
         initCartFragment();
         initRequiredFragment();
-    }
-
-    /**
-     * 与服务器通过WebSocket连接
-     */
-    private void connectionWebSocket(String deviceId) {
-        mFoodWebSocket = new WebSocketImpl();
-        /**连接菜品完成推送*/
-        mFoodWebSocket.connect(Config.URL_FOOD_SERVICE + deviceId, this);
-        mServiceWebSocket = new WebSocketImpl();
-        /**完成服务终止推送*/
-        mServiceWebSocket.connect(Config.URL_SERVICE_SERVICE + deviceId, this);
     }
 
     /**
@@ -424,6 +394,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 如果判断已经有登录信息了，显示登录状态
      */
     private void login(MemberBean bean) {
+        userId = bean.getId() + "";
         hasLogin.setVisibility(View.VISIBLE);
         noLogin.setVisibility(View.GONE);
         /**加载头像*/
@@ -520,43 +491,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         T.showShort(this, "设置失败，请重新设置！");
     }
 
-    @Override
-    public void onBinaryMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onClose(int code, String reason) {
-        /**断开后尝试再次连接*/
-//        mServiceWebSocket.reConnection();
-//        mFoodWebSocket.reConnection();
-    }
-
-    @Override
-    public void onOpen() {
-
-    }
-
-    @Override
-    public void onRawTextMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onTextMessage(String payload) {
-        RestRequest<PushCommonBean> restRequest
-                = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
-        if (OP.PUSH_ARRIVE.equals(restRequest.getOp())) {
-            /**菜品完成*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_FOOD_ARRIVE, restRequest.getBean()));
-        } else if (OP.PUSH_COMPLETE.equals(restRequest.getOp())) {
-            /**服务完成*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_SERVICE_COMPLETE, restRequest.getBean()));
-        }
-    }
-
     /**
      * 界面切换事件
      *
@@ -637,6 +571,18 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         }
 
     }
+
+    /**
+     * 通知事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        if (event.getType() == WebSocketEvent.REFRESH_USER) {
+            MyApplication.setIsLogin(true);
+            login(event.getBean().getUser());
+        }
+    }
+
 
     /**
      * 开启心跳

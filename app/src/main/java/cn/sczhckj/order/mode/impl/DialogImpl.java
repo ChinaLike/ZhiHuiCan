@@ -1,6 +1,5 @@
 package cn.sczhckj.order.mode.impl;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 

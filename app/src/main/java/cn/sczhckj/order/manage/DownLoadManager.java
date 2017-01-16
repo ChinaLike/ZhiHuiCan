@@ -52,13 +52,20 @@ public class DownLoadManager {
         ProgressHelper.setProgressHandler(new DownloadProgressHandler() {
             @Override
             protected void onProgress(long bytesRead, long contentLength, boolean done) {
-                dialog.setProgressMax((int) (contentLength / 1024));
-                dialog.setProgress((int) (bytesRead / 1024));
-                dialog.setProgressText(String.format("%1s Kb/%2s Kb", (int) (bytesRead / 1024), (int) (contentLength / 1024)));
-                if (done) {
-                    dialog.dismiss();
-                    File file = new File(Environment.getExternalStorageDirectory()+"/"+ FileConstant.PATH, apkName);
-                    autoInstall(mContext,file);
+                if (dialog!=null) {
+                    dialog.setProgressMax((int) (contentLength / 1024));
+                    dialog.setProgress((int) (bytesRead / 1024));
+                    dialog.setProgressText(String.format("%1s Kb/%2s Kb", (int) (bytesRead / 1024), (int) (contentLength / 1024)));
+                    if (done) {
+                        dialog.dismiss();
+                        File file = new File(Environment.getExternalStorageDirectory() + "/" + FileConstant.PATH, apkName);
+                        autoInstall(mContext, file);
+                    }
+                }else {
+                    if (done){
+                        File file = new File(Environment.getExternalStorageDirectory() + "/" + FileConstant.PATH, apkName);
+                        autoInstall(mContext, file);
+                    }
                 }
             }
         });

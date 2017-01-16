@@ -22,11 +22,13 @@ import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
+import cn.sczhckj.order.manage.DownLoadManager;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
@@ -62,6 +64,10 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      * 版本类型0-点菜端 1-后厨端
      */
     private final int VERSION_TYPE = 0;
+    /**
+     * 手动更新或者是后台自动更新
+     */
+    private boolean isAuto = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +120,11 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      * 获取台桌信息
      */
     private void initTableInfo() {
-        RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(this));
-        mTableMode.openInfo(bean, openInfoCallback);
+        if (!isAuto) {
+            RequestCommonBean bean = new RequestCommonBean();
+            bean.setDeviceId(AppSystemUntil.getAndroidID(this));
+            mTableMode.openInfo(bean, openInfoCallback);
+        }
     }
 
     /**
@@ -199,8 +207,19 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             if (bean.getResult() != null) {
                 if (bean.getResult().getCode() > mVersionManager.getVersionCode(InitActivity.this)) {
-                    mVersionManager.version(InitActivity.this, bean.getResult());
-                    mVersionManager.setOnDialogClickListener(this);
+                    if (!isAuto) {
+                        /**手动更新*/
+                        mVersionManager.version(InitActivity.this, bean.getResult());
+                        mVersionManager.setOnDialogClickListener(this);
+                    } else {
+                        /**后台更新*/
+                        DownLoadManager downLoadManager = new DownLoadManager();
+                        if (bean.getResult().getName() == null) {
+                            downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(), FileConstant.APK_NAME, null, InitActivity.this);
+                        } else {
+                            downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(), bean.getResult().getName(), null, InitActivity.this);
+                        }
+                    }
                 } else {
                     initTableInfo();
                 }
@@ -259,12 +278,17 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     public void webSocketEventBus(WebSocketEvent event) {
         if (WebSocketEvent.INIT_SUCCESS == event.getType()) {
             /**初始化成功，当WebSocket连接成功时在获取版本信息*/
+            isAuto = false;
             getVersion();
         } else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
             /**锁定界面有关*/
             Intent intent = new Intent(InitActivity.this, LockActivity.class);
             intent.putExtra(Constant.LOCK_TITLE, event.getMessage());
             startActivity(intent);
+        } else if (WebSocketEvent.CHECK_VERSION == event.getType()) {
+            /**检查版本*/
+            isAuto = true;
+            getVersion();
         }
 
     }
