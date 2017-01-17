@@ -92,6 +92,7 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
                     new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
         } else if (OP.PUSH_BILL_FINISH.equals(restRequest.getOp())) {
             /**结账完成*/
+            L.d("结账完成");
             EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.TYPE_BILL_FINISH));
         } else if (OP.PUSH_ARRIVE.equals(restRequest.getOp())) {
             /**菜品完成*/
