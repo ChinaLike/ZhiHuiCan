@@ -3,19 +3,22 @@ package cn.sczhckj.order.manage;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
+import android.view.View;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.network.DownloadApi;
 import cn.sczhckj.order.helper.DownloadProgressHandler;
 import cn.sczhckj.order.helper.ProgressHelper;
 import cn.sczhckj.order.overwrite.MyDialog;
+import cn.sczhckj.order.until.FileUntils;
 import cn.sczhckj.order.until.show.L;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -40,7 +43,7 @@ public class DownLoadManager {
      * @param apkName
      * @param dialog
      */
-    public void retrofitDownload(String host,String url,final String apkName, final MyDialog dialog, final Context mContext) {
+    public void retrofitDownload(String host, String url, final String apkName, final MyDialog dialog, final Context mContext) {
 
         Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -52,19 +55,18 @@ public class DownLoadManager {
         ProgressHelper.setProgressHandler(new DownloadProgressHandler() {
             @Override
             protected void onProgress(long bytesRead, long contentLength, boolean done) {
-                if (dialog!=null) {
+                if (dialog != null) {
                     dialog.setProgressMax((int) (contentLength / 1024));
                     dialog.setProgress((int) (bytesRead / 1024));
                     dialog.setProgressText(String.format("%1s Kb/%2s Kb", (int) (bytesRead / 1024), (int) (contentLength / 1024)));
                     if (done) {
-                        dialog.dismiss();
-                        File file = new File(Environment.getExternalStorageDirectory() + "/" + FileConstant.PATH, apkName);
-                        autoInstall(mContext, file);
+                        File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
+                        install(mContext, dialog, file);
                     }
-                }else {
-                    if (done){
-                        File file = new File(Environment.getExternalStorageDirectory() + "/" + FileConstant.PATH, apkName);
-                        autoInstall(mContext, file);
+                } else {
+                    if (done) {
+                        File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
+                        install(mContext, null, file);
                     }
                 }
             }
@@ -76,7 +78,7 @@ public class DownLoadManager {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     InputStream is = response.body().byteStream();
-                    File file = new File(Environment.getExternalStorageDirectory()+"/"+ FileConstant.PATH, apkName);
+                    File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
                     FileOutputStream fos = new FileOutputStream(file);
                     BufferedInputStream bis = new BufferedInputStream(is);
                     byte[] buffer = new byte[1024];
@@ -85,9 +87,9 @@ public class DownLoadManager {
                         fos.write(buffer, 0, len);
                         fos.flush();
                     }
+                    is.close();
                     fos.close();
                     bis.close();
-                    is.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -101,25 +103,53 @@ public class DownLoadManager {
     }
 
     /**
-     * 自动安装
+     * 安装应用
+     *
+     * @param mContext
+     * @param dialog
+     * @param file
      */
-    private void autoInstall(Context mContext, File file) {
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(android.content.Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(file),
-                    "application/vnd.android.package-archive");
-            mContext.startActivity(intent);
+    private void install(final Context mContext, final MyDialog dialog, final File file) {
+        if (dialog != null) {
+            dialog.setContextText("下载已完成，请确定安装应用！");
+            dialog.setAloneButton("安装", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    autoInstall(mContext, file);
+                }
+            });
+        } else {
+            final MyDialog mDialog = new MyDialog(mContext);
+            mDialog.setTitle("版本更新");
+            mDialog.setContextText("下载已完成，请确定安装应用！");
+            mDialog.setPositiveButton("取消", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDialog.dismiss();
+                }
+            });
+            mDialog.setNegativeButton("安装", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    autoInstall(mContext, file);
+                }
+            });
+            mDialog.show();
+        }
     }
 
     /**
-     * 判断文件是否存在，不存在就创建
+     * 自动安装
      */
-    public void isMkdir(){
-        File file = new File(Environment.getExternalStorageDirectory()+"/"+ FileConstant.PATH);
-        if (!file.exists()){
-            file.mkdir();
-        }
+    private void autoInstall(Context mContext, File file) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file),
+                "application/vnd.android.package-archive");
+        mContext.startActivity(intent);
     }
 
 }

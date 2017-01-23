@@ -165,4 +165,13 @@ public class MyDialog extends Dialog {
         }
     }
 
+    /**
+     * 设置进度条隐藏
+     */
+    public void setProgressGone() {
+        if (progressParent.getVisibility() == View.VISIBLE) {
+            progressParent.setVisibility(View.GONE);
+        }
+    }
+
 }

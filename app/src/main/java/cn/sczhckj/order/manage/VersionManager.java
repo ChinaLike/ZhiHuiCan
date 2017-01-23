@@ -8,6 +8,8 @@ import cn.sczhckj.order.Config;
 import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.overwrite.MyDialog;
+import cn.sczhckj.order.until.FileUntils;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 版本管理
@@ -84,6 +86,7 @@ public class VersionManager {
      * 提示当前有新版本
      */
     public void updataVersion(final Context mContext, final VersionBean bean) {
+        L.d("版本更新：" + bean.toString());
         String context = "当前版本：" + getVersionName(mContext)
                 + "\n最新版本：" + bean.getVersion()
                 + "\n更新大小：" + bean.getSize()
@@ -95,12 +98,7 @@ public class VersionManager {
             @Override
             public void onClick(View v) {
                 downLoadDialog(mContext);
-                downLoadManager.isMkdir();
-                if (bean.getName() == null) {
-                    downLoadManager.retrofitDownload(Config.HOST, bean.getUrl(), FileConstant.APK_NAME, downLoadDialog, mContext);
-                } else {
-                    downLoadManager.retrofitDownload(Config.HOST, bean.getUrl(), bean.getName(), downLoadDialog, mContext);
-                }
+                downLoadManager.retrofitDownload(Config.HOST, bean.getUrl(), judgeName(bean.getName()), downLoadDialog, mContext);
                 onDialogClickListener.show();
                 dialog.dismiss();
             }
@@ -148,6 +146,21 @@ public class VersionManager {
             }
         });
         downLoadDialog.show();
+    }
+
+
+    /**
+     * 判断名字是否符合规范
+     *
+     * @param name
+     * @return
+     */
+    public static String judgeName(String name) {
+        if (name != null && name.endsWith(".apk")) {
+            return name;
+        } else {
+            return FileConstant.APK_NAME;
+        }
     }
 
 }

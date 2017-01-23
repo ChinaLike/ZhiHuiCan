@@ -34,7 +34,9 @@ import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.service.WebSocketService;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.FileUntils;
 import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -78,6 +80,8 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         ButterKnife.bind(this);
         /**显示设备ID*/
         deviceid.setText("设备ID：" + AppSystemUntil.getAndroidID(this));
+        /**创建下载文件夹*/
+        FileUntils.createFileDir(FileConstant.PATH);
     }
 
     @Override
@@ -215,11 +219,8 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
                     } else {
                         /**后台更新*/
                         DownLoadManager downLoadManager = new DownLoadManager();
-                        if (bean.getResult().getName() == null) {
-                            downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(), FileConstant.APK_NAME, null, InitActivity.this);
-                        } else {
-                            downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(), bean.getResult().getName(), null, InitActivity.this);
-                        }
+                        downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(),
+                                VersionManager.judgeName(bean.getResult().getName()), null, InitActivity.this);
                     }
                 } else {
                     initTableInfo();
@@ -293,5 +294,6 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         }
 
     }
+
 
 }

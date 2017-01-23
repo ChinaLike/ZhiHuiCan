@@ -41,6 +41,10 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
      * 数据刷新
      */
     private WebSocketImpl mWebSocketRefresh = new WebSocketImpl();
+    /**
+     * 初始化成功标志
+     */
+    private boolean isInit = false;
 
     @Nullable
     @Override
@@ -69,7 +73,10 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onOpen() {
-        EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_SUCCESS));
+        if (!isInit) {
+            isInit =true;
+            EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_SUCCESS));
+        }
     }
 
     @Override
