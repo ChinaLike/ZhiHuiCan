@@ -53,6 +53,7 @@ public class LeadActivity extends Activity {
      */
     private void disposeIntent() {
         int status = getIntent().getExtras().getInt(Constant.INTENT_TABLE_STATUS, Constant.TABLE_STATUS_OTHER);
+        String remark = getIntent().getExtras().getString(Constant.INTENT_TABLE_REMARK,"");
         Intent intent = new Intent(LeadActivity.this, MainActivity.class);
         switch (status) {
             case Constant.TABLE_STATUS_OPEN:
@@ -65,6 +66,7 @@ public class LeadActivity extends Activity {
             case Constant.TABLE_STATUS_BILL:
                 /**结帐中*/
                 intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_BILL);
+                intent.putExtra(Constant.INTENT_TABLE_REMARK,remark);
                 startActivity(intent);
                 break;
             case Constant.TABLE_STATUS_EMPTY:

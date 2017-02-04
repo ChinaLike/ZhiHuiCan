@@ -50,8 +50,15 @@ public class LockActivity extends Activity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
-        if (event.getType() == WebSocketEvent.TYPE_UNLOCK) {
-            finish();
+        switch (event.getType()) {
+            case WebSocketEvent.TYPE_UNLOCK:
+                /**普通直接解锁*/
+                finish();
+                break;
+            case WebSocketEvent.TYPE_BILL_FINISH:
+                /**结账完成*/
+                finish();
+                break;
         }
     }
 

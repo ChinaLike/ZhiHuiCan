@@ -26,6 +26,7 @@ public interface Constant {
      */
     String LOCK_TITLE = "lock";
     String INTENT_TABLE_STATUS = "status";
+    String INTENT_TABLE_REMARK = "remark";
 
     /**
      * 存储字段

@@ -192,6 +192,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void disposeIntent() {
         int status = getIntent().getExtras().getInt(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OTHER);
+        String remark = getIntent().getExtras().getString(Constant.INTENT_TABLE_REMARK,"");
         switch (status) {
             case Constant.TABLE_STATUS_OPEN:
                 /**进入消费中*/
@@ -202,6 +203,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 /**进入结账*/
                 initMainFragment();
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_BILL));
+                /**进入结账锁屏界面*/
+                lockView(remark);
                 break;
         }
     }
@@ -571,6 +574,16 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 break;
         }
 
+    }
+
+    /**
+     * 进入锁屏界面
+     * @param remark
+     */
+    private void lockView(String remark) {
+        Intent intent = new Intent(MainActivity.this, LockActivity.class);
+        intent.putExtra(Constant.LOCK_TITLE, remark);
+        startActivity(intent);
     }
 
     /**

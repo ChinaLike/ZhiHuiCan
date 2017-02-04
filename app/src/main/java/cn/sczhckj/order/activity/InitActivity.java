@@ -1,5 +1,6 @@
 package cn.sczhckj.order.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +33,10 @@ import cn.sczhckj.order.manage.DownLoadManager;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
+import cn.sczhckj.order.permission.OnPermissionCallback;
+import cn.sczhckj.order.permission.PermissionManager;
 import cn.sczhckj.order.service.WebSocketService;
+import cn.sczhckj.order.until.AndroidVersionUtil;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.FileUntils;
 import cn.sczhckj.order.until.show.L;
@@ -46,7 +50,8 @@ import retrofit2.Response;
 /**
  * 初始化台桌信息，版本信息
  */
-public class InitActivity extends Activity implements Callback<Bean<VersionBean>>, VersionManager.OnDialogClickListener {
+public class InitActivity extends Activity implements Callback<Bean<VersionBean>>,
+        VersionManager.OnDialogClickListener, OnPermissionCallback {
 
     @Bind(R.id.init_text)
     TextView initText;
@@ -71,6 +76,15 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      * 手动更新或者是后台自动更新
      */
     private boolean isAuto = false;
+    /**
+     * 需要申请的权限
+     */
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    /**
+     * 服务
+     */
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +94,13 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         ButterKnife.bind(this);
         /**显示设备ID*/
         deviceid.setText("设备ID：" + AppSystemUntil.getAndroidID(this));
-        /**创建下载文件夹*/
-        FileUntils.createFileDir(FileConstant.PATH);
+        if (AndroidVersionUtil.hasM()) {
+            PermissionManager.getInstance().requestPermission(InitActivity.this, this, PERMISSIONS_STORAGE);
+        } else {
+            /**创建下载文件夹*/
+            FileUntils.createFileDir(FileConstant.PATH);
+        }
+
     }
 
     @Override
@@ -101,6 +120,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        stopService(intent);
     }
 
     /**
@@ -158,11 +178,11 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
                 /**已上菜*/
             case Constant.TABLE_STATUS_BILL:
                 /**结帐中*/
-                intentLead(status);
+                intentLead(status,message);
                 break;
             default:
                 /**其他*/
-                intentLead(Constant.TABLE_STATUS_OTHER);
+                intentLead(Constant.TABLE_STATUS_OTHER,null);
                 break;
         }
     }
@@ -172,9 +192,10 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      *
      * @param status 状态
      */
-    private void intentLead(Integer status) {
+    private void intentLead(Integer status, String remark) {
         Intent intent = new Intent(InitActivity.this, LeadActivity.class);
         intent.putExtra(Constant.INTENT_TABLE_STATUS, status);
+        intent.putExtra(Constant.INTENT_TABLE_REMARK, remark);
         startActivity(intent);
     }
 
@@ -196,7 +217,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      * 注册WebSocket
      */
     private void regsWebSocket() {
-        Intent intent = new Intent(InitActivity.this, WebSocketService.class);
+        intent = new Intent(InitActivity.this, WebSocketService.class);
         startService(intent);
     }
 
@@ -296,4 +317,14 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     }
 
 
+    @Override
+    public void onSuccess(String... permissions) {
+        /**创建下载文件夹*/
+        FileUntils.createFileDir(FileConstant.PATH);
+    }
+
+    @Override
+    public void onFail(String... permissions) {
+        finish();
+    }
 }
