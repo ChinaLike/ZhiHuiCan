@@ -34,29 +34,33 @@ public class WebSocketEvent {
      */
     public static final int INIT_SUCCESS = 5;
     /**
+     * 初始化失败
+     */
+    public static final int INIT_FAIL = 6;
+    /**
      * 通知刷新菜品
      */
-    public static final int REFRESH_FOOD = 6;
+    public static final int REFRESH_FOOD = 7;
     /**
      * 通知刷新用户
      */
-    public static final int REFRESH_USER = 7;
+    public static final int REFRESH_USER = 8;
     /**
      * 通知刷新点菜记录
      */
-    public static final int REFRESH_RECORD = 8;
+    public static final int REFRESH_RECORD = 9;
     /**
      * 单桌点菜
      */
-    public static final int ALONE_ORDER = 9;
+    public static final int ALONE_ORDER = 10;
     /**
      * 并桌
      */
-    public static final int MERGE_TABLE = 10;
+    public static final int MERGE_TABLE = 11;
     /**
      * 版本检查
      */
-    public static final int CHECK_VERSION = 11;
+    public static final int CHECK_VERSION = 12;
     /**
      * 通用Bean
      */

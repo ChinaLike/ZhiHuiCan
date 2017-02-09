@@ -225,6 +225,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     @OnClick(R.id.init_parent)
     public void onClick() {
         initText.setText("数据初始化中...");
+        init();
     }
 
     @Override
@@ -303,7 +304,11 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
             /**初始化成功，当WebSocket连接成功时在获取版本信息*/
             isAuto = false;
             getVersion();
-        } else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
+        } else if(WebSocketEvent.INIT_FAIL == event.getType()){
+            /**初始化失败*/
+            initParent.setClickable(true);
+            initText.setText("初始化失败，点击重新初始化...");
+        }else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
             /**锁定界面有关*/
             Intent intent = new Intent(InitActivity.this, LockActivity.class);
             intent.putExtra(Constant.LOCK_TITLE, event.getMessage());

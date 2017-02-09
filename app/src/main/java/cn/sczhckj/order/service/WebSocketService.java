@@ -15,6 +15,7 @@ import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.websocket.WebSocket;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 
@@ -25,18 +26,18 @@ import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
  */
 
 public class WebSocketService extends Service implements OnWebSocketListenner {
-    /**
-     * 锁屏WebSocket
-     */
-    private WebSocketImpl mWebSocketLock = new WebSocketImpl();
-    /**
-     * 菜品WebSocket
-     */
-    private WebSocketImpl mWebSocketFood = new WebSocketImpl();
-    /**
-     * 服务WebSocket
-     */
-    private WebSocketImpl mWebSocketService = new WebSocketImpl();
+//    /**
+//     * 锁屏WebSocket
+//     */
+//    private WebSocketImpl mWebSocketLock = new WebSocketImpl();
+//    /**
+//     * 菜品WebSocket
+//     */
+//    private WebSocketImpl mWebSocketFood = new WebSocketImpl();
+//    /**
+//     * 服务WebSocket
+//     */
+//    private WebSocketImpl mWebSocketService = new WebSocketImpl();
     /**
      * 数据刷新
      */
@@ -54,10 +55,11 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mWebSocketLock.connect(Config.URL_LOCK_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
-        mWebSocketFood.connect(Config.URL_FOOD_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
-        mWebSocketService.connect(Config.URL_SERVICE_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
-        mWebSocketRefresh.connect(Config.URL_REFRESH_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+//        mWebSocketLock.connect(Config.URL_LOCK_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+//        mWebSocketFood.connect(Config.URL_FOOD_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+//        mWebSocketService.connect(Config.URL_SERVICE_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+//        mWebSocketRefresh.connect(Config.URL_REFRESH_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+        mWebSocketRefresh.connect(Config.URL_NOTIFICATION_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -68,13 +70,16 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onClose(int code, String reason) {
-
+        if (code == WebSocket.ConnectionHandler.CLOSE_CANNOT_CONNECT) {
+            /**连接不能建立*/
+            EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_FAIL));
+        }
     }
 
     @Override
     public void onOpen() {
         if (!isInit) {
-            isInit =true;
+            isInit = true;
             EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_SUCCESS));
         }
     }
@@ -88,63 +93,80 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
     public void onTextMessage(String payload) {
         RestRequest<PushCommonBean> restRequest
                 = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
-        L.d("WebSocket Service：" + restRequest.getBean());
-        if (OP.PUSH_LOCK.equals(restRequest.getOp())) {
-            /**锁定界面*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_LOCK, restRequest.getBean().getMessage()));
-        } else if (OP.PUSH_UNLOCK.equals(restRequest.getOp())) {
-            /**解锁界面*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
-        } else if (OP.PUSH_BILL_FINISH.equals(restRequest.getOp())) {
-            /**结账完成*/
-            EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.TYPE_BILL_FINISH));
-        } else if (OP.PUSH_ARRIVE.equals(restRequest.getOp())) {
-            /**菜品完成*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_FOOD_ARRIVE, restRequest.getBean()));
-        } else if (OP.PUSH_COMPLETE.equals(restRequest.getOp())) {
-            /**服务完成*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.TYPE_SERVICE_COMPLETE, restRequest.getBean()));
-        } else if (OP.PUSH_REFRESH_FOOD.equals(restRequest.getOp())) {
-            /**通知刷新菜品数据*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
-        } else if (OP.PUSH_REFRESH_USER.equals(restRequest.getOp())) {
-            /**通知刷新用户数据*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_USER, restRequest.getBean()));
-            /**刷新用户数据时同时刷新菜品、刷新点菜记录*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
-        } else if (OP.PUSH_REFRESH_RECORD.equals(restRequest.getOp())) {
-            /**刷新点菜记录*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
-        } else if (OP.PUSH_ALONE_ORDER.equals(restRequest.getOp())) {
-            /**单桌点菜*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.ALONE_ORDER));
-            /**同时刷新菜品列表*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
-        } else if (OP.PUSH_MERGE_TABLE.equals(restRequest.getOp())) {
-            /**并桌*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.MERGE_TABLE));
-            /**同时刷新菜品、刷新点菜记录*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
-        } else if (OP.PUSH_CHECK_VERSION.equals(restRequest.getOp())) {
-            /**版本检查*/
-            EventBus.getDefault().post(
-                    new WebSocketEvent(WebSocketEvent.CHECK_VERSION));
+        String op = restRequest.getOp();
+        switch (op) {
+            case OP.PUSH_LOCK:
+                /**状态变更锁定屏幕*/
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.TYPE_LOCK, restRequest.getBean().getMessage()));
+                break;
+            case OP.PUSH_UNLOCK:
+                /**状态变更解除屏幕锁定*/
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
+                break;
+            case OP.PUSH_BILL_FINISH:
+                /**结账完成*/
+                EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.TYPE_BILL_FINISH));
+                break;
+            case OP.PUSH_REFRESH_FOOD:
+                /**刷新菜品*/
+                //需要刷新，菜品列表，已提交菜品，已点未提交菜品
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
+                break;
+            case OP.PUSH_REFRESH_RECORD:
+                /**刷新点菜记录*/
+                //需要刷新，已提交菜品，已点未提交菜品
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
+                break;
+            case OP.PUSH_ALONE_ORDER:
+                /**单独点餐*/
+                //将合并点菜标志设置为否，同时刷新菜品列表
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.ALONE_ORDER));
+                break;
+            case OP.PUSH_REFRESH_USER:
+                /**变更会员信息*/
+                //需要刷新，菜品，点菜记录
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.REFRESH_USER, restRequest.getBean()));
+
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
+                break;
+            case OP.PUSH_MERGE_TABLE:
+                /**并桌*/
+                //需要刷新，会员信息，点菜记录，菜品，并桌信息
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.MERGE_TABLE));
+                /**同时刷新菜品、刷新点菜记录*/
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
+                break;
+            case OP.PUSH_ARRIVE:
+                /**出菜*/
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.TYPE_FOOD_ARRIVE, restRequest.getBean()));
+                break;
+            case OP.PUSH_CHECK_VERSION:
+                /**版本检查*/
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.CHECK_VERSION));
+                break;
+            case OP.PUSH_COMPLETE:
+                /**服务完成*/
+                EventBus.getDefault().post(
+                        new WebSocketEvent(WebSocketEvent.TYPE_SERVICE_COMPLETE, restRequest.getBean()));
+                break;
+            default:
+                /**其他*/
+                break;
         }
     }
 }

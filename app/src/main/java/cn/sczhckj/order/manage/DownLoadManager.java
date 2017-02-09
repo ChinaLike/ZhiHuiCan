@@ -136,6 +136,7 @@ public class DownLoadManager {
                     autoInstall(mContext, file);
                 }
             });
+            mDialog.setCancelable(false);
             mDialog.show();
         }
     }

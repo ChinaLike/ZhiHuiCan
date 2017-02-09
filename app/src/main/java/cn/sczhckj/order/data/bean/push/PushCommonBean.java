@@ -1,5 +1,7 @@
 package cn.sczhckj.order.data.bean.push;
 
+import java.util.List;
+
 import cn.sczhckj.order.data.bean.user.MemberBean;
 
 /**
@@ -10,37 +12,14 @@ import cn.sczhckj.order.data.bean.user.MemberBean;
 
 public class PushCommonBean {
 
-    private Integer id;//菜品ID
-    private Integer cateId;//分类ID
-    private Integer arriveCount;//上菜数量
-
-    private MemberBean user;//用户信息
 
     private String message;//消息内容
 
-    public Integer getId() {
-        return id;
-    }
+    private Integer status;//台桌状态
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private List<ArriveBean> food;//推送指定菜品刷新
 
-    public Integer getCateId() {
-        return cateId;
-    }
-
-    public void setCateId(Integer cateId) {
-        this.cateId = cateId;
-    }
-
-    public Integer getArriveCount() {
-        return arriveCount;
-    }
-
-    public void setArriveCount(Integer arriveCount) {
-        this.arriveCount = arriveCount;
-    }
+    private MemberBean user;//用户信息
 
     public String getMessage() {
         return message;
@@ -48,6 +27,22 @@ public class PushCommonBean {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public List<ArriveBean> getFood() {
+        return food;
+    }
+
+    public void setFood(List<ArriveBean> food) {
+        this.food = food;
     }
 
     public MemberBean getUser() {
@@ -61,11 +56,10 @@ public class PushCommonBean {
     @Override
     public String toString() {
         return "{" +
-                "id=" + id +
-                ", cateId=" + cateId +
-                ", arriveCount=" + arriveCount +
+                "message='" + message + '\'' +
+                ", status=" + status +
+                ", food=" + food +
                 ", user=" + user +
-                ", message='" + message + '\'' +
                 '}';
     }
 }

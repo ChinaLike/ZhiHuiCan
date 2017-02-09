@@ -147,6 +147,12 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     @Override
     public void setData(Object object) {
         /**费消费中执行*/
+        //初始打赏金额
+        awards = 0;
+        //文本初始化
+        tipMoney.setText("0");
+        //再次初始化避免上次已经选择数据Btn状态为改变
+        initTipAdapter();
         initBill();
         initTip();
     }

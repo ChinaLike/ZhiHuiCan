@@ -145,6 +145,8 @@ public class VersionManager {
                 onDialogClickListener.dismiss();
             }
         });
+        /**点击外部不能关闭*/
+        downLoadDialog.setCancelable(false);
         downLoadDialog.show();
     }
 

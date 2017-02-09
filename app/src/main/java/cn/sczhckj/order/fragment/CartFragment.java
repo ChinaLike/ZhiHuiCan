@@ -713,14 +713,14 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     public void webSocketEventBus(WebSocketEvent event) {
         if (event.getType() == WebSocketEvent.TYPE_FOOD_ARRIVE) {
             /**菜品完成*/
-            int id = event.getBean().getId();
-            int cateId = event.getBean().getCateId();
-            for (FoodBean bean : orderList) {
-                if (bean.getId() == id && bean.getCateId() == cateId) {
-                    int finishCount = bean.getFinishCount() + event.getBean().getArriveCount();
-                    bean.setFinishCount(finishCount > bean.getCount() ? bean.getCount() : finishCount);
-                }
-            }
+//            int id = event.getBean().getFood().getId();
+//            int cateId = event.getBean().getFood().getCateId();
+//            for (FoodBean bean : orderList) {
+//                if (bean.getId() == id && bean.getCateId() == cateId) {
+//                    int finishCount = bean.getFinishCount() + event.getBean().getFood().getArriveCount();
+//                    bean.setFinishCount(finishCount > bean.getCount() ? bean.getCount() : finishCount);
+//                }
+//            }
             mOrderAdapter.notifyDataSetChanged(orderList);
         } else if (WebSocketEvent.REFRESH_RECORD == event.getType()) {
             /**刷新点菜记录的已下单*/
