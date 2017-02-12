@@ -33,7 +33,7 @@
 
     <!--自定义复选框，用于菜品过多提醒-->
     <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/checkbox_my</item>
+        <item name="android:button">@drawable/check_box_my</item>
     </style>
 
 </resources>

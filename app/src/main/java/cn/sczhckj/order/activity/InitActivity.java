@@ -2,6 +2,8 @@ package cn.sczhckj.order.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -178,11 +182,11 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
                 /**已上菜*/
             case Constant.TABLE_STATUS_BILL:
                 /**结帐中*/
-                intentLead(status,message);
+                intentLead(status, message);
                 break;
             default:
                 /**其他*/
-                intentLead(Constant.TABLE_STATUS_OTHER,null);
+                intentLead(Constant.TABLE_STATUS_OTHER, null);
                 break;
         }
     }
@@ -304,11 +308,11 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
             /**初始化成功，当WebSocket连接成功时在获取版本信息*/
             isAuto = false;
             getVersion();
-        } else if(WebSocketEvent.INIT_FAIL == event.getType()){
+        } else if (WebSocketEvent.INIT_FAIL == event.getType()) {
             /**初始化失败*/
             initParent.setClickable(true);
             initText.setText("初始化失败，点击重新初始化...");
-        }else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
+        } else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
             /**锁定界面有关*/
             Intent intent = new Intent(InitActivity.this, LockActivity.class);
             intent.putExtra(Constant.LOCK_TITLE, event.getMessage());
@@ -331,5 +335,26 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     @Override
     public void onFail(String... permissions) {
         finish();
+    }
+
+    /**
+     * 判断指定类是否运行
+     *
+     * @param className 包名+类名
+     * @return
+     */
+    private boolean isWorked(String className) {
+        ActivityManager myManager = (ActivityManager) InitActivity.this
+                .getApplicationContext().getSystemService(
+                        Context.ACTIVITY_SERVICE);
+        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager
+                .getRunningServices(30);
+        for (int i = 0; i < runningService.size(); i++) {
+            if (runningService.get(i).service.getClassName().toString()
+                    .equals(className)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
