@@ -94,6 +94,7 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
         RestRequest<PushCommonBean> restRequest
                 = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
         String op = restRequest.getOp();
+        L.d("推送OP="+op);
         switch (op) {
             case OP.PUSH_LOCK:
                 /**状态变更锁定屏幕*/
