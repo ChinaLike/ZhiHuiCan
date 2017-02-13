@@ -1,9 +1,8 @@
 /local.properties
 /ZhiHuiCan.iml
 .gradle
+.idea
 build
-/.idea/workspace.xml
 libraries
 copyright
-/.idea/*.xml
 /app/app.iml
