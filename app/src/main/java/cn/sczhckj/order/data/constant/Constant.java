@@ -61,7 +61,7 @@ public interface Constant {
      */
     int ORDER_TYPE_OPEN = 0;//开桌点餐
     int ORDER_TYPE_ALONE = 1;//单桌点餐
-    int ORDER_TYPE_MERGE = 2;//并卓点餐
+    int ORDER_TYPE_MERGE = 2;//并桌点餐
 
     /**
      * 是否显示点菜类型 字段showType
@@ -117,6 +117,11 @@ public interface Constant {
     int TABLE_STATUS_BILL = 7;//结帐中
     int TABLE_STATUS_SWEEP = 8;//打扫中
     int TABLE_STATUS_OTHER = -1;//其他
+
+    /**
+     * 版本类型0-点菜端 1-后厨端
+     */
+    int VERSION_TYPE = 0;
 
 
 }

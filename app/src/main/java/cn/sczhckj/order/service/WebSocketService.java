@@ -26,18 +26,6 @@ import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
  */
 
 public class WebSocketService extends Service implements OnWebSocketListenner {
-//    /**
-//     * 锁屏WebSocket
-//     */
-//    private WebSocketImpl mWebSocketLock = new WebSocketImpl();
-//    /**
-//     * 菜品WebSocket
-//     */
-//    private WebSocketImpl mWebSocketFood = new WebSocketImpl();
-//    /**
-//     * 服务WebSocket
-//     */
-//    private WebSocketImpl mWebSocketService = new WebSocketImpl();
     /**
      * 数据刷新
      */
@@ -55,10 +43,6 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        mWebSocketLock.connect(Config.URL_LOCK_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
-//        mWebSocketFood.connect(Config.URL_FOOD_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
-//        mWebSocketService.connect(Config.URL_SERVICE_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
-//        mWebSocketRefresh.connect(Config.URL_REFRESH_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
         mWebSocketRefresh.connect(Config.URL_NOTIFICATION_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
         return super.onStartCommand(intent, flags, startId);
     }

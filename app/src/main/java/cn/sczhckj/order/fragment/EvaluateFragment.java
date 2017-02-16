@@ -150,7 +150,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         evaluateFinish.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         bean.setWords(wordList);
         bean.setItems(mEvalAdapter.getmList());
         mEvalMode.evalCommit(bean, commitCallback);

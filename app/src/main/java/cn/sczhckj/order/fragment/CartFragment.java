@@ -364,7 +364,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setPassword(password);
-        bean.setMemberCode(MyApplication.memberCode);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         bean.setPersonCount(MainActivity.personNumber);
         bean.setFoods(infoSwitch());
         mTableMode.open(bean, this);
@@ -377,8 +377,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         showProgress("数据提交中，请稍后...");
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
-        bean.setRecordId(MyApplication.recordId);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
+        bean.setRecordId(MyApplication.tableBean.getRecordId());
         bean.setFoods(infoSwitch());
         mOrderMode.order(bean, this);
     }
@@ -389,8 +389,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     private void initRefresh() {
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
-        bean.setRecordId(MyApplication.recordId);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
+        bean.setRecordId(MyApplication.tableBean.getRecordId());
         mOrderMode.refresh(bean, refreshFoodCallback);
     }
 
@@ -483,12 +483,12 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 T.showShort(mContext, bean.getMessage());
             } else {
                 /**未开桌*//**设置点菜方式*/
-                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, bean.getResult().getShowType());
+                MyApplication.tableBean.setOrderType(bean.getResult().getShowType());
                 /**设置菜品过多提醒*/
                 warmPromptNumber = bean.getResult().getFoodCountHint() != null ? bean.getResult().getFoodCountHint() : 0;
-                MyApplication.mStorage.setData(Constant.STORAGR_HINT, warmPromptNumber);
+                MyApplication.tableBean.setFoodCountHint(warmPromptNumber);
                 /**设置消费记录ID*/
-                MyApplication.setRecordId(bean.getResult().getRecordId());
+                MyApplication.tableBean.setRecordId(bean.getResult().getRecordId());
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.MAIN, bean.getResult().getShowType()));
                 isOpen = true;
             }
@@ -649,8 +649,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         requestCommonBean.setFoodId(bean.getId());
         requestCommonBean.setCateId(bean.getCateId());
         requestCommonBean.setCount(COUNT);
-        requestCommonBean.setMemberCode(MyApplication.memberCode);
-        requestCommonBean.setRecordId(MyApplication.recordId);
+        requestCommonBean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
+        requestCommonBean.setRecordId(MyApplication.tableBean.getRecordId());
         requestCommonBean.setOperateID(Constant.OPERATE_ID);
         requestCommonBean.setPriceTypeID(bean.getType());
         new FoodMode().refund(requestCommonBean, new Callback<Bean<ResponseCommonBean>>() {
@@ -724,7 +724,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             mOrderAdapter.notifyDataSetChanged(orderList);
         } else if (WebSocketEvent.REFRESH_RECORD == event.getType()) {
             /**刷新点菜记录的已下单*/
-            if (isOpen){
+            if (isOpen) {
                 /**开桌后才会刷新已下单*/
                 initRefresh();
             }

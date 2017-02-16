@@ -6,6 +6,7 @@ import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.card.CardInfoBean;
+import cn.sczhckj.order.data.bean.device.ExceptionBean;
 import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.data.bean.eval.EvalBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
@@ -28,6 +29,13 @@ import retrofit2.http.POST;
  */
 
 public interface RetrofitService {
+
+    /**
+     * 获取台桌初始化信息
+     */
+    @FormUrlEncoded
+    @POST("rest/table/tableInit")
+    Call<Bean<TableBean>> tableInit(@Field("p") String p);
 
     /**
      * 开桌信息
@@ -225,5 +233,11 @@ public interface RetrofitService {
     @POST("rest/device/update")
     Call<Bean<VersionBean>> version(@Field("p") String p);
 
+    /**
+     * 异常信息提交
+     */
+    @FormUrlEncoded
+    @POST("rest/device/exception")
+    Call<Bean<ResponseCommonBean>> exception(@Field("p") String p);
 
 }

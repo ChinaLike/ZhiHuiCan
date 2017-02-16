@@ -24,19 +24,16 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.device.VersionBean;
-import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.event.WebSocketEvent;
-import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.manage.DownLoadManager;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.mode.TableMode;
-import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.permission.OnPermissionCallback;
 import cn.sczhckj.order.permission.PermissionManager;
 import cn.sczhckj.order.service.WebSocketService;
@@ -44,7 +41,6 @@ import cn.sczhckj.order.until.AndroidVersionUtil;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.FileUntils;
 import cn.sczhckj.order.until.show.L;
-import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -72,10 +68,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      * 台桌信息获取
      */
     private TableMode mTableMode;
-    /**
-     * 版本类型0-点菜端 1-后厨端
-     */
-    private final int VERSION_TYPE = 0;
+
     /**
      * 手动更新或者是后台自动更新
      */
@@ -96,6 +89,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         setContentView(R.layout.activity_init);
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
+        System.out.println(5/0+"");
         /**显示设备ID*/
         deviceid.setText("设备ID：" + AppSystemUntil.getAndroidID(this));
         if (AndroidVersionUtil.hasM()) {
@@ -135,7 +129,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         initParent.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(this));
-        bean.setType(VERSION_TYPE);
+        bean.setType(Constant.VERSION_TYPE);
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.DEVICE_UPDATE)
                 .time()
@@ -152,7 +146,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         if (!isAuto) {
             RequestCommonBean bean = new RequestCommonBean();
             bean.setDeviceId(AppSystemUntil.getAndroidID(this));
-            mTableMode.openInfo(bean, openInfoCallback);
+            mTableMode.tableInit(bean, openInfoCallback);
         }
     }
 
@@ -273,10 +267,12 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
             initParent.setClickable(true);
             Bean<TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                MyApplication.setRecordId(bean.getResult().getRecordId());
-                MyApplication.setStatus(bean.getResult().getStatus());
-                MyApplication.setFoodCountHint(bean.getResult().getFoodCountHint() == null
-                        ? 0 : bean.getResult().getFoodCountHint());
+                L.d("初始化台桌信息：" + bean.toString());
+//                MyApplication.setRecordId(bean.getResult().getRecordId());
+//                MyApplication.setStatus(bean.getResult().getStatus());
+//                MyApplication.setFoodCountHint(bean.getResult().getFoodCountHint() == null
+//                        ? 0 : bean.getResult().getFoodCountHint());
+                MyApplication.tableBean = bean.getResult();
                 initTableStatus(bean.getResult().getStatus(), bean.getResult().getRemark());
                 initText.setText("初始化成功");
             } else {

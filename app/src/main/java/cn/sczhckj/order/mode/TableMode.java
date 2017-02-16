@@ -21,6 +21,21 @@ import retrofit2.Callback;
 public class TableMode {
 
     /**
+     * 初始化台桌信息
+     *
+     * @param bean     参数对象
+     * @param callback 回调
+     */
+    public void tableInit(RequestCommonBean bean, Callback<Bean<TableBean>> callback) {
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.TABLE_INIT)
+                .time()
+                .bean(bean);
+        Call<Bean<TableBean>> openInfo = RetrofitRequest.service().tableInit(restRequest.toRequestString());
+        openInfo.enqueue(callback);
+    }
+
+    /**
      * 获取开桌信息
      *
      * @param bean     参数对象

@@ -118,7 +118,7 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
                 mContext.getResources().getString(R.string.loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         mCardMode.info(bean, this);
     }
 

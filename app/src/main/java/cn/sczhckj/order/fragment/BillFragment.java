@@ -196,8 +196,8 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
                 mContext.getResources().getString(R.string.loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
-        bean.setRecordId(MyApplication.recordId);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
+        bean.setRecordId(MyApplication.tableBean.getRecordId());
         mBillMode.bill(bean, this);
     }
 
@@ -207,7 +207,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     private void initTip() {
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         mBillMode.awards(bean, awardsCallback);
     }
 
@@ -217,8 +217,8 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     private void initCommit() {
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
-        bean.setRecordId(MyApplication.recordId);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
+        bean.setRecordId(MyApplication.tableBean.getRecordId());
         bean.setAwards(awards);
         mBillMode.billCommit(bean, commitCallback);
     }

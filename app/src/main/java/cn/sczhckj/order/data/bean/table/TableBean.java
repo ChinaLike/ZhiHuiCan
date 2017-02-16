@@ -2,6 +2,9 @@ package cn.sczhckj.order.data.bean.table;
 
 import java.util.List;
 
+import cn.sczhckj.order.data.bean.user.MemberBean;
+import cn.sczhckj.order.data.constant.Constant;
+
 /**
  * @describe: 开桌信息属性
  * @author: Like on 2016/12/13.
@@ -19,6 +22,9 @@ public class TableBean {
     private List<Integer> persons;//候选人数
     private Integer recordId;//消费记录ID
     private Integer foodCountHint;//菜品过多提醒,只有status=3,5,6,7,8有效，其余时候可不返回
+    private MemberBean user;//会员信息
+    private Integer isShow;//是否显示点餐方式，0-不显示 1-显示
+    private Integer orderType;//点餐方式
 
     public Integer getId() {
         return id;
@@ -85,11 +91,44 @@ public class TableBean {
     }
 
     public Integer getFoodCountHint() {
+        if (foodCountHint == null){
+            return 10;
+        }
         return foodCountHint;
     }
 
     public void setFoodCountHint(Integer foodCountHint) {
         this.foodCountHint = foodCountHint;
+    }
+
+    public MemberBean getUser() {
+        return user;
+    }
+
+    public void setUser(MemberBean user) {
+        this.user = user;
+    }
+
+    public Integer getIsShow() {
+        if (isShow == null) {
+            return Constant.SHOW_TYPE;
+        }
+        return isShow;
+    }
+
+    public void setIsShow(Integer isShow) {
+        this.isShow = isShow;
+    }
+
+    public Integer getOrderType() {
+        if (orderType == null){
+            return Constant.ORDER_TYPE_ALONE;
+        }
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
     }
 
     @Override
@@ -104,6 +143,8 @@ public class TableBean {
                 ", persons=" + persons +
                 ", recordId=" + recordId +
                 ", foodCountHint=" + foodCountHint +
+                ", user=" + user +
+                ", isShow=" + isShow +
                 '}';
     }
 }

@@ -106,7 +106,7 @@ public class MainFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isConsuming()) {
-            if (MyApplication.status == Constant.TABLE_STATUS_BILL) {
+            if (MyApplication.tableBean.getStatus() == Constant.TABLE_STATUS_BILL) {
                 index = 2;
             } else {
                 index = 0;
@@ -137,7 +137,8 @@ public class MainFragment extends BaseFragment {
         imageViews[index].setSelected(true);
         textViews[index].setSelected(true);
         if (index == 0) {
-            showOrderType((Integer) MyApplication.mStorage.getData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE));
+//            showOrderType((Integer) MyApplication.mStorage.getData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE));
+            showOrderType(MyApplication.tableBean.getIsShow());
         } else if (index == 1) {
             initServiceFragment();
         } else if (index == 2) {
@@ -261,7 +262,8 @@ public class MainFragment extends BaseFragment {
                 orderType = Constant.ORDER_TYPE_ALONE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
                 /**如果已经点击，再次进来不显示点菜方式*/
-                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
+//                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
+                MyApplication.tableBean.setOrderType(Constant.DIS_SHOW_TYPE);
                 /**设置已选择点菜*/
                 BaseFragment.setOrderType(orderType);
                 break;
@@ -320,7 +322,8 @@ public class MainFragment extends BaseFragment {
                 orderType = Constant.ORDER_TYPE_MERGE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
                 /**如果已经点击，再次进来不显示点菜方式*/
-                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
+//                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
+                MyApplication.tableBean.setOrderType(Constant.DIS_SHOW_TYPE);
                 /**设置已选择点菜*/
                 BaseFragment.setOrderType(orderType);
                 dialog.dismiss();

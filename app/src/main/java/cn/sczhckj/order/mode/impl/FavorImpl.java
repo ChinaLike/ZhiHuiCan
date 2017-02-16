@@ -125,10 +125,10 @@ public class FavorImpl {
     private void initFavor(FoodBean bean) {
         RequestCommonBean requestCommonBean = new RequestCommonBean();
         requestCommonBean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        requestCommonBean.setRecordId(MyApplication.recordId);
+        requestCommonBean.setRecordId(MyApplication.tableBean.getRecordId());
         requestCommonBean.setFoodId(bean.getId());
         requestCommonBean.setCateId(bean.getCateId());
-        requestCommonBean.setMemberCode(MyApplication.memberCode);
+        requestCommonBean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         mFoodMode.favor(requestCommonBean, favorCallback);
     }
 

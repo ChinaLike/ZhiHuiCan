@@ -255,7 +255,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setCateId(cateId);
-        bean.setMemberCode(MyApplication.memberCode);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         mFoodMode.foods(bean, foodCallback);
     }
 
@@ -557,7 +557,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         } else if (WebSocketEvent.ALONE_ORDER == event.getType()) {
             /**单独点餐*/
             orderType = Constant.ORDER_TYPE_ALONE;
-            MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE,orderType);
+//            MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE,orderType);
+            MyApplication.tableBean.setOrderType(orderType);
             // TODO: 2017-01-16 变更状态栏等信息
 
         } else if (WebSocketEvent.MERGE_TABLE == event.getType()) {

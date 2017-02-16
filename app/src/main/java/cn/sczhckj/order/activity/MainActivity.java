@@ -181,7 +181,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void isLogin() {
         /**判断是否登录*/
-        if (MyApplication.isLogin) {
+        if (MyApplication.tableBean.getUser()!=null) {
             MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
             login(bean);
         }
@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void disposeIntent() {
         int status = getIntent().getExtras().getInt(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OTHER);
-        String remark = getIntent().getExtras().getString(Constant.INTENT_TABLE_REMARK,"");
+        String remark = getIntent().getExtras().getString(Constant.INTENT_TABLE_REMARK, "");
         switch (status) {
             case Constant.TABLE_STATUS_OPEN:
                 /**进入消费中*/
@@ -371,7 +371,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         /**退出该界面时退出登录*/
-        MyApplication.setIsLogin(false);
+        MyApplication.tableBean = null;
         /**退出时暂停Glide请求*/
         Glide.with(getApplicationContext()).pauseRequests();
         /**人数清零*/
@@ -414,7 +414,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(this));
         bean.setNumber(number);
-        bean.setRecordId(MyApplication.recordId);
+        bean.setRecordId(MyApplication.tableBean.getRecordId());
         TableMode tableMode = new TableMode();
         tableMode.setPersonNum(bean, this);
     }
@@ -483,7 +483,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
             /**设置菜品过多提醒*/
             if (bean.getResult() != null && bean.getResult().getFoodCountHint() != null) {
                 BaseFragment.warmPromptNumber = bean.getResult().getFoodCountHint();
-                MyApplication.mStorage.setData(Constant.STORAGR_HINT, BaseFragment.warmPromptNumber);
+//                MyApplication.mStorage.setData(Constant.STORAGR_HINT, BaseFragment.warmPromptNumber);
             }
         } else {
             T.showShort(this, bean.getMessage());
@@ -578,6 +578,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     /**
      * 进入锁屏界面
+     *
      * @param remark
      */
     private void lockView(String remark) {
@@ -592,7 +593,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (event.getType() == WebSocketEvent.REFRESH_USER) {
-            MyApplication.setIsLogin(true);
+//            MyApplication.setIsLogin(true);
+            MyApplication.tableBean.setUser(event.getBean().getUser());
             login(event.getBean().getUser());
         }
     }

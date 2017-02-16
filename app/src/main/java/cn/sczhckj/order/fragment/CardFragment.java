@@ -125,7 +125,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
                 mContext.getResources().getString(R.string.loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setMemberCode(MyApplication.memberCode);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         mCardMode.info(bean, this);
     }
 
@@ -147,7 +147,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
         applyForVipCardConfirm.setText("数据提交中...");
         applyForVipCardConfirm.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
-        bean.setMemberCode(MyApplication.memberCode);
+        bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
         bean.setName(cardInputName.getText().toString());
         bean.setPhone(cardInputPhone.getText().toString());
         bean.setCardId(card.getCardId());

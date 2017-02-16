@@ -23,6 +23,7 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.until.show.L;
 
@@ -113,9 +114,9 @@ public abstract class BaseFragment extends Fragment {
      * 设置是否开桌
      */
     private void setIsOpen() {
-        if (MyApplication.status == Constant.TABLE_STATUS_OPEN
-                || MyApplication.status == Constant.TABLE_STATUS_FOOD
-                || MyApplication.status == Constant.TABLE_STATUS_BILL) {
+        int status = MyApplication.tableBean.getStatus();
+        if (status == Constant.TABLE_STATUS_OPEN || status == Constant.TABLE_STATUS_FOOD
+                || status == Constant.TABLE_STATUS_BILL) {
             isOpen = true;
         }
     }
@@ -184,16 +185,17 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void finish() {
         getActivity().finish();
-        /**设置为未登录模式*/
-        MyApplication.setIsLogin(false);
-        /**清空用户编码记录*/
-        MyApplication.setMemberCode(null);
-        /**消费记录ID*/
-        MyApplication.setRecordId(null);
-        /**设置台桌状态*/
-        MyApplication.setStatus(Constant.TABLE_STATUS_EMPTY);
-        /**设置菜品过多提醒*/
-        MyApplication.setFoodCountHint(0);
+//        /**设置为未登录模式*/
+//        MyApplication.setIsLogin(false);
+//        /**清空用户编码记录*/
+//        MyApplication.setMemberCode(null);
+//        /**消费记录ID*/
+//        MyApplication.setRecordId(null);
+//        /**设置台桌状态*/
+//        MyApplication.setStatus(Constant.TABLE_STATUS_EMPTY);
+//        /**设置菜品过多提醒*/
+//        MyApplication.setFoodCountHint(0);
+        MyApplication.tableBean = new TableBean();
         /**人数清零*/
         MainActivity.personNumber = 0;
         /**设置默认点餐为单桌点餐*/
@@ -207,7 +209,7 @@ public abstract class BaseFragment extends Fragment {
         disOrderList = new ArrayList<>();
         /**设置默认是否加菜*/
         isAddFood = false;
-        clearStorage();
+//        clearStorage();
         /**清除已点赞菜品*/
         favorFood = new ArrayList<>();
     }
@@ -221,9 +223,9 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 正常结账后，清除所有用户数据
      */
-    private void clearStorage() {
-        MyApplication.mStorage.clear();
-    }
+//    private void clearStorage() {
+//        MyApplication.mStorage.clear();
+//    }
 
     /**
      * 加载中
@@ -282,10 +284,12 @@ public abstract class BaseFragment extends Fragment {
      * @return
      */
     protected boolean isConsuming() {
-        if (MyApplication.status == Constant.TABLE_STATUS_OPEN
-                || MyApplication.status == Constant.TABLE_STATUS_FOOD
-                || MyApplication.status == Constant.TABLE_STATUS_BILL) {
-            warmPromptNumber = (int) MyApplication.mStorage.getData(Constant.STORAGR_HINT, 0);
+        Integer status = MyApplication.tableBean.getStatus();
+        if (status == Constant.TABLE_STATUS_OPEN
+                || status == Constant.TABLE_STATUS_FOOD
+                || status == Constant.TABLE_STATUS_BILL) {
+//            warmPromptNumber = (int) MyApplication.mStorage.getData(Constant.STORAGR_HINT, 0);
+            warmPromptNumber = MyApplication.tableBean.getFoodCountHint();
             return true;
         } else {
             return false;
@@ -299,7 +303,8 @@ public abstract class BaseFragment extends Fragment {
      */
     public static void setOrderType(int orderType) {
         BaseFragment.orderType = orderType;
-        MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE, orderType);
+//        MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE, orderType);
+        MyApplication.tableBean.setOrderType(orderType);
     }
 
     /**
@@ -308,6 +313,7 @@ public abstract class BaseFragment extends Fragment {
      * @return
      */
     public static int getOrderType() {
-        return (int) MyApplication.mStorage.getData(Constant.STORAGR_ORDER_TYPE, Constant.ORDER_TYPE_ALONE);
+//        return (int) MyApplication.mStorage.getData(Constant.STORAGR_ORDER_TYPE, Constant.ORDER_TYPE_ALONE);
+        return MyApplication.tableBean.getOrderType();
     }
 }

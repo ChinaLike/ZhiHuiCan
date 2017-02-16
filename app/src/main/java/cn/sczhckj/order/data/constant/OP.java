@@ -202,5 +202,15 @@ public interface OP {
      */
     String DEVICE_UPDATE = "update";
 
+    /**
+     * 台桌初始化
+     */
+    String TABLE_INIT = "tableInit";
+
+    /**
+     * 异常收集
+     */
+    String EXCEPTION = "exception";
+
 
 }
