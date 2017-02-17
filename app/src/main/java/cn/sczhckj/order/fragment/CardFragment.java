@@ -122,7 +122,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
      */
     private void initFavor() {
         loading(loadingParent, contentParent, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.card_fragment_loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -144,7 +144,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
      * 提交信息
      */
     private void commit() {
-        applyForVipCardConfirm.setText("数据提交中...");
+        applyForVipCardConfirm.setText(getString(R.string.card_fragment_commit));
         applyForVipCardConfirm.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -226,14 +226,14 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
             loadingWeb(url);
         } else {
             loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.card_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<CardInfoBean>> call, Throwable t) {
         loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.card_fragment_loading_fail));
     }
 
     /**
@@ -249,14 +249,14 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
                 T.showShort(mContext, bean.getMessage());
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.FAVORABLE_OUT));
             } else {
-                applyForVipCardConfirm.setText("提交失败，点击重新提交");
+                applyForVipCardConfirm.setText(getString(R.string.card_fragment_commit_fail));
                 applyForVipCardConfirm.setClickable(true);
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-            applyForVipCardConfirm.setText("提交失败，点击重新提交");
+            applyForVipCardConfirm.setText(getString(R.string.card_fragment_commit_fail));
             applyForVipCardConfirm.setClickable(true);
         }
     };

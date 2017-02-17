@@ -103,11 +103,11 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
      */
     private void initLogin(String number, String code) {
         if (number.equals("") || number == null) {
-            T.showShort(this, getString(R.string.userNameHint));
+            T.showShort(this, getString(R.string.login_activity_user_name_hint));
             return;
         }
         if (code.equals("") || code == null) {
-            T.showShort(this, getString(R.string.passwordHint));
+            T.showShort(this, getString(R.string.login_activity_password_hint));
             return;
         }
         loginBtnStatus(true);
@@ -147,15 +147,15 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
             } else {
                 T.showShort(LoginActivity.this, bean.getMessage());
                 loginCode.setClickable(true);
-                loginCode.setText("重新发送");
+                loginCode.setText(getString(R.string.login_activity_again_send));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-            T.showShort(LoginActivity.this, getString(R.string.overTime));
+            T.showShort(LoginActivity.this, getString(R.string.login_activity_over_time));
             loginCode.setClickable(true);
-            loginCode.setText("重新发送");
+            loginCode.setText(getString(R.string.login_activity_again_send));
         }
     };
 
@@ -166,12 +166,12 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
         mCountDownTimer = new CountDownTimer(TIME, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                loginCode.setText((millisUntilFinished / 1000) + "s后重新发送");
+                loginCode.setText(getString(R.string.login_activity_again_send_later,millisUntilFinished / 1000));
             }
 
             @Override
             public void onFinish() {
-                loginCode.setText("重新发送");
+                loginCode.setText(getString(R.string.login_activity_again_send));
                 loginCode.setClickable(true);
             }
         };
@@ -203,7 +203,8 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
                     loginCode.setClickable(false);
                     initSms(loginPhoneInput.getText().toString());
                 } else {
-                    Toast.makeText(LoginActivity.this, "请先输入电话号码", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,
+                            getString(R.string.login_activity_input_phone), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.login_cancel_phone:
@@ -235,10 +236,10 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
             loginView1.setVisibility(View.GONE);
             loginCode.setVisibility(View.GONE);
             loginCancelPhone.setVisibility(View.VISIBLE);
-            loginPhoneInput.setHint("请输入卡号或手机号");
+            loginPhoneInput.setHint(getString(R.string.login_activity_input_phone_hint));
             loginPhoneInput.setText("");
             loginPasswordInput.setText("");
-            loginPasswordInput.setHint("请输入密码");
+            loginPasswordInput.setHint(getString(R.string.login_activity_input_password_hint));
             loginPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         } else if (type == SHORTCUT_LOGIN) {
             /**快捷登录*/
@@ -248,10 +249,10 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
             loginView1.setVisibility(View.VISIBLE);
             loginCode.setVisibility(View.VISIBLE);
             loginCancelPhone.setVisibility(View.GONE);
-            loginPhoneInput.setHint("请输入手机号");
+            loginPhoneInput.setHint(getString(R.string.login_activity_phone_hint));
             loginPhoneInput.setText("");
             loginPasswordInput.setText("");
-            loginPasswordInput.setHint("请输入验证码");
+            loginPasswordInput.setHint(getString(R.string.login_activity_code_hint));
             loginPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT);
         }
     }
@@ -323,7 +324,7 @@ public class LoginActivity extends Activity implements Callback<Bean<MemberBean>
     @Override
     public void onFailure(Call<Bean<MemberBean>> call, Throwable t) {
         loginBtnStatus(false);
-        T.showShort(this, getString(R.string.overTime));
+        T.showShort(this, getString(R.string.login_activity_over_time));
     }
 }
 

@@ -126,7 +126,6 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void showProgress() {
         if (!mPopupWindow.isShowing()) {
-            Log.d("PopWindow", "show");
             popLoading.setVisibility(View.VISIBLE);
             popLoadingFail.setVisibility(View.GONE);
             mPopupWindow.showAtLocation(popLoadingView, Gravity.CENTER, 0, 0);

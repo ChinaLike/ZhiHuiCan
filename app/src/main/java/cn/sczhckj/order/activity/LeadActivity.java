@@ -13,10 +13,19 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.data.response.ResponseCode;
+import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.L;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @ Describe:引导界面，提供用户VIP登录，用户可选择登录，也可不选择登录，不登录路直接跳转选菜界面，如果
@@ -38,43 +47,12 @@ public class LeadActivity extends Activity {
     @Bind(R.id.lead_isVip)
     TextView leadIsVip;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
-        disposeIntent();
-
-    }
-
-    /**
-     * 处理Intent状态
-     */
-    private void disposeIntent() {
-        int status = getIntent().getExtras().getInt(Constant.INTENT_TABLE_STATUS, Constant.TABLE_STATUS_OTHER);
-        String remark = getIntent().getExtras().getString(Constant.INTENT_TABLE_REMARK,"");
-        Intent intent = new Intent(LeadActivity.this, MainActivity.class);
-        switch (status) {
-            case Constant.TABLE_STATUS_OPEN:
-                /**已开桌*/
-            case Constant.TABLE_STATUS_FOOD:
-                /**已上菜和已开桌处理同级*/
-                intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OPEN);
-                startActivity(intent);
-                break;
-            case Constant.TABLE_STATUS_BILL:
-                /**结帐中*/
-                intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_BILL);
-                intent.putExtra(Constant.INTENT_TABLE_REMARK,remark);
-                startActivity(intent);
-                break;
-            case Constant.TABLE_STATUS_EMPTY:
-                /**空桌*/
-            default:
-                /**其他*/
-                break;
-        }
+        initTableStatus(MyApplication.tableBean.getStatus(),MyApplication.tableBean.getRemark());
     }
 
     @OnClick({R.id.right, R.id.deny})
@@ -135,6 +113,60 @@ public class LeadActivity extends Activity {
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 处理台桌状态
+     *
+     * @param status
+     * @param message
+     */
+    private void initTableStatus(Integer status, String message) {
+        Intent intent = new Intent(LeadActivity.this, MainActivity.class);
+        switch (status) {
+            case Constant.TABLE_STATUS_DISABLE:
+                /**不可用*/
+            case Constant.TABLE_STATUS_NO_OPEN:
+                /**未开台*/
+            case Constant.TABLE_STATUS_SWEEP:
+                /**打扫中*/
+            case Constant.TABLE_STATUS_RESERVE:
+                /**预定*/
+                intentLock(status, message);
+                break;
+            case Constant.TABLE_STATUS_EMPTY:
+                /**空桌*/
+                break;
+            case Constant.TABLE_STATUS_OPEN:
+                /**已开桌*/
+            case Constant.TABLE_STATUS_FOOD:
+                /**已上菜*/
+                intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OPEN);
+                startActivity(intent);
+                break;
+            case Constant.TABLE_STATUS_BILL:
+                /**结帐中*/
+                intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_BILL);
+                intent.putExtra(Constant.INTENT_TABLE_REMARK, message);
+                startActivity(intent);
+                break;
+            default:
+                /**其他*/
+                break;
+        }
+    }
+
+    /**
+     * 跳转锁定界面
+     *
+     * @param status  状态
+     * @param message 显示消息
+     */
+    private void intentLock(Integer status, String message) {
+        Intent intent = new Intent(LeadActivity.this, LockActivity.class);
+        intent.putExtra(Constant.LOCK_TITLE, message);
+        intent.putExtra(Constant.INTENT_TABLE_STATUS, status);
+        startActivity(intent);
     }
 
 }

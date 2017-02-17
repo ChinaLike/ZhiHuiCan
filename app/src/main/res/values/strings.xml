@@ -1,38 +1,100 @@
 <resources>
     <string name="app_name">智汇餐点菜</string>
+    
+    <!--InitActivity-->
+    <string name="init_activity_device">设备ID: %s</string>
+    <string name="init_activity_loading">数据初始化中...</string>
+    <string name="init_activity_loading_success">初始化成功</string>
+    <string name="init_activity_loading_fail">初始化失败，点击重新初始化...</string>
 
-    <!--进入页面-->
-    <string name="firstPage">欢迎来到本店就餐，点击开桌开始就餐！</string>
-    <string name="isVip">是否会员</string>
-    <string name="cardNumber">卡号</string>
-    <string name="vipCardNumberHint">会员卡号</string>
-    <string name="password">密码</string>
-    <string name="vipPasswordHint">会员密码</string>
-    <string name="toast_net">请检查网络是否链接</string>
-    <string name="userNameHint">卡号或手机号未填写</string>
-    <string name="passwordHint">密码或验证码未填写</string>
-    <string name="overTime">请求超时</string>
+    <!--LeadActivity-->
+    <string name="lead_activity_welcome">欢迎来到本店就餐，点击开桌开始就餐！</string>
+    <string name="lead_activity_is_vip">是否会员</string>
+    <string name="lead_activity_is_yes">是</string>
+    <string name="lead_activity_is_no">否</string>
+
+    <!--LockActivity-->
+    <string name="lock_activity_hint">台桌【%s】已经被锁定</string>
+
+    <!--LoginActivity-->
+    <string name="login_activity_user_name_hint">卡号或手机号未填写</string>
+    <string name="login_activity_password_hint">密码或验证码未填写</string>
+    <string name="login_activity_over_time">请求超时</string>
+    <string name="login_activity_again_send">重新发送</string>
+    <string name="login_activity_again_send_later">%ds后重新发送</string>
+    <string name="login_activity_input_phone">请先输入电话号码</string>
+    <string name="login_activity_input_phone_hint">请输入卡号或手机号</string>
+    <string name="login_activity_input_password_hint">请输入密码</string>
+    <string name="login_activity_phone_hint">请输入手机号</string>
+    <string name="login_activity_code_hint">请输入验证码</string>
+
+    <string name="login_activity_number_login">账号登录</string>
+    <string name="login_activity_short_cut_login">快捷登陆</string>
+    <string name="login_activity_login">登录</string>
+
+    <!--MainActivity-->
+    <string name="main_activity_dialog_title">人数设置</string>
+    <string name="main_activity_dialog_content">请输入人数</string>
+    <string name="main_activity_dialog_positive">确定</string>
+    <string name="main_activity_dialog_negative">取消</string>
+    <string name="main_activity_setting_fail">设置失败，请重新设置！</string>
+
+    <string name="main_activity_table">桌号</string>
+    <string name="main_activity_person">就餐人数</string>
+    <string name="main_activity_waitress">服务员</string>
+
+    <!--BillFragment-->
+    <string name="bill_fragment_loading">努力加载中...</string>
+    <string name="bill_fragment_loading_fail">数据加载失败，点击刷新</string>
+    <string name="bill_fragment_bill_fail">结账失败，请重新提交</string>
+
+    <string name="bill_fragment_bill">结账</string>
+
+    <!--CardFragment-->
+    <string name="card_fragment_loading">努力加载中...</string>
+    <string name="card_fragment_commit">数据提交中...</string>
+    <string name="card_fragment_loading_fail">数据加载失败，点击刷新</string>
+    <string name="card_fragment_commit_fail">提交失败，点击重新提交</string>
+
+    <!--CartFragment-->
+
+    <!--DetailsFragment-->
+
+    <!--EvaluateFragment-->
+
+    <!--FavorableFragment-->
+
+    <!--MainFragment-->
+
+    <!--OrderFragment-->
+
+    <!--RequireFragment-->
+
+    <!--ServiceFragment-->
+
+    <!--CommonString-->
+    <string name="common_food">菜品</string>
+    <string name="common_number">数量</string>
+    <string name="common_price">单价</string>
+    <string name="common_total_price">小计</string>
+
+
+
+
+
     <string name="potMustChoose">锅底必选</string>
     <string name="recommendingDishes">推荐菜品</string>
     <string name="loadingFail">数据加载失败，点击刷新</string>
     <string name="loading">努力加载中...</string>
 
-    <string name="dishes">菜品</string>
-    <string name="numbers">数量</string>
-    <string name="price">单价</string>
-    <string name="totalPrice">小计</string>
 
 
-    <string name="numberLogin">账号登录</string>
-    <string name="shortcutLogin">快捷登陆</string>
 
 
-    <string name="title_activity_base_activvity">BaseActivvity</string>
 
     <!--购物车按钮-->
     <string name="openTable">开桌</string>
     <string name="order">点菜</string>
-    <string name="settle_accounts">结账</string>
     <string name="choose_good">选好了</string>
 
     <string name="order_type_text_hint">请选择一种点菜方式</string>

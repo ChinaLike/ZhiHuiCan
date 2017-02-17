@@ -181,7 +181,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void isLogin() {
         /**判断是否登录*/
-        if (MyApplication.tableBean.getUser()!=null) {
+        if (MyApplication.tableBean.getUser() != null) {
             MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
             login(bean);
         }
@@ -433,8 +433,9 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 /**设置台桌人数*/
                 if (BaseFragment.isOpen) {
                     mDialog.editTextDialog().setInputType(InputType.TYPE_CLASS_NUMBER);
-                    mDialog.setEditDialog("人数设置", null, "请输入人数")
-                            .setRightButton("确定", new View.OnClickListener() {
+                    mDialog.setEditDialog(getString(R.string.main_activity_dialog_title), null,
+                            getString(R.string.main_activity_dialog_content))
+                            .setRightButton(getString(R.string.main_activity_dialog_positive), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     try {
@@ -447,7 +448,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                                     mDialog.editTextDialog().dismiss();
                                 }
                             })
-                            .setLeftButton("取消", new View.OnClickListener() {
+                            .setLeftButton(getString(R.string.main_activity_dialog_negative), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     mDialog.editTextDialog().dismiss();
@@ -483,7 +484,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
             /**设置菜品过多提醒*/
             if (bean.getResult() != null && bean.getResult().getFoodCountHint() != null) {
                 BaseFragment.warmPromptNumber = bean.getResult().getFoodCountHint();
-//                MyApplication.mStorage.setData(Constant.STORAGR_HINT, BaseFragment.warmPromptNumber);
             }
         } else {
             T.showShort(this, bean.getMessage());
@@ -492,7 +492,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     @Override
     public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-        T.showShort(this, "设置失败，请重新设置！");
+        T.showShort(this, getString(R.string.main_activity_setting_fail));
     }
 
     /**

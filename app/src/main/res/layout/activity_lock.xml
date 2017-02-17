@@ -19,7 +19,6 @@
         android:layout_below="@id/lock_img"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:text="此桌已锁定"
         android:textColor="@color/button_text"
         android:textSize="@dimen/text_size_s_m" />
 

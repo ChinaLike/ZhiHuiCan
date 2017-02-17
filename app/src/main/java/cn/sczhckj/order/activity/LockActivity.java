@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.WebSocketEvent;
@@ -33,7 +34,8 @@ public class LockActivity extends Activity {
     }
 
     private void setTitle() {
-        String title = getIntent().getExtras().getString(Constant.LOCK_TITLE, "此桌已经锁定");
+        String title = getIntent().getExtras().getString(Constant.LOCK_TITLE,
+                getString(R.string.lock_activity_hint, MyApplication.tableBean.getTableName()));
         lockTitle.setText(title);
     }
 

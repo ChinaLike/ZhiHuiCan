@@ -33,7 +33,7 @@
                 android:layout_weight="2"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="35dp"
-                android:text="@string/dishes"
+                android:text="@string/common_food"
                 android:textColor="@color/text_color_m"
                 android:textSize="@dimen/cart_title_text_size"
                 android:textStyle="bold" />
@@ -43,7 +43,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="left|center_vertical"
-                android:text="@string/numbers"
+                android:text="@string/common_number"
                 android:textColor="@color/text_color_m"
                 android:textSize="@dimen/cart_title_text_size"
                 android:textStyle="bold" />
@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="left|center_vertical"
-                android:text="@string/price"
+                android:text="@string/common_price"
                 android:textColor="@color/text_color_m"
                 android:textSize="@dimen/cart_title_text_size"
                 android:textStyle="bold" />
@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="left|center_vertical"
-                android:text="@string/totalPrice"
+                android:text="@string/common_total_price"
                 android:textColor="@color/text_color_m"
                 android:textSize="@dimen/cart_title_text_size"
                 android:textStyle="bold" />
@@ -224,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_left"
                 android:background="@drawable/selector_shape_button_yellow"
-                android:text="@string/settle_accounts"
+                android:text="@string/bill_fragment_bill"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_size" />
 

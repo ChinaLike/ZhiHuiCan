@@ -193,7 +193,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      */
     private void initBill() {
         loading(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.bill_fragment_loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -289,14 +289,14 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             mSettleAccountsAdapter.notifyDataSetChanged(mList);
         } else {
             loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.bill_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<List<BillBean>>> call, Throwable t) {
         loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.bill_fragment_loading_fail));
     }
 
     /**
@@ -336,7 +336,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-            T.showShort(mContext, "结账失败，请重新提交");
+            T.showShort(mContext, getString(R.string.bill_fragment_bill_fail));
         }
     };
 
