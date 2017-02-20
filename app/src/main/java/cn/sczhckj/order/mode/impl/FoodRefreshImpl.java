@@ -1,7 +1,6 @@
 package cn.sczhckj.order.mode.impl;
 
-import android.support.v7.widget.RecyclerView;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.food.FoodBean;
@@ -99,6 +98,46 @@ public class FoodRefreshImpl {
         }
 
         return currList;
+    }
+
+    /**
+     * 比较原有集合中数据，如果有则添加数量或减少数量，如果没有则新加一条记录
+     *
+     * @param bean
+     * @param mList
+     */
+    public void compare(FoodBean bean, List<FoodBean> mList) {
+        int id = bean.getId();
+        int cateId = bean.getCateId();
+        boolean isAdd = false;
+        for (FoodBean item : mList) {
+            if (item.getId() == id && item.getCateId() == cateId) {
+                /**查出有改条记录*/
+                isAdd = true;
+                item.setCount(bean.getCount());
+            }
+        }
+        if (!isAdd) {
+            mList.add(bean);
+        }
+        checkData(mList);
+    }
+
+    /**
+     * 检测集合中是否有数量为0的数据
+     *
+     * @param mList
+     */
+    private void checkData(List<FoodBean> mList) {
+        List<FoodBean> removeBean = new ArrayList<>();
+        for (FoodBean bean : mList) {
+            if (bean.getCount() == 0) {
+                removeBean.add(bean);
+            }
+        }
+        for (FoodBean bean : removeBean) {
+            mList.remove(bean);
+        }
     }
 
 

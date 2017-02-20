@@ -528,19 +528,24 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshFoodBus(RefreshFoodEvent event) {
+        L.d("购物车数据-列表测试" + event.getBean());
         if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
             onItemClick(null, currBean, currPosition);
-        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD && event.getFrom() != RefreshFoodEvent.FROM_FOOD) {
-            /**减菜*/
-            mFoodAdapter.notifyDataSetChanged(
-                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
-        } else if (event.getType() == RefreshFoodEvent.ADD_FOOD && event.getFrom() != RefreshFoodEvent.FROM_FOOD) {
-            /**加菜*/
-            mFoodAdapter.notifyDataSetChanged(
-                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         } else if (event.getType() == RefreshFoodEvent.FAVOR_FOOD) {
             /**点赞*/
             onItemClick(null, currBean, currPosition);
+        } else if (event.getType() == RefreshFoodEvent.CART_MINUS_FOOD) {
+            /**购物车的减菜*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+        } else if (event.getType() == RefreshFoodEvent.DETAILS_ADD_FOOD) {
+            /**详情的加菜*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+        } else if (event.getType() == RefreshFoodEvent.DETAILS_MINUS_FOOD) {
+            /**详情的减菜*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         }
     }
 
@@ -557,7 +562,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         } else if (WebSocketEvent.ALONE_ORDER == event.getType()) {
             /**单独点餐*/
             orderType = Constant.ORDER_TYPE_ALONE;
-//            MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE,orderType);
             MyApplication.tableBean.setOrderType(orderType);
             // TODO: 2017-01-16 变更状态栏等信息
 

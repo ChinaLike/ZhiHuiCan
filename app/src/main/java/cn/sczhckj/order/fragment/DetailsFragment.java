@@ -233,11 +233,11 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
                 break;
             case R.id.details_dishes_minus:
                 /**减菜*/
-                mFoodControl.minusFood(dishesMinus, detailsDishesNumber, mFoodBean, RefreshFoodEvent.FROM_DETAILS);
+                mFoodControl.minusFood(dishesMinus, detailsDishesNumber, mFoodBean, RefreshFoodEvent.DETAILS_MINUS_FOOD);
                 break;
             case R.id.details_dishes_add:
                 /**加菜*/
-                mFoodControl.addFood(dishesAdd, detailsDishesNumber, mFoodBean, beanList, RefreshFoodEvent.FROM_DETAILS);
+                mFoodControl.addFood(dishesAdd, detailsDishesNumber, mFoodBean, beanList, RefreshFoodEvent.DETAILS_ADD_FOOD);
                 break;
             case R.id.details_back:
                 /**返回*/
@@ -293,13 +293,15 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshFoodBus(RefreshFoodEvent event) {
-        if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
-            detailsDishesNumber.setText("0");
-            mFoodBean.setCount(0);
-        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
+        if (event.getType() == RefreshFoodEvent.CART_MINUS_FOOD) {
+            /**购物车减菜通知详情刷新数据*/
             FoodBean bean = event.getBean();
             detailsDishesNumber.setText(bean.getCount() + "");
-            mFoodBean.setCount(bean.getCount());
+//            mFoodBean.setCount(bean.getCount());
+        } else if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
+            /**购物车提交数据后，应把已点菜品数量设置为0*/
+            detailsDishesNumber.setText("0");
+            mFoodBean.setCount(0);
         }
     }
 

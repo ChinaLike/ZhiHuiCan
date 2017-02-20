@@ -312,4 +312,5 @@ public abstract class BaseFragment extends Fragment {
         }
         return MyApplication.tableBean.getOrderType();
     }
+
 }

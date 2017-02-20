@@ -106,10 +106,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         holder.dishesCollect.setText(bean.getFavors() + "");
         /**默认菜品*/
         holder.dishesNumber.setText(bean.getCount() + "");
+//        /**菜品减少*/
+//        mFoodControl.minusFood(holder.dishesMinus, holder.dishesNumber, bean, RefreshFoodEvent.FROM_FOOD);
+//        /**菜品添加*/
+//        mFoodControl.addFood(holder.dishesAdd, holder.dishesNumber, bean, mList, RefreshFoodEvent.FROM_FOOD);
         /**菜品减少*/
-        mFoodControl.minusFood(holder.dishesMinus, holder.dishesNumber, bean, RefreshFoodEvent.FROM_FOOD);
+        mFoodControl.minusFood(holder.dishesMinus, holder.dishesNumber, bean, RefreshFoodEvent.MINUS_FOOD);
         /**菜品添加*/
-        mFoodControl.addFood(holder.dishesAdd, holder.dishesNumber, bean, mList, RefreshFoodEvent.FROM_FOOD);
+        mFoodControl.addFood(holder.dishesAdd, holder.dishesNumber, bean, mList, RefreshFoodEvent.ADD_FOOD);
         /**点击菜品图片进入详情*/
         holder.dishesImage.setOnClickListener(new View.OnClickListener() {
             @Override

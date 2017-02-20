@@ -181,7 +181,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void isLogin() {
         /**判断是否登录*/
-        L.d("获取信息："+MyApplication.tableBean.toString());
+        L.d("获取信息：" + MyApplication.tableBean.toString());
         if (MyApplication.tableBean.isLogin()) {
             MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
             login(bean);
@@ -299,16 +299,16 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void initDetailsFragment(FoodBean bean, List<FoodBean> mList) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (mDetailsFragment == null) {
-            mDetailsFragment = new DetailsFragment();
-            mDetailsFragment.setFoodBean(bean);
-            mDetailsFragment.setBeanList(mList);
-            transaction.add(R.id.content_area, mDetailsFragment);
-        } else {
-            mDetailsFragment.setFoodBean(bean);
-            mDetailsFragment.setBeanList(mList);
-            mDetailsFragment.setData(null);
-        }
+//        if (mDetailsFragment == null) {
+        mDetailsFragment = new DetailsFragment();
+        mDetailsFragment.setFoodBean(bean);
+        mDetailsFragment.setBeanList(mList);
+        transaction.add(R.id.content_area, mDetailsFragment);
+//        } else {
+//            mDetailsFragment.setFoodBean(bean);
+//            mDetailsFragment.setBeanList(mList);
+//            mDetailsFragment.setData(null);
+//        }
         hideRightFragment(transaction);
         transaction.show(mDetailsFragment);
         transaction.commit();

@@ -49,6 +49,7 @@ import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.OrderMode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
+import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
@@ -289,51 +290,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             shoppingcartButton.setText(getString(R.string.choose_good));
         }
 
-    }
-
-    /**
-     * 通过菜品信息来加菜
-     *
-     * @param bean
-     */
-    private List<FoodBean> addFood(FoodBean bean) {
-        int id = bean.getId();
-        int cateId = bean.getCateId();
-        boolean isAdd = false;
-        for (FoodBean item : disOrderList) {
-            if (item.getId() == id && item.getCateId() == cateId) {
-                item.setCount(item.getCount());
-                isAdd = true;
-            }
-        }
-        if (!isAdd) {
-            bean.setCount(1);
-            disOrderList.add(bean);
-        }
-        return disOrderList;
-    }
-
-    /**
-     * 通过菜品信息来减菜
-     *
-     * @param bean
-     */
-    private List<FoodBean> minusFood(FoodBean bean) {
-        int id = bean.getId();
-        int cateId = bean.getCateId();
-        List<FoodBean> mList = new ArrayList<>();
-        mList.addAll(disOrderList);
-        for (FoodBean item : disOrderList) {
-            if (item.getId() == id && item.getCateId() == cateId) {
-                int num = item.getCount();
-                mList.remove(item);
-                if (num > 0) {
-                    item.setCount(num);
-                    mList.add(item);
-                }
-            }
-        }
-        return mList;
     }
 
     /**
@@ -714,23 +670,36 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         if (event.getType() == RefreshFoodEvent.ADD_FOOD) {
             buttonAttr(true);
             /**加菜*/
-            disOrderList = addFood(event.getBean());
-            initCart(disOrderList);
-            mDisOrderAdapter.notifyDataSetChanged(disOrderList);
-            baseInfoRefresh();
+            refreshView(event.getBean());
         } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
-            buttonAttr(true);
             /**减菜*/
-            disOrderList = minusFood(event.getBean());
-            initCart(disOrderList);
-            mDisOrderAdapter.notifyDataSetChanged(disOrderList);
-            baseInfoRefresh();
+            refreshView(event.getBean());
         } else if (event.getType() == RefreshFoodEvent.CART_REFUND) {
             buttonAttr(true);
             /**退菜*/
             refund(event.getBean());
+        } else if (event.getType() == RefreshFoodEvent.DETAILS_MINUS_FOOD) {
+            /**详情减菜*/
+            refreshView(event.getBean());
+        } else if (event.getType() == RefreshFoodEvent.DETAILS_ADD_FOOD) {
+            buttonAttr(true);
+            /**详情加菜*/
+            refreshView(event.getBean());
+        } else if (event.getType() == RefreshFoodEvent.CART_MINUS_FOOD) {
+            /**购物车减菜*/
+            refreshView(event.getBean());
         }
+    }
 
+    /**
+     * 刷新界面
+     * @param bean
+     */
+    private void refreshView(FoodBean bean){
+        FoodRefreshImpl.getInstance().compare(bean, disOrderList);
+        initCart(disOrderList);
+        mDisOrderAdapter.notifyDataSetChanged(disOrderList);
+        baseInfoRefresh();
     }
 
     /**

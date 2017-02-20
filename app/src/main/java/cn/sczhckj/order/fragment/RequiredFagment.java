@@ -381,22 +381,27 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     public void refreshFoodBus(RefreshFoodEvent event) {
         if (event.getType() == RefreshFoodEvent.CART_COMMIT) {
             onItemClick(null, currPosition, currBean);
-        } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD && event.getFrom() != RefreshFoodEvent.FROM_FOOD) {
-            /**减菜*/
-            mFoodAdapter.notifyDataSetChanged(
-                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
-        } else if (event.getType() == RefreshFoodEvent.ADD_FOOD && event.getFrom() != RefreshFoodEvent.FROM_FOOD) {
-            /**加菜*/
-            mFoodAdapter.notifyDataSetChanged(
-                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         } else if (event.getType() == RefreshFoodEvent.FAVOR_FOOD) {
             /**点赞*/
             onItemClick(null, currPosition, currBean);
+        } else if (event.getType() == RefreshFoodEvent.CART_MINUS_FOOD) {
+            /**购物车发出菜品减少*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+        } else if (event.getType() == RefreshFoodEvent.DETAILS_MINUS_FOOD) {
+            /**详情发出菜品减少*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
+        } else if (event.getType() == RefreshFoodEvent.DETAILS_ADD_FOOD) {
+            /**详情发出菜品增加*/
+            mFoodAdapter.notifyDataSetChanged(
+                    FoodRefreshImpl.getInstance().refreshFood(event.getBean(), foodList));
         }
     }
 
     /**
      * 通知事件
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -65,7 +65,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
 
     @Override
     public void onBindViewHolder(ShoppingCartViewHolder holder, int position) {
-        final FoodBean bean = mList.get(position);
+        FoodBean bean = mList.get(position);
         /**设置菜品名字*/
         holder.cartDishesName.setText(bean.getName());
         /**设置菜品数量*/
@@ -80,7 +80,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ShoppingCartVi
             setFinishFood(holder.cartDishesFlag, holder.cartDishesRefund, bean);
         } else if (type == DIS_ORDER_TYPE) {
             holder.cartDishesRefund.setImageResource(R.drawable.open_btn_dishes_reduce);
-            mFoodControl.minusFood(holder.cartDishesRefund, bean, RefreshFoodEvent.FROM_CART);
+            mFoodControl.minusFood(holder.cartDishesRefund, bean, RefreshFoodEvent.CART_MINUS_FOOD);
         }
     }
 
