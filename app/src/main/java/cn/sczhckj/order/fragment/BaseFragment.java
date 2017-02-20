@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.activity.BaseActivity;
 import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
@@ -183,18 +185,8 @@ public abstract class BaseFragment extends Fragment {
      * 完成后关闭界面，推到会员登录界面
      */
     protected void finish() {
-        getActivity().finish();
-//        /**设置为未登录模式*/
-//        MyApplication.setIsLogin(false);
-//        /**清空用户编码记录*/
-//        MyApplication.setMemberCode(null);
-//        /**消费记录ID*/
-//        MyApplication.setRecordId(null);
-//        /**设置台桌状态*/
-//        MyApplication.setStatus(Constant.TABLE_STATUS_EMPTY);
-//        /**设置菜品过多提醒*/
-//        MyApplication.setFoodCountHint(0);
         MyApplication.tableBean = new TableBean();
+        setDefaultTable();
         /**人数清零*/
         MainActivity.personNumber = 0;
         /**设置默认点餐为单桌点餐*/
@@ -208,9 +200,9 @@ public abstract class BaseFragment extends Fragment {
         disOrderList = new ArrayList<>();
         /**设置默认是否加菜*/
         isAddFood = false;
-//        clearStorage();
         /**清除已点赞菜品*/
         favorFood = new ArrayList<>();
+        getActivity().finish();
     }
 
     @Override
@@ -219,12 +211,18 @@ public abstract class BaseFragment extends Fragment {
         finish();
     }
 
-    /**
-     * 正常结账后，清除所有用户数据
-     */
-//    private void clearStorage() {
-//        MyApplication.mStorage.clear();
-//    }
+    private void setDefaultTable() {
+        /**点餐类型默认为单独点餐*/
+        MyApplication.tableBean.setOrderType(Constant.ORDER_TYPE_ALONE);
+        /**设置默认菜品提醒数量，默认无上限*/
+        MyApplication.tableBean.setFoodCountHint(10000);
+        /**设置点菜方式显示*/
+        MyApplication.tableBean.setIsShow(Constant.SHOW_TYPE);
+        /**设置台桌状态为空*/
+        MyApplication.tableBean.setStatus(Constant.TABLE_STATUS_EMPTY);
+        /**设置为未登录*/
+        MyApplication.tableBean.setLogin(false);
+    }
 
     /**
      * 加载中
@@ -284,10 +282,8 @@ public abstract class BaseFragment extends Fragment {
      */
     protected boolean isConsuming() {
         Integer status = MyApplication.tableBean.getStatus();
-        if (status == Constant.TABLE_STATUS_OPEN
-                || status == Constant.TABLE_STATUS_FOOD
+        if (status == Constant.TABLE_STATUS_OPEN|| status == Constant.TABLE_STATUS_FOOD
                 || status == Constant.TABLE_STATUS_BILL) {
-//            warmPromptNumber = (int) MyApplication.mStorage.getData(Constant.STORAGR_HINT, 0);
             warmPromptNumber = MyApplication.tableBean.getFoodCountHint();
             return true;
         } else {
@@ -302,7 +298,6 @@ public abstract class BaseFragment extends Fragment {
      */
     public static void setOrderType(int orderType) {
         BaseFragment.orderType = orderType;
-//        MyApplication.mStorage.setData(Constant.STORAGR_ORDER_TYPE, orderType);
         MyApplication.tableBean.setOrderType(orderType);
     }
 
@@ -312,7 +307,9 @@ public abstract class BaseFragment extends Fragment {
      * @return
      */
     public static int getOrderType() {
-//        return (int) MyApplication.mStorage.getData(Constant.STORAGR_ORDER_TYPE, Constant.ORDER_TYPE_ALONE);
+        if (MyApplication.tableBean == null){
+            return Constant.ORDER_TYPE_ALONE;
+        }
         return MyApplication.tableBean.getOrderType();
     }
 }

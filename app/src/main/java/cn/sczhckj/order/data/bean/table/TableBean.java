@@ -25,6 +25,7 @@ public class TableBean {
     private MemberBean user;//会员信息
     private Integer isShow;//是否显示点餐方式，0-不显示 1-显示
     private Integer orderType;//点餐方式
+    private boolean isLogin;//本地字段是否登录
 
     public Integer getId() {
         return id;
@@ -91,7 +92,7 @@ public class TableBean {
     }
 
     public Integer getFoodCountHint() {
-        if (foodCountHint == null){
+        if (foodCountHint == null) {
             return 10;
         }
         return foodCountHint;
@@ -121,10 +122,21 @@ public class TableBean {
     }
 
     public Integer getOrderType() {
-        if (orderType == null){
+        if (orderType == null) {
             return Constant.ORDER_TYPE_ALONE;
         }
         return orderType;
+    }
+
+    public boolean isLogin() {
+        if (getUser() == null)
+            return false;
+        else
+            return true;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
     }
 
     public void setOrderType(Integer orderType) {
@@ -145,6 +157,8 @@ public class TableBean {
                 ", foodCountHint=" + foodCountHint +
                 ", user=" + user +
                 ", isShow=" + isShow +
+                ", orderType=" + orderType +
+                ", isLogin=" + isLogin +
                 '}';
     }
 }

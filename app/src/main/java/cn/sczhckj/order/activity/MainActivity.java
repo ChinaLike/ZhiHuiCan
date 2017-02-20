@@ -181,7 +181,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void isLogin() {
         /**判断是否登录*/
-        if (MyApplication.tableBean.getUser() != null) {
+        L.d("获取信息："+MyApplication.tableBean.toString());
+        if (MyApplication.tableBean.isLogin()) {
             MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
             login(bean);
         }
@@ -370,8 +371,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        /**退出该界面时退出登录*/
-        MyApplication.tableBean = null;
         /**退出时暂停Glide请求*/
         Glide.with(getApplicationContext()).pauseRequests();
         /**人数清零*/

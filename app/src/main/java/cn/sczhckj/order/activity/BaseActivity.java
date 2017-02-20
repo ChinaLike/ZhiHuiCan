@@ -3,6 +3,8 @@ package cn.sczhckj.order.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import cn.sczhckj.order.data.bean.table.TableBean;
+
 public abstract class BaseActivity extends FragmentActivity {
 
     /**
@@ -43,5 +45,4 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     protected abstract void init();
-
 }

@@ -78,6 +78,9 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      */
     private Intent intent;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +89,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         ButterKnife.bind(this);
         /**显示设备ID*/
         deviceid.setText(getString(R.string.init_activity_device,AppSystemUntil.getAndroidID(this)));
+
         if (AndroidVersionUtil.hasM()) {
             PermissionManager.getInstance().requestPermission(InitActivity.this, this, PERMISSIONS_STORAGE);
         } else {

@@ -323,6 +323,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     @Override
     public void onResponse(Call<Bean<TableBean>> call, Response<Bean<TableBean>> response) {
         Bean<TableBean> bean = response.body();
+
         if (bean != null) {
             if (bean.getCode() == ResponseCode.SUCCESS) {
                 /**设置桌面桌号、服务员、就餐人数*/

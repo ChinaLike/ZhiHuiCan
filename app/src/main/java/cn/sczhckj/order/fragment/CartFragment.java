@@ -135,6 +135,22 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * 是否退菜
      */
     private boolean isCommit = false;
+    /**
+     * 布局视图
+     */
+    private View view;
+    /**
+     * 提交菜品刷新
+     */
+    private final int COMMIT_TYPE = 0;
+    /**
+     * 单独刷新
+     */
+    private final int REFRESH = 1;
+    /**
+     * 刷新菜品类型
+     */
+    private int refreshType = COMMIT_TYPE;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,7 +163,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_cart, null, true);
+        view = inflater.inflate(R.layout.fragment_cart, null, true);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -168,7 +184,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         mTableMode = new TableMode();
         initOrder();
         initDisOrder();
-        initRefresh();
+        initRefresh(COMMIT_TYPE);
     }
 
     @Override
@@ -368,6 +384,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         bean.setPersonCount(MainActivity.personNumber);
         bean.setFoods(infoSwitch());
         mTableMode.open(bean, this);
+
     }
 
     /**
@@ -386,7 +403,8 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     /**
      * 刷新已下单菜品
      */
-    private void initRefresh() {
+    private void initRefresh(int type) {
+        refreshType = type;
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -493,7 +511,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 isOpen = true;
             }
             /**刷新购物车数据*/
-            initRefresh();
+            initRefresh(COMMIT_TYPE);
 
         } else {
             commit("" + bean.getMessage());
@@ -513,18 +531,29 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         @Override
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
             Bean<List<FoodBean>> bean = response.body();
-            if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                /**关闭进度框*/
-                dismissProgress();
-                cartToOrder(bean.getResult());
+            if (refreshType == COMMIT_TYPE) {
+                /**提交刷新*/
+                if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                    /**关闭进度框*/
+                    dismissProgress();
+                    cartToOrder(bean.getResult());
+                } else {
+                    commit("提交失败，点击重新提交");
+                }
             } else {
-                commit("提交失败，点击重新提交");
+                /**推送刷新*/
+                if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                    orderList = bean.getResult();
+                    mOrderAdapter.notifyDataSetChanged(orderList);
+                }
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
-            commit("提交失败，点击重新提交");
+            if (refreshType == COMMIT_TYPE) {
+                commit("提交失败，点击重新提交");
+            }
         }
     };
 
@@ -660,7 +689,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 if (rBean != null && rBean.getCode() == ResponseCode.SUCCESS) {
                     isCommit = false;
                     /**调用后台刷新*/
-                    initRefresh();
+                    initRefresh(REFRESH);
                     baseInfoRefresh();
                 } else {
                     dismissProgress();
@@ -712,21 +741,13 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (event.getType() == WebSocketEvent.TYPE_FOOD_ARRIVE) {
-            /**菜品完成*/
-//            int id = event.getBean().getFood().getId();
-//            int cateId = event.getBean().getFood().getCateId();
-//            for (FoodBean bean : orderList) {
-//                if (bean.getId() == id && bean.getCateId() == cateId) {
-//                    int finishCount = bean.getFinishCount() + event.getBean().getFood().getArriveCount();
-//                    bean.setFinishCount(finishCount > bean.getCount() ? bean.getCount() : finishCount);
-//                }
-//            }
-            mOrderAdapter.notifyDataSetChanged(orderList);
+            /**菜品完成全部刷新*/
+            initRefresh(REFRESH);
         } else if (WebSocketEvent.REFRESH_RECORD == event.getType()) {
             /**刷新点菜记录的已下单*/
             if (isOpen) {
                 /**开桌后才会刷新已下单*/
-                initRefresh();
+                initRefresh(REFRESH);
             }
             /**刷新点菜记录的未下单*/
             //TODO: 2017-01-16 这里是不是应该添加单个菜品刷新接口，还是通过foodId和cateId来请求所有数据一一比较刷新
