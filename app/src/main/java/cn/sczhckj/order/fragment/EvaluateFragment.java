@@ -136,7 +136,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
      */
     private void initEvaluate() {
         loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.loading));
+                mContext.getResources().getString(R.string.evaluate_fragment_loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         mEvalMode.evalInfo(bean, this);
@@ -146,7 +146,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
      * 提交数据
      */
     private void commit() {
-        evaluateFinish.setText("评价提交中...");
+        evaluateFinish.setText(getString(R.string.evaluate_fragment_commit));
         evaluateFinish.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
@@ -186,14 +186,14 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
             mTagCloud.setWord(wordsCloud, bean.getResult().getWords(), this);
         } else {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.evaluate_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<EvalBean>> call, Throwable t) {
         loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.evaluate_fragment_loading_fail));
     }
 
     /**
@@ -204,16 +204,16 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                evaluateFinish.setText("提交成功");
+                evaluateFinish.setText(getString(R.string.evaluate_fragment_commit_success));
             } else {
-                evaluateFinish.setText("提交失败，请重新提交");
+                evaluateFinish.setText(getString(R.string.evaluate_fragment_commit_fail));
                 evaluateFinish.setClickable(true);
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-            evaluateFinish.setText("提交失败，请重新提交");
+            evaluateFinish.setText(getString(R.string.evaluate_fragment_commit_fail));
             evaluateFinish.setClickable(true);
         }
     };

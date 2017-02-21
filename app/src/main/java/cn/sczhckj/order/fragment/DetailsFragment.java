@@ -136,7 +136,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     private void initBase() {
         dishesName.setText(mFoodBean.getName());
         detailsPrice.setText(mFoodBean.getOriginPrice() + "");
-        dishesSales.setText("月销量 " + mFoodBean.getSales());
+        dishesSales.setText(getString(R.string.details_fragment_sales,mFoodBean.getSales()));
         dishesLike.setText(mFoodBean.getFavors() + "");
         if (mFoodBean.isFavor()) {
             detailsLike.setSelected(true);

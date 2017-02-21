@@ -51,7 +51,7 @@
                     android:background="@color/background_gray_m"
                     android:lines="1"
                     android:padding="20dp"
-                    android:text="@string/evaluate_title"
+                    android:text="@string/evaluate_fragment_hint"
                     android:textColor="@color/text_color_m"
                     android:textSize="@dimen/text_size_mediu_s" />
 

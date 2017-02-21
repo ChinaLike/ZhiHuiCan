@@ -125,7 +125,8 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
 
     @Override
     public void init() {
-        loading(loadingParent, contextParent,loadingItemParent,loadingFail,loadingTitle,"正在初始化服务中...");
+        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
+                getString(R.string.service_fragment_init));
         initAdapter();
         mServiceMode = new ServiceMode();
         initList();
@@ -181,8 +182,8 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
         try {
             mGifDrawable = new GifDrawable(getResources(), R.drawable.service_bg);
             serviceGif.setImageDrawable(mGifDrawable);
-            serviceHint.setText("挂断");
-            serviceTitle.setText("服务员呼叫中，请耐心等待...");
+            serviceHint.setText(getString(R.string.service_fragment_cancel));
+            serviceTitle.setText(getString(R.string.service_fragment_service));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -212,9 +213,9 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
         mServiceMode.abort(bean, requestCommonBeanCallback);
     }
 
-    @OnClick({R.id.loadingParent,R.id.service_parent})
+    @OnClick({R.id.loadingParent, R.id.service_parent})
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.loadingParent:
                 /**重新加载*/
                 initList();
@@ -234,16 +235,16 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
             mServiceAdapter.notifyDataSetChanged(bean.getResult());
-        }else {
+        } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                    getString(R.string.service_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<List<ServiceBean>>> call, Throwable t) {
         loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.loadingFail));
+                getString(R.string.service_fragment_loading_fail));
     }
 
     @Override
@@ -260,9 +261,9 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                if (bean.getResult().getWaiter() != null) {
-                    serviceTitle.setText("服务员:" + bean.getResult().getWaiter() + "将为您服务，正在赶来的路上！请稍等...");
-                }
+                serviceTitle.setText(bean.getResult().getMessage());
+            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+                serviceTitle.setText(bean.getMessage());
             }
         }
 

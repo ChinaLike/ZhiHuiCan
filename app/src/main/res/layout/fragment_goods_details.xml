@@ -48,7 +48,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
                                 android:lines="1"
-                                android:text="鲜毛肚"
                                 android:textColor="@color/text_color_m"
                                 android:textSize="@dimen/text_size_mediu_s" />
 
@@ -68,7 +67,6 @@
                                     android:id="@+id/details_price"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="38"
                                     android:textColor="@color/text_color_red"
                                     android:textSize="@dimen/text_size_RMB_price" />
                             </LinearLayout>
@@ -90,8 +88,7 @@
                                     android:id="@+id/dishes_sales"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="月销量 230" />
+                                    android:layout_weight="1"/>
 
                                 <LinearLayout
                                     android:id="@+id/favor_parent"
@@ -113,7 +110,6 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="5dp"
-                                        android:text="230"
                                         android:textColor="@color/text_color_red" />
                                 </LinearLayout>
 
@@ -222,7 +218,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:text="5" />
+                        android:text="0" />
 
                     <ImageView
                         android:id="@+id/details_dishes_add"

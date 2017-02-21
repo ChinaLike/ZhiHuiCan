@@ -14,7 +14,7 @@
         android:paddingBottom="15dp"
         android:paddingLeft="10dp"
         android:paddingTop="15dp"
-        android:text="@string/order_type_text_hint"
+        android:text="@string/main_fragment_order_type_text_hint"
         android:textColor="@color/text_color_m"
         android:textSize="@dimen/text_size_mediu_s" />
 
@@ -25,7 +25,7 @@
         android:layout_marginRight="30dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:text="@string/order_one" />
+        android:text="@string/main_fragment_order_one" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:layout_marginRight="@dimen/margin_right"
             style="?android:attr/borderlessButtonStyle"
             android:background="@drawable/shape_button_full_yellow_login"
-            android:text="@string/one_order"
+            android:text="@string/main_fragment_one_order"
             android:textColor="@color/button_text"
             android:textSize="@dimen/button_size" />
 
@@ -55,7 +55,7 @@
         android:layout_marginRight="30dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:text="@string/order_more" />
+        android:text="@string/main_fragment_order_more" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -69,7 +69,7 @@
             android:layout_gravity="center_horizontal"
             style="?android:attr/borderlessButtonStyle"
             android:background="@drawable/shape_button_full_yellow_login"
-            android:text="@string/more_order"
+            android:text="@string/main_fragment_more_order"
             android:textColor="@color/button_text"
             android:textSize="@dimen/button_size"
             android:layout_marginLeft="@dimen/margin_right"

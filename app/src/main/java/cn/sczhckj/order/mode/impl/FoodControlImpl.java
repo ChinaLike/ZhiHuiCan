@@ -14,7 +14,6 @@ import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.fragment.BaseFragment;
-import cn.sczhckj.order.until.show.L;
 
 /**
  * @ describe:  菜品数量控制实现
@@ -156,7 +155,7 @@ public class FoodControlImpl {
      */
     private void maxDialog() {
         dialog.aloneDialog(mContext.getString(R.string.dialog_title),
-                mContext.getString(R.string.dialog_context2),
+                mContext.getString(R.string.dialog_context_over_number),
                 "好的").show();
     }
 
@@ -172,7 +171,7 @@ public class FoodControlImpl {
             if (bean.getCount() >= bean.getMaximum()) {
                 /**限制数量*/
                 dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
-                        mContext.getResources().getString(R.string.dialog_context),
+                        mContext.getResources().getString(R.string.dialog_context_number),
                         mContext.getResources().getString(R.string.dialog_cancel)).show();
             } else {
                 setAddDishes(bean, countText, type);
@@ -209,7 +208,7 @@ public class FoodControlImpl {
             @Override
             public void onClick(View v) {
                 dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
-                        mContext.getResources().getString(R.string.dialog_context1),
+                        mContext.getResources().getString(R.string.dialog_context_permiss),
                         mContext.getResources().getString(R.string.dialog_cancel)).show();
             }
         });

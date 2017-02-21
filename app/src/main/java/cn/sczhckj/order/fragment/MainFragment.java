@@ -137,7 +137,6 @@ public class MainFragment extends BaseFragment {
         imageViews[index].setSelected(true);
         textViews[index].setSelected(true);
         if (index == 0) {
-//            showOrderType((Integer) MyApplication.mStorage.getData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE));
             showOrderType(MyApplication.tableBean.getIsShow());
         } else if (index == 1) {
             initServiceFragment();
@@ -262,7 +261,6 @@ public class MainFragment extends BaseFragment {
                 orderType = Constant.ORDER_TYPE_ALONE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
                 /**如果已经点击，再次进来不显示点菜方式*/
-//                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
                 MyApplication.tableBean.setOrderType(Constant.DIS_SHOW_TYPE);
                 /**设置已选择点菜*/
                 BaseFragment.setOrderType(orderType);
@@ -313,8 +311,8 @@ public class MainFragment extends BaseFragment {
      */
     private void dialog() {
         final MyDialog dialog = new MyDialog(mContext);
-        dialog.setTitle(mContext.getString(R.string.dialog_title));
-        dialog.setContextText(mContext.getString(R.string.dialog_merge));
+        dialog.setTitle(mContext.getString(R.string.main_fragment_dialog_hint));
+        dialog.setContextText(mContext.getString(R.string.main_fragment_dialog_merge_hint));
         dialog.setNegativeButton("确认", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -322,7 +320,6 @@ public class MainFragment extends BaseFragment {
                 orderType = Constant.ORDER_TYPE_MERGE;
                 showOrderType(Constant.DIS_SHOW_TYPE);
                 /**如果已经点击，再次进来不显示点菜方式*/
-//                MyApplication.mStorage.setData(Constant.STORAGR_SHOW_TYPE, Constant.DIS_SHOW_TYPE);
                 MyApplication.tableBean.setOrderType(Constant.DIS_SHOW_TYPE);
                 /**设置已选择点菜*/
                 BaseFragment.setOrderType(orderType);

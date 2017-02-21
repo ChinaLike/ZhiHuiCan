@@ -1,7 +1,5 @@
 package cn.sczhckj.order.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -43,7 +41,6 @@ import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
-import cn.sczhckj.order.data.listener.OnButtonClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.OrderMode;
@@ -285,9 +282,9 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         }
 
         if (!isOpen) {
-            shoppingcartButton.setText(getString(R.string.openTable));
+            shoppingcartButton.setText(getString(R.string.cart_fragment_open_table));
         } else {
-            shoppingcartButton.setText(getString(R.string.choose_good));
+            shoppingcartButton.setText(getString(R.string.cart_fragment_choose_good));
         }
 
     }
@@ -332,7 +329,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * @param password
      */
     private void openTable(String password) {
-        showProgress("数据提交中，请稍后...");
+        showProgress(getString(R.string.cart_fragment_commit));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setPassword(password);
@@ -347,7 +344,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * 已开桌，点菜
      */
     private void order() {
-        showProgress("数据提交中，请稍后...");
+        showProgress(getString(R.string.cart_fragment_commit));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -430,14 +427,16 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     private void infoVerify() {
 
-        mDialog.setEditDialog("信息确认", "就餐人数：" + MainActivity.personNumber + "人", "请输入开桌密码")
-                .setLeftButton("取消", new View.OnClickListener() {
+        mDialog.setEditDialog(getContext().getString(R.string.cart_fragment_dialog_title),
+                getContext().getString(R.string.cart_fragment_dialog_content_person, MainActivity.personNumber),
+                getContext().getString(R.string.cart_fragment_dialog_content_password))
+                .setLeftButton(getContext().getString(R.string.cart_fragment_dialog_negative), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mDialog.editTextDialog().dismiss();
                     }
                 })
-                .setRightButton("确定", new View.OnClickListener() {
+                .setRightButton(getContext().getString(R.string.cart_fragment_dialog_positive), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         password = mDialog.editTextDialog().getEditText().toString();
@@ -477,7 +476,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
 
     @Override
     public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-        commit("提交失败，点击重新提交");
+        commit(getContext().getString(R.string.cart_fragment_commit_fail));
     }
 
     /**
@@ -487,14 +486,14 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         @Override
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
             Bean<List<FoodBean>> bean = response.body();
+            /**关闭进度框*/
+            dismissProgress();
             if (refreshType == COMMIT_TYPE) {
                 /**提交刷新*/
                 if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                    /**关闭进度框*/
-                    dismissProgress();
                     cartToOrder(bean.getResult());
-                } else {
-                    commit("提交失败，点击重新提交");
+                } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+                    commit(bean.getMessage());
                 }
             } else {
                 /**推送刷新*/
@@ -508,7 +507,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
             if (refreshType == COMMIT_TYPE) {
-                commit("提交失败，点击重新提交");
+                commit(getContext().getString(R.string.cart_fragment_commit_fail));
             }
         }
     };
@@ -575,12 +574,13 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 } else {
                     CateBean.CateItemBean bean = requiredVerify();
                     if (bean == null) {
-                        /**未开桌，提交菜品*/
+                        /**判断限定菜品已经符合要求，可以进入开桌模式*/
                         infoVerify();
                     } else {
-                        mDialog.aloneDialog(getString(R.string.dialog_title),
-                                "尊敬的顾客您好！\n【" + bean.getName() + "】为必选菜品，只有选择规定数量\n才能提交信息，还请谅解！",
-                                "继续点餐").show();
+                        mDialog.aloneDialog(getString(R.string.cart_fragment_dialog_food_hint_title),
+                                getString(R.string.cart_fragment_dialog_food_hint_content, bean.getName()),
+                                getString(R.string.cart_fragment_dialog_food_hint_continue))
+                                .show();
                     }
                 }
 
@@ -628,7 +628,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      * @param bean
      */
     private void refund(final FoodBean bean) {
-        showProgress("退菜中...");
+        showProgress(getString(R.string.cart_fragment_return_food));
         final RequestCommonBean requestCommonBean = new RequestCommonBean();
         requestCommonBean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         requestCommonBean.setFoodId(bean.getId());
@@ -649,14 +649,15 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                     baseInfoRefresh();
                 } else {
                     dismissProgress();
-                    T.showShort(mContext, rBean == null ? "退菜失败" : rBean.getMessage());
+                    T.showShort(mContext, rBean == null ?
+                            getString(R.string.cart_fragment_return_food_fail) : rBean.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
                 dismissProgress();
-                T.showShort(mContext, "退菜失败");
+                T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
             }
         });
     }
@@ -693,9 +694,10 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
 
     /**
      * 刷新界面
+     *
      * @param bean
      */
-    private void refreshView(FoodBean bean){
+    private void refreshView(FoodBean bean) {
         FoodRefreshImpl.getInstance().compare(bean, disOrderList);
         initCart(disOrderList);
         mDisOrderAdapter.notifyDataSetChanged(disOrderList);

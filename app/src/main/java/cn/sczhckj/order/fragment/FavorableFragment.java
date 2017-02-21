@@ -115,7 +115,7 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
      */
     private void initFavor() {
         loading(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.loading));
+                getString(R.string.favorable_fragment__loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -151,13 +151,13 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
             mAdapter.notifyDataSetChanged(bean.getResult().getCards());
         } else {
             loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                    mContext.getResources().getString(R.string.favorable_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<CardInfoBean>> call, Throwable t) {
         loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.loadingFail));
+                mContext.getResources().getString(R.string.favorable_fragment_loading_fail));
     }
 }

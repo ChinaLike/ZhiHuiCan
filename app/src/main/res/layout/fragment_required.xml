@@ -16,7 +16,7 @@
             android:layout_weight="1"
             android:background="@color/bg_gray_person"
             android:gravity="center"
-            android:text="就餐人数"
+            android:text="@string/require_fragment_person"
             android:textColor="@color/text_color_default"
             android:textSize="@dimen/text_size_mediu_s" />
 

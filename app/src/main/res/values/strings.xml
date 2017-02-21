@@ -56,88 +56,83 @@
     <string name="card_fragment_loading_fail">数据加载失败，点击刷新</string>
     <string name="card_fragment_commit_fail">提交失败，点击重新提交</string>
 
+
     <!--CartFragment-->
+    <string name="cart_fragment_open_table">开桌</string>
+    <string name="cart_fragment_choose_good">选好了</string>
+    <string name="cart_fragment_dialog_title">信息确认</string>
+    <string name="cart_fragment_dialog_content_person">就餐人数：%d人</string>
+    <string name="cart_fragment_dialog_content_password">请输入开桌密码</string>
+    <string name="cart_fragment_dialog_positive">确定</string>
+    <string name="cart_fragment_dialog_negative">取消</string>
+    <string name="cart_fragment_commit_fail">提交失败，点击重新提交</string>
+    <string name="cart_fragment_dialog_food_hint_title">温馨提示</string>
+    <string name="cart_fragment_dialog_food_hint_content">尊敬的顾客您好！\n【%s】为必选菜品，只有选择规定数量\n才能提交信息，还请谅解！</string>
+    <string name="cart_fragment_dialog_food_hint_continue">继续点餐</string>
+    <string name="cart_fragment_return_food">退菜中...</string>
+    <string name="cart_fragment_return_food_fail">退菜失败</string>
+    <string name="cart_fragment_return_food_success">退菜成功</string>
+    <string name="cart_fragment_commit">数据提交中...</string>
 
     <!--DetailsFragment-->
+    <string name="details_fragment_sales">月销量\t%d</string>
 
     <!--EvaluateFragment-->
+    <string name="evaluate_fragment_loading">努力加载中...</string>
+    <string name="evaluate_fragment_commit">评价提交中...</string>
+    <string name="evaluate_fragment_commit_success">提交成功</string>
+    <string name="evaluate_fragment_commit_fail">提交失败，请重新提交</string>
+    <string name="evaluate_fragment_loading_fail">数据加载失败，点击刷新</string>
+
+    <string name="evaluate_fragment_hint">感谢您来本店就餐！请您对本次就餐做出评价</string>
 
     <!--FavorableFragment-->
+    <string name="favorable_fragment__loading">数据加载中...</string>
+    <string name="favorable_fragment_loading_fail">数据加载失败，点击刷新</string>
+
+    <string name="favorable_fragment_more">更多优惠</string>
+    <string name="button_vip_no_select">立即享受</string>
 
     <!--MainFragment-->
+    <string name="main_fragment_dialog_hint">温馨提示</string>
+    <string name="main_fragment_dialog_merge_hint">\t\t如果你选择了并桌点餐，您每点一份餐将会给辅桌分发一份，但本桌数量显示任然是一份！</string>
+
+    <string name="main_fragment_order_type_text_hint">请选择一种点菜方式</string>
+    <string name="main_fragment_order_one">如果您是独自就餐，没有选择与其他餐桌合并；或者您已与其他餐桌合并，但想要各自点餐，请选择</string>
+    <string name="main_fragment_order_more">如果您是与其它餐桌合并且想要一起点餐，请选择</string>
+    <string name="main_fragment_one_order">单桌点餐</string>
+    <string name="main_fragment_more_order">并桌点餐</string>
+    <string name="main_fragment_choose_order_type">点菜方式选择</string>
 
     <!--OrderFragment-->
+    <string name="order_fragment_loading">数据加载中...</string>
+    <string name="order_fragment_loading_fail">数据加载失败，点击刷新</string>
+    <string name="order_fragment_one_order">单桌点餐</string>
+    <string name="order_fragment_more_order">并桌点餐</string>
 
     <!--RequireFragment-->
+    <string name="require_fragment_loading">数据加载中...</string>
+    <string name="require_fragment_loading_fail">数据加载失败，点击刷新</string>
+
+    <string name="require_fragment_person">就餐人数</string>
 
     <!--ServiceFragment-->
+    <string name="service_fragment_init">正在初始化服务中...</string>
+    <string name="service_fragment_cancel">挂断</string>
+    <string name="service_fragment_service">服务员呼叫中，请耐心等待...</string>
+    <string name="service_fragment_loading_fail">数据加载失败，点击刷新</string>
 
     <!--CommonString-->
     <string name="common_food">菜品</string>
     <string name="common_number">数量</string>
     <string name="common_price">单价</string>
     <string name="common_total_price">小计</string>
-
-
-
-
-
-    <string name="potMustChoose">锅底必选</string>
-    <string name="recommendingDishes">推荐菜品</string>
-    <string name="loadingFail">数据加载失败，点击刷新</string>
-    <string name="loading">努力加载中...</string>
-
-
-
-
-
-
-    <!--购物车按钮-->
-    <string name="openTable">开桌</string>
-    <string name="order">点菜</string>
-    <string name="choose_good">选好了</string>
-
-    <string name="order_type_text_hint">请选择一种点菜方式</string>
-    <string name="order_one">如果您是独自就餐，没有选择与其他餐桌合并；或者您已与其他餐桌合并，但想要各自点餐，请选择</string>
-    <string name="order_more">如果您是与其它餐桌合并且想要一起点餐，请选择</string>
-    <string name="one_order">单桌点餐</string>
-    <string name="more_order">并桌点餐</string>
-    <string name="choose_order_type">点菜方式选择</string>
-
-
-    <string name="favorable_type">优惠方式</string>
-    <string name="pay_type">支付方式</string>
-    <string name="group_add_text">点击添加多张团购券</string>
-    <string name="pay_finish_title">恭喜你已完成支付！</string>
-    <string name="evaluate_go">去评价>></string>
-    <string name="evaluate_no">不了，谢谢</string>
-    <string name="evaluate_title">感谢您来本店就餐！请您对本次就餐做出评价</string>
-    <string name="evaluate_data1">服务态度</string>
-    <string name="evaluate_data2">菜品质量</string>
-    <string name="evaluate_data3">上菜速度</string>
-    <string name="evaluate_data4">其他评价</string>
-
-    <string name="weixin_pay_title">扫描二维码进行微信支付</string>
-    <string name="aliPay_title">扫描二维码进行支付宝支付</string>
-    <string name="cash_title">现金支付请到前台完成支付</string>
-    <string name="bank_card_title">请到前台完成刷卡支付</string>
-
-    <!--温馨提示-->
     <string name="warm_prompt">尊敬的顾客您好！\n您点的菜品过多，可根据情况适当点餐，避免食物浪费。</string>
-
-    <!--Button办卡-->
-    <string name="button_vip_select">取消办卡</string>
-    <string name="button_vip_no_select">立即享受</string>
-
-    <!--Dialog-->
     <string name="dialog_title">温馨提示</string>
-    <string name="dialog_context">尊敬的顾客您好！\n您选择的菜品已经达到限制数量,不能再\n选择了，给你带来的不便还请谅解！</string>
-    <string name="dialog_context1">尊敬的顾客您好！\n您没有足够的权限点次菜品，具体事宜请你\n联系主桌！还请谅解！</string>
-    <string name="dialog_context2">尊敬的顾客您好！\n您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
+    <string name="dialog_context_number">尊敬的顾客您好！\n\t\t您选择的菜品已经达到限制数量,不能再\n选择了，给你带来的不便还请谅解！</string>
+    <string name="dialog_context_permiss">尊敬的顾客您好！\n\t\t您没有足够的权限点次菜品，具体事宜请你\n联系主桌！还请谅解！</string>
+    <string name="dialog_context_over_number">尊敬的顾客您好！\n\t\t您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
     <string name="dialog_cancel">好的</string>
-    <string name="dialog_merge">\t\t如果你选择了并桌点餐，您每点一份餐将会给辅桌分发一份，但本桌数量显示任然是一份！</string>
-
-    <!--点赞-->
     <string name="favor_non_open">开桌后才能对菜品点赞</string>
 
 </resources>

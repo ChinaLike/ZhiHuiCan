@@ -184,7 +184,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         /**获取数据*/
         mTableMode.openInfo(bean, this);
         loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.loading));
+                getString(R.string.require_fragment_loading));
         initTab();
     }
 
@@ -239,18 +239,18 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                     mTabCateAdapter.notifyDataSetChanged(cateList);
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            mContext.getResources().getString(R.string.loadingFail));
+                            bean.getMessage());
                 }
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        mContext.getResources().getString(R.string.loadingFail));
+                        getString(R.string.require_fragment_loading_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<CateBean>> call, Throwable t) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                    getString(R.string.require_fragment_loading_fail));
         }
     };
 
@@ -268,18 +268,18 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                     mFoodAdapter.notifyDataSetChanged(foodList);
                 } else {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            mContext.getResources().getString(R.string.loadingFail));
+                            bean.getMessage());
                 }
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        mContext.getResources().getString(R.string.loadingFail));
+                       getString(R.string.require_fragment_loading_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                    getString(R.string.require_fragment_loading_fail));
         }
     };
 
@@ -337,18 +337,18 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                 personAdapter.notifyDataSetChanged(mList);
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        mContext.getResources().getString(R.string.loadingFail));
+                        bean.getMessage());
             }
         } else {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.loadingFail));
+                   getString(R.string.require_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<TableBean>> call, Throwable t) {
         loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.loadingFail));
+               getString(R.string.require_fragment_loading_fail));
     }
 
     /**
