@@ -36,6 +36,7 @@ import cn.sczhckj.order.service.WebSocketService;
 import cn.sczhckj.order.until.AndroidVersionUtil;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.FileUntils;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -199,9 +200,9 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
                 MyApplication.tableBean = bean.getResult();
                 initText.setText(getString(R.string.init_activity_loading_success));
                 intentLead();
-            } else {
+            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE){
                 initParent.setClickable(true);
-                initText.setText(getString(R.string.init_activity_loading_fail));
+                initText.setText(bean.getMessage());
             }
         }
 

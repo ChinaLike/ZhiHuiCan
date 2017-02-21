@@ -1,15 +1,20 @@
 package cn.sczhckj.order.mode.impl;
 
 import android.content.Context;
+import android.util.ArrayMap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
@@ -37,6 +42,10 @@ public class FoodControlImpl {
      * 本分类是否必选
      */
     private static int required = 0;
+    /**
+     * 分类ID
+     */
+    private static Integer cateId;
 
     public FoodControlImpl(Context mContext) {
         this.mContext = mContext;
@@ -150,6 +159,10 @@ public class FoodControlImpl {
         this.required = required;
     }
 
+    public void setCateId(Integer cateId) {
+        this.cateId = cateId;
+    }
+
     /**
      * 总数超标弹窗
      */
@@ -190,6 +203,8 @@ public class FoodControlImpl {
         int number = bean.getCount();
         number++;
         bean.setCount(number);
+        /**设置分类ID(此处用别名)*/
+        bean.setCateAlias(cateId);
         countText.setText(number + "");
         /**发送广播，让购物车、必选菜品、下单点餐界面处理数据*/
         EventBus.getDefault().post(new RefreshFoodEvent(type, bean));
@@ -214,4 +229,53 @@ public class FoodControlImpl {
         });
     }
 
+    /**
+     * 验证所有分类下必选的菜品是否必选
+     *
+     * @param mList    已经选择的菜品集合
+     * @param cateBean 分类集合
+     * @return 是否已经满足必选要求
+     */
+    public static String requiredFood(List<FoodBean> mList, List<CateBean.CateItemBean> cateBean) {
+        StringBuffer cateName = new StringBuffer();
+        /**必选的ID*/
+        List<Integer> required = new ArrayList<>();
+        for (CateBean.CateItemBean item : cateBean) {
+            if (item.getRequired() == Constant.REQUIRED) {
+                required.add(item.getId());
+            }
+        }
+        /**获取必选分类的数量*/
+        Map<Integer, Integer> requiredNum = new HashMap<>();
+        for (Integer id : required) {
+            for (FoodBean bean : mList) {
+                if (bean.getCateAlias() == id) {
+                    if (requiredNum.containsKey(id)) {
+                        requiredNum.put(id, requiredNum.get(id) + bean.getCount());
+                    } else {
+                        requiredNum.put(id, bean.getCount());
+                    }
+                }
+            }
+        }
+        /**判断是否对应的必选已经全部包含*/
+        for (Integer id : required) {
+            if (!requiredNum.containsKey(id)) {
+                cateName.append(getCateName(id, cateBean));
+            }
+        }
+        return cateName.toString();
+    }
+
+    /**
+     * 获取指定分类的名字
+     */
+    private static String getCateName(Integer cateId, List<CateBean.CateItemBean> cateBean) {
+        for (CateBean.CateItemBean bean : cateBean) {
+            if (bean.getId() == cateId) {
+                return bean.getName() + " ";
+            }
+        }
+        return "";
+    }
 }

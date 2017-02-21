@@ -472,7 +472,10 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Override
     public void person(int number) {
         personNumber = number;
-        this.tablePersonNum.setText(number + "人");
+        if (MyApplication.tableBean!=null&&MyApplication.tableBean.getMaximum()!=null){
+            personNumber = MyApplication.tableBean.getMaximum();
+        }
+        this.tablePersonNum.setText(personNumber + "人");
     }
 
     @Override

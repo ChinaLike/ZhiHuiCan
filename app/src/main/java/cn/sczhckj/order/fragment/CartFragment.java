@@ -46,6 +46,7 @@ import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.OrderMode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
+import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
@@ -262,23 +263,20 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
 
     /**
      * 设置Button的属性
-     *
-     * @param isClick
+     * <p>
+     * //     * @param isClick
      */
-    private void buttonAttr(boolean isClick) {
+    private void buttonAttr() {
         if (disOrderList.size() > 0) {
             shoppingcartButton.setClickable(true);
+            /**可选状态*/
+            shoppingcartButton.setSelected(false);
+            shoppingcartButton.setTextColor(ContextCompat.getColor(mContext, R.color.button_text));
         } else {
-            shoppingcartButton.setClickable(isClick);
-            if (isClick) {
-                /**可选状态*/
-                shoppingcartButton.setSelected(false);
-                shoppingcartButton.setTextColor(ContextCompat.getColor(mContext, R.color.button_text));
-            } else {
-                /**变为灰色*/
-                shoppingcartButton.setSelected(true);
-                shoppingcartButton.setTextColor(ContextCompat.getColor(mContext, R.color.text_color_999999));
-            }
+            /**变为灰色*/
+            shoppingcartButton.setClickable(false);
+            shoppingcartButton.setSelected(true);
+            shoppingcartButton.setTextColor(ContextCompat.getColor(mContext, R.color.text_color_999999));
         }
 
         if (!isOpen) {
@@ -384,44 +382,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         }
         return cartList;
     }
-
-    /**
-     * 必选菜品验证
-     */
-    private CateBean.CateItemBean requiredVerify() {
-        Map<Integer, Integer> map = getCateItemNumber();
-        CateBean.CateItemBean curr = null;
-        for (CateBean.CateItemBean bean : cateList) {
-            if (bean.getRequired() == Constant.REQUIRED) {
-                if (map.containsKey(bean.getId())) {
-                    curr = null;
-                } else {
-                    curr = bean;
-                    return curr;
-                }
-            }
-        }
-        return curr;
-    }
-
-    /**
-     * 获取分类下的个数和
-     */
-    private Map<Integer, Integer> getCateItemNumber() {
-        /**有分类ID作为Key，个数作为value*/
-        Map<Integer, Integer> mapNumber = new HashMap<>();
-        for (CartBean item : infoSwitch()) {
-            if (mapNumber.containsKey(item.getCateId())) {
-                Integer number = mapNumber.get(item.getCateId()) + item.getNumber();
-                mapNumber.put(item.getCateId(), number);
-            } else {
-                mapNumber.put(item.getCateId(), item.getNumber());
-            }
-        }
-        return mapNumber;
-    }
-
-
     /**
      * 信息验证
      */
@@ -502,6 +462,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                     mOrderAdapter.notifyDataSetChanged(orderList);
                 }
             }
+            baseInfoRefresh();
         }
 
         @Override
@@ -558,7 +519,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         setTitleStatus(cartOrderFlag, cartOrder);
         /**底部显示*/
         baseInfoRefresh();
-        buttonAttr(false);
+        buttonAttr();
     }
 
 
@@ -572,13 +533,13 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                     /**已开桌，加菜*/
                     order();
                 } else {
-                    CateBean.CateItemBean bean = requiredVerify();
-                    if (bean == null) {
+                    String cateName = FoodControlImpl.requiredFood(disOrderList, cateList);
+                    if (cateName == null || "".equals(cateName)) {
                         /**判断限定菜品已经符合要求，可以进入开桌模式*/
                         infoVerify();
                     } else {
                         mDialog.aloneDialog(getString(R.string.cart_fragment_dialog_food_hint_title),
-                                getString(R.string.cart_fragment_dialog_food_hint_content, bean.getName()),
+                                getString(R.string.cart_fragment_dialog_food_hint_content, cateName),
                                 getString(R.string.cart_fragment_dialog_food_hint_continue))
                                 .show();
                     }
@@ -647,10 +608,12 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                     /**调用后台刷新*/
                     initRefresh(REFRESH);
                     baseInfoRefresh();
-                } else {
+                } else if (rBean != null && rBean.getCode() == ResponseCode.FAILURE){
                     dismissProgress();
-                    T.showShort(mContext, rBean == null ?
-                            getString(R.string.cart_fragment_return_food_fail) : rBean.getMessage());
+                    T.showShort(mContext, rBean.getMessage());
+                }else {
+                    dismissProgress();
+                    T.showShort(mContext,getString(R.string.cart_fragment_return_food_fail) );
                 }
             }
 
@@ -667,29 +630,26 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshFoodEventBus(RefreshFoodEvent event) {
-        /**把按钮状态buttonAttr(true)写在里面，避免了其他命令影响按钮状态*/
         if (event.getType() == RefreshFoodEvent.ADD_FOOD) {
-            buttonAttr(true);
             /**加菜*/
             refreshView(event.getBean());
         } else if (event.getType() == RefreshFoodEvent.MINUS_FOOD) {
             /**减菜*/
             refreshView(event.getBean());
         } else if (event.getType() == RefreshFoodEvent.CART_REFUND) {
-            buttonAttr(true);
             /**退菜*/
             refund(event.getBean());
         } else if (event.getType() == RefreshFoodEvent.DETAILS_MINUS_FOOD) {
             /**详情减菜*/
             refreshView(event.getBean());
         } else if (event.getType() == RefreshFoodEvent.DETAILS_ADD_FOOD) {
-            buttonAttr(true);
             /**详情加菜*/
             refreshView(event.getBean());
         } else if (event.getType() == RefreshFoodEvent.CART_MINUS_FOOD) {
             /**购物车减菜*/
             refreshView(event.getBean());
         }
+        buttonAttr();
     }
 
     /**
@@ -721,7 +681,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 initRefresh(REFRESH);
             }
             /**刷新点菜记录的未下单*/
-            //TODO: 2017-01-16 这里是不是应该添加单个菜品刷新接口，还是通过foodId和cateId来请求所有数据一一比较刷新
+
         }
     }
 }

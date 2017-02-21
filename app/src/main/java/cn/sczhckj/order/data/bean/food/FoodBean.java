@@ -15,6 +15,7 @@ public class FoodBean {
 
     private Integer id;//菜品ID
     private Integer cateId;//分类ID
+    private Integer cateAlias;//分类别名，用于必选界面
     private String name;//菜品名称
     private Integer permiss;//选择权限，0-不可选，1-可选
     private Integer maximum;//最大可选数量，0-不控制
@@ -186,11 +187,20 @@ public class FoodBean {
         this.type = type;
     }
 
+    public Integer getCateAlias() {
+        return cateAlias;
+    }
+
+    public void setCateAlias(Integer cateAlias) {
+        this.cateAlias = cateAlias;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "id=" + id +
                 ", cateId=" + cateId +
+                ", cateAlias=" + cateAlias +
                 ", name='" + name + '\'' +
                 ", permiss=" + permiss +
                 ", maximum=" + maximum +

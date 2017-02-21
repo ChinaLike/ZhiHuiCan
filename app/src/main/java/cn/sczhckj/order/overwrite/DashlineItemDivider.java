@@ -52,7 +52,6 @@ public class DashlineItemDivider extends RecyclerView.ItemDecoration {
             }
             for (int i = 0; i < childCount; i++) {
                 final View child = parent.getChildAt(i);
-                // TODO: 2016/12/20 这里报空指针
                 final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                         .getLayoutParams();
                 //以下计算主要用来确定绘制的位置

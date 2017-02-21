@@ -66,6 +66,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
      * 菜品数量控制实现
      */
     private FoodControlImpl mFoodControl;
+    /**
+     * 分类ID
+     */
+    private Integer cateId;
 
 
     public FoodAdapter(Context mContext, List<FoodBean> mList) {
@@ -106,10 +110,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
         holder.dishesCollect.setText(bean.getFavors() + "");
         /**默认菜品*/
         holder.dishesNumber.setText(bean.getCount() + "");
-//        /**菜品减少*/
-//        mFoodControl.minusFood(holder.dishesMinus, holder.dishesNumber, bean, RefreshFoodEvent.FROM_FOOD);
-//        /**菜品添加*/
-//        mFoodControl.addFood(holder.dishesAdd, holder.dishesNumber, bean, mList, RefreshFoodEvent.FROM_FOOD);
         /**菜品减少*/
         mFoodControl.minusFood(holder.dishesMinus, holder.dishesNumber, bean, RefreshFoodEvent.MINUS_FOOD);
         /**菜品添加*/
@@ -186,6 +186,12 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
     public void setRequired(int required) {
         this.required = required;
         mFoodControl.setRequired(required);
+    }
+
+    /**设置分类ID*/
+    public void setCateId(Integer cateId) {
+        this.cateId = cateId;
+        mFoodControl.setCateId(cateId);
     }
 
     /**
