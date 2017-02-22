@@ -1,5 +1,7 @@
 package cn.sczhckj.order.mode;
 
+import java.util.List;
+
 import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
@@ -55,12 +57,12 @@ public class TableMode {
      * @param bean
      * @param callback
      */
-    public void info(RequestCommonBean bean, Callback<Bean<InfoBean>> callback){
+    public void info(RequestCommonBean bean, Callback<Bean<List<InfoBean>>> callback){
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.TABLE_INFO)
                 .time()
                 .bean(bean);
-        Call<Bean<InfoBean>> info=RetrofitRequest.service().tableInfo(restRequest.toRequestString());
+        Call<Bean<List<InfoBean>>> info=RetrofitRequest.service().tableInfo(restRequest.toRequestString());
         info.enqueue(callback);
     }
 

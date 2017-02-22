@@ -184,6 +184,9 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
             loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
             mEvalAdapter.notifyDataSetChanged(bean.getResult().getItems());
             mTagCloud.setWord(wordsCloud, bean.getResult().getWords(), this);
+        } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
+                    bean.getMessage());
         } else {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                     mContext.getResources().getString(R.string.evaluate_fragment_loading_fail));
@@ -204,7 +207,10 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                evaluateFinish.setText(getString(R.string.evaluate_fragment_commit_success));
+                evaluateFinish.setText(bean.getMessage());
+            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+                evaluateFinish.setText(bean.getMessage());
+                evaluateFinish.setClickable(true);
             } else {
                 evaluateFinish.setText(getString(R.string.evaluate_fragment_commit_fail));
                 evaluateFinish.setClickable(true);

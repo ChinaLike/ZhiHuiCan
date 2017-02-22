@@ -37,7 +37,7 @@ import retrofit2.Response;
  * Created by Like on 2016/11/2.
  * @ Email: 572919350@qq.com
  */
-public class LoginActivity extends Activity implements Callback<Bean<MemberBean>> {
+    public class LoginActivity extends Activity implements Callback<Bean<MemberBean>> {
 
     @Bind(R.id.back)
     ImageView back;

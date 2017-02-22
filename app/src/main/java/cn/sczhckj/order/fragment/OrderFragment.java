@@ -297,14 +297,15 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     /**
      * 台桌信息
      */
-    Callback<Bean<InfoBean>> tableInfoCallback = new Callback<Bean<InfoBean>>() {
+    Callback<Bean<List<InfoBean>>> tableInfoCallback = new Callback<Bean<List<InfoBean>>>() {
         @Override
-        public void onResponse(Call<Bean<InfoBean>> call, Response<Bean<InfoBean>> response) {
-            Bean<InfoBean> bean = response.body();
+        public void onResponse(Call<Bean<List<InfoBean>>> call, Response<Bean<List<InfoBean>>> response) {
+            Bean<List<InfoBean>> bean = response.body();
+            L.d("台桌信息："+bean.getResult().toString());
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**加载成功*/
                 setTabContext(bean.getResult());
-                mTabTableAdapter.notifyDataSetChanged(bean.getResult().getTables());
+                mTabTableAdapter.notifyDataSetChanged(bean.getResult());
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                         bean.getMessage());
@@ -312,7 +313,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         }
 
         @Override
-        public void onFailure(Call<Bean<InfoBean>> call, Throwable t) {
+        public void onFailure(Call<Bean<List<InfoBean>>> call, Throwable t) {
+            L.d("台桌信息1："+t.toString());
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                     getString(R.string.order_fragment_loading_fail));
         }
@@ -345,21 +347,21 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
 
     /**
      * 设置台桌显示内容
-     *
-     * @param bean
      */
-    private void setTabContext(InfoBean bean) {
-        if (bean.getTableType() == Constant.TABLE_TYPE_ALONE) {
-            /**单独点餐*/
+    private void setTabContext(List<InfoBean> mList) {
+        if (mList == null || mList.size() == 0 || mList.size() == 1){
+            /**单桌显示方式*/
             tabLayout(false);
             tabText.setText(getString(R.string.order_fragment_one_order));
-        } else if (bean.getTableType() == Constant.TABLE_TYPE_MAIN) {
-            /**主桌点餐*/
-            tabLayout(true);
-        } else if (bean.getTableType() == Constant.TABLE_TYPE_AUX) {
-            /**辅桌点餐*/
-            tabLayout(false);
-            tabText.setText(getString(R.string.order_fragment_one_order));
+        }else {
+            /**多桌显示方式*/
+            for (InfoBean item :mList) {
+                if (tableId == item.getId() && item.getTableType() == Constant.TABLE_TYPE_AUX){
+                    /**辅桌点餐，也属于单桌点餐*/
+                    tabLayout(false);
+                    tabText.setText(getString(R.string.order_fragment_one_order));
+                }
+            }
         }
     }
 

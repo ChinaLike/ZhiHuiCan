@@ -287,6 +287,9 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             mList = bean.getResult();
             compute(mList);
             mSettleAccountsAdapter.notifyDataSetChanged(mList);
+        } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+            loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
+                    bean.getMessage());
         } else {
             loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
                     mContext.getResources().getString(R.string.bill_fragment_loading_fail));
@@ -324,13 +327,12 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         @Override
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
-            if (bean != null && bean.getMessage() != null) {
-                T.showShort(mContext, bean.getMessage());
-            }
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-//                finish();
+                T.showShort(mContext, bean.getMessage());
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 T.showShort(mContext, bean.getMessage());
+            } else {
+                T.showShort(mContext, getString(R.string.bill_fragment_bill_fail));
             }
         }
 

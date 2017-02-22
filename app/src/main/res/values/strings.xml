@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">智汇餐点菜</string>
-    
+
     <!--InitActivity-->
     <string name="init_activity_device">设备ID: %s</string>
     <string name="init_activity_loading">数据初始化中...</string>
@@ -134,5 +134,14 @@
     <string name="dialog_context_over_number">尊敬的顾客您好！\n\t\t您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
     <string name="dialog_cancel">好的</string>
     <string name="favor_non_open">开桌后才能对菜品点赞</string>
+
+    <!--VersionManager APK更新提示-->
+    <string name="dialog_apk_update_title">版本更新</string>
+    <string name="dialog_apk_update_positive">马上更新</string>
+    <string name="dialog_apk_update_negative">暂不更新</string>
+    <string name="dialog_apk_update_content">当前版本：%1$s\n最新版本：%2$s\n更新大小：%3$s\n更新内容：%4$s</string>
+    <string name="dialog_apk_updating_title">版本更新</string>
+    <string name="dialog_apk_updating_content">正在更新中...</string>
+    <string name="dialog_apk_updating_negative">取消</string>
 
 </resources>

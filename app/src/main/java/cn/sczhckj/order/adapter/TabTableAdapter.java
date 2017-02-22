@@ -29,7 +29,7 @@ public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabVie
 
     private Context mContext;
 
-    private List<InfoBean.Tables> mList;
+    private List<InfoBean> mList;
 
     private Map<Integer, LinearLayout> layouts = new HashMap<>();
 
@@ -47,7 +47,7 @@ public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabVie
 
     private OnItemClickListener onItemClickListener;
 
-    public TabTableAdapter(Context mContext, List<InfoBean.Tables> mList) {
+    public TabTableAdapter(Context mContext, List<InfoBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -95,7 +95,7 @@ public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabVie
      * 刷新数据
      * @param mList
      */
-    public void notifyDataSetChanged(List<InfoBean.Tables> mList) {
+    public void notifyDataSetChanged(List<InfoBean> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }

@@ -409,26 +409,26 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Override
     public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
         Bean<ResponseCommonBean> bean = response.body();
-        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            isCommit = true;
-            if (isOpen) {
-                /**已开桌*/
-                T.showShort(mContext, bean.getMessage());
-            } else {
-                /**未开桌*//**设置点菜方式*/
-                MyApplication.tableBean.setOrderType(bean.getResult().getShowType());
-                /**设置菜品过多提醒*/
-                warmPromptNumber = bean.getResult().getFoodCountHint() != null ? bean.getResult().getFoodCountHint() : 0;
-                MyApplication.tableBean.setFoodCountHint(warmPromptNumber);
-                /**设置消费记录ID*/
-                MyApplication.tableBean.setRecordId(bean.getResult().getRecordId());
-                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.MAIN, bean.getResult().getShowType()));
-                isOpen = true;
-            }
-            /**刷新购物车数据*/
-            initRefresh(COMMIT_TYPE);
+                if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                    isCommit = true;
+                    if (isOpen) {
+                        /**已开桌*/
+                        T.showShort(mContext, bean.getMessage());
+                    } else {
+                        /**未开桌*//**设置点菜方式*/
+                        MyApplication.tableBean.setOrderType(bean.getResult().getShowType());
+                        /**设置菜品过多提醒*/
+                        warmPromptNumber = bean.getResult().getFoodCountHint() != null ? bean.getResult().getFoodCountHint() : 0;
+                        MyApplication.tableBean.setFoodCountHint(warmPromptNumber);
+                        /**设置消费记录ID*/
+                        MyApplication.tableBean.setRecordId(bean.getResult().getRecordId());
+                        EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.MAIN, bean.getResult().getShowType()));
+                        isOpen = true;
+                    }
+                    /**刷新购物车数据*/
+                    initRefresh(COMMIT_TYPE);
 
-        } else {
+                } else {
             commit("" + bean.getMessage());
         }
 

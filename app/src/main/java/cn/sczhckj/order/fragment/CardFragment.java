@@ -224,6 +224,9 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
             isShow(true);
             url = bean.getResult().getUrl();
             loadingWeb(url);
+        } else if ((bean != null && bean.getCode() == ResponseCode.FAILURE)) {
+            loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
+                    bean.getMessage());
         } else {
             loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
                     mContext.getResources().getString(R.string.card_fragment_loading_fail));
@@ -243,15 +246,16 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
         @Override
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
+            applyForVipCardConfirm.setClickable(true);
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 applyForVipCardConfirm.setText("确定");
-                applyForVipCardConfirm.setClickable(true);
                 T.showShort(mContext, bean.getMessage());
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.FAVORABLE_OUT));
+            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+                applyForVipCardConfirm.setText(bean.getMessage());
             } else {
                 applyForVipCardConfirm.setText(getString(R.string.card_fragment_commit_fail));
-                applyForVipCardConfirm.setClickable(true);
-            }
+                }
         }
 
         @Override

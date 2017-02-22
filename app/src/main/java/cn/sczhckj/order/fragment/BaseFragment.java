@@ -86,6 +86,10 @@ public abstract class BaseFragment extends Fragment {
      * 已点赞菜品
      */
     public static List<FoodBean> favorFood = new ArrayList<>();
+    /**
+     * 当前台桌ID
+     */
+    protected Integer tableId = -1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -202,6 +206,8 @@ public abstract class BaseFragment extends Fragment {
         isAddFood = false;
         /**清除已点赞菜品*/
         favorFood = new ArrayList<>();
+        /**清除台桌ID*/
+        tableId = -1;
         getActivity().finish();
     }
 
@@ -217,7 +223,7 @@ public abstract class BaseFragment extends Fragment {
         /**设置默认菜品提醒数量，默认无上限*/
         MyApplication.tableBean.setFoodCountHint(10000);
         /**设置点菜方式显示*/
-        MyApplication.tableBean.setIsShow(Constant.SHOW_TYPE);
+        MyApplication.tableBean.setIsShow(Constant.DIS_SHOW_TYPE);
         /**设置台桌状态为空*/
         MyApplication.tableBean.setStatus(Constant.TABLE_STATUS_EMPTY);
         /**设置为未登录*/
@@ -282,7 +288,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected boolean isConsuming() {
         Integer status = MyApplication.tableBean.getStatus();
-        if (status == Constant.TABLE_STATUS_OPEN|| status == Constant.TABLE_STATUS_FOOD
+        if (status == Constant.TABLE_STATUS_OPEN || status == Constant.TABLE_STATUS_FOOD
                 || status == Constant.TABLE_STATUS_BILL) {
             warmPromptNumber = MyApplication.tableBean.getFoodCountHint();
             return true;
@@ -307,7 +313,7 @@ public abstract class BaseFragment extends Fragment {
      * @return
      */
     public static int getOrderType() {
-        if (MyApplication.tableBean == null){
+        if (MyApplication.tableBean == null) {
             return Constant.ORDER_TYPE_ALONE;
         }
         return MyApplication.tableBean.getOrderType();

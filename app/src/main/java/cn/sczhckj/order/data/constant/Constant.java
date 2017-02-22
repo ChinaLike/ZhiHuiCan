@@ -64,10 +64,21 @@ public interface Constant {
     int ORDER_TYPE_MERGE = 2;//并桌点餐
 
     /**
+     * 台桌是否合并
+     */
+    int MERGE_TABLE = 1;//合并台桌
+    int NON_MERGE_TABLE = 0;//不合并台桌
+
+    /**消费类型*/
+    int CONSUME_TYPE_ALONE = 0;//单独消费
+    int CONSUME_TYPE_MERGE_MAIN = 1;//并桌消费(主桌)
+    int CONSUME_TYPE_MERGE_ASSIST = 2;//并桌消费(辅桌)
+
+    /**
      * 是否显示点菜类型 字段showType
      */
-    int DIS_SHOW_TYPE = 1;//不显示
-    int SHOW_TYPE = 0;//显示
+    int DIS_SHOW_TYPE = 0;//不显示
+    int SHOW_TYPE = 1;//显示
 
     /**
      * 取价 字段active
@@ -90,9 +101,9 @@ public interface Constant {
     /**
      * 接口回调台桌属性 字段tableType
      */
-    int TABLE_TYPE_ALONE = 0;//单独点餐
-    int TABLE_TYPE_MAIN = 1;//主桌点餐
-    int TABLE_TYPE_AUX = 2;//辅桌点餐
+    int TABLE_TYPE_ALONE = 0;//单桌
+    int TABLE_TYPE_MAIN = 1;//主桌
+    int TABLE_TYPE_AUX = 2;//辅桌
 
     /**
      * 当前VIP是否解锁 字段isLock

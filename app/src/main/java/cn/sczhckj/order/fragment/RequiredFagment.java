@@ -272,7 +272,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                 }
             } else {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                       getString(R.string.require_fragment_loading_fail));
+                        getString(R.string.require_fragment_loading_fail));
             }
         }
 
@@ -327,6 +327,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         if (bean != null) {
             if (bean.getCode() == ResponseCode.SUCCESS) {
                 /**设置桌面桌号、服务员、就餐人数*/
+                tableId = bean.getResult().getId();
                 mOnTableListenner.table(bean.getResult().getTableName());
                 mOnTableListenner.waiter(bean.getResult().getWaiter());
                 mOnTableListenner.person(bean.getResult().getMaximum());
@@ -341,14 +342,14 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
             }
         } else {
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                   getString(R.string.require_fragment_loading_fail));
+                    getString(R.string.require_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<TableBean>> call, Throwable t) {
         loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-               getString(R.string.require_fragment_loading_fail));
+                getString(R.string.require_fragment_loading_fail));
     }
 
     /**

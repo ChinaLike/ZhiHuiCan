@@ -10,7 +10,8 @@ import java.util.List;
 
 public class InfoBean {
     private Integer tableType;//台桌类型，0-单独点餐，1-主桌，2-辅桌
-    private List<Tables> tables;
+    private Integer id;//台桌ID
+    private String name;//台桌名称
 
     public Integer getTableType() {
         return tableType;
@@ -20,48 +21,28 @@ public class InfoBean {
         this.tableType = tableType;
     }
 
-    public List<Tables> getTables() {
-        return tables;
+    public Integer getId() {
+        return id;
     }
 
-    public void setTables(List<Tables> tables) {
-        this.tables = tables;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public class Tables{
-        private Integer id;//台桌ID
-        private String name;//台桌名称
+    public String getName() {
+        return name;
+    }
 
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return "{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
-                    '}';
-        }
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
         return "{" +
                 "tableType=" + tableType +
-                ", tables=" + tables +
+                ", id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

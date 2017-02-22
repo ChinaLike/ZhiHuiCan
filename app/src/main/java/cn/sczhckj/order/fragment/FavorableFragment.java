@@ -149,6 +149,9 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             loadingSuccess(loadingParent, favorRecy, loadingItemParent, loadingFail);
             mAdapter.notifyDataSetChanged(bean.getResult().getCards());
+        } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+            loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
+                    bean.getMessage());
         } else {
             loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
                     mContext.getResources().getString(R.string.favorable_fragment_loading_fail));

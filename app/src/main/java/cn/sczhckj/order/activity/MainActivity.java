@@ -181,7 +181,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     private void isLogin() {
         /**判断是否登录*/
-        L.d("获取信息：" + MyApplication.tableBean.toString());
         if (MyApplication.tableBean.isLogin()) {
             MemberBean bean = (MemberBean) getIntent().getExtras().getSerializable(Constant.USER_INFO);
             login(bean);

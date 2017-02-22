@@ -25,6 +25,9 @@ public class TableBean {
     private MemberBean user;//会员信息
     private Integer isShow;//是否显示点餐方式，0-不显示 1-显示
     private Integer orderType;//点餐方式
+    private Integer tableType;//台桌类型，0-单独点餐，1-主桌，2-辅桌
+    private Integer isMerge;//是否并桌点餐0-否，1-是
+    private Integer consumeType;//消费类型0-单独消费;1-并桌消费(主桌);2-并桌消费(辅桌);当有并桌记录ID时有效
     private boolean isLogin;//本地字段是否登录
 
     public Integer getId() {
@@ -111,10 +114,18 @@ public class TableBean {
     }
 
     public Integer getIsShow() {
-        if (isShow == null) {
-            return Constant.SHOW_TYPE;
+        if (isMerge !=null && consumeType !=null) {
+            if (isMerge == Constant.MERGE_TABLE && consumeType == Constant.CONSUME_TYPE_MERGE_MAIN) {
+                /**显示点餐类型*/
+                return Constant.SHOW_TYPE;
+            } else {
+                /**不显示点餐类型*/
+                return Constant.DIS_SHOW_TYPE;
+            }
+        }else {
+            /**不显示点餐类型*/
+            return Constant.DIS_SHOW_TYPE;
         }
-        return isShow;
     }
 
     public void setIsShow(Integer isShow) {
@@ -143,6 +154,30 @@ public class TableBean {
         this.orderType = orderType;
     }
 
+    public Integer getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(Integer tableType) {
+        this.tableType = tableType;
+    }
+
+    public Integer getIsMerge() {
+        return isMerge;
+    }
+
+    public void setIsMerge(Integer isMerge) {
+        this.isMerge = isMerge;
+    }
+
+    public Integer getConsumeType() {
+        return consumeType;
+    }
+
+    public void setConsumeType(Integer consumeType) {
+        this.consumeType = consumeType;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -158,6 +193,9 @@ public class TableBean {
                 ", user=" + user +
                 ", isShow=" + isShow +
                 ", orderType=" + orderType +
+                ", tableType=" + tableType +
+                ", isMerge=" + isMerge +
+                ", consumeType=" + consumeType +
                 ", isLogin=" + isLogin +
                 '}';
     }

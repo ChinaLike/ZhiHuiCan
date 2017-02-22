@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.view.View;
 
 import cn.sczhckj.order.Config;
+import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.bean.device.VersionBean;
 import cn.sczhckj.order.overwrite.MyDialog;
@@ -86,15 +87,15 @@ public class VersionManager {
      * 提示当前有新版本
      */
     public void updataVersion(final Context mContext, final VersionBean bean) {
-        L.d("版本更新：" + bean.toString());
-        String context = "当前版本：" + getVersionName(mContext)
-                + "\n最新版本：" + bean.getVersion()
-                + "\n更新大小：" + bean.getSize()
-                + "\n更新内容:" + bean.getContent();
+//        String context = "当前版本：" + getVersionName(mContext)
+//                + "\n最新版本：" + bean.getVersion()
+//                + "\n更新大小：" + bean.getSize()
+//                + "\n更新内容:" + bean.getContent();
+        String context = mContext.getString(R.string.dialog_apk_update_content, getVersionName(mContext), bean.getVersion(), bean.getSize(), bean.getContent());
         final MyDialog dialog = new MyDialog(mContext);
-        dialog.setTitle("版本更新");
+        dialog.setTitle(mContext.getString(R.string.dialog_apk_update_title));
         dialog.setContextText(context);
-        dialog.setNegativeButton("马上更新", new View.OnClickListener() {
+        dialog.setNegativeButton(mContext.getString(R.string.dialog_apk_update_positive), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 downLoadDialog(mContext);
@@ -104,7 +105,7 @@ public class VersionManager {
             }
         });
 
-        dialog.setPositiveButton("暂不更新", new View.OnClickListener() {
+        dialog.setPositiveButton(mContext.getString(R.string.dialog_apk_update_negative), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -135,10 +136,10 @@ public class VersionManager {
      */
     private void downLoadDialog(Context mContext) {
         downLoadDialog = new MyDialog(mContext);
-        downLoadDialog.setTitle("软件更新");
-        downLoadDialog.setContextText("正在更新中...");
+        downLoadDialog.setTitle(mContext.getString(R.string.dialog_apk_updating_title));
+        downLoadDialog.setContextText(mContext.getString(R.string.dialog_apk_updating_content));
         downLoadDialog.setProgressVisibility();
-        downLoadDialog.setAloneButton("取消", new View.OnClickListener() {
+        downLoadDialog.setAloneButton(mContext.getString(R.string.dialog_apk_updating_negative  ), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 downLoadDialog.dismiss();

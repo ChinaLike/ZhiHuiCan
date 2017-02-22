@@ -49,7 +49,7 @@ public interface RetrofitService {
      */
     @FormUrlEncoded
     @POST("rest/table/info")
-    Call<Bean<InfoBean>> tableInfo(@Field("p") String p);
+    Call<Bean<List<InfoBean>>> tableInfo(@Field("p") String p);
 
     /**
      * 开桌
