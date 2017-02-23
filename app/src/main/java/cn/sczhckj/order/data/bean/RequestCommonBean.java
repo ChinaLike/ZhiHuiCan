@@ -38,6 +38,7 @@ public class RequestCommonBean {
     private Integer type;//类型，用于版本检测0-点菜端 1-后厨端
     private Integer priceTypeID;//价格类型ID
     private Integer operateID;//操作类型ID，0-普通退菜（平板）1-特权退菜（收银）
+    private Integer status;//用于状态切换
 
     public String getMemberCode() {
         return memberCode;
@@ -221,6 +222,14 @@ public class RequestCommonBean {
 
     public void setOperateID(Integer operateID) {
         this.operateID = operateID;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     @Override

@@ -66,6 +66,13 @@ public interface RetrofitService {
     Call<Bean<ResponseCommonBean>> setPersonNum(@Field("p") String p);
 
     /**
+     * 台桌状态切换（并桌点餐切换到单桌点餐）
+     */
+    @FormUrlEncoded
+    @POST("rest/table/switchStatus")
+    Call<Bean<ResponseCommonBean>> switchStatus(@Field("p") String p);
+
+    /**
      * 菜品分类
      */
     @FormUrlEncoded

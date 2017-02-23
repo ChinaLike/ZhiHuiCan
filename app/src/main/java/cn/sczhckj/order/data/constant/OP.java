@@ -48,6 +48,12 @@ public interface OP {
      */
     String TABLE_SET_PERSON_NUM = "setPersonNum";
 
+
+    /**
+     * 台桌状态切换
+     */
+    String TABLE_SWITCH_STATUS = "switchStatus";
+
     /**
      * 菜品分类
      */

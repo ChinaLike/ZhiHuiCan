@@ -96,4 +96,18 @@ public class TableMode {
         commonCall.enqueue(callback);
     }
 
+    /**
+     * 台桌状态切换
+     * @param bean
+     * @param callback
+     */
+    public void switchStatus(RequestCommonBean bean, Callback<Bean<ResponseCommonBean>> callback){
+        RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
+                .op(OP.TABLE_SWITCH_STATUS)
+                .time()
+                .bean(bean);
+        Call<Bean<ResponseCommonBean>> commonCall = RetrofitRequest.service().switchStatus(restRequest.toRequestString());
+        commonCall.enqueue(callback);
+    }
+
 }

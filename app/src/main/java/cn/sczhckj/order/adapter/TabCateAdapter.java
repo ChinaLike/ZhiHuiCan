@@ -15,8 +15,10 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.activity.MainActivity;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
+import cn.sczhckj.order.overwrite.CheckSwitchButton;
 import cn.sczhckj.order.until.AppSystemUntil;
 
 /**
@@ -71,6 +73,7 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
         }else {
             views.get(position).setSelected(false);
         }
+        holder.statusSwitch.setVisibility(View.GONE);
         holder.tabName.setText(mList.get(position).getName());
         holder.tabParent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +113,8 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
         View tabLine;
         @Bind(R.id.tab_parent)
         LinearLayout tabParent;
+        @Bind(R.id.statusSwitch)
+        CheckSwitchButton statusSwitch;
 
         public TabViewHolder(View itemView) {
             super(itemView);
@@ -121,13 +126,22 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
         this.defaultItem = defaultItem;
     }
 
+//    /**
+//     * 获取每一项的宽度
+//     * @return
+//     */
+//    private int getItemWidth(){
+//        int screen= AppSystemUntil.width(mContext);
+//        return screen/2/ITEM_WIDTH;
+//    }
     /**
      * 获取每一项的宽度
+     *
      * @return
      */
-    private int getItemWidth(){
-        int screen= AppSystemUntil.width(mContext);
-        return screen/2/ITEM_WIDTH;
+    private int getItemWidth() {
+        /**46.0 和 56.0 是父类布局文件在界面所占比例（1:4.6）所得*/
+        return (int) ((MainActivity.rightWidth*46.0)/56.0)/ITEM_WIDTH;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

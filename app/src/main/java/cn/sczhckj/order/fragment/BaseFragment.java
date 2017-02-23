@@ -89,7 +89,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 当前台桌ID
      */
-    protected Integer tableId = -1;
+    protected static Integer tableId = -1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

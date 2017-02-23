@@ -102,8 +102,8 @@ public interface Constant {
      * 接口回调台桌属性 字段tableType
      */
     int TABLE_TYPE_ALONE = 0;//单桌
-    int TABLE_TYPE_MAIN = 1;//主桌
-    int TABLE_TYPE_AUX = 2;//辅桌
+    int TABLE_TYPE_MAIN = 1;//并桌主桌
+    int TABLE_TYPE_AUX = 2;//并桌辅桌
 
     /**
      * 当前VIP是否解锁 字段isLock

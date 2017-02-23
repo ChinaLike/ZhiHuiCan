@@ -12,10 +12,6 @@ public class ResponseCommonBean{
     private String waiter;//服务员
     private String message;//消息
     private Integer recordId;//消费记录ID
-
-
-
-
     private int showType;//显示点菜方式
 
     public int getShowType() {

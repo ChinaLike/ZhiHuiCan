@@ -26,7 +26,7 @@ public class TableBean {
     private Integer isShow;//是否显示点餐方式，0-不显示 1-显示
     private Integer orderType;//点餐方式
     private Integer tableType;//台桌类型，0-单独点餐，1-主桌，2-辅桌
-    private Integer isMerge;//是否并桌点餐0-否，1-是
+    private Integer combine;//是否并桌点餐0-否，1-是
     private Integer consumeType;//消费类型0-单独消费;1-并桌消费(主桌);2-并桌消费(辅桌);当有并桌记录ID时有效
     private boolean isLogin;//本地字段是否登录
 
@@ -114,8 +114,8 @@ public class TableBean {
     }
 
     public Integer getIsShow() {
-        if (isMerge !=null && consumeType !=null) {
-            if (isMerge == Constant.MERGE_TABLE && consumeType == Constant.CONSUME_TYPE_MERGE_MAIN) {
+        if (combine !=null && consumeType !=null) {
+            if (combine == Constant.MERGE_TABLE && consumeType == Constant.CONSUME_TYPE_MERGE_MAIN) {
                 /**显示点餐类型*/
                 return Constant.SHOW_TYPE;
             } else {
@@ -162,12 +162,12 @@ public class TableBean {
         this.tableType = tableType;
     }
 
-    public Integer getIsMerge() {
-        return isMerge;
+    public Integer getCombine() {
+        return combine;
     }
 
-    public void setIsMerge(Integer isMerge) {
-        this.isMerge = isMerge;
+    public void setCombine(Integer combine) {
+        this.combine = combine;
     }
 
     public Integer getConsumeType() {
@@ -194,7 +194,7 @@ public class TableBean {
                 ", isShow=" + isShow +
                 ", orderType=" + orderType +
                 ", tableType=" + tableType +
-                ", isMerge=" + isMerge +
+                ", combine=" + combine +
                 ", consumeType=" + consumeType +
                 ", isLogin=" + isLogin +
                 '}';

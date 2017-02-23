@@ -34,6 +34,7 @@ import cn.sczhckj.order.adapter.CatesAdapter;
 import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.adapter.TabTableAdapter;
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
@@ -50,6 +51,7 @@ import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
+import cn.sczhckj.order.mode.impl.StatusSwitchImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
@@ -208,9 +210,10 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      */
     private void initTabAdapter() {
         loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-               getString(R.string.order_fragment_loading));
+                getString(R.string.order_fragment_loading));
         mTabTableAdapter = new TabTableAdapter(mContext, null);
         mTabTableAdapter.setOnItemClickListener(this);
+        mTabTableAdapter.setCurrTableId(tableId);
         LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         dishesTab.setLayoutManager(mLayoutManager);
@@ -301,7 +304,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         @Override
         public void onResponse(Call<Bean<List<InfoBean>>> call, Response<Bean<List<InfoBean>>> response) {
             Bean<List<InfoBean>> bean = response.body();
-            L.d("台桌信息："+bean.getResult().toString());
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**加载成功*/
                 setTabContext(bean.getResult());
@@ -314,7 +316,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
 
         @Override
         public void onFailure(Call<Bean<List<InfoBean>>> call, Throwable t) {
-            L.d("台桌信息1："+t.toString());
             loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                     getString(R.string.order_fragment_loading_fail));
         }
@@ -328,6 +329,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
             Bean<List<FoodBean>> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                T.showLong(getContext(), "菜品权限：" + bean.getResult().get(0).getPermiss());
                 /**菜品请求成功*/
                 /**处理适配数据*/
                 foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
@@ -349,18 +351,39 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 设置台桌显示内容
      */
     private void setTabContext(List<InfoBean> mList) {
-        if (mList == null || mList.size() == 0 || mList.size() == 1){
-            /**单桌显示方式*/
+        T.showLong(getContext(), mList.toString());
+        if (mList == null || mList.size() == 0) {
+            /**单桌显示方式（小于2桌只有一桌的只有单独点餐）*/
             tabLayout(false);
             tabText.setText(getString(R.string.order_fragment_one_order));
-        }else {
+        } else if (mList.size() == 1) {
+            tabLayout(false);
+            if (mList.get(0).getCombine() == Constant.MERGE_TABLE) {
+                tabText.setText(getString(R.string.order_fragment_more_order));
+            } else {
+                tabText.setText(getString(R.string.order_fragment_one_order));
+            }
+        } else {
             /**多桌显示方式*/
-            for (InfoBean item :mList) {
-                if (tableId == item.getId() && item.getTableType() == Constant.TABLE_TYPE_AUX){
-                    /**辅桌点餐，也属于单桌点餐*/
+            for (InfoBean item : mList) {
+                if (item.getCombine() == Constant.MERGE_TABLE) {
+                    /**合并点餐*/
+                    if (tableId == item.getId() && item.getConsumeType() == Constant.TABLE_TYPE_AUX) {
+                        /**并桌的辅桌（显示并桌点餐）*/
+                        tabLayout(false);
+                        tabText.setText(getString(R.string.order_fragment_more_order));
+                        return;
+                    } else if (tableId == item.getId() && item.getConsumeType() == Constant.TABLE_TYPE_MAIN) {
+                        /**并桌的主桌（显示列表）*/
+                        tabLayout(true);
+                        return;
+                    }
+                } else if (item.getCombine() == Constant.NON_MERGE_TABLE) {
+                    /**单独点餐*/
                     tabLayout(false);
                     tabText.setText(getString(R.string.order_fragment_one_order));
                 }
+
             }
         }
     }
@@ -564,11 +587,18 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             /**单独点餐*/
             orderType = Constant.ORDER_TYPE_ALONE;
             MyApplication.tableBean.setOrderType(orderType);
-            // TODO: 2017-01-16 变更状态栏等信息
-
+            tabLayout(false);
+            tabText.setText(getString(R.string.order_fragment_one_order));
+            /**刷新菜品数据*/
+            onItemClick(null, currBean, currPosition);
         } else if (WebSocketEvent.MERGE_TABLE == event.getType()) {
             /**并桌*/
-            // TODO: 2017-01-16 处理并桌等信息
+            orderType = Constant.ORDER_TYPE_MERGE;
+            MyApplication.tableBean.setOrderType(orderType);
+            /**刷新台桌*/
+            initTab();
+            /**刷新菜品数据*/
+            onItemClick(null, currBean, currPosition);
         }
     }
 

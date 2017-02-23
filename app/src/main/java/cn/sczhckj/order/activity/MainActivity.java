@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -154,6 +155,10 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 心跳检测
      */
     private Intent intent;
+    /**
+     * 右侧的宽度
+     */
+    public static int rightWidth = 0;
 
 
     @Override
@@ -166,6 +171,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         isLogin();
         init();
         disposeIntent();
+        getWidth();
     }
 
     @Override
@@ -173,6 +179,20 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         super.onResume();
         /**Activity重新获取焦点时，开启Glide请求*/
         Glide.with(getApplicationContext()).resumeRequests();
+    }
+
+    /**
+     * 获取屏幕宽度
+     */
+    private void getWidth() {
+        ViewTreeObserver observer = contentArea.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                rightWidth = contentArea.getWidth();
+                return true;
+            }
+        });
     }
 
 
@@ -415,6 +435,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         bean.setRecordId(MyApplication.tableBean.getRecordId());
         TableMode tableMode = new TableMode();
         tableMode.setPersonNum(bean, this);
+        T.showShort(this,getString(R.string.main_activity_setting_person));
     }
 
 
@@ -471,7 +492,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Override
     public void person(int number) {
         personNumber = number;
-        if (MyApplication.tableBean!=null&&MyApplication.tableBean.getMaximum()!=null){
+        if (MyApplication.tableBean != null && MyApplication.tableBean.getMaximum() != null) {
             personNumber = MyApplication.tableBean.getMaximum();
         }
         this.tablePersonNum.setText(personNumber + "人");
@@ -481,6 +502,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
         Bean<ResponseCommonBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            MyApplication.tableBean.setMaximum(personCount);
             person(personCount);
             /**设置菜品过多提醒*/
             if (bean.getResult() != null && bean.getResult().getFoodCountHint() != null) {

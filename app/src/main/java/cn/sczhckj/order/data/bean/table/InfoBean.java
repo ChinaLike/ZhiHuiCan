@@ -1,6 +1,6 @@
 package cn.sczhckj.order.data.bean.table;
 
-import java.util.List;
+import cn.sczhckj.order.until.TextUntils;
 
 /**
  * @describe: 台桌信息
@@ -8,17 +8,18 @@ import java.util.List;
  * @Email: 572919350@qq.com
  */
 
-public class InfoBean {
-    private Integer tableType;//台桌类型，0-单独点餐，1-主桌，2-辅桌
+public class    InfoBean {
+    private Integer consumeType;//台桌消费类型，0-单独点餐，1-并桌主桌，2-并桌辅桌
+    private Integer combine;//0-不合并点餐，1-合并点餐
     private Integer id;//台桌ID
     private String name;//台桌名称
 
-    public Integer getTableType() {
-        return tableType;
+    public Integer getConsumeType() {
+        return TextUntils.empty(consumeType, -1);
     }
 
-    public void setTableType(Integer tableType) {
-        this.tableType = tableType;
+    public void setConsumeType(Integer consumeType) {
+        this.consumeType = consumeType;
     }
 
     public Integer getId() {
@@ -37,10 +38,19 @@ public class InfoBean {
         this.name = name;
     }
 
+    public Integer getCombine() {
+        return TextUntils.empty(combine, -1);
+    }
+
+    public void setCombine(Integer combine) {
+        this.combine = combine;
+    }
+
     @Override
     public String toString() {
         return "{" +
-                "tableType=" + tableType +
+                "consumeType=" + consumeType +
+                ", combine=" + combine +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 '}';

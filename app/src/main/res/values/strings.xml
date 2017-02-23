@@ -38,6 +38,7 @@
     <string name="main_activity_dialog_positive">确定</string>
     <string name="main_activity_dialog_negative">取消</string>
     <string name="main_activity_setting_fail">设置失败，请重新设置！</string>
+    <string name="main_activity_setting_person">人数设置中，请稍后...</string>
 
     <string name="main_activity_table">桌号</string>
     <string name="main_activity_person">就餐人数</string>
@@ -134,6 +135,10 @@
     <string name="dialog_context_over_number">尊敬的顾客您好！\n\t\t您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
     <string name="dialog_cancel">好的</string>
     <string name="favor_non_open">开桌后才能对菜品点赞</string>
+    <string name="dialog_context_switch">尊敬的顾客您好！\n\t\t您确认允许单桌点餐吗？</string>
+    <string name="toast_content_hint">正在切换中，请耐心等待...</string>
+    <string name="dialog_context_switch_positive">继续</string>
+    <string name="dialog_context_switch_negative">放弃</string>
 
     <!--VersionManager APK更新提示-->
     <string name="dialog_apk_update_title">版本更新</string>
@@ -143,5 +148,6 @@
     <string name="dialog_apk_updating_title">版本更新</string>
     <string name="dialog_apk_updating_content">正在更新中...</string>
     <string name="dialog_apk_updating_negative">取消</string>
+    
 
 </resources>
