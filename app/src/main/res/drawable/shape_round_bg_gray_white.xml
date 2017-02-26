@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <shape android:shape="oval" android:useLevel="false">
+            <!-- 填充的颜色：这里设置背景透明 -->
+            <solid android:color="@color/table_cate_bg" />
+            <size android:width="30dp" android:height="30dp"></size>
+        </shape>
+
+    </item>
+
+    <item android:state_selected="true">
+        <shape android:shape="oval" android:useLevel="false">
+            <!-- 填充的颜色：这里设置背景透明 -->
+            <solid android:color="@color/white" />
+            <size android:width="30dp" android:height="30dp"></size>
+        </shape>
+    </item>
+
+</selector>

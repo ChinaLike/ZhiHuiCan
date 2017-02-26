@@ -40,6 +40,11 @@ public class RequestCommonBean {
     private Integer operateID;//操作类型ID，0-普通退菜（平板）1-特权退菜（收银）
     private Integer status;//用于状态切换
 
+    private String waitressId;//服务员ID
+    private Integer id;//包间ID
+    private String code;//包间编码
+
+
     public String getMemberCode() {
         return memberCode;
     }
@@ -232,6 +237,30 @@ public class RequestCommonBean {
         this.status = status;
     }
 
+    public String getWaitressId() {
+        return waitressId;
+    }
+
+    public void setWaitressId(String waitressId) {
+        this.waitressId = waitressId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -258,6 +287,10 @@ public class RequestCommonBean {
                 ", type=" + type +
                 ", priceTypeID=" + priceTypeID +
                 ", operateID=" + operateID +
+                ", status=" + status +
+                ", waitressId='" + waitressId + '\'' +
+                ", id=" + id +
+                ", code='" + code + '\'' +
                 '}';
     }
 }

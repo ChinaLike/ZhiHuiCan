@@ -208,15 +208,15 @@ public class MainFragment extends BaseFragment {
      * 是否显示点菜方式
      */
     public void showOrderType(int showType) {
-        if (showType == Constant.SHOW_TYPE) {
-            mainHintChoose.setVisibility(View.VISIBLE);
-            mainBottomViewPager.setVisibility(View.GONE);
-        } else {
+//        if (showType == Constant.SHOW_TYPE) {
+//            mainHintChoose.setVisibility(View.VISIBLE);
+//            mainBottomViewPager.setVisibility(View.GONE);
+//        } else {
             setBottomBtn(true);
             mainHintChoose.setVisibility(View.GONE);
             mainBottomViewPager.setVisibility(View.VISIBLE);
             initOrderFragment();
-        }
+//        }
     }
 
     @Override

@@ -218,5 +218,25 @@ public interface OP {
      */
     String EXCEPTION = "exception";
 
+    /**
+     * 服务员登录
+     */
+    String PRODUCE_WAITRESSLOGIN = "waitressLogin";
+
+    /**
+     * 获取所有台桌分类
+     */
+    String PRODUCE_TABLECATE = "tableCate";
+
+    /**
+     * 获取台桌属性
+     */
+    String PRODUCE_TABLEATTR = "tableAttr";
+
+    /**
+     * 获取台桌属性
+     */
+    String PRODUCE_ALL_TABLE = "allTable";
+
 
 }

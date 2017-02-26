@@ -69,7 +69,9 @@ public interface Constant {
     int MERGE_TABLE = 1;//合并台桌
     int NON_MERGE_TABLE = 0;//不合并台桌
 
-    /**消费类型*/
+    /**
+     * 消费类型
+     */
     int CONSUME_TYPE_ALONE = 0;//单独消费
     int CONSUME_TYPE_MERGE_MAIN = 1;//并桌消费(主桌)
     int CONSUME_TYPE_MERGE_ASSIST = 2;//并桌消费(辅桌)
@@ -133,6 +135,12 @@ public interface Constant {
      * 版本类型0-点菜端 1-后厨端
      */
     int VERSION_TYPE = 0;
+
+    /**
+     * 平板模式
+     */
+    int CUSTOMER = 0;//消费者模式
+    int PRODUCER = 1;//服务员模式
 
 
 }

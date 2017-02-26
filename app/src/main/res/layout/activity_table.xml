@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_table"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cn.sczhckj.order.activity.TableActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hint_line"
+        android:background="@color/hint_color"/>
+
+    <LinearLayout
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <include layout="@layout/item_loading" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/table_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/table_cate_bg"
+            android:padding="5dp">
+
+            <Spinner
+                android:id="@+id/table_spinner"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/table_cate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/table_spinner"
+                tools:listitem="@layout/item_table_cate" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/table"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            tools:listitem="@layout/item_table" />
+    </LinearLayout>
+
+
+</LinearLayout>

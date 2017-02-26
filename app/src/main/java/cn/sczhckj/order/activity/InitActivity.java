@@ -80,8 +80,6 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     private Intent intent;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +87,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         /**显示设备ID*/
-        deviceid.setText(getString(R.string.init_activity_device,AppSystemUntil.getAndroidID(this)));
+        deviceid.setText(getString(R.string.init_activity_device, AppSystemUntil.getAndroidID(this)));
 
         if (AndroidVersionUtil.hasM()) {
             PermissionManager.getInstance().requestPermission(InitActivity.this, this, PERMISSIONS_STORAGE);
@@ -198,9 +196,17 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
             Bean<TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 MyApplication.tableBean = bean.getResult();
+                L.d("初始化信息："+bean.getResult());
                 initText.setText(getString(R.string.init_activity_loading_success));
-                intentLead();
-            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE){
+                if (bean.getResult().getMode() == Constant.CUSTOMER) {
+                    /**消费者模式*/
+                    intentLead();
+                } else if (bean.getResult().getMode() == Constant.PRODUCER) {
+                    /**服务员模式*/
+                    intentWaitressLogin();
+                }
+
+            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 initParent.setClickable(true);
                 initText.setText(bean.getMessage());
             }
@@ -247,10 +253,18 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     }
 
     /**
-     * 跳转引导页
+     * 跳转引导页，消费者模式
      */
     private void intentLead() {
         Intent intent = new Intent(InitActivity.this, LeadActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 跳转服务员登录，服务员模式
+     */
+    private void intentWaitressLogin() {
+        Intent intent = new Intent(InitActivity.this, WaitressLoginActivity.class);
         startActivity(intent);
     }
 

@@ -7,9 +7,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".MyApplication"
@@ -22,53 +22,74 @@
         <activity
             android:name=".activity.InitActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"
-            android:launchMode="singleTask"
             android:keepScreenOn="true"
-            android:screenOrientation="landscape">
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--<category android:name="android.intent.category.HOME" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- <category android:name="android.intent.category.HOME" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"
-            android:launchMode="singleTask"
             android:keepScreenOn="true"
-            android:screenOrientation="landscape"></activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"
-            android:launchMode="singleTask"
             android:keepScreenOn="true"
-            android:screenOrientation="landscape"></activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".activity.LeadActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"
-            android:launchMode="singleTask"
             android:keepScreenOn="true"
-            android:screenOrientation="landscape"></activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".activity.LockActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"
-            android:launchMode="singleTask"
             android:keepScreenOn="true"
-            android:screenOrientation="landscape"></activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
-        <service android:name=".service.HeartService"></service>
-        <service android:name=".service.WebSocketService"></service>
+        <service android:name=".service.HeartService" />
+        <service android:name=".service.WebSocketService" />
+
+        <activity
+            android:name=".activity.WaitressLoginActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:keepScreenOn="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".activity.TableActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:keepScreenOn="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

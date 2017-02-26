@@ -2,6 +2,7 @@ package cn.sczhckj.order.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -47,6 +48,7 @@ import cn.sczhckj.order.fragment.RequiredFagment;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
+import cn.sczhckj.order.mode.impl.FloatButtonImpl;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AppSystemUntil;
@@ -89,6 +91,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     FrameLayout cartArea;
     @Bind(R.id.content_area)
     FrameLayout contentArea;
+    @Bind(R.id.float_btn)
+    FloatingActionButton floatBtn;
     /**
      * 用户ID
      */
@@ -159,6 +163,10 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 右侧的宽度
      */
     public static int rightWidth = 0;
+    /**
+     * 服务员模式弹窗
+     */
+    private FloatButtonImpl mFloatButton;
 
 
     @Override
@@ -179,6 +187,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         super.onResume();
         /**Activity重新获取焦点时，开启Glide请求*/
         Glide.with(getApplicationContext()).resumeRequests();
+        initFloatBtn();
     }
 
     /**
@@ -231,7 +240,9 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     @Override
     protected void init() {
+
         mDialog = new DialogImpl(this);
+        mFloatButton = new FloatButtonImpl(this);
         personNumber = 0;
         initCartFragment();
         initRequiredFragment();
@@ -435,11 +446,11 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         bean.setRecordId(MyApplication.tableBean.getRecordId());
         TableMode tableMode = new TableMode();
         tableMode.setPersonNum(bean, this);
-        T.showShort(this,getString(R.string.main_activity_setting_person));
+        T.showShort(this, getString(R.string.main_activity_setting_person));
     }
 
 
-    @OnClick({R.id.no_login, R.id.table_person_parent})
+    @OnClick({R.id.no_login, R.id.table_person_parent, R.id.float_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.no_login:
@@ -475,6 +486,10 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                             }).show();
                 }
                 break;
+            case R.id.float_btn:
+                /**服务员模式弹窗*/
+                mFloatButton.show();
+                break;
         }
     }
 
@@ -492,7 +507,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Override
     public void person(int number) {
         personNumber = number;
-        if (MyApplication.tableBean != null && MyApplication.tableBean.getMaximum() != null) {
+        if (MyApplication.tableBean != null && MyApplication.tableBean.getMaximum() != null && MyApplication.tableBean.getMaximum() != 0) {
             personNumber = MyApplication.tableBean.getMaximum();
         }
         this.tablePersonNum.setText(personNumber + "人");
@@ -639,4 +654,17 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    /**
+     * 初始化浮动按钮
+     */
+    private void initFloatBtn() {
+        if (MyApplication.tableBean != null && MyApplication.tableBean.getMode() != null &&
+                MyApplication.tableBean.getMode() == Constant.PRODUCER) {
+            floatBtn.setVisibility(View.VISIBLE);
+        } else {
+            floatBtn.setVisibility(View.GONE);
+        }
+    }
+
 }

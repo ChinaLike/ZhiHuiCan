@@ -2,7 +2,6 @@ package cn.sczhckj.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,28 +32,22 @@ import cn.sczhckj.order.adapter.CatesAdapter;
 import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.adapter.TabTableAdapter;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.ResponseCommonBean;
-import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
-import cn.sczhckj.order.data.event.RefreshViewEvent;
-import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.TableMode;
-import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
-import cn.sczhckj.order.mode.impl.StatusSwitchImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -329,7 +321,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
             Bean<List<FoodBean>> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                T.showLong(getContext(), "菜品权限：" + bean.getResult().get(0).getPermiss());
                 /**菜品请求成功*/
                 /**处理适配数据*/
                 foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
@@ -351,7 +342,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 设置台桌显示内容
      */
     private void setTabContext(List<InfoBean> mList) {
-        T.showLong(getContext(), mList.toString());
         if (mList == null || mList.size() == 0) {
             /**单桌显示方式（小于2桌只有一桌的只有单独点餐）*/
             tabLayout(false);

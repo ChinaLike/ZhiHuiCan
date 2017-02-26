@@ -44,6 +44,11 @@
     <string name="main_activity_person">就餐人数</string>
     <string name="main_activity_waitress">服务员</string>
 
+    <!--TableActivity-->
+    <string name="table_activity_loading">台桌加载中...</string>
+    <string name="table_activity_loading_fail">加载失败,点击重新加载</string>
+    <string name="table_activity_open_table_fail">打开台桌失败，请重试或换另外一张台桌</string>
+
     <!--BillFragment-->
     <string name="bill_fragment_loading">努力加载中...</string>
     <string name="bill_fragment_loading_fail">数据加载失败，点击刷新</string>
@@ -131,7 +136,7 @@
     <string name="warm_prompt">尊敬的顾客您好！\n您点的菜品过多，可根据情况适当点餐，避免食物浪费。</string>
     <string name="dialog_title">温馨提示</string>
     <string name="dialog_context_number">尊敬的顾客您好！\n\t\t您选择的菜品已经达到限制数量,不能再\n选择了，给你带来的不便还请谅解！</string>
-    <string name="dialog_context_permiss">尊敬的顾客您好！\n\t\t您没有足够的权限点次菜品，具体事宜请你\n联系主桌！还请谅解！</string>
+    <string name="dialog_context_permiss">尊敬的顾客您好！\n\t\t您没有足够的权限点此菜品，具体事宜请你\n联系主桌！还请谅解！</string>
     <string name="dialog_context_over_number">尊敬的顾客您好！\n\t\t您所点的菜品单类已经超出规定数量，请选择其他喜欢菜\n品！还请谅解！</string>
     <string name="dialog_cancel">好的</string>
     <string name="favor_non_open">开桌后才能对菜品点赞</string>
@@ -148,6 +153,6 @@
     <string name="dialog_apk_updating_title">版本更新</string>
     <string name="dialog_apk_updating_content">正在更新中...</string>
     <string name="dialog_apk_updating_negative">取消</string>
-    
+
 
 </resources>

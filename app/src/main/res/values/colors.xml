@@ -69,5 +69,10 @@
     <color name="favor_nor">#CCCCCC</color>
     <color name="favor_sel">#F45665</color>
 
+    <!--台桌选择-->
+    <color name="table_cate_bg">#F0F0F0</color>
+    <color name="table_table_bg_gray">#DFDFDF</color>
+    <color name="table_table_bg_yellow">#FFE036</color>
+
 
 </resources>

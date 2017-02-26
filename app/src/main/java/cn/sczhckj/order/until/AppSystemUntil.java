@@ -14,6 +14,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.until.show.L;
 
 /**
@@ -47,7 +48,11 @@ public class AppSystemUntil {
      */
     public static String getAndroidID(Context mContext) {
         String deviceID = Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
-        return deviceID;
+        if (MyApplication.deviceID == null || MyApplication.deviceID.equals("")) {
+            return deviceID;
+        } else {
+            return MyApplication.deviceID;
+        }
     }
 
     /**

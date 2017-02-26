@@ -13,6 +13,9 @@ import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.food.ImageBean;
 import cn.sczhckj.order.data.bean.food.PriceBean;
+import cn.sczhckj.order.data.bean.produce.TableAttrBean;
+import cn.sczhckj.order.data.bean.produce.TableCateBean;
+import cn.sczhckj.order.data.bean.produce.WaitressBean;
 import cn.sczhckj.order.data.bean.service.ServiceBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
@@ -246,5 +249,33 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("rest/device/exception")
     Call<Bean<ResponseCommonBean>> exception(@Field("p") String p);
+
+    /**
+     * 服务员登陆
+     */
+    @FormUrlEncoded
+    @POST("rest/produce/waitressLogin")
+    Call<Bean<WaitressBean>> waitressLogin(@Field("p") String p);
+
+    /**
+     * 获取台桌分类
+     */
+    @FormUrlEncoded
+    @POST("rest/produce/tableCate")
+    Call<Bean<List<TableCateBean>>> tableCate(@Field("p") String p);
+
+    /**
+     * 获取台桌属性
+     */
+    @FormUrlEncoded
+    @POST("rest/produce/tableAttr")
+    Call<Bean<List<TableAttrBean>>> tableAttr(@Field("p") String p);
+
+    /**
+     * 获取所有台桌
+     */
+    @FormUrlEncoded
+    @POST("rest/produce/allTable")
+    Call<Bean<List<cn.sczhckj.order.data.bean.produce.TableBean>>> allTable(@Field("p") String p);
 
 }

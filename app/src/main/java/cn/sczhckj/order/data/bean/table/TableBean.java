@@ -25,6 +25,7 @@ public class TableBean {
     private MemberBean user;//会员信息
     private Integer isShow;//是否显示点餐方式，0-不显示 1-显示
     private Integer orderType;//点餐方式
+    private Integer mode;//平板模式 0-消费者模式 1-服务员模式
     private Integer tableType;//台桌类型，0-单独点餐，1-主桌，2-辅桌
     private Integer combine;//是否并桌点餐0-否，1-是
     private Integer consumeType;//消费类型0-单独消费;1-并桌消费(主桌);2-并桌消费(辅桌);当有并桌记录ID时有效
@@ -114,7 +115,7 @@ public class TableBean {
     }
 
     public Integer getIsShow() {
-        if (combine !=null && consumeType !=null) {
+        if (combine != null && consumeType != null) {
             if (combine == Constant.MERGE_TABLE && consumeType == Constant.CONSUME_TYPE_MERGE_MAIN) {
                 /**显示点餐类型*/
                 return Constant.SHOW_TYPE;
@@ -122,7 +123,7 @@ public class TableBean {
                 /**不显示点餐类型*/
                 return Constant.DIS_SHOW_TYPE;
             }
-        }else {
+        } else {
             /**不显示点餐类型*/
             return Constant.DIS_SHOW_TYPE;
         }
@@ -178,6 +179,14 @@ public class TableBean {
         this.consumeType = consumeType;
     }
 
+    public Integer getMode() {
+        return mode;
+    }
+
+    public void setMode(Integer mode) {
+        this.mode = mode;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -193,6 +202,7 @@ public class TableBean {
                 ", user=" + user +
                 ", isShow=" + isShow +
                 ", orderType=" + orderType +
+                ", mode=" + mode +
                 ", tableType=" + tableType +
                 ", combine=" + combine +
                 ", consumeType=" + consumeType +
