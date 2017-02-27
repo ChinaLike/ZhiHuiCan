@@ -19,6 +19,7 @@ import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.fragment.BaseFragment;
+import cn.sczhckj.order.until.show.L;
 
 /**
  * @ describe:  菜品数量控制实现
@@ -64,13 +65,14 @@ public class FoodControlImpl {
         addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyMaximum(mList)) {
-                    /**总数已经超过本菜品分类设定数量*/
-                    maxDialog();
-                } else {
-                    /**总数未超标，验证单个菜品数量是否超标*/
-                    isOverProof(bean, countText, type);
-                }
+                cateFoodControler(countText, bean, type);
+//                if (verifyMaximum(mList)) {
+//                    /**总数已经超过本菜品分类设定数量*/
+//                    maxDialog();
+//                } else {
+//                    /**总数未超标，验证单个菜品数量是否超标*/
+//                    isOverProof(bean, countText, type);
+//                }
             }
         });
     }
@@ -163,33 +165,82 @@ public class FoodControlImpl {
         this.cateId = cateId;
     }
 
-    /**
-     * 总数超标弹窗
-     */
-    private void maxDialog() {
-        dialog.aloneDialog(mContext.getString(R.string.dialog_title),
-                mContext.getString(R.string.dialog_context_over_number),
-                "好的").show();
-    }
-
-    /**
-     * 判断锅底是否超过标准
-     */
-    private void isOverProof(FoodBean bean, TextView countText, int type) {
-        /**判断最大数量，如果是0，则不限制点菜*/
-        if (bean.getMaximum() == null || bean.getMaximum() == Constant.FOOD_DISASTRICT) {
-            /**不限制数量*/
-            setAddDishes(bean, countText, type);
-        } else {
-            if (bean.getCount() >= bean.getMaximum()) {
-                /**限制数量*/
-                dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
-                        mContext.getResources().getString(R.string.dialog_context_number),
-                        mContext.getResources().getString(R.string.dialog_cancel)).show();
-            } else {
-                setAddDishes(bean, countText, type);
+    private void cateFoodControler(TextView countText, FoodBean bean, int type) {
+        /**判断是否限制点菜*/
+        if (maximum == Constant.FOOD_DISASTRICT) {
+            foodControler(countText, bean, type);
+            return;
+        }
+        int cateNumber = 0;
+        /**获取已经下单中对应分类下的数量*/
+        for (FoodBean orderBean : BaseFragment.orderList) {
+            int cateId = orderBean.getCateId();
+            if (cateId == this.cateId) {
+                cateNumber++;
             }
         }
+        /**获取未下单中对应分类下的数量*/
+        for (FoodBean disOrderBean : BaseFragment.disOrderList) {
+            int cateId = disOrderBean.getCateId();
+            if (cateId == this.cateId) {
+                cateNumber++;
+            }
+        }
+        /**获取当前对应分类的数量，每一次加一份*/
+        int currCateNumber = cateNumber + 1;
+        /**判断是否超过对应数量*/
+        if (currCateNumber > maximum) {
+            dialog(mContext.getString(R.string.dialog_title), mContext.getString(R.string.dialog_context_over_number), "我懂了");
+        } else {
+            foodControler(countText, bean, type);
+        }
+
+    }
+
+    private void foodControler(TextView countText, FoodBean bean, int type) {
+        /**判断该菜品有数量控制*/
+        if (bean.getMaximum() == null || bean.getMaximum() == Constant.FOOD_DISASTRICT) {
+            setAddDishes(bean, countText, type);
+            return;
+        }
+        int foodNumber = 0;
+        /**获取已经下单中对应菜品的数量*/
+        for (FoodBean orderBean : BaseFragment.orderList) {
+            /**获取菜品ID和价格类型ID ， 判断是否是同一个菜品规则：只需要判断菜品ID与价格类型ID是否一样*/
+            int foodId = orderBean.getId();
+            int priceTypeId = orderBean.getType();
+            if (foodId == bean.getId() && priceTypeId == bean.getType()) {
+                foodNumber++;
+            }
+        }
+        /**获取未下单中对应菜品的数量*/
+        for (FoodBean disOrderBean : BaseFragment.disOrderList) {
+            /**获取菜品ID和价格类型ID ， 判断是否是同一个菜品规则：只需要判断菜品ID与价格类型ID是否一样*/
+            int foodId = disOrderBean.getId();
+            int priceTypeId = disOrderBean.getType();
+            if (foodId == bean.getId() && priceTypeId == bean.getType()) {
+                foodNumber++;
+            }
+        }
+        /**获取当前对应菜品的数量,每一次加一份*/
+        int currFoodNumber = foodNumber + 1;
+        if (currFoodNumber > bean.getMaximum()) {
+            dialog(mContext.getString(R.string.dialog_title), mContext.getString(R.string.dialog_context_number), "我懂了");
+        } else {
+            setAddDishes(bean, countText, type);
+        }
+    }
+
+
+    /**
+     * 一个按钮弹窗
+     *
+     * @param title
+     * @param content
+     * @param btn
+     */
+    private void dialog(String title, String content, String btn) {
+        dialog.aloneDialog(title, content, btn).show();
     }
 
     /**

@@ -196,7 +196,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
             Bean<TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 MyApplication.tableBean = bean.getResult();
-                L.d("初始化信息："+bean.getResult());
+                MyApplication.mode = bean.getResult().getMode();
                 initText.setText(getString(R.string.init_activity_loading_success));
                 if (bean.getResult().getMode() == Constant.CUSTOMER) {
                     /**消费者模式*/

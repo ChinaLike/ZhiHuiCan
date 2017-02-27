@@ -1,6 +1,7 @@
 package cn.sczhckj.order.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -52,7 +53,9 @@ public class LeadActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
-        initTableStatus(MyApplication.tableBean.getStatus(),MyApplication.tableBean.getRemark());
+        if (MyApplication.mode == Constant.CUSTOMER) {
+            initTableStatus(MyApplication.tableBean.getStatus(), MyApplication.tableBean.getRemark());
+        }
     }
 
     @OnClick({R.id.right, R.id.deny})
@@ -84,6 +87,9 @@ public class LeadActivity extends Activity {
         super.onResume();
         initButton(deny, false);
         initButton(right, false);
+        if (MyApplication.mode == Constant.PRODUCER) {
+            initTableStatus(MyApplication.tableBean.getStatus(), MyApplication.tableBean.getRemark());
+        }
     }
 
     @Override

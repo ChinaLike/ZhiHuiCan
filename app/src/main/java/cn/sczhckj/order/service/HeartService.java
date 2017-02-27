@@ -42,7 +42,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mWebSocket.connect(Config.URL_HEART_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+        mWebSocket.connect(Config.URL_HEART_SERVICE + AppSystemUntil.getHeartAndroidID(getApplicationContext()), this);
         sendMessage(mWebSocket);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -73,7 +73,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
      */
     private String msg() {
         HeartBean bean = new HeartBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(getApplicationContext()));
+        bean.setDeviceId(AppSystemUntil.getHeartAndroidID(getApplicationContext()));
         bean.setIp(AppSystemUntil.ip(getApplicationContext()));
 
         RestRequest<HeartBean> restRequest = JSONRestRequest.Builder.build(HeartBean.class)

@@ -51,6 +51,11 @@ public class WaitressLoginActivity extends Activity implements Callback<Bean<Wai
         setContentView(R.layout.activity_waitress_login);
         ButterKnife.bind(this);
         init();
+
+        /**测试*/
+        // TODO: 2017-02-27 测试后删掉
+        loginPhoneInput.setText("G0000");
+        loginPasswordInput.setText("123456");
     }
 
     private void init() {

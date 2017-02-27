@@ -82,8 +82,7 @@ public class LockActivity extends Activity {
      * 初始化浮动按钮
      */
     private void initFloatBtn() {
-        if (MyApplication.tableBean != null && MyApplication.tableBean.getMode() != null &&
-                MyApplication.tableBean.getMode() == Constant.PRODUCER) {
+        if (MyApplication.mode == Constant.PRODUCER) {
             floatBtn.setVisibility(View.VISIBLE);
         } else {
             floatBtn.setVisibility(View.GONE);

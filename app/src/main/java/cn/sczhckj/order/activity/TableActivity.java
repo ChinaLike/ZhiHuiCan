@@ -167,6 +167,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View v) {
                 initCate();
+                initAttr();
             }
         });
     }
@@ -236,7 +237,6 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
      * 初始化台桌
      */
     private void initTable(TableCateBean cateBean) {
-        L.d("测试数据返回1" + cateBean.toString());
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(TableActivity.this));
         bean.setId(cateBean.getId());
@@ -252,7 +252,6 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         public void onResponse(Call<Bean<List<TableCateBean>>> call, Response<Bean<List<TableCateBean>>> response) {
             Bean<List<TableCateBean>> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                loadingSuccess();
                 TableCateBean cateBean = new TableCateBean();
                 cateBean.setDistrict("全部台桌");
                 cateBean.setSelect(true);
@@ -279,6 +278,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         public void onResponse(Call<Bean<List<TableAttrBean>>> call, Response<Bean<List<TableAttrBean>>> response) {
             Bean<List<TableAttrBean>> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                loadingSuccess();
                 attrBeen = bean.getResult();
                 TableAttrBean tableAttrBean = new TableAttrBean();
                 tableAttrBean.setAttrId(-1);
@@ -286,13 +286,13 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
                 attrBeen.add(0, tableAttrBean);
                 initAttrAdapter(attrBeen);
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-
+                loadingFail(getString(R.string.table_activity_loading_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<TableAttrBean>>> call, Throwable t) {
-
+            loadingFail(getString(R.string.table_activity_loading_fail));
         }
     };
     /**
@@ -302,21 +302,18 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         @Override
         public void onResponse(Call<Bean<List<TableBean>>> call, Response<Bean<List<TableBean>>> response) {
             Bean<List<TableBean>> bean = response.body();
-            L.d("测试数据返回" + bean.getResult().toString());
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 loadingSuccess();
                 tableBeen = bean.getResult();
                 filterAttr(tableBeen);
-//                tableAdapter.notifyDataSetChanged(filterTable);
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-//                loadingFail(bean.getMessage());
+                loadingFail(bean.getMessage());
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<TableBean>>> call, Throwable t) {
-//            loadingFail(getString(R.string.table_activity_loading_fail));
-            L.d("测试数据返回" + t.toString());
+            loadingFail(getString(R.string.table_activity_loading_fail));
         }
     };
 
@@ -335,7 +332,6 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     private void filterAttr(List<TableBean> tableBeen) {
         filterTable.clear();
         int attrId = currAttrBean.getAttrId();
-        L.d("过滤条件ID：" + attrId);
         if (attrId == -1) {
             /**是-1表示全部台桌*/
             filterTable.addAll(tableBeen);
@@ -403,19 +399,20 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         @Override
         public void onResponse(Call<Bean<cn.sczhckj.order.data.bean.table.TableBean>> call, Response<Bean<cn.sczhckj.order.data.bean.table.TableBean>> response) {
             Bean<cn.sczhckj.order.data.bean.table.TableBean> bean = response.body();
-            if (bean!=null && bean.getCode() == ResponseCode.SUCCESS){
+            if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 MyApplication.tableBean = bean.getResult();
+                L.d("台桌属性：" + MyApplication.tableBean.toString());
                 intentLead();
-            }else if (bean!=null && bean.getCode() == ResponseCode.FAILURE){
-                T.showShort(TableActivity.this,bean.getMessage());
-            }else {
-                T.showShort(TableActivity.this,getString(R.string.table_activity_open_table_fail));
+            } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+                T.showShort(TableActivity.this, bean.getMessage());
+            } else {
+                T.showShort(TableActivity.this, getString(R.string.table_activity_open_table_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<cn.sczhckj.order.data.bean.table.TableBean>> call, Throwable t) {
-            T.showShort(TableActivity.this,getString(R.string.table_activity_open_table_fail));
+            T.showShort(TableActivity.this, getString(R.string.table_activity_open_table_fail));
         }
     };
 

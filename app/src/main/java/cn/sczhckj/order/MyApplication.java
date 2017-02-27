@@ -24,6 +24,10 @@ public class MyApplication extends Application {
      * 服务员模式下的设备ID,当为空时表示是消费者模式
      */
     public static String deviceID = "";
+    /**
+     * 平板模式0-消费者模式 1-服务员模式
+     */
+    public static int mode = 1;
 
     @Override
     public void onCreate() {
@@ -32,6 +36,8 @@ public class MyApplication extends Application {
 //        ExceptionPush.init(this).openCrashHandler(Config.HOST, "p");
 
     }
+
+
 
 
 }

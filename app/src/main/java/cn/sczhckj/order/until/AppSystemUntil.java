@@ -41,7 +41,7 @@ public class AppSystemUntil {
     }
 
     /**
-     * 获取收设备唯一标识
+     * 获取收设备唯一标识(判断服务员模式)
      *
      * @param mContext
      * @return
@@ -53,6 +53,15 @@ public class AppSystemUntil {
         } else {
             return MyApplication.deviceID;
         }
+    }
+
+    /**
+     * 获取设备ID（原始）
+     * @param mContext
+     * @return
+     */
+    public static String getHeartAndroidID(Context mContext) {
+        return Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
     }
 
     /**
@@ -102,7 +111,7 @@ public class AppSystemUntil {
      * @return
      */
     public static String intIP2StringIP(int ip) {
-        return (ip & 0xFF) + "." +
+        return  (ip & 0xFF) + "." +
                 ((ip >> 8) & 0xFF) + "." +
                 ((ip >> 16) & 0xFF) + "." +
                 (ip >> 24 & 0xFF);

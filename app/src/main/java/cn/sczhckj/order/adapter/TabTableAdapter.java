@@ -51,10 +51,6 @@ public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabVie
      */
     private int ITEM_WIDTH = 2;
     /**
-     * 默认显示第几项
-     */
-    private int defaultItem = 0;
-    /**
      * 状态切换
      */
     private StatusSwitchImpl mStatusSwitch;
@@ -81,17 +77,13 @@ public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabVie
         views.put(position, holder.tabLine);
         /**设置每一项的宽度*/
         holder.tabParent.setLayoutParams(new LinearLayout.LayoutParams(getItemWidth(), LinearLayout.LayoutParams.MATCH_PARENT));
-        /**设置默认选择项*/
-        if (defaultItem == position) {
-            views.get(position).setSelected(true);
-        } else {
-            views.get(position).setSelected(false);
-        }
         /**设置主桌显示切换按钮*/
         if (mList.get(position).getId() == currTableId) {
+            views.get(position).setSelected(true);
             holder.statusSwitch.setVisibility(View.VISIBLE);
             mStatusSwitch.switchStatus(holder.statusSwitch);
         } else {
+            views.get(position).setSelected(false);
             holder.statusSwitch.setVisibility(View.GONE);
         }
 
@@ -150,10 +142,6 @@ public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabVie
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
-
-    public void setDefaultItem(int defaultItem) {
-        this.defaultItem = defaultItem;
     }
 
     /**

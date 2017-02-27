@@ -207,9 +207,10 @@
 
                     <ImageView
                         android:id="@+id/details_dishes_minus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
                         android:src="@drawable/open_btn_dishes_reduce" />
 
                     <TextView
@@ -222,9 +223,10 @@
 
                     <ImageView
                         android:id="@+id/details_dishes_add"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
                         android:src="@drawable/open_btn_dishes_add" />
 
                 </LinearLayout>

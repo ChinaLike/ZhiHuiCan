@@ -48,6 +48,7 @@ import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -205,7 +206,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                 getString(R.string.order_fragment_loading));
         mTabTableAdapter = new TabTableAdapter(mContext, null);
         mTabTableAdapter.setOnItemClickListener(this);
-        mTabTableAdapter.setCurrTableId(tableId);
         LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         dishesTab.setLayoutManager(mLayoutManager);
@@ -299,6 +299,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**加载成功*/
                 setTabContext(bean.getResult());
+                mTabTableAdapter.setCurrTableId(tableId);
                 mTabTableAdapter.notifyDataSetChanged(bean.getResult());
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
@@ -342,6 +343,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 设置台桌显示内容
      */
     private void setTabContext(List<InfoBean> mList) {
+        L.d("台桌列表："+mList.toString());
         if (mList == null || mList.size() == 0) {
             /**单桌显示方式（小于2桌只有一桌的只有单独点餐）*/
             tabLayout(false);

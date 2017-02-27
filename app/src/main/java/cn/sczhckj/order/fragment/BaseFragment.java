@@ -73,11 +73,11 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 下单的菜品，即已下单菜品
      */
-    protected static List<FoodBean> orderList = new ArrayList<>();
+    public static List<FoodBean> orderList = new ArrayList<>();
     /**
      * 未下单的菜品，即购物车菜品
      */
-    protected static List<FoodBean> disOrderList = new ArrayList<>();
+    public static List<FoodBean> disOrderList = new ArrayList<>();
     /**
      * 是否加菜
      */

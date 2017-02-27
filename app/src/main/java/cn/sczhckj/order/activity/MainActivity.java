@@ -49,6 +49,7 @@ import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.mode.impl.FloatButtonImpl;
+import cn.sczhckj.order.overwrite.DraggableFloatingButton;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AppSystemUntil;
@@ -92,7 +93,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Bind(R.id.content_area)
     FrameLayout contentArea;
     @Bind(R.id.float_btn)
-    FloatingActionButton floatBtn;
+    DraggableFloatingButton floatBtn;
     /**
      * 用户ID
      */
@@ -659,8 +660,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 初始化浮动按钮
      */
     private void initFloatBtn() {
-        if (MyApplication.tableBean != null && MyApplication.tableBean.getMode() != null &&
-                MyApplication.tableBean.getMode() == Constant.PRODUCER) {
+        if (MyApplication.mode == Constant.PRODUCER) {
             floatBtn.setVisibility(View.VISIBLE);
         } else {
             floatBtn.setVisibility(View.GONE);
