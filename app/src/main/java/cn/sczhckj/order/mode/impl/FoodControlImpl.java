@@ -1,7 +1,9 @@
 package cn.sczhckj.order.mode.impl;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.util.ArrayMap;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.fragment.BaseFragment;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.until.show.L;
 
 /**
@@ -30,10 +33,6 @@ import cn.sczhckj.order.until.show.L;
 public class FoodControlImpl {
 
     private Context mContext;
-    /**
-     * 弹窗
-     */
-    private DialogImpl dialog;
 
     /**
      * 本分类最大数量
@@ -48,9 +47,10 @@ public class FoodControlImpl {
      */
     private static Integer cateId;
 
+    private CommonDialog mDialog;
+
     public FoodControlImpl(Context mContext) {
         this.mContext = mContext;
-        dialog = new DialogImpl(mContext);
     }
 
     /**
@@ -66,13 +66,6 @@ public class FoodControlImpl {
             @Override
             public void onClick(View v) {
                 cateFoodControler(countText, bean, type);
-//                if (verifyMaximum(mList)) {
-//                    /**总数已经超过本菜品分类设定数量*/
-//                    maxDialog();
-//                } else {
-//                    /**总数未超标，验证单个菜品数量是否超标*/
-//                    isOverProof(bean, countText, type);
-//                }
             }
         });
     }
@@ -137,22 +130,6 @@ public class FoodControlImpl {
         });
     }
 
-    /**
-     * 验证总数是否已经超过最大数量
-     */
-    private boolean verifyMaximum(List<FoodBean> mList) {
-        int count = 0;
-        for (FoodBean bean : mList) {
-            count = count + bean.getCount();
-        }
-        if (maximum == 0) {
-            return false;
-        } else if (count >= maximum) {
-            return true;
-        }
-        return false;
-    }
-
     public void setMaximum(int maximum) {
         this.maximum = maximum;
     }
@@ -181,7 +158,7 @@ public class FoodControlImpl {
         }
         /**获取未下单中对应分类下的数量*/
         for (FoodBean disOrderBean : BaseFragment.disOrderList) {
-            int cateId = disOrderBean.getCateId();
+            int cateId = disOrderBean.getCateAlias();
             if (cateId == this.cateId) {
                 cateNumber++;
             }
@@ -240,7 +217,16 @@ public class FoodControlImpl {
      * @param btn
      */
     private void dialog(String title, String content, String btn) {
-        dialog.aloneDialog(title, content, btn).show();
+        mDialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
+        mDialog.setTitle(title)
+                .setTextContext(content)
+                .setPositive(btn, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -267,15 +253,10 @@ public class FoodControlImpl {
      * @param button
      */
     public void buttonClick(final ImageView button) {
-        if (dialog != null && dialog.getDialog().isShowing()) {
-            dialog.getDialog().dismiss();
-        }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.aloneDialog(mContext.getResources().getString(R.string.dialog_title),
-                        mContext.getResources().getString(R.string.dialog_context_permiss),
-                        mContext.getResources().getString(R.string.dialog_cancel)).show();
+                dialog(mContext.getResources().getString(R.string.dialog_title), mContext.getResources().getString(R.string.dialog_context_permiss), mContext.getResources().getString(R.string.dialog_cancel));
             }
         });
     }

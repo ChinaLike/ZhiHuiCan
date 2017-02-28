@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -226,7 +227,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
 
     @Override
     public void dismiss() {
-        intentLead();
+        initTableInfo();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

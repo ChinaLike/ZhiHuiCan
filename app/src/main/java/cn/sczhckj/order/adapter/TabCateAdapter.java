@@ -20,6 +20,7 @@ import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.overwrite.CheckSwitchButton;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.show.T;
 
 /**
  * @describe: 头部导航栏数据
@@ -41,11 +42,11 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
     /**
      * 平分等分
      */
-    private int ITEM_WIDTH=2;
+    private int ITEM_WIDTH = 2;
     /**
      * 默认显示第几项
      */
-    private int defaultItem=0;
+    private int defaultItem = 0;
 
     private OnItemClickListener onItemClickListener;
 
@@ -65,12 +66,12 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
         layouts.put(position, holder.tabParent);
         views.put(position, holder.tabLine);
         /**设置每一项的宽度*/
-        holder.tabParent.setLayoutParams(new LinearLayout.LayoutParams(getItemWidth(),LinearLayout.LayoutParams.MATCH_PARENT));
+        holder.tabParent.setLayoutParams(new LinearLayout.LayoutParams(getItemWidth(), LinearLayout.LayoutParams.MATCH_PARENT));
         /**设置默认选择项*/
-        if (defaultItem==position) {
+        if (defaultItem == position) {
             views.get(position).setSelected(true);
-            onItemClickListener.onItemClick(holder.tabParent,holder.getLayoutPosition(),mList.get(position));
-        }else {
+            onItemClickListener.onItemClick(holder.tabParent, holder.getLayoutPosition(), mList.get(position));
+        } else {
             views.get(position).setSelected(false);
         }
         holder.statusSwitch.setVisibility(View.GONE);
@@ -81,7 +82,7 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
                 views.get(position).setSelected(true);
                 views.get(current).setSelected(false);
                 current = position;
-                onItemClickListener.onItemClick(holder.tabParent,holder.getLayoutPosition(),mList.get(position));
+                onItemClickListener.onItemClick(holder.tabParent, holder.getLayoutPosition(), mList.get(position));
 //                OrderFragment.tabOrderType = mList.get(position).getId();
             }
         });
@@ -98,6 +99,7 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
 
     /**
      * 刷新数据
+     *
      * @param mList
      */
     public void notifyDataSetChanged(List<CateBean.CateItemBean> mList) {
@@ -134,6 +136,7 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
 //        int screen= AppSystemUntil.width(mContext);
 //        return screen/2/ITEM_WIDTH;
 //    }
+
     /**
      * 获取每一项的宽度
      *
@@ -141,7 +144,11 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
      */
     private int getItemWidth() {
         /**46.0 和 56.0 是父类布局文件在界面所占比例（1:4.6）所得*/
-        return (int) ((MainActivity.rightWidth*46.0)/56.0)/ITEM_WIDTH;
+        int width = (int) ((MainActivity.rightWidth * 46.0) / 56.0) / ITEM_WIDTH;
+//        if (width == 0) {
+//            return 321;
+//        }
+        return width;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

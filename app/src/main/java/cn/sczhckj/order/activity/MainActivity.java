@@ -52,7 +52,9 @@ import cn.sczhckj.order.mode.impl.FloatButtonImpl;
 import cn.sczhckj.order.overwrite.DraggableFloatingButton;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.service.HeartService;
+import cn.sczhckj.order.until.AndroidUtils;
 import cn.sczhckj.order.until.AppSystemUntil;
+import cn.sczhckj.order.until.DensityUtils;
 import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
@@ -175,12 +177,17 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getWidth();
         EventBus.getDefault().register(this);
         startHeart();
         isLogin();
         init();
         disposeIntent();
-        getWidth();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -195,14 +202,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 获取屏幕宽度
      */
     private void getWidth() {
-        ViewTreeObserver observer = contentArea.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                rightWidth = contentArea.getWidth();
-                return true;
-            }
-        });
+        //7表示控件之间的宽度 16.0/26.0表示显示控件所占比例
+        rightWidth = (int) ((AndroidUtils.getWindowWidth(this) - DensityUtils.dp2px(7)) * 16.0 / 26.0);
     }
 
 

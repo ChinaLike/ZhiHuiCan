@@ -21,6 +21,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.adapter.PersonAdapter;
@@ -232,6 +233,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         public void onResponse(Call<Bean<CateBean>> call, Response<Bean<CateBean>> response) {
 
             Bean<CateBean> bean = response.body();
+
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
                     mTabCateAdapter.setDefaultItem(bean.getResult().getDefaultCate() != null ? bean.getResult().getDefaultCate() : 0);
@@ -409,8 +411,13 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (WebSocketEvent.REFRESH_FOOD == event.getType()) {
-            /**刷新菜品数据*/
-            onItemClick(null, currPosition, currBean);
+            /**刷新菜品*/
+            initTab();//刷新菜品
+            onItemClick(null, currPosition, currBean);//刷新菜品数据
+        } else if (WebSocketEvent.ALONE_ORDER == event.getType()) {
+            /**单独点餐*/
+            initTab(); //刷新分类列表
+            onItemClick(null, currPosition, currBean);//刷新菜品数据
         }
     }
 

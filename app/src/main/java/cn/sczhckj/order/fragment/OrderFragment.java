@@ -134,7 +134,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     /**
      * 当前点击的Item下标
      */
-    private int currPosition;
+    private int currPosition = -1;
     /**
      * 当前点击的Item参数
      */
@@ -266,12 +266,16 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                     loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
                     /**加载成功*/
                     defaultItem = bean.getResult().getDefaultCate();//设置默认显示
+                    defaultItem = currPosition != -1 ? currPosition : defaultItem;
+                    if (currPosition >= bean.getResult().getCates().size()) {
+                        /**如果分类减少，处理越界*/
+                        defaultItem = bean.getResult().getDefaultCate();//设置默认显示
+                    }
                     mCatesAdapter.setCurrent(defaultItem);
                     mCatesAdapter.notifyDataSetChanged(bean.getResult().getCates());
-                    /**请求默认*/
-                    initFood(bean.getResult().getCates().get(defaultItem).getId());
-                    currPosition = defaultItem;
+                    /**请求指定分类菜品*/
                     currBean = bean.getResult().getCates().get(defaultItem);
+                    onItemClick(null, currBean, defaultItem);
                 } else if (bean.getCode() == ResponseCode.FAILURE) {
                     loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
                             bean.getMessage());
@@ -343,7 +347,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 设置台桌显示内容
      */
     private void setTabContext(List<InfoBean> mList) {
-        L.d("台桌列表："+mList.toString());
+        L.d("台桌列表：" + mList.toString());
         if (mList == null || mList.size() == 0) {
             /**单桌显示方式（小于2桌只有一桌的只有单独点餐）*/
             tabLayout(false);
@@ -423,6 +427,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             mFoodAdapter.setMaximum(itemBean.getMaximum());
             /**设置分类权限*/
             mFoodAdapter.setCatePermiss(itemBean.getPermiss());
+            /**设置分类ID*/
+            mFoodAdapter.setCateId(itemBean.getId());
             move(position);
             initFood(itemBean.getId());
         }
@@ -581,16 +587,14 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             MyApplication.tableBean.setOrderType(orderType);
             tabLayout(false);
             tabText.setText(getString(R.string.order_fragment_one_order));
-            /**刷新菜品数据*/
-            onItemClick(null, currBean, currPosition);
+            initCate();//刷新分类列表,默认刷新当前分类下的菜品
         } else if (WebSocketEvent.MERGE_TABLE == event.getType()) {
             /**并桌*/
             orderType = Constant.ORDER_TYPE_MERGE;
             MyApplication.tableBean.setOrderType(orderType);
-            /**刷新台桌*/
-            initTab();
-            /**刷新菜品数据*/
-            onItemClick(null, currBean, currPosition);
+            initTab();//刷新台桌
+            initCate();//刷新分类列表,默认刷新当前分类下的菜品
+
         }
     }
 
