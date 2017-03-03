@@ -347,7 +347,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 设置台桌显示内容
      */
     private void setTabContext(List<InfoBean> mList) {
-        L.d("台桌列表：" + mList.toString());
         if (mList == null || mList.size() == 0) {
             /**单桌显示方式（小于2桌只有一桌的只有单独点餐）*/
             tabLayout(false);
@@ -579,8 +578,10 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (WebSocketEvent.REFRESH_FOOD == event.getType()) {
-            /**刷新菜品数据*/
-            onItemClick(null, currBean, currPosition);
+            /**刷新菜品数据--菜品列表，已提交菜品（在购物车界面刷新），已点未提交菜品（在购物车界面刷新）*/
+//            onItemClick(null, currBean, currPosition);
+            initCate();//刷新分类列表,默认刷新当前分类下的菜品
+
         } else if (WebSocketEvent.ALONE_ORDER == event.getType()) {
             /**单独点餐*/
             orderType = Constant.ORDER_TYPE_ALONE;

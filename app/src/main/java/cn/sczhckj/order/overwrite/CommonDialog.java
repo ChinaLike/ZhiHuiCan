@@ -75,9 +75,9 @@ public class CommonDialog extends Dialog {
 
     /**
      * @param context
-     * @param mode       {@link Mode#TEXT}
-     *                   {@link Mode#EDIT}
-     *                   {@link Mode#PROGRESS}
+     * @param mode    {@link Mode#TEXT}
+     *                {@link Mode#EDIT}
+     *                {@link Mode#PROGRESS}
      */
     public CommonDialog(Context context, int mode) {
         super(context, R.style.customDialog);
@@ -266,6 +266,21 @@ public class CommonDialog extends Dialog {
     }
 
     /**
+     * 设置Edit输入类型
+     *
+     * @param type {@link android.text.InputType}
+     * @return
+     */
+    public CommonDialog setEditInputType(int type) {
+        if (mode != Mode.EDIT) {
+            throw new NullPointerException("对应的Mode不对应");
+        } else {
+            editContext.setInputType(type);
+        }
+        return this;
+    }
+
+    /**
      * 设置输入框上方的提醒文字
      *
      * @param str
@@ -421,6 +436,20 @@ public class CommonDialog extends Dialog {
         if (onDialogStatusListener != null) {
             onDialogStatusListener.dismiss();
         }
+    }
+
+    /**
+     * 没有回调的关闭
+     */
+    public void onDismiss() {
+        super.dismiss();
+    }
+
+    /**
+     * 没有回调的打开
+     */
+    public void onShow() {
+        super.show();
     }
 
     public interface Mode {

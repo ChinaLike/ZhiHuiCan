@@ -19,9 +19,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,7 +32,6 @@ import cn.sczhckj.order.data.bean.Bean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.food.CartBean;
-import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.MoreDishesHintEvent;
@@ -45,13 +42,12 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.OrderMode;
 import cn.sczhckj.order.mode.TableMode;
-import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
 import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,7 +106,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     /**
      * 弹窗
      */
-    private DialogImpl mDialog;
+    private CommonDialog mDialog;
 
     /**
      * 下单数据请求
@@ -178,7 +174,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     @Override
     public void init() {
         /**首先把购物车图标置为不可点*/
-        mDialog = new DialogImpl(mContext);
         mOrderMode = new OrderMode();
         mTableMode = new TableMode();
         initOrder();
@@ -364,6 +359,20 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     }
 
     /**
+     * 指定菜品刷新
+     */
+    private void refreshAppointFood() {
+        if (disOrderList != null && disOrderList.size() != 0) {
+            RequestCommonBean bean = new RequestCommonBean();
+            bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
+            bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
+            bean.setRecordId(MyApplication.tableBean.getRecordId());
+            bean.setFoods(infoSwitch());
+            mOrderMode.refresh(bean, refreshAppointFoodCallback);
+        }
+    }
+
+    /**
      * 把菜品信息简化后提交给服务器
      *
      * @return
@@ -382,53 +391,55 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         }
         return cartList;
     }
+
     /**
      * 信息验证
      */
     private void infoVerify() {
-
-        mDialog.setEditDialog(getContext().getString(R.string.cart_fragment_dialog_title),
-                getContext().getString(R.string.cart_fragment_dialog_content_person, MainActivity.personNumber),
-                getContext().getString(R.string.cart_fragment_dialog_content_password))
-                .setLeftButton(getContext().getString(R.string.cart_fragment_dialog_negative), new View.OnClickListener() {
+        mDialog = new CommonDialog(mContext, CommonDialog.Mode.EDIT);
+        mDialog.setTitle("信息验证")
+                .setEditTextHint(getContext().getString(R.string.cart_fragment_dialog_content_person, MainActivity.personNumber))
+                .setEditHint(getContext().getString(R.string.cart_fragment_dialog_content_password))
+                .setPositive(getContext().getString(R.string.cart_fragment_dialog_positive), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mDialog.editTextDialog().dismiss();
+                        password = mDialog.getInputText();
+                        openTable(password);
+                        mDialog.dismiss();
                     }
                 })
-                .setRightButton(getContext().getString(R.string.cart_fragment_dialog_positive), new View.OnClickListener() {
+                .setNegative(getContext().getString(R.string.cart_fragment_dialog_negative), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        password = mDialog.editTextDialog().getEditText().toString();
-                        openTable(password);
-                        mDialog.editTextDialog().dismiss();
+                        mDialog.dismiss();
                     }
-                }).show();
+                })
+                .show();
     }
 
     @Override
     public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
         Bean<ResponseCommonBean> bean = response.body();
-                if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                    isCommit = true;
-                    if (isOpen) {
-                        /**已开桌*/
-                        T.showShort(mContext, bean.getMessage());
-                    } else {
-                        /**未开桌*//**设置点菜方式*/
-                        MyApplication.tableBean.setOrderType(bean.getResult().getShowType());
-                        /**设置菜品过多提醒*/
-                        warmPromptNumber = bean.getResult().getFoodCountHint() != null ? bean.getResult().getFoodCountHint() : 0;
-                        MyApplication.tableBean.setFoodCountHint(warmPromptNumber);
-                        /**设置消费记录ID*/
-                        MyApplication.tableBean.setRecordId(bean.getResult().getRecordId());
-                        EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.MAIN, bean.getResult().getShowType()));
-                        isOpen = true;
-                    }
-                    /**刷新购物车数据*/
-                    initRefresh(COMMIT_TYPE);
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            isCommit = true;
+            if (isOpen) {
+                /**已开桌*/
+                T.showShort(mContext, bean.getMessage());
+            } else {
+                /**未开桌*//**设置点菜方式*/
+                MyApplication.tableBean.setOrderType(bean.getResult().getShowType());
+                /**设置菜品过多提醒*/
+                warmPromptNumber = bean.getResult().getFoodCountHint() != null ? bean.getResult().getFoodCountHint() : 0;
+                MyApplication.tableBean.setFoodCountHint(warmPromptNumber);
+                /**设置消费记录ID*/
+                MyApplication.tableBean.setRecordId(bean.getResult().getRecordId());
+                EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.MAIN, bean.getResult().getShowType()));
+                isOpen = true;
+            }
+            /**刷新购物车数据*/
+            initRefresh(COMMIT_TYPE);
 
-                } else {
+        } else {
             commit("" + bean.getMessage());
         }
 
@@ -470,6 +481,24 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             if (refreshType == COMMIT_TYPE) {
                 commit(getContext().getString(R.string.cart_fragment_commit_fail));
             }
+        }
+    };
+    /**
+     * 刷新指定菜品回调
+     */
+    Callback<Bean<List<FoodBean>>> refreshAppointFoodCallback = new Callback<Bean<List<FoodBean>>>() {
+        @Override
+        public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
+            Bean<List<FoodBean>> bean = response.body();
+            if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                FoodRefreshImpl.getInstance().refreshDisOrderFood(bean.getResult(),disOrderList);
+                mDisOrderAdapter.notifyDataSetChanged(disOrderList);
+                baseInfoRefresh();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
         }
     };
 
@@ -538,9 +567,15 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                         /**判断限定菜品已经符合要求，可以进入开桌模式*/
                         infoVerify();
                     } else {
-                        mDialog.aloneDialog(getString(R.string.cart_fragment_dialog_food_hint_title),
-                                getString(R.string.cart_fragment_dialog_food_hint_content, cateName),
-                                getString(R.string.cart_fragment_dialog_food_hint_continue))
+                        mDialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
+                        mDialog.setTitle(getString(R.string.cart_fragment_dialog_food_hint_title))
+                                .setTextContext(getString(R.string.cart_fragment_dialog_food_hint_content, cateName))
+                                .setPositive(getString(R.string.cart_fragment_dialog_food_hint_continue), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mDialog.dismiss();
+                                    }
+                                })
                                 .show();
                     }
                 }
@@ -608,12 +643,12 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                     /**调用后台刷新*/
                     initRefresh(REFRESH);
                     baseInfoRefresh();
-                } else if (rBean != null && rBean.getCode() == ResponseCode.FAILURE){
+                } else if (rBean != null && rBean.getCode() == ResponseCode.FAILURE) {
                     dismissProgress();
                     T.showShort(mContext, rBean.getMessage());
-                }else {
+                } else {
                     dismissProgress();
-                    T.showShort(mContext,getString(R.string.cart_fragment_return_food_fail) );
+                    T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
                 }
             }
 
@@ -671,17 +706,27 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
-        if (event.getType() == WebSocketEvent.TYPE_FOOD_ARRIVE) {
-            /**菜品完成全部刷新*/
-            initRefresh(REFRESH);
-        } else if (WebSocketEvent.REFRESH_RECORD == event.getType()) {
-            /**刷新点菜记录的已下单*/
-            if (isOpen) {
-                /**开桌后才会刷新已下单*/
+        switch (event.getType()) {
+            case WebSocketEvent.TYPE_FOOD_ARRIVE:
+                /**菜品完成全部刷新*/
                 initRefresh(REFRESH);
-            }
-            /**刷新点菜记录的未下单*/
-
+                break;
+            case WebSocketEvent.REFRESH_RECORD:
+                /**刷新点菜记录的已下单*/
+                if (isOpen) {
+                    /**开桌后才会刷新已下单*/
+                    initRefresh(REFRESH);
+                }
+                /**刷新点菜记录的未下单*/
+                refreshAppointFood();
+                break;
+            case WebSocketEvent.REFRESH_FOOD:
+                /**刷新菜品*/
+                if (isOpen) {
+                    initRefresh(REFRESH);//刷新已下单
+                }
+                refreshAppointFood();  //刷新未下单菜品
+                break;
         }
     }
 }

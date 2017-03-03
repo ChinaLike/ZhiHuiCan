@@ -6,11 +6,10 @@ import android.view.View;
 
 import cn.sczhckj.order.Config;
 import cn.sczhckj.order.R;
-import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.bean.device.VersionBean;
+import cn.sczhckj.order.data.constant.FileConstant;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.overwrite.MyDialog;
-import cn.sczhckj.order.until.FileUntils;
-import cn.sczhckj.order.until.show.L;
 
 /**
  * @describe: 版本管理
@@ -22,24 +21,12 @@ public class VersionManager {
 
     private DownLoadManager downLoadManager;
 
-    private MyDialog downLoadDialog;
-
     private Context mContext;
-
-    private int maxs = 0;
 
     public VersionManager(Context mContext) {
         this.mContext = mContext;
-        downLoadManager = new DownLoadManager();
+        downLoadManager = new DownLoadManager(mContext);
     }
-
-    public interface OnDialogClickListener {
-        void show();
-
-        void dismiss();
-    }
-
-    private OnDialogClickListener onDialogClickListener;
 
     /**
      * 获取软件版本号
@@ -76,79 +63,55 @@ public class VersionManager {
      * @param mContext
      * @param bean
      */
-    public void version(Context mContext, VersionBean bean) {
+    public void version(Context mContext, VersionBean bean, CommonDialog.OnDialogStatusListener listener) {
         if (getVersionCode(mContext) < bean.getCode()) {
             /**服务器有更新*/
-            updataVersion(mContext, bean);
+            updataVersion(mContext, bean, listener);
         }
     }
 
     /**
      * 提示当前有新版本
      */
-    public void updataVersion(final Context mContext, final VersionBean bean) {
-//        String context = "当前版本：" + getVersionName(mContext)
-//                + "\n最新版本：" + bean.getVersion()
-//                + "\n更新大小：" + bean.getSize()
-//                + "\n更新内容:" + bean.getContent();
+    public void updataVersion(final Context mContext, final VersionBean bean, CommonDialog.OnDialogStatusListener listener) {
         String context = mContext.getString(R.string.dialog_apk_update_content, getVersionName(mContext), bean.getVersion(), bean.getSize(), bean.getContent());
-        final MyDialog dialog = new MyDialog(mContext);
-        dialog.setTitle(mContext.getString(R.string.dialog_apk_update_title));
-        dialog.setContextText(context);
-        dialog.setNegativeButton(mContext.getString(R.string.dialog_apk_update_positive), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downLoadDialog(mContext);
-                downLoadManager.retrofitDownload(Config.HOST, bean.getUrl(), judgeName(bean.getName()), downLoadDialog, mContext);
-                onDialogClickListener.show();
-                dialog.dismiss();
-            }
-        });
-
-        dialog.setPositiveButton(mContext.getString(R.string.dialog_apk_update_negative), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                onDialogClickListener.dismiss();
-            }
-        });
+        final CommonDialog dialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
+        dialog.setTitle(mContext.getString(R.string.dialog_apk_update_title)).setTextContext(context)
+                .setOnDialogStatusListener(listener)
+                .setPositive(mContext.getString(R.string.dialog_apk_update_positive), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        downLoadDialog();
+                        downLoadManager.retrofitDownload(Config.HOST, bean.getUrl(), judgeName(bean.getName()));
+                        dialog.onDismiss();
+                    }
+                })
+                .setNegative(mContext.getString(R.string.dialog_apk_update_negative), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
         /**点击外部不能关闭*/
         dialog.setCancelable(false);
-        dialog.show();
-    }
-
-
-    /**
-     * 当前没有新版本
-     */
-    public void notUpdata(Context mContext) {
-
-    }
-
-    public void setOnDialogClickListener(OnDialogClickListener onDialogClickListener) {
-        this.onDialogClickListener = onDialogClickListener;
     }
 
     /**
      * 下载弹窗
-     *
-     * @param mContext
      */
-    private void downLoadDialog(Context mContext) {
-        downLoadDialog = new MyDialog(mContext);
-        downLoadDialog.setTitle(mContext.getString(R.string.dialog_apk_updating_title));
-        downLoadDialog.setContextText(mContext.getString(R.string.dialog_apk_updating_content));
-        downLoadDialog.setProgressVisibility();
-        downLoadDialog.setAloneButton(mContext.getString(R.string.dialog_apk_updating_negative  ), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downLoadDialog.dismiss();
-                onDialogClickListener.dismiss();
-            }
-        });
+    private void downLoadDialog() {
+        final CommonDialog dialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
+        dialog.setTitle(mContext.getString(R.string.dialog_apk_updating_title))
+                .setTextContext(mContext.getString(R.string.dialog_apk_updating_content))
+                .setPositive(mContext.getString(R.string.dialog_apk_updating_negative), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                }).show();
         /**点击外部不能关闭*/
-        downLoadDialog.setCancelable(false);
-        downLoadDialog.show();
+        dialog.setCancelable(false);
     }
 
 

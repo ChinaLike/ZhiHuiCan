@@ -83,7 +83,6 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
                 views.get(current).setSelected(false);
                 current = position;
                 onItemClickListener.onItemClick(holder.tabParent, holder.getLayoutPosition(), mList.get(position));
-//                OrderFragment.tabOrderType = mList.get(position).getId();
             }
         });
     }
@@ -126,16 +125,8 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
 
     public void setDefaultItem(int defaultItem) {
         this.defaultItem = defaultItem;
+        this.current = defaultItem;
     }
-
-//    /**
-//     * 获取每一项的宽度
-//     * @return
-//     */
-//    private int getItemWidth(){
-//        int screen= AppSystemUntil.width(mContext);
-//        return screen/2/ITEM_WIDTH;
-//    }
 
     /**
      * 获取每一项的宽度
@@ -145,9 +136,6 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
     private int getItemWidth() {
         /**46.0 和 56.0 是父类布局文件在界面所占比例（1:4.6）所得*/
         int width = (int) ((MainActivity.rightWidth * 46.0) / 56.0) / ITEM_WIDTH;
-//        if (width == 0) {
-//            return 321;
-//        }
         return width;
     }
 

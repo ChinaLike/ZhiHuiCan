@@ -81,10 +81,11 @@ public class WebSocketImpl {
     /**
      * 重新连接
      */
-    public void reConnection() {
-        if (connection != null && !connection.isConnected()) {
-            connection.reconnect();
+    public boolean reConnection() {
+        if (connection != null) {
+            return connection.reconnect();
         }
+        return false;
     }
 
     /**

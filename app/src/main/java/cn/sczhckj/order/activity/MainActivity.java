@@ -2,12 +2,10 @@ package cn.sczhckj.order.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,15 +45,14 @@ import cn.sczhckj.order.fragment.MainFragment;
 import cn.sczhckj.order.fragment.RequiredFagment;
 import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.TableMode;
-import cn.sczhckj.order.mode.impl.DialogImpl;
 import cn.sczhckj.order.mode.impl.FloatButtonImpl;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.overwrite.DraggableFloatingButton;
 import cn.sczhckj.order.overwrite.RoundImageView;
 import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AndroidUtils;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.DensityUtils;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -140,11 +137,10 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 用餐人数
      */
     public static Integer personNumber = 0;
-
     /**
-     * 弹窗
+     * 编辑框弹窗
      */
-    private DialogImpl mDialog;
+    private CommonDialog mDialog;
 
     /**
      * 设置就餐人数
@@ -242,8 +238,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     @Override
     protected void init() {
-
-        mDialog = new DialogImpl(this);
+        mDialog = new CommonDialog(this, CommonDialog.Mode.EDIT);
         mFloatButton = new FloatButtonImpl(this);
         personNumber = 0;
         initCartFragment();
@@ -464,28 +459,29 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
             case R.id.table_person_parent:
                 /**设置台桌人数*/
                 if (BaseFragment.isOpen) {
-                    mDialog.editTextDialog().setInputType(InputType.TYPE_CLASS_NUMBER);
-                    mDialog.setEditDialog(getString(R.string.main_activity_dialog_title), null,
-                            getString(R.string.main_activity_dialog_content))
-                            .setRightButton(getString(R.string.main_activity_dialog_positive), new View.OnClickListener() {
+                    mDialog.setTitle("人数设置")
+                            .setEditInputType(InputType.TYPE_CLASS_NUMBER)
+                            .setEditHint(getString(R.string.main_activity_dialog_content))
+                            .setPositive(getString(R.string.main_activity_dialog_positive), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     try {
-                                        personCount = Integer.parseInt(mDialog.editTextDialog().getEditText().toString());
+                                        personCount = Integer.parseInt(mDialog.getInputText());
                                     } catch (NumberFormatException e) {
                                         e.printStackTrace();
                                         personCount = personNumber;
                                     }
                                     initSetPerson(personCount);
-                                    mDialog.editTextDialog().dismiss();
+                                    mDialog.dismiss();
                                 }
                             })
-                            .setLeftButton(getString(R.string.main_activity_dialog_negative), new View.OnClickListener() {
+                            .setNegative(getString(R.string.main_activity_dialog_negative), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mDialog.editTextDialog().dismiss();
+                                    mDialog.dismiss();
                                 }
-                            }).show();
+                            })
+                            .show();
                 }
                 break;
             case R.id.float_btn:
@@ -633,9 +629,11 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (event.getType() == WebSocketEvent.REFRESH_USER) {
-//            MyApplication.setIsLogin(true);
-            MyApplication.tableBean.setUser(event.getBean().getUser());
-            login(event.getBean().getUser());
+            /**刷新用户*/
+            if (event.getBean().getUser() != null) {
+                MyApplication.tableBean.setUser(event.getBean().getUser());
+                login(event.getBean().getUser());
+            }
         }
     }
 

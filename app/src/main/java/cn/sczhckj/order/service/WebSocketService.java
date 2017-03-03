@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import cn.sczhckj.order.Config;
 import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.constant.OP;
@@ -30,10 +33,10 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
      * 数据刷新
      */
     private WebSocketImpl mWebSocketRefresh = new WebSocketImpl();
-    /**
-     * 初始化成功标志
-     */
-    private boolean isInit = false;
+
+    private final int TIME = 20 * 1000;
+
+    private Timer timer;
 
     @Nullable
     @Override
@@ -47,6 +50,22 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * 定时重新发起连接
+     */
+    private void reConnection() {
+        timer.schedule(mTimerTask, 100, TIME);
+    }
+
+    TimerTask mTimerTask = new TimerTask() {
+        @Override
+        public void run() {
+            if (mWebSocketRefresh != null) {
+                mWebSocketRefresh.reConnection();
+            }
+        }
+    };
+
     @Override
     public void onBinaryMessage(byte[] payload) {
 
@@ -54,18 +73,24 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onClose(int code, String reason) {
+        L.d("测试" + code);
         if (code == WebSocket.ConnectionHandler.CLOSE_CANNOT_CONNECT) {
             /**连接不能建立*/
             EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_FAIL));
+        } else {
+            if (timer == null) {
+                timer = new Timer();
+            }
+            reConnection();
         }
     }
 
     @Override
     public void onOpen() {
-        if (!isInit) {
-            isInit = true;
-            EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_SUCCESS));
+        if (timer != null) {
+            timer.cancel();
         }
+        EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_SUCCESS));
     }
 
     @Override
@@ -78,15 +103,15 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
         RestRequest<PushCommonBean> restRequest
                 = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
         String op = restRequest.getOp();
-        L.d("推送OP="+op);
+        L.d("推送OP=" + op);
         switch (op) {
             case OP.PUSH_LOCK:
-                /**状态变更锁定屏幕*/
+                /**状态变更-锁定屏幕*/
                 EventBus.getDefault().post(
                         new WebSocketEvent(WebSocketEvent.TYPE_LOCK, restRequest.getBean().getMessage()));
                 break;
             case OP.PUSH_UNLOCK:
-                /**状态变更解除屏幕锁定*/
+                /**状态变更-解除屏幕锁定(解锁后进入锁屏前界面)*/
                 EventBus.getDefault().post(
                         new WebSocketEvent(WebSocketEvent.TYPE_UNLOCK, restRequest.getBean()));
                 break;
@@ -114,25 +139,20 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
                 break;
             case OP.PUSH_REFRESH_USER:
                 /**变更会员信息*/
-                //需要刷新，菜品，点菜记录
                 EventBus.getDefault().post(
-                        new WebSocketEvent(WebSocketEvent.REFRESH_USER, restRequest.getBean()));
-
+                        new WebSocketEvent(WebSocketEvent.REFRESH_USER, restRequest.getBean()));//刷新会员信息
                 EventBus.getDefault().post(
-                        new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
-                EventBus.getDefault().post(
-                        new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
+                        new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));//刷新菜品，包含了刷新点菜记录
                 break;
             case OP.PUSH_MERGE_TABLE:
                 /**并桌*/
                 //需要刷新，会员信息，点菜记录，菜品，并桌信息
                 EventBus.getDefault().post(
-                        new WebSocketEvent(WebSocketEvent.MERGE_TABLE));
-                /**同时刷新菜品、刷新点菜记录*/
+                        new WebSocketEvent(WebSocketEvent.MERGE_TABLE));//刷新并桌信息
                 EventBus.getDefault().post(
-                        new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));
+                        new WebSocketEvent(WebSocketEvent.REFRESH_FOOD));//刷新菜品，包含了刷新点菜记录
                 EventBus.getDefault().post(
-                        new WebSocketEvent(WebSocketEvent.REFRESH_RECORD));
+                        new WebSocketEvent(WebSocketEvent.REFRESH_USER, restRequest.getBean()));//刷新会员信息
                 break;
             case OP.PUSH_ARRIVE:
                 /**出菜*/

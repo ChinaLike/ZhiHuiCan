@@ -81,7 +81,7 @@ public class TabTableAdapter extends RecyclerView.Adapter<TabTableAdapter.TabVie
         if (mList.get(position).getId() == currTableId) {
             views.get(position).setSelected(true);
             holder.statusSwitch.setVisibility(View.VISIBLE);
-            mStatusSwitch.switchStatus(holder.statusSwitch);
+            mStatusSwitch.setButtonView(holder.statusSwitch);
         } else {
             views.get(position).setSelected(false);
             holder.statusSwitch.setVisibility(View.GONE);

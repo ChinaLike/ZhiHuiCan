@@ -412,12 +412,12 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     public void webSocketEventBus(WebSocketEvent event) {
         if (WebSocketEvent.REFRESH_FOOD == event.getType()) {
             /**刷新菜品*/
-            initTab();//刷新菜品
-            onItemClick(null, currPosition, currBean);//刷新菜品数据
+            initTab();//刷新菜品分类列表，同时刷新了默认分类下数据
+//            onItemClick(null, currPosition, currBean);//刷新菜品数据
         } else if (WebSocketEvent.ALONE_ORDER == event.getType()) {
             /**单独点餐*/
             initTab(); //刷新分类列表
-            onItemClick(null, currPosition, currBean);//刷新菜品数据
+//            onItemClick(null, currPosition, currBean);//刷新菜品数据
         }
     }
 

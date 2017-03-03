@@ -9,17 +9,14 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
+import cn.sczhckj.order.activity.InitActivity;
 import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.data.network.DownloadApi;
 import cn.sczhckj.order.helper.DownloadProgressHandler;
 import cn.sczhckj.order.helper.ProgressHelper;
-import cn.sczhckj.order.overwrite.MyDialog;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.until.FileUntils;
-import cn.sczhckj.order.until.show.L;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -36,14 +33,28 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DownLoadManager {
 
+    private CommonDialog dialog;
+
+    private Context mContext;
+
+    public DownLoadManager(Context context) {
+        mContext = context;
+        dialog = new CommonDialog(context, CommonDialog.Mode.PROGRESS);
+        dialog.setTitle("软件更新");
+    }
+
+    public void downloadFile(String host , String url ,String apkName){
+
+    }
+
+
     /**
      * 通过Retrofit下载文件
      *
      * @param host
      * @param apkName
-     * @param dialog
      */
-    public void retrofitDownload(String host, String url, final String apkName, final MyDialog dialog, final Context mContext) {
+    public void retrofitDownload(String host, String url, final String apkName) {
 
         Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -55,18 +66,18 @@ public class DownLoadManager {
         ProgressHelper.setProgressHandler(new DownloadProgressHandler() {
             @Override
             protected void onProgress(long bytesRead, long contentLength, boolean done) {
-                if (dialog != null) {
+                if (!InitActivity.isAuto) {
                     dialog.setProgressMax((int) (contentLength / 1024));
                     dialog.setProgress((int) (bytesRead / 1024));
                     dialog.setProgressText(String.format("%1s Kb/%2s Kb", (int) (bytesRead / 1024), (int) (contentLength / 1024)));
                     if (done) {
                         File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
-                        install(mContext, dialog, file);
+                        install(file);
                     }
                 } else {
                     if (done) {
                         File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
-                        install(mContext, null, file);
+                        install(file);
                     }
                 }
             }
@@ -105,40 +116,21 @@ public class DownLoadManager {
     /**
      * 安装应用
      *
-     * @param mContext
-     * @param dialog
      * @param file
      */
-    private void install(final Context mContext, final MyDialog dialog, final File file) {
-        if (dialog != null) {
-            dialog.setContextText("下载已完成，请确定安装应用！");
-            dialog.setAloneButton("安装", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    autoInstall(mContext, file);
-                }
-            });
-        } else {
-            final MyDialog mDialog = new MyDialog(mContext);
-            mDialog.setTitle("版本更新");
-            mDialog.setContextText("下载已完成，请确定安装应用！");
-            mDialog.setPositiveButton("取消", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mDialog.dismiss();
-                }
-            });
-            mDialog.setNegativeButton("安装", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    autoInstall(mContext, file);
-                }
-            });
-            mDialog.setCancelable(false);
-            mDialog.show();
-        }
+    private void install(final File file) {
+        final CommonDialog mDialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
+        mDialog.setTitle("应用安装")
+                .setTextContext("下载已完成，请确定安装应用！")
+                .setPositive("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                        autoInstall(mContext, file);
+                    }
+                })
+                .show();
+        mDialog.setCancelable(false);
     }
 
     /**

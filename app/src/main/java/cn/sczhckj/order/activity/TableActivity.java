@@ -126,6 +126,8 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(TableActivity.this, WaitressLoginActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -401,7 +403,6 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
             Bean<cn.sczhckj.order.data.bean.table.TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 MyApplication.tableBean = bean.getResult();
-                L.d("台桌属性：" + MyApplication.tableBean.toString());
                 intentLead();
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 T.showShort(TableActivity.this, bean.getMessage());

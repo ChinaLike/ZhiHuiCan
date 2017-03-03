@@ -140,5 +140,33 @@ public class FoodRefreshImpl {
         }
     }
 
+    /**
+     * 刷新未下单数据
+     *
+     * @param currentList 更新的数据
+     * @param list        原来的数据
+     */
+    public static void refreshDisOrderFood(List<FoodBean> currentList, List<FoodBean> list) {
+        if (currentList == null || currentList.size() == 0) {
+            return;
+        }
+        /**遍历原来的数据，逐条对应刷新*/
+        for (FoodBean bean : list) {
+            int cateId = bean.getCateId();
+            int foodId = bean.getId();
+            for (FoodBean item : currentList) {
+                if (item.getCateId() == cateId && item.getId() == foodId) {
+                    bean.setOriginPrice(item.getOriginPrice());//替换原始价格
+                    bean.setPrice(item.getPrice());//替换执行价格
+                    bean.setType(item.getType());//替换价格类型
+                    bean.setPriceImageUrl(item.getPriceImageUrl());//替换价格图标
+                    break;
+                }
+            }
+        }
+
+
+    }
+
 
 }

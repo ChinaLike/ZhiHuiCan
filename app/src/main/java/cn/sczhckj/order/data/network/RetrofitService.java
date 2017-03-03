@@ -62,7 +62,7 @@ public interface RetrofitService {
     Call<Bean<ResponseCommonBean>> open(@Field("p") String p);
 
     /**
-     * 获取台桌信息
+     * 设置台桌人数
      */
     @FormUrlEncoded
     @POST("rest/table/setPersonNum")

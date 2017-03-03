@@ -363,6 +363,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
         if (event.getType() == WebSocketEvent.TYPE_BILL_FINISH) {
+            /**结账完成*/
             finish();
         }
     }

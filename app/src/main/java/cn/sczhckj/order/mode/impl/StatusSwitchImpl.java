@@ -15,9 +15,8 @@ import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.overwrite.CheckSwitchButton;
-import cn.sczhckj.order.overwrite.MyDialog;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,64 +28,62 @@ import retrofit2.Response;
  * @ email: 572919350@qq.com
  */
 
-public class StatusSwitchImpl implements Callback<Bean<ResponseCommonBean>> {
+public class StatusSwitchImpl implements Callback<Bean<ResponseCommonBean>>, CompoundButton.OnCheckedChangeListener {
 
     int MEGER_TO_ALONE = 0;//并桌转单桌
     int ALONE_TO_MEGER = 1;//单桌转并桌
 
     private Context mContext;
 
-    private MyDialog dialog;
-
     private CheckSwitchButton buttonView;
 
-    public StatusSwitchImpl(Context context){
+    private CommonDialog mDialog;
+
+
+    public StatusSwitchImpl(Context context) {
         this.mContext = context;
-        dialog = new MyDialog(context);
+        mDialog = new CommonDialog(context, CommonDialog.Mode.TEXT);
     }
 
-    public void switchStatus(final CheckSwitchButton button) {
-        buttonView = button;
-        button.setOnCheckedChangeListenner(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                dialog();
-            }
-        });
+    public void setButtonView(CheckSwitchButton buttonView) {
+        this.buttonView = buttonView;
+        buttonView.setOnCheckedChangeListenner(this);
     }
 
-    /**
-     * 弹窗
-     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            dialog();
+        }
+    }
+
     private void dialog() {
-        dialog.setTitle(mContext.getString(R.string.dialog_title));
-        dialog.setContextText(mContext.getString(R.string.dialog_context_switch));
-        dialog.setPositiveButton(mContext.getString(R.string.dialog_context_switch_negative), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                buttonView.setChecked(false);
-            }
-        });
-        dialog.setNegativeButton(mContext.getString(R.string.dialog_context_switch_positive), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                T.showShort(mContext,mContext.getString(R.string.toast_content_hint));
-                switchStatus(MyApplication.tableBean.getRecordId());
-            }
-        });
-        dialog.show();
+        mDialog.setTitle(mContext.getString(R.string.dialog_title))
+                .setTextContext(mContext.getString(R.string.dialog_context_switch))
+                .setPositive(mContext.getString(R.string.dialog_context_switch_positive), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.setTextContext(mContext.getString(R.string.toast_content_hint));
+                        switchStatus();
+                    }
+                })
+                .setNegative(mContext.getString(R.string.dialog_context_switch_negative), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                        buttonView.setChecked(false);
+                    }
+                })
+                .show();
     }
 
     /**
      * 数据请求
-     * @param recordId
      */
-    public void switchStatus(Integer recordId) {
+    public void switchStatus() {
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
-        bean.setRecordId(recordId);
+        bean.setRecordId(MyApplication.tableBean.getRecordId());
         bean.setStatus(MEGER_TO_ALONE);
         TableMode tableMode = new TableMode();
         tableMode.switchStatus(bean, this);
@@ -94,13 +91,16 @@ public class StatusSwitchImpl implements Callback<Bean<ResponseCommonBean>> {
 
     @Override
     public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
-        Bean<ResponseCommonBean> bean =response.body();
-        if (bean!=null && bean.getCode() == ResponseCode.SUCCESS){
-            buttonView.setChecked(true);
+        Bean<ResponseCommonBean> bean = response.body();
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
             //将合并点菜标志设置为否，同时刷新菜品列表
-            EventBus.getDefault().post( new WebSocketEvent(WebSocketEvent.ALONE_ORDER));
-        }else {
-            T.showShort(mContext,bean.getMessage());
+            EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.ALONE_ORDER));
+            mDialog.dismiss();
+        } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
+            mDialog.setTextContext(bean.getMessage());
+            buttonView.setChecked(false);
+        } else {
+            T.showShort(mContext, bean.getMessage());
             buttonView.setChecked(false);
         }
     }

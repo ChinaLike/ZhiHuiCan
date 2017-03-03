@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,13 +30,13 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.manage.DownLoadManager;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.mode.TableMode;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.permission.OnPermissionCallback;
 import cn.sczhckj.order.permission.PermissionManager;
 import cn.sczhckj.order.service.WebSocketService;
 import cn.sczhckj.order.until.AndroidVersionUtil;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.FileUntils;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -48,7 +47,7 @@ import retrofit2.Response;
  * 初始化台桌信息，版本信息
  */
 public class InitActivity extends Activity implements Callback<Bean<VersionBean>>,
-        VersionManager.OnDialogClickListener, OnPermissionCallback {
+        CommonDialog.OnDialogStatusListener, OnPermissionCallback {
 
     @Bind(R.id.init_text)
     TextView initText;
@@ -56,7 +55,6 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     RelativeLayout initParent;
     @Bind(R.id.deviceid)
     TextView deviceid;
-
     /**
      * 版本管理
      */
@@ -65,11 +63,10 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      * 台桌信息获取
      */
     private TableMode mTableMode;
-
     /**
      * 手动更新或者是后台自动更新
      */
-    private boolean isAuto = false;
+    public static boolean isAuto = false;
     /**
      * 需要申请的权限
      */
@@ -168,15 +165,13 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         Bean<VersionBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS && bean.getResult() != null
                 && bean.getResult().getCode() > mVersionManager.getVersionCode(InitActivity.this)) {
-            if (!isAuto) {
-                /**手动更新*/
-                mVersionManager.version(InitActivity.this, bean.getResult());
-                mVersionManager.setOnDialogClickListener(this);
-            } else {
+            if (isAuto) {
                 /**后台更新*/
-                DownLoadManager downLoadManager = new DownLoadManager();
-                downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(),
-                        VersionManager.judgeName(bean.getResult().getName()), null, InitActivity.this);
+                DownLoadManager downLoadManager = new DownLoadManager(InitActivity.this);
+                downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(), VersionManager.judgeName(bean.getResult().getName()));
+            } else {
+                /**手动更新*/
+                mVersionManager.version(InitActivity.this, bean.getResult(), this);
             }
         } else {
             initTableInfo();
@@ -196,6 +191,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         public void onResponse(Call<Bean<TableBean>> call, Response<Bean<TableBean>> response) {
             Bean<TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+
                 MyApplication.tableBean = bean.getResult();
                 MyApplication.mode = bean.getResult().getMode();
                 initText.setText(getString(R.string.init_activity_loading_success));

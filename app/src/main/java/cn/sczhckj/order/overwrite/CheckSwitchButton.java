@@ -271,7 +271,7 @@ public class CheckSwitchButton extends CheckBox {
     /**
      * 设置监听
      */
-    void setOnCheckedChangeWidgetListener(OnCheckedChangeListener listener) {
+    public void setOnCheckedChangeWidgetListener(OnCheckedChangeListener listener) {
         mOnCheckedChangeWidgetListener = listener;
     }
 
