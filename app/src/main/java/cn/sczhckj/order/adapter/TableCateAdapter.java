@@ -18,7 +18,7 @@ import cn.sczhckj.order.data.bean.produce.TableCateBean;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
 
 /**
- * @ describe: 台桌分类
+ * @ describe: 台桌分类,用于服务员模式
  * @ author: Like on 2017-02-24.
  * @ email: 572919350@qq.com
  */

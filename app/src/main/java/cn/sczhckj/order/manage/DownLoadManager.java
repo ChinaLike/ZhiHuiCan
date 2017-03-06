@@ -37,25 +37,53 @@ public class DownLoadManager {
 
     private Context mContext;
 
+    private String apkName;
+
+    private CommonDialog.OnDialogStatusListener onDialogStatusListener;
+    /**
+     * 是否弹出安装界面
+     */
+    private boolean isInstall = false;
+
     public DownLoadManager(Context context) {
         mContext = context;
-        dialog = new CommonDialog(context, CommonDialog.Mode.PROGRESS);
-        dialog.setTitle("软件更新");
     }
 
-    public void downloadFile(String host , String url ,String apkName){
-
+    public void setOnDialogStatusListener(CommonDialog.OnDialogStatusListener onDialogStatusListener) {
+        this.onDialogStatusListener = onDialogStatusListener;
     }
-
 
     /**
-     * 通过Retrofit下载文件
-     *
-     * @param host
-     * @param apkName
+     * 弹窗初始化
      */
-    public void retrofitDownload(String host, String url, final String apkName) {
+    private void initDialog() {
+        dialog = new CommonDialog(mContext, CommonDialog.Mode.PROGRESS);
+        dialog.setTitle("版本更新")
+                .setOnDialogStatusListener(onDialogStatusListener)
+                .setProgressMax(0)
+                .setProgress(0)
+                .setProgressText(String.format("%1s Kb/%2s Kb", (int) (0 / 1024), (int) (0 / 1024)))
+                .setNegative("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                }).show();
+        dialog.setCancelable(false);
+    }
 
+    /**
+     * 文件下载
+     *
+     * @param host    主机地址
+     * @param url     链接地址
+     * @param apkName APK名称
+     */
+    public void downloadFile(String host, String url, final String apkName) {
+        this.apkName = apkName;
+        if (!InitActivity.isAuto) {
+            initDialog();
+        }
         Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(host);
@@ -70,15 +98,10 @@ public class DownLoadManager {
                     dialog.setProgressMax((int) (contentLength / 1024));
                     dialog.setProgress((int) (bytesRead / 1024));
                     dialog.setProgressText(String.format("%1s Kb/%2s Kb", (int) (bytesRead / 1024), (int) (contentLength / 1024)));
-                    if (done) {
-                        File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
-                        install(file);
-                    }
-                } else {
-                    if (done) {
-                        File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
-                        install(file);
-                    }
+                }
+                if (done && !isInstall) {
+                    isInstall = true;
+                    install();
                 }
             }
         });
@@ -115,18 +138,18 @@ public class DownLoadManager {
 
     /**
      * 安装应用
-     *
-     * @param file
      */
-    private void install(final File file) {
+    private void install() {
+        dialog.onDismiss();
+        final File file = new File(FileUntils.getSdPath() + FileConstant.PATH, apkName);
         final CommonDialog mDialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
         mDialog.setTitle("应用安装")
                 .setTextContext("下载已完成，请确定安装应用！")
                 .setPositive("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mDialog.dismiss();
-                        autoInstall(mContext, file);
+                        mDialog.onDismiss();
+                        autoInstall(file);
                     }
                 })
                 .show();
@@ -136,7 +159,7 @@ public class DownLoadManager {
     /**
      * 自动安装
      */
-    private void autoInstall(Context mContext, File file) {
+    private void autoInstall(File file) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(android.content.Intent.ACTION_VIEW);

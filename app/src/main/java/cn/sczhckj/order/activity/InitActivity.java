@@ -14,7 +14,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.sczhckj.order.Config;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
@@ -27,7 +26,6 @@ import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.network.RetrofitRequest;
 import cn.sczhckj.order.data.response.ResponseCode;
-import cn.sczhckj.order.manage.DownLoadManager;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.overwrite.CommonDialog;
@@ -163,16 +161,9 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     @Override
     public void onResponse(Call<Bean<VersionBean>> call, Response<Bean<VersionBean>> response) {
         Bean<VersionBean> bean = response.body();
-        if (bean != null && bean.getCode() == ResponseCode.SUCCESS && bean.getResult() != null
-                && bean.getResult().getCode() > mVersionManager.getVersionCode(InitActivity.this)) {
-            if (isAuto) {
-                /**后台更新*/
-                DownLoadManager downLoadManager = new DownLoadManager(InitActivity.this);
-                downLoadManager.retrofitDownload(Config.HOST, bean.getResult().getUrl(), VersionManager.judgeName(bean.getResult().getName()));
-            } else {
-                /**手动更新*/
-                mVersionManager.version(InitActivity.this, bean.getResult(), this);
-            }
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            mVersionManager.setOnDialogStatusListener(this);
+            mVersionManager.updata(bean.getResult());
         } else {
             initTableInfo();
         }

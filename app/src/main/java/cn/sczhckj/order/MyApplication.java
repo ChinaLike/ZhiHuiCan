@@ -3,10 +3,7 @@ package cn.sczhckj.order;
 import android.app.Application;
 
 import cn.sczhckj.order.data.bean.table.TableBean;
-import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.manage.ExceptionPush;
-import cn.sczhckj.order.mode.impl.StorageImpl;
 
 /**
  * @describe:
@@ -36,8 +33,6 @@ public class MyApplication extends Application {
         ExceptionPush.init(this).openCrashHandler(Config.HOST, "p");
 
     }
-
-
 
 
 }

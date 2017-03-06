@@ -72,35 +72,6 @@ public class FoodRefreshImpl {
     }
 
     /**
-     * 退菜数据处理
-     *
-     * @param bean
-     * @param list
-     * @return
-     */
-    public List<FoodBean> refund(FoodBean bean, List<FoodBean> list) {
-        List<FoodBean> currList = list;
-        int id = bean.getId();
-        int cateId = bean.getCateId();
-        FoodBean removeBean = null;
-        for (FoodBean item : currList) {
-            if (item.getId() == id && item.getCateId() == cateId) {
-                int count = item.getCount() - 1;
-                if (count > 0) {
-                    item.setCount(count);
-                } else {
-                    removeBean = item;
-                }
-            }
-        }
-        if (removeBean != null) {
-            currList.remove(removeBean);
-        }
-
-        return currList;
-    }
-
-    /**
      * 比较原有集合中数据，如果有则添加数量或减少数量，如果没有则新加一条记录
      *
      * @param bean
@@ -108,11 +79,12 @@ public class FoodRefreshImpl {
      */
     public void compare(FoodBean bean, List<FoodBean> mList) {
         int id = bean.getId();
+        int priceTypeId = bean.getType();
         int cateId = bean.getCateId();
         boolean isAdd = false;
         for (FoodBean item : mList) {
-            if (item.getId() == id && item.getCateId() == cateId) {
-                /**查出有改条记录*/
+            if (item.getId() == id && item.getType() == priceTypeId && item.getCateId() == cateId) {
+                /**查出有该条记录*/
                 isAdd = true;
                 item.setCount(bean.getCount());
             }
@@ -164,9 +136,5 @@ public class FoodRefreshImpl {
                 }
             }
         }
-
-
     }
-
-
 }

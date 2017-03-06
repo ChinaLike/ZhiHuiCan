@@ -142,6 +142,12 @@ public class FoodControlImpl {
         this.cateId = cateId;
     }
 
+    /**
+     * 判断菜品是否超过分类规定数量
+     * @param countText
+     * @param bean
+     * @param type
+     */
     private void cateFoodControler(TextView countText, FoodBean bean, int type) {
         /**判断是否限制点菜*/
         if (maximum == Constant.FOOD_DISASTRICT) {
@@ -174,6 +180,12 @@ public class FoodControlImpl {
 
     }
 
+    /**
+     * 判断菜品是否超过菜品规定数量
+     * @param countText
+     * @param bean
+     * @param type
+     */
     private void foodControler(TextView countText, FoodBean bean, int type) {
         /**判断该菜品有数量控制*/
         if (bean.getMaximum() == null || bean.getMaximum() == Constant.FOOD_DISASTRICT) {

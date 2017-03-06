@@ -25,8 +25,7 @@ import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
-import cn.sczhckj.order.overwrite.MyDialog;
-import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.overwrite.CommonDialog;
 
 /**
  * @describe: 开桌后主界面
@@ -212,10 +211,10 @@ public class MainFragment extends BaseFragment {
 //            mainHintChoose.setVisibility(View.VISIBLE);
 //            mainBottomViewPager.setVisibility(View.GONE);
 //        } else {
-            setBottomBtn(true);
-            mainHintChoose.setVisibility(View.GONE);
-            mainBottomViewPager.setVisibility(View.VISIBLE);
-            initOrderFragment();
+        setBottomBtn(true);
+        mainHintChoose.setVisibility(View.GONE);
+        mainBottomViewPager.setVisibility(View.VISIBLE);
+        initOrderFragment();
 //        }
     }
 
@@ -310,29 +309,29 @@ public class MainFragment extends BaseFragment {
      * 并桌点餐提示框
      */
     private void dialog() {
-        final MyDialog dialog = new MyDialog(mContext);
-        dialog.setTitle(mContext.getString(R.string.main_fragment_dialog_hint));
-        dialog.setContextText(mContext.getString(R.string.main_fragment_dialog_merge_hint));
-        dialog.setNegativeButton("确认", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setBottomBtn(true);
-                orderType = Constant.ORDER_TYPE_MERGE;
-                showOrderType(Constant.DIS_SHOW_TYPE);
-                /**如果已经点击，再次进来不显示点菜方式*/
-                MyApplication.tableBean.setOrderType(Constant.DIS_SHOW_TYPE);
-                /**设置已选择点菜*/
-                BaseFragment.setOrderType(orderType);
-                dialog.dismiss();
-            }
-        });
-        dialog.setPositiveButton("取消", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+        final CommonDialog dialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
+        dialog.setTitle(mContext.getString(R.string.main_fragment_dialog_hint))
+                .setTextContext(mContext.getString(R.string.main_fragment_dialog_merge_hint))
+                .setPositive("确认", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setBottomBtn(true);
+                        orderType = Constant.ORDER_TYPE_MERGE;
+                        showOrderType(Constant.DIS_SHOW_TYPE);
+                        /**如果已经点击，再次进来不显示点菜方式*/
+                        MyApplication.tableBean.setOrderType(Constant.DIS_SHOW_TYPE);
+                        /**设置已选择点菜*/
+                        BaseFragment.setOrderType(orderType);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 }
