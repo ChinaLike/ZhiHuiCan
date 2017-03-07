@@ -95,7 +95,6 @@ public class WebSocketWriter extends Handler {
      *                this class).
      */
     public void forward(Object message) {
-
         Message msg = obtainMessage();
         msg.obj = message;
         sendMessage(msg);

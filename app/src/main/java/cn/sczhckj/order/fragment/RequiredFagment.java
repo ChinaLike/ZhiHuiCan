@@ -420,6 +420,4 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
 //            onItemClick(null, currPosition, currBean);//刷新菜品数据
         }
     }
-
-
 }

@@ -2,6 +2,8 @@ package cn.sczhckj.order.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -35,6 +37,7 @@ import cn.sczhckj.order.service.WebSocketService;
 import cn.sczhckj.order.until.AndroidVersionUtil;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.FileUntils;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -53,6 +56,9 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     RelativeLayout initParent;
     @Bind(R.id.deviceid)
     TextView deviceid;
+
+    private String TAG = getClass().getName();
+
     /**
      * 版本管理
      */
@@ -219,10 +225,10 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
-        if (WebSocketEvent.INIT_SUCCESS == event.getType()) {
+        if (WebSocketEvent.INIT_SUCCESS == event.getType() && isTopActivity()) {
             /**初始化成功，当WebSocket连接成功时在获取版本信息*/
-            isAuto = false;
-            getVersion();
+                isAuto = false;
+                getVersion();
         } else if (WebSocketEvent.INIT_FAIL == event.getType()) {
             /**初始化失败*/
             initParent.setClickable(true);
@@ -266,5 +272,16 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     @Override
     public void onFail(String... permissions) {
         finish();
+    }
+
+    /**
+     * 判断是否顶层Activity
+     *
+     * @return
+     */
+    private boolean isTopActivity() {
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        return cn.getClassName().contains(TAG);
     }
 }

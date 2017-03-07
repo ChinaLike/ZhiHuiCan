@@ -2,7 +2,9 @@ package cn.sczhckj.order.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
 import java.util.Timer;
@@ -32,6 +34,11 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     private Timer timer;
 
+    /**
+     * 是否链接
+     */
+    private boolean isConnect = false;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -45,8 +52,9 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        timer = new Timer();
         mWebSocket.connect(Config.URL_HEART_SERVICE + AppSystemUntil.getHeartAndroidID(getApplicationContext()), this);
-        sendMessage();
+        startTimer();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -55,34 +63,42 @@ public class HeartService extends Service implements OnWebSocketListenner {
         super.onDestroy();
     }
 
-    /**
-     * 定时重新发起连接
-     */
-    private void reConnection(final WebSocketImpl mWebSocket) {
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0x123:
+                    mWebSocket.reConnection();
+                    break;
+                case 0x122:
+                    String msgS = msg();
+                    mWebSocket.sendMessage(msgS);
+                    break;
+            }
+        }
+    };
+
+    private void startTimer() {
+        if (timer == null) {
+            timer = new Timer();
+        }
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                mWebSocket.reConnection();
+                if (mWebSocket != null){
+                    if (isConnect){
+                        /**如果连接，发送心跳*/
+                        mHandler.sendEmptyMessage(0x122);
+                    }else {
+                        /**没有连接，重新连接*/
+                        mHandler.sendEmptyMessage(0x123);
+                    }
+                }
             }
         }, 100, TIME);
     }
 
-    /**
-     * 间隔发送消息检测心跳
-     */
-    private void sendMessage() {
-        Timer timer = new Timer();
-        timer.schedule(mTimerTask, 100, TIME);
-    }
-
-    TimerTask mTimerTask = new TimerTask() {
-        @Override
-        public void run() {
-            String msg = msg();
-            if (mWebSocket != null)
-                mWebSocket.sendMessage(msg);
-        }
-    };
 
     /**
      * 发送消息内容
@@ -108,17 +124,12 @@ public class HeartService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onClose(int code, String reason) {
-        if (timer != null) {
-            timer = new Timer();
-        }
-        reConnection(mWebSocket);
+        isConnect = false;
     }
 
     @Override
     public void onOpen() {
-        if (timer != null) {
-            timer.cancel();
-        }
+        isConnect = true;
     }
 
     @Override

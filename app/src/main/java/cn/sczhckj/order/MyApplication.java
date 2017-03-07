@@ -30,7 +30,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         /**异常信息收集*/
-        ExceptionPush.init(this).openCrashHandler(Config.HOST, "p");
+//        ExceptionPush.init(this).openCrashHandler(Config.HOST, "p");
 
     }
 

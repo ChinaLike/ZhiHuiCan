@@ -33,7 +33,6 @@ public class WebSocketImpl {
 
                 @Override
                 public void onClose(int code, String reason) {
-                    connection.disconnect();
                     /**链接关闭*/
                     onWebSocketListenner.onClose(code, reason);
                 }

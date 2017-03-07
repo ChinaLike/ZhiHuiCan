@@ -2,7 +2,9 @@ package cn.sczhckj.order.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,6 +40,8 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     private Timer timer;
 
+    private boolean isConnect = false;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,21 +54,31 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0x123:
+                    mWebSocketRefresh.reConnection();
+                    break;
+            }
+        }
+    };
+
     /**
      * 定时重新发起连接
      */
     private void reConnection() {
-        timer.schedule(mTimerTask, 100, TIME);
-    }
-
-    TimerTask mTimerTask = new TimerTask() {
-        @Override
-        public void run() {
-            if (mWebSocketRefresh != null) {
-                mWebSocketRefresh.reConnection();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (mWebSocketRefresh != null && !isConnect) {
+                    mHandler.sendEmptyMessage(0x123);
+                }
             }
-        }
-    };
+        }, 100, TIME);
+    }
 
     @Override
     public void onBinaryMessage(byte[] payload) {
@@ -73,6 +87,7 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onClose(int code, String reason) {
+        isConnect = false;
         L.d("测试" + code);
         if (code == WebSocket.ConnectionHandler.CLOSE_CANNOT_CONNECT) {
             /**连接不能建立*/
@@ -87,9 +102,7 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public void onOpen() {
-        if (timer != null) {
-            timer.cancel();
-        }
+        isConnect = true;
         EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.INIT_SUCCESS));
     }
 
