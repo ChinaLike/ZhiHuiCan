@@ -5,13 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -44,18 +39,6 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
 
     @Bind(R.id.back)
     ImageView back;
-    @Bind(R.id.loading_progress)
-    ProgressBar loadingProgress;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingItemParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
-    @Bind(R.id.loadingParent)
-    LinearLayout loadingParent;
     @Bind(R.id.favor_recy)
     RecyclerView favorRecy;
 
@@ -74,12 +57,9 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorable, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_favorable;
     }
 
     @Override
@@ -100,6 +80,17 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
         initAdapter();
     }
 
+    @Override
+    public void initFail() {
+        /**重新加载*/
+        setData(null);
+    }
+
+    @Override
+    public void loadingFail() {
+
+    }
+
     /**
      * 初始化更多优惠适配器
      */
@@ -114,8 +105,7 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
      * 初始化更多优惠获取数据
      */
     private void initFavor() {
-        loading(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingTitle,
-                getString(R.string.favorable_fragment__loading));
+        initing(getString(R.string.favorable_fragment__loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -128,16 +118,12 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.back, R.id.loading_parent})
+    @OnClick({R.id.back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
                 /**返回*/
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.FAVORABLE_OUT));
-                break;
-            case R.id.loading_parent:
-                /**重新加载*/
-                setData(null);
                 break;
         }
     }
@@ -147,20 +133,17 @@ public class FavorableFragment extends BaseFragment implements Callback<Bean<Car
         Bean<CardInfoBean> bean = response.body();
 
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            loadingSuccess(loadingParent, favorRecy, loadingItemParent, loadingFail);
+            initSuccess();
             mAdapter.notifyDataSetChanged(bean.getResult().getCards());
         } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-            loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
-                    bean.getMessage());
+            initFailer(bean.getMessage());
         } else {
-            loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.favorable_fragment_loading_fail));
+            initFailer(mContext.getResources().getString(R.string.favorable_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<CardInfoBean>> call, Throwable t) {
-        loadingFail(loadingParent, favorRecy, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.favorable_fragment_loading_fail));
+        initFailer(mContext.getResources().getString(R.string.favorable_fragment_loading_fail));
     }
 }

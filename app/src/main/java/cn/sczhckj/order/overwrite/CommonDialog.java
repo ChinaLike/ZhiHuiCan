@@ -130,6 +130,15 @@ public class CommonDialog extends Dialog {
     }
 
     /**
+     * 获取编辑框控件
+     *
+     * @return
+     */
+    public EditText getEditText() {
+        return editContext;
+    }
+
+    /**
      * 设置标题
      *
      * @param title

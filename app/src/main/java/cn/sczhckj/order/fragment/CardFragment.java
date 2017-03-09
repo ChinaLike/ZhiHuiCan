@@ -2,17 +2,13 @@ package cn.sczhckj.order.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -59,20 +55,6 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
     LinearLayout cardInfoParent;
     @Bind(R.id.card_close)
     ImageView cardClose;
-    @Bind(R.id.loading_progress)
-    ProgressBar loadingProgress;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingItemParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
-    @Bind(R.id.loadingParent)
-    LinearLayout loadingParent;
-    @Bind(R.id.contentParent)
-    LinearLayout contentParent;
 
     /**
      * 获取数据
@@ -92,12 +74,9 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_card;
     }
 
     @Override
@@ -117,12 +96,22 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
         mCardMode = new CardMode();
     }
 
+    @Override
+    public void initFail() {
+        /**重新加载*/
+        setData(null);
+    }
+
+    @Override
+    public void loadingFail() {
+
+    }
+
     /**
      * 初始化更多优惠获取数据
      */
     private void initFavor() {
-        loading(loadingParent, contentParent, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.card_fragment_loading));
+        initing(mContext.getResources().getString(R.string.card_fragment_loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -161,7 +150,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.card_input_name_cancel, R.id.card_input_phone_cancel, R.id.apply_for_vip_card_confirm, R.id.card_close, R.id.loadingParent})
+    @OnClick({R.id.card_input_name_cancel, R.id.card_input_phone_cancel, R.id.apply_for_vip_card_confirm, R.id.card_close})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.card_input_name_cancel:
@@ -180,10 +169,6 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
                 /**关闭*/
                 isShow(true);
                 loadingWeb(url);
-                break;
-            case R.id.loadingParent:
-                /**重新加载*/
-                setData(null);
                 break;
         }
     }
@@ -220,23 +205,20 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
     public void onResponse(Call<Bean<CardInfoBean>> call, Response<Bean<CardInfoBean>> response) {
         Bean<CardInfoBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            loadingSuccess(loadingParent, contentParent, loadingItemParent, loadingFail);
+            initSuccess();
             isShow(true);
             url = bean.getResult().getUrl();
             loadingWeb(url);
         } else if ((bean != null && bean.getCode() == ResponseCode.FAILURE)) {
-            loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    bean.getMessage());
+            initFailer(bean.getMessage());
         } else {
-            loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.card_fragment_loading_fail));
+            initFailer(mContext.getResources().getString(R.string.card_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<CardInfoBean>> call, Throwable t) {
-        loadingFail(loadingParent, contentParent, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.card_fragment_loading_fail));
+        initFailer(mContext.getResources().getString(R.string.card_fragment_loading_fail));
     }
 
     /**
@@ -255,7 +237,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
                 applyForVipCardConfirm.setText(bean.getMessage());
             } else {
                 applyForVipCardConfirm.setText(getString(R.string.card_fragment_commit_fail));
-                }
+            }
         }
 
         @Override

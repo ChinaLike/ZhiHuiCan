@@ -33,8 +33,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/required_tab"
                 android:layout_width="match_parent"
-                android:background="@color/background_gray_m"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="@color/background_gray_m" />
 
         </LinearLayout>
 
@@ -46,7 +46,7 @@
         android:background="@color/view_color" />
 
     <LinearLayout
-        android:id="@+id/contextParent"
+        android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -67,16 +67,7 @@
             android:background="@color/white" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/loadingParent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <include layout="@layout/item_loading" />
-
-    </LinearLayout>
+    <include layout="@layout/item_loading" />
 
 
 </LinearLayout>

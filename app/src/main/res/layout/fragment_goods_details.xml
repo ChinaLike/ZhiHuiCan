@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -88,7 +89,7 @@
                                     android:id="@+id/dishes_sales"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"/>
+                                    android:layout_weight="1" />
 
                                 <LinearLayout
                                     android:id="@+id/favor_parent"
@@ -208,8 +209,8 @@
                     <ImageView
                         android:id="@+id/details_dishes_minus"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:scaleType="center"
                         android:src="@drawable/open_btn_dishes_reduce" />
 
@@ -224,8 +225,8 @@
                     <ImageView
                         android:id="@+id/details_dishes_add"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:scaleType="center"
                         android:src="@drawable/open_btn_dishes_add" />
 
@@ -246,6 +247,8 @@
         android:layout_alignParentTop="true"
         android:padding="10dp"
         android:src="@drawable/order_btn_back_details" />
+
+    <include layout="@layout/item_loading" />
 
 
 </RelativeLayout>

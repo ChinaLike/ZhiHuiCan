@@ -46,7 +46,7 @@ public class TableStatusAdapter extends RecyclerView.Adapter<TableStatusAdapter.
     }
 
     static class TableStatusViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.parent)
+        @Bind(R.id.status_parent)
         TextView parent;
 
         public TableStatusViewHolder(View itemView) {

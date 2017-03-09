@@ -213,7 +213,7 @@ public class SettleAccountsAdapter extends BaseExpandableListAdapter {
         @Bind(R.id.tag)
         ImageView tag;
         @Nullable
-        @Bind(R.id.parent)
+        @Bind(R.id.ex_parent)
         LinearLayout parent;
 
         ParentViewHolder(View view) {

@@ -51,6 +51,7 @@
 
     <!--BillFragment-->
     <string name="bill_fragment_loading">努力加载中...</string>
+    <string name="bill_fragment_commit">数据提交中，请稍等...</string>
     <string name="bill_fragment_loading_fail">数据加载失败，点击刷新</string>
     <string name="bill_fragment_bill_fail">结账失败，请重新提交</string>
 
@@ -81,6 +82,8 @@
     <string name="cart_fragment_commit">数据提交中...</string>
 
     <!--DetailsFragment-->
+    <string name="details_fragment_loading">努力加载中...</string>
+    <string name="details_fragment_fail">加载失败，点击重新加载！</string>
     <string name="details_fragment_sales">月销量\t%d</string>
 
     <!--EvaluateFragment-->

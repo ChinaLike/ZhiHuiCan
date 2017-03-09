@@ -5,11 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -20,18 +16,16 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.FoodAdapter;
 import cn.sczhckj.order.adapter.PersonAdapter;
 import cn.sczhckj.order.adapter.TabCateAdapter;
 import cn.sczhckj.order.data.bean.Bean;
+import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.food.CateBean;
-import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
-import cn.sczhckj.order.data.bean.RequestCommonBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.RefreshFoodEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
@@ -42,7 +36,6 @@ import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,18 +52,6 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
     RecyclerView personChoose;
     @Bind(R.id.dishes_choose)
     RecyclerView dishesChoose;
-    @Bind(R.id.contextParent)
-    LinearLayout contextParent;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingItemParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
-    @Bind(R.id.loadingParent)
-    LinearLayout loadingParent;
     @Bind(R.id.required_tab)
     RecyclerView requiredTab;
 
@@ -128,12 +109,9 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         EventBus.getDefault().register(this);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_required, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_required;
     }
 
     @Override
@@ -148,6 +126,17 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         mTableMode = new TableMode();
         mFoodMode = new FoodMode();
         initTableInfo();
+    }
+
+    @Override
+    public void initFail() {
+        /**点击重新加载数据*/
+        initTableInfo();
+    }
+
+    @Override
+    public void loadingFail() {
+
     }
 
     /**
@@ -184,8 +173,7 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         /**获取数据*/
         mTableMode.openInfo(bean, this);
-        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                getString(R.string.require_fragment_loading));
+        initing(getString(R.string.require_fragment_loading));
         initTab();
     }
 
@@ -240,19 +228,16 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                     cateList = bean.getResult().getCates();
                     mTabCateAdapter.notifyDataSetChanged(cateList);
                 } else {
-                    loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            bean.getMessage());
+                    initFailer(bean.getMessage());
                 }
             } else {
-                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getString(R.string.require_fragment_loading_fail));
+                initFailer(getString(R.string.require_fragment_loading_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<CateBean>> call, Throwable t) {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getString(R.string.require_fragment_loading_fail));
+            initFailer(getString(R.string.require_fragment_loading_fail));
         }
     };
 
@@ -265,23 +250,20 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
             Bean<List<FoodBean>> bean = response.body();
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
-                    loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
+                    initSuccess();
                     foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
                     mFoodAdapter.notifyDataSetChanged(foodList);
                 } else {
-                    loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            bean.getMessage());
+                    initFailer(bean.getMessage());
                 }
             } else {
-                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        getString(R.string.require_fragment_loading_fail));
+                initFailer(getString(R.string.require_fragment_loading_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getString(R.string.require_fragment_loading_fail));
+            initFailer(getString(R.string.require_fragment_loading_fail));
         }
     };
 
@@ -302,16 +284,6 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
         ButterKnife.unbind(this);
         /**取消事件监听*/
         EventBus.getDefault().unregister(this);
-    }
-
-    @OnClick({R.id.loadingParent})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.loadingParent:
-                /**点击重新加载数据*/
-                initTableInfo();
-                break;
-        }
     }
 
     public void setOnTableListenner(OnTableListenner mOnTableListenner) {
@@ -339,19 +311,16 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
                 mList.add(bean.getResult().getMaximum());
                 personAdapter.notifyDataSetChanged(mList);
             } else {
-                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        bean.getMessage());
+                initFailer(bean.getMessage());
             }
         } else {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getString(R.string.require_fragment_loading_fail));
+            initFailer(getString(R.string.require_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<TableBean>> call, Throwable t) {
-        loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                getString(R.string.require_fragment_loading_fail));
+        initFailer(getString(R.string.require_fragment_loading_fail));
     }
 
     /**

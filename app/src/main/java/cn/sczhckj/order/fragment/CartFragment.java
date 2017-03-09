@@ -5,9 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
@@ -131,10 +128,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
      */
     private boolean isCommit = false;
     /**
-     * 布局视图
-     */
-    private View view;
-    /**
      * 提交菜品刷新
      */
     private final int COMMIT_TYPE = 0;
@@ -151,16 +144,11 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        /**初始化弹窗*/
-        initLoadingPop();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_cart, null, true);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_cart;
     }
 
     @Override
@@ -179,6 +167,20 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         initOrder();
         initDisOrder();
         initRefresh(COMMIT_TYPE);
+    }
+
+    @Override
+    public void initFail() {
+
+    }
+
+    @Override
+    public void loadingFail() {
+        if (isOpen) {
+            order();
+        } else {
+            openTable(password);
+        }
     }
 
     @Override
@@ -403,9 +405,9 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 .setPositive(getContext().getString(R.string.cart_fragment_dialog_positive), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mDialog.dismiss();
                         password = mDialog.getInputText();
                         openTable(password);
-                        mDialog.dismiss();
                     }
                 })
                 .setNegative(getContext().getString(R.string.cart_fragment_dialog_negative), new View.OnClickListener() {
@@ -440,14 +442,14 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             initRefresh(COMMIT_TYPE);
 
         } else {
-            commit("" + bean.getMessage());
+            loadingFail("" + bean.getMessage());
         }
 
     }
 
     @Override
     public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-        commit(getContext().getString(R.string.cart_fragment_commit_fail));
+        loadingFail(getContext().getString(R.string.cart_fragment_commit_fail));
     }
 
     /**
@@ -464,7 +466,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                     cartToOrder(bean.getResult());
                 } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-                    commit(bean.getMessage());
+                    loadingFail(bean.getMessage());
                 }
             } else {
                 /**推送刷新*/
@@ -479,7 +481,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
             if (refreshType == COMMIT_TYPE) {
-                commit(getContext().getString(R.string.cart_fragment_commit_fail));
+                loadingFail(getContext().getString(R.string.cart_fragment_commit_fail));
             }
         }
     };
@@ -491,7 +493,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         public void onResponse(Call<Bean<List<FoodBean>>> call, Response<Bean<List<FoodBean>>> response) {
             Bean<List<FoodBean>> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                FoodRefreshImpl.getInstance().refreshDisOrderFood(bean.getResult(),disOrderList);
+                FoodRefreshImpl.getInstance().refreshDisOrderFood(bean.getResult(), disOrderList);
                 mDisOrderAdapter.notifyDataSetChanged(disOrderList);
                 baseInfoRefresh();
             }
@@ -501,21 +503,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
         }
     };
-
-
-    /**
-     * 提交失败，重新提交
-     *
-     * @param title
-     */
-    private void commit(String title) {
-        loadingFail(title, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openTable(password);
-            }
-        });
-    }
 
     /**
      * 菜品，价格合计，优惠显示刷新
@@ -645,17 +632,20 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                     baseInfoRefresh();
                 } else if (rBean != null && rBean.getCode() == ResponseCode.FAILURE) {
                     dismissProgress();
-                    T.showShort(mContext, rBean.getMessage());
+                    refundFailDialog(rBean.getMessage());
+//                    T.showShort(mContext, rBean.getMessage());
                 } else {
                     dismissProgress();
-                    T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
+                    refundFailDialog(getString(R.string.cart_fragment_return_food_fail));
+//                    T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
                 }
             }
 
             @Override
             public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
                 dismissProgress();
-                T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
+                refundFailDialog(getString(R.string.cart_fragment_return_food_fail));
+//                T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
             }
         });
     }
@@ -728,5 +718,22 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 refreshAppointFood();  //刷新未下单菜品
                 break;
         }
+    }
+
+    /**
+     * 退菜失败提醒
+     * @param msg
+     */
+    private void refundFailDialog(String msg) {
+        final CommonDialog dialog = new CommonDialog(mContext, CommonDialog.Mode.TEXT);
+        dialog.setTitle("退菜提醒")
+                .setTextContext(msg)
+                .setPositive("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 }

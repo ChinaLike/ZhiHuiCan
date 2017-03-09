@@ -4,15 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +30,6 @@ import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
-import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
@@ -42,7 +37,6 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.BillMode;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,18 +51,6 @@ import retrofit2.Response;
 public class BillFragment extends BaseFragment implements Callback<Bean<List<BillBean>>>, OnItemClickListener {
 
 
-    @Bind(R.id.loading_progress)
-    ProgressBar loadingProgress;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingItemParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
-    @Bind(R.id.loadingParent)
-    LinearLayout loadingParent;
     @Bind(R.id.cart_top_parent)
     LinearLayout cartTopParent;
     @Bind(R.id.cart_tip)
@@ -91,8 +73,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     ImageView cartFavorable;
     @Bind(R.id.cart_bill_list)
     ExpandableListView cartBillList;
-    @Bind(R.id.cart_loading_success)
-    RelativeLayout cartLoadingSuccess;
+
     /**
      * 清单数据获取
      */
@@ -128,12 +109,10 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         EventBus.getDefault().register(this);
     }
 
-    @Nullable
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bill, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_bill;
     }
 
     @Override
@@ -165,6 +144,18 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         initTipAdapter();
     }
 
+    @Override
+    public void initFail() {
+        /**加载失败，重新加载*/
+        setData(null);
+    }
+
+    @Override
+    public void loadingFail() {
+        /**结账*/
+        initCommit();
+    }
+
     /**
      * 初始化结账清单适配器
      */
@@ -192,8 +183,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      * 初始化账单数据
      */
     private void initBill() {
-        loading(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.bill_fragment_loading));
+        initing(mContext.getResources().getString(R.string.bill_fragment_loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -215,6 +205,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
      * 初始化结账
      */
     private void initCommit() {
+        showProgress(getString(R.string.bill_fragment_commit));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setMemberCode(MyApplication.tableBean.getUser() == null ? "" : MyApplication.tableBean.getUser().getMemberCode());
@@ -261,7 +252,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick({R.id.shoppingcart_button, R.id.cart_favorable, R.id.loadingParent})
+    @OnClick({R.id.shoppingcart_button, R.id.cart_favorable})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.shoppingcart_button:
@@ -272,10 +263,6 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
                 /**更多优惠*/
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.FAVORABLE));
                 break;
-            case R.id.loadingParent:
-                /**加载失败，重新加载*/
-                setData(null);
-                break;
         }
     }
 
@@ -283,23 +270,20 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
     public void onResponse(Call<Bean<List<BillBean>>> call, Response<Bean<List<BillBean>>> response) {
         Bean<List<BillBean>> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            loadingSuccess(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail);
+            initSuccess();
             mList = bean.getResult();
             compute(mList);
             mSettleAccountsAdapter.notifyDataSetChanged(mList);
         } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-            loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
-                    bean.getMessage());
+            initFailer(bean.getMessage());
         } else {
-            loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.bill_fragment_loading_fail));
+            initFailer(mContext.getResources().getString(R.string.bill_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<List<BillBean>>> call, Throwable t) {
-        loadingFail(loadingParent, cartLoadingSuccess, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.bill_fragment_loading_fail));
+        initFailer(mContext.getResources().getString(R.string.bill_fragment_loading_fail));
     }
 
     /**
@@ -328,17 +312,17 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                T.showShort(mContext, bean.getMessage());
+                dismissProgress();
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-                T.showShort(mContext, bean.getMessage());
+                loadingFail(bean.getMessage());
             } else {
-                T.showShort(mContext, getString(R.string.bill_fragment_bill_fail));
+                loadingFail(getString(R.string.bill_fragment_bill_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-            T.showShort(mContext, getString(R.string.bill_fragment_bill_fail));
+            loadingFail(getString(R.string.bill_fragment_bill_fail));
         }
     };
 

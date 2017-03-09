@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -61,22 +59,10 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
     TextView serviceHint;
     @Bind(R.id.service_call_parent)
     RelativeLayout serviceCallParent;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingItemParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
-    @Bind(R.id.loadingParent)
-    LinearLayout loadingParent;
     @Bind(R.id.service_phone)
     ImageView servicePhone;
     @Bind(R.id.service_parent)
     LinearLayout serviceParent;
-    @Bind(R.id.context_parent)
-    RelativeLayout contextParent;
 
     /**
      * 初始化GIF图片
@@ -103,12 +89,9 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
         EventBus.getDefault().register(this);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_service, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_service;
     }
 
     @Override
@@ -125,11 +108,22 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
 
     @Override
     public void init() {
-        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                getString(R.string.service_fragment_init));
+        initing(getString(R.string.service_fragment_init));
         initAdapter();
         mServiceMode = new ServiceMode();
         initList();
+    }
+
+    @Override
+    public void initFail() {
+        /**重新加载*/
+        initing(getString(R.string.service_fragment_init));
+        initList();
+    }
+
+    @Override
+    public void loadingFail() {
+
     }
 
     @Override
@@ -199,7 +193,6 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         bean.setServiceId(serviceId);
         mServiceMode.call(bean, requestCommonBeanCallback);
-
         initGif();
 
     }
@@ -213,13 +206,9 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
         mServiceMode.abort(bean, requestCommonBeanCallback);
     }
 
-    @OnClick({R.id.loadingParent, R.id.service_parent})
+    @OnClick({R.id.service_parent})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.loadingParent:
-                /**重新加载*/
-                initList();
-                break;
             case R.id.service_parent:
                 /**关闭服务*/
                 cancelService();
@@ -233,18 +222,16 @@ public class ServiceFragment extends BaseFragment implements Callback<Bean<List<
     public void onResponse(Call<Bean<List<ServiceBean>>> call, Response<Bean<List<ServiceBean>>> response) {
         Bean<List<ServiceBean>> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
+            initSuccess();
             mServiceAdapter.notifyDataSetChanged(bean.getResult());
         } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getString(R.string.service_fragment_loading_fail));
+            initFailer(getString(R.string.service_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<List<ServiceBean>>> call, Throwable t) {
-        loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                getString(R.string.service_fragment_loading_fail));
+        initFailer(getString(R.string.service_fragment_loading_fail));
     }
 
     @Override

@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/contextParent"
+        android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -78,16 +78,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/loadingParent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <include layout="@layout/item_loading" />
-
-    </LinearLayout>
+    <include layout="@layout/item_loading" />
 
 
 </LinearLayout>

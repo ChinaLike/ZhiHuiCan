@@ -32,12 +32,10 @@ import cn.sczhckj.order.image.GlideLoading;
 import cn.sczhckj.order.mode.FoodMode;
 import cn.sczhckj.order.mode.impl.FavorImpl;
 import cn.sczhckj.order.mode.impl.FoodControlImpl;
-import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
 import cn.sczhckj.order.overwrite.CarouselView;
 import cn.sczhckj.order.overwrite.TagFlowLayout;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,12 +107,9 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         EventBus.getDefault().register(this);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_goods_details, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_goods_details;
     }
 
     @Override
@@ -136,7 +131,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
     private void initBase() {
         dishesName.setText(mFoodBean.getName());
         detailsPrice.setText(mFoodBean.getOriginPrice() + "");
-        dishesSales.setText(getString(R.string.details_fragment_sales,mFoodBean.getSales()));
+        dishesSales.setText(getString(R.string.details_fragment_sales, mFoodBean.getSales()));
         dishesLike.setText(mFoodBean.getFavors() + "");
         if (mFoodBean.isFavor()) {
             detailsLike.setSelected(true);
@@ -156,6 +151,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
      * @param cateId
      */
     private void initBanner(int foodId, int cateId) {
+        initing(getString(R.string.details_fragment_loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setFoodId(foodId);
         bean.setCateId(cateId);
@@ -177,6 +173,16 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         mFoodMode = new FoodMode();
         mFavorImpl = new FavorImpl(mContext);
         mFoodControl = new FoodControlImpl(mContext);
+
+    }
+
+    @Override
+    public void initFail() {
+        setData(null);
+    }
+
+    @Override
+    public void loadingFail() {
 
     }
 
@@ -257,11 +263,17 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
         Bean<List<ImageBean>> bean = response.body();
 
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            initSuccess();
             isSuccess = true;
             if (bean.getResult() != null || bean.getResult().size() > 0) {
                 bannerAdapter(bean.getResult());
             }
-        } else {
+        } else if (bean != null && bean.getCode() == ResponseCode.FAILURE){
+            initFailer(bean.getMessage());
+            isSuccess = false;
+            bannerAdapter(new ArrayList<ImageBean>());
+        }else {
+            initFailer(getString(R.string.details_fragment_fail));
             isSuccess = false;
             bannerAdapter(new ArrayList<ImageBean>());
         }
@@ -269,6 +281,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
 
     @Override
     public void onFailure(Call<Bean<List<ImageBean>>> call, Throwable t) {
+        initFailer(getString(R.string.details_fragment_fail));
         isSuccess = false;
         bannerAdapter(new ArrayList<ImageBean>());
     }

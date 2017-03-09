@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:content="http://schemas.android.com/tools"
+    xmlns:context="http://schemas.android.com/tools"
+    android:id="@+id/loading_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/temp_parent"
-    android:background="@color/white"
+    android:padding="15dp"
+    android:background="@drawable/shape_pop_black_bg"
     android:gravity="center"
     android:orientation="vertical">
 
     <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/temp_gif"
+        android:id="@+id/loading_gif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/temp_text"
+        android:id="@+id/loading_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        content:text="努力加载中，稍等哒..." />
+        android:textColor="@color/white"
+        context:text="数据提交中，请稍后..." />
 
 </LinearLayout>

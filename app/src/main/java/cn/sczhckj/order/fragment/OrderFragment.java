@@ -8,11 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -25,7 +23,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.adapter.CatesAdapter;
@@ -49,7 +46,6 @@ import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
 import cn.sczhckj.order.until.show.L;
-import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,18 +67,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     RecyclerView dishesShow;
     @Bind(R.id.tab_text)
     TextView tabText;
-    @Bind(R.id.contextParent)
-    LinearLayout contextParent;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingItemParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
-    @Bind(R.id.loadingParent)
-    LinearLayout loadingParent;
 
     /**
      * 一级分类分类适配器
@@ -147,12 +131,9 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         EventBus.getDefault().register(this);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_order, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_order;
     }
 
     @Override
@@ -180,6 +161,18 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     }
 
     @Override
+    public void initFail() {
+        /**加载失败时使用*/
+        initCate();
+        initTab();
+    }
+
+    @Override
+    public void loadingFail() {
+
+    }
+
+    @Override
     public void setData(Object object) {
 
     }
@@ -202,8 +195,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
      * 初始化头部Tab适配器
      */
     private void initTabAdapter() {
-        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                getString(R.string.order_fragment_loading));
+        initing(getString(R.string.order_fragment_loading));
         mTabTableAdapter = new TabTableAdapter(mContext, null);
         mTabTableAdapter.setOnItemClickListener(this);
         LinearLayoutManager mLayoutManager =
@@ -263,7 +255,7 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             Bean<CateBean> bean = response.body();
             if (bean != null) {
                 if (bean.getCode() == ResponseCode.SUCCESS) {
-                    loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
+                    initSuccess();
                     /**加载成功*/
                     defaultItem = bean.getResult().getDefaultCate();//设置默认显示
                     defaultItem = currPosition != -1 ? currPosition : defaultItem;
@@ -277,19 +269,16 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                     currBean = bean.getResult().getCates().get(defaultItem);
                     onItemClick(null, currBean, defaultItem);
                 } else if (bean.getCode() == ResponseCode.FAILURE) {
-                    loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                            bean.getMessage());
+                    initFailer(bean.getMessage());
                 }
             } else {
-                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        mContext.getResources().getString(R.string.order_fragment_loading_fail));
+                initFailer(mContext.getResources().getString(R.string.order_fragment_loading_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<CateBean>> call, Throwable t) {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.order_fragment_loading_fail));
+            initFailer(mContext.getResources().getString(R.string.order_fragment_loading_fail));
         }
     };
 
@@ -306,15 +295,13 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                 mTabTableAdapter.setCurrTableId(tableId);
                 mTabTableAdapter.notifyDataSetChanged(bean.getResult());
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        bean.getMessage());
+                initFailer(bean.getMessage());
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<InfoBean>>> call, Throwable t) {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getString(R.string.order_fragment_loading_fail));
+            initFailer(getString(R.string.order_fragment_loading_fail));
         }
     };
 
@@ -331,15 +318,13 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
                 foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
                 mFoodAdapter.notifyDataSetChanged(foodList);
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-                loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                        bean.getMessage());
+                initFailer(bean.getMessage());
             }
         }
 
         @Override
         public void onFailure(Call<Bean<List<FoodBean>>> call, Throwable t) {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    getString(R.string.order_fragment_loading_fail));
+            initFailer(getString(R.string.order_fragment_loading_fail));
         }
     };
 
@@ -507,12 +492,6 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
         lp.alpha = bgAlpha; //0.0-1.0
         getActivity().getWindow().setAttributes(lp);
-    }
-
-    @OnClick(R.id.loadingParent)
-    public void onClick() {
-        /**加载失败时使用*/
-        init();
     }
 
     /**

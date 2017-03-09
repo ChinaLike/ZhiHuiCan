@@ -5,14 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +22,12 @@ import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.eval.EvalBean;
 import cn.sczhckj.order.data.bean.eval.EvalItemBean;
-import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.listener.OnTagClickListenner;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.EvalMode;
 import cn.sczhckj.order.mode.impl.TagCloudImpl;
-import cn.sczhckj.order.overwrite.FlowLayout;
 import cn.sczhckj.order.overwrite.TagFlowLayout;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
-import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,27 +40,12 @@ import retrofit2.Response;
 
 public class EvaluateFragment extends BaseFragment implements Callback<Bean<EvalBean>>, OnTagClickListenner {
 
-
-    @Bind(R.id.loading_progress)
-    ProgressBar loadingProgress;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingItemParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
-    @Bind(R.id.loadingParent)
-    LinearLayout loadingParent;
     @Bind(R.id.evaluate_finish)
     Button evaluateFinish;
     @Bind(R.id.evaluate_list)
     RecyclerView evaluateList;
     @Bind(R.id.words_cloud)
     TagFlowLayout wordsCloud;
-    @Bind(R.id.contextParent)
-    RelativeLayout contextParent;
 
     /**
      * 热词实现类
@@ -95,12 +69,9 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_evaluate, null, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public int setLayoutId() {
+        return R.layout.fragment_evaluate;
     }
 
     @Override
@@ -122,6 +93,17 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         initEvaluateAdapter();
     }
 
+    @Override
+    public void initFail() {
+        /**重新加载*/
+        setData(null);
+    }
+
+    @Override
+    public void loadingFail() {
+        commit();
+    }
+
     /**
      * 初始化评价适配器
      */
@@ -135,8 +117,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
      * 初始化评价数据
      */
     private void initEvaluate() {
-        loading(loadingParent, contextParent, loadingItemParent, loadingFail, loadingTitle,
-                mContext.getResources().getString(R.string.evaluate_fragment_loading));
+        initing(mContext.getResources().getString(R.string.evaluate_fragment_loading));
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
         mEvalMode.evalInfo(bean, this);
@@ -146,7 +127,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
      * 提交数据
      */
     private void commit() {
-        evaluateFinish.setText(getString(R.string.evaluate_fragment_commit));
+        showProgress(getString(R.string.evaluate_fragment_commit));
         evaluateFinish.setClickable(false);
         RequestCommonBean bean = new RequestCommonBean();
         bean.setDeviceId(AppSystemUntil.getAndroidID(mContext));
@@ -163,13 +144,9 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.loadingParent, R.id.evaluate_finish})
+    @OnClick({R.id.evaluate_finish})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.loadingParent:
-                /**重新加载*/
-                setData(null);
-                break;
             case R.id.evaluate_finish:
                 /**提交评价*/
                 commit();
@@ -181,22 +158,19 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
     public void onResponse(Call<Bean<EvalBean>> call, Response<Bean<EvalBean>> response) {
         Bean<EvalBean> bean = response.body();
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            loadingSuccess(loadingParent, contextParent, loadingItemParent, loadingFail);
+            initSuccess();
             mEvalAdapter.notifyDataSetChanged(bean.getResult().getItems());
             mTagCloud.setWord(wordsCloud, bean.getResult().getWords(), this);
         } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    bean.getMessage());
+            initFailer(bean.getMessage());
         } else {
-            loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                    mContext.getResources().getString(R.string.evaluate_fragment_loading_fail));
+            initFailer(mContext.getResources().getString(R.string.evaluate_fragment_loading_fail));
         }
     }
 
     @Override
     public void onFailure(Call<Bean<EvalBean>> call, Throwable t) {
-        loadingFail(loadingParent, contextParent, loadingItemParent, loadingFail, loadingFailTitle,
-                mContext.getResources().getString(R.string.evaluate_fragment_loading_fail));
+        initFailer(mContext.getResources().getString(R.string.evaluate_fragment_loading_fail));
     }
 
     /**
@@ -207,19 +181,20 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                dismissProgress();
                 evaluateFinish.setText(bean.getMessage());
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-                evaluateFinish.setText(bean.getMessage());
+                loadingFail(bean.getMessage());
                 evaluateFinish.setClickable(true);
             } else {
-                evaluateFinish.setText(getString(R.string.evaluate_fragment_commit_fail));
+                loadingFail(getString(R.string.evaluate_fragment_commit_fail));
                 evaluateFinish.setClickable(true);
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
-            evaluateFinish.setText(getString(R.string.evaluate_fragment_commit_fail));
+            loadingFail(getString(R.string.evaluate_fragment_commit_fail));
             evaluateFinish.setClickable(true);
         }
     };
