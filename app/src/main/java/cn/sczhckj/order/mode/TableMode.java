@@ -1,5 +1,7 @@
 package cn.sczhckj.order.mode;
 
+import android.content.Context;
+
 import java.util.List;
 
 import cn.sczhckj.order.data.bean.Bean;
@@ -9,6 +11,7 @@ import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.table.InfoBean;
 import cn.sczhckj.order.data.network.RetrofitRequest;
+import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -25,10 +28,12 @@ public class TableMode {
     /**
      * 初始化台桌信息
      *
-     * @param bean     参数对象
+     * @param context     参数对象
      * @param callback 回调
      */
-    public void tableInit(RequestCommonBean bean, Callback<Bean<TableBean>> callback) {
+    public void tableInit(Context context, Callback<Bean<TableBean>> callback) {
+        RequestCommonBean bean = new RequestCommonBean();
+        bean.setDeviceId(AppSystemUntil.getAndroidID(context));
         RestRequest<RequestCommonBean> restRequest = JSONRestRequest.Builder.build(RequestCommonBean.class)
                 .op(OP.TABLE_INIT)
                 .time()

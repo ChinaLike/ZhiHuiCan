@@ -50,7 +50,7 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mWebSocketRefresh.connect(Config.URL_NOTIFICATION_SERVICE + AppSystemUntil.getAndroidID(getApplicationContext()), this);
+        mWebSocketRefresh.connect(Config.URL_NOTIFICATION_SERVICE + AppSystemUntil.getOriginalAndroidID(getApplicationContext()), this);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -182,6 +182,9 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
                 EventBus.getDefault().post(
                         new WebSocketEvent(WebSocketEvent.TYPE_SERVICE_COMPLETE, restRequest.getBean()));
                 break;
+            case OP.PUSH_EXCHANGE_TABLE:
+                /**换桌*/
+                EventBus.getDefault().post(new WebSocketEvent(WebSocketEvent.EXCHANGE_TABLE));
             default:
                 /**其他*/
                 break;

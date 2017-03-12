@@ -169,6 +169,10 @@ public interface OP {
      * 版本检查
      */
     String PUSH_CHECK_VERSION = "checkVersion";
+    /**
+     * 换桌
+     */
+    String PUSH_EXCHANGE_TABLE = "exchangeTable";
 
     /**
      * 获取结账清单
@@ -234,7 +238,7 @@ public interface OP {
     String PRODUCE_TABLEATTR = "tableAttr";
 
     /**
-     * 获取台桌属性
+     * 获取所有台桌
      */
     String PRODUCE_ALL_TABLE = "allTable";
 

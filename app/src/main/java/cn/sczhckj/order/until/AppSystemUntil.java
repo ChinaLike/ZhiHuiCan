@@ -60,7 +60,7 @@ public class AppSystemUntil {
      * @param mContext
      * @return
      */
-    public static String getHeartAndroidID(Context mContext) {
+    public static String getOriginalAndroidID(Context mContext) {
         return Settings.System.getString(mContext.getContentResolver(), Settings.System.ANDROID_ID);
     }
 

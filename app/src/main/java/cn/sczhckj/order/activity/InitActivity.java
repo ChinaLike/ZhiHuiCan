@@ -142,9 +142,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      */
     private void initTableInfo() {
         if (!isAuto) {
-            RequestCommonBean bean = new RequestCommonBean();
-            bean.setDeviceId(AppSystemUntil.getAndroidID(this));
-            mTableMode.tableInit(bean, openInfoCallback);
+            mTableMode.tableInit(InitActivity.this, openInfoCallback);
         }
     }
 
@@ -188,7 +186,7 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         public void onResponse(Call<Bean<TableBean>> call, Response<Bean<TableBean>> response) {
             Bean<TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-
+                L.d("数据初始化：Init="+bean.getResult().toString());
                 MyApplication.tableBean = bean.getResult();
                 MyApplication.mode = bean.getResult().getMode();
                 initText.setText(getString(R.string.init_activity_loading_success));

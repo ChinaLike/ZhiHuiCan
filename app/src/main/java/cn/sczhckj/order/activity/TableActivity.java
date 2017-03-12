@@ -33,8 +33,8 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.ProduceMode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
+import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,18 +54,14 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     RecyclerView table;
     @Bind(R.id.activity_table)
     LinearLayout activityTable;
-    @Bind(R.id.loading_title)
-    TextView loadingTitle;
-    @Bind(R.id.loading_parent)
-    LinearLayout loadingParent;
-    @Bind(R.id.loading_fail_title)
-    TextView loadingFailTitle;
-    @Bind(R.id.loading_fail)
-    LinearLayout loadingFail;
     @Bind(R.id.table_parent)
     LinearLayout tableParent;
-    @Bind(R.id.loading)
-    LinearLayout loading;
+    @Bind(R.id.temp_gif)
+    GifImageView tempGif;
+    @Bind(R.id.temp_text)
+    TextView tempText;
+    @Bind(R.id.temp_parent)
+    LinearLayout tempParent;
     /**
      * 台桌属性
      */
@@ -134,7 +130,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void init() {
-        loading.setClickable(false);
+        tempParent.setClickable(false);
         mProduceMode = new ProduceMode();
         mTableMode = new TableMode();
         initCateAdapter();
@@ -147,25 +143,23 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
      * 加载中
      */
     private void loading(String str) {
-        loading.setVisibility(View.VISIBLE);
+        tempParent.setVisibility(View.VISIBLE);
         tableParent.setVisibility(View.GONE);
-        loadingParent.setVisibility(View.VISIBLE);
-        loadingFail.setVisibility(View.GONE);
-        loadingTitle.setText(str);
-        loading.setClickable(false);
+        tempGif.setImageResource(R.drawable.init_loading);
+        tempParent.setClickable(false);
+        tempText.setText(str);
     }
 
     /**
      * 加载失败
      */
     private void loadingFail(String str) {
-        loading.setVisibility(View.VISIBLE);
+        tempParent.setVisibility(View.VISIBLE);
         tableParent.setVisibility(View.GONE);
-        loadingParent.setVisibility(View.GONE);
-        loadingFail.setVisibility(View.VISIBLE);
-        loadingFailTitle.setText(str);
-        loading.setClickable(true);
-        loading.setOnClickListener(new View.OnClickListener() {
+        tempGif.setImageResource(R.drawable.init_loading_faild);
+        tempText.setText(str);
+        tempParent.setClickable(true);
+        tempParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initCate();
@@ -178,7 +172,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
      * 加载成功
      */
     private void loadingSuccess() {
-        loading.setVisibility(View.GONE);
+        tempParent.setVisibility(View.GONE);
         tableParent.setVisibility(View.VISIBLE);
     }
 
@@ -389,9 +383,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
      * 获取该台桌信息
      */
     private void initTable() {
-        RequestCommonBean bean = new RequestCommonBean();
-        bean.setDeviceId(AppSystemUntil.getAndroidID(this));
-        mTableMode.tableInit(bean, openInfoCallback);
+        mTableMode.tableInit(TableActivity.this, openInfoCallback);
     }
 
     /**

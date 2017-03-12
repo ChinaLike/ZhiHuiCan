@@ -16,7 +16,6 @@ import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.listener.OnWebSocketListenner;
 import cn.sczhckj.order.mode.impl.WebSocketImpl;
 import cn.sczhckj.order.until.AppSystemUntil;
-import cn.sczhckj.order.websocket.WebSocket;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 
@@ -53,7 +52,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         timer = new Timer();
-        mWebSocket.connect(Config.URL_HEART_SERVICE + AppSystemUntil.getHeartAndroidID(getApplicationContext()), this);
+        mWebSocket.connect(Config.URL_HEART_SERVICE + AppSystemUntil.getOriginalAndroidID(getApplicationContext()), this);
         startTimer();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -107,7 +106,7 @@ public class HeartService extends Service implements OnWebSocketListenner {
      */
     private String msg() {
         HeartBean bean = new HeartBean();
-        bean.setDeviceId(AppSystemUntil.getHeartAndroidID(getApplicationContext()));
+        bean.setDeviceId(AppSystemUntil.getOriginalAndroidID(getApplicationContext()));
         bean.setIp(AppSystemUntil.ip(getApplicationContext()));
 
         RestRequest<HeartBean> restRequest = JSONRestRequest.Builder.build(HeartBean.class)

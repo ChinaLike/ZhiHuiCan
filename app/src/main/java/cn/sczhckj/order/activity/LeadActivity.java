@@ -1,15 +1,19 @@
 package cn.sczhckj.order.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,12 +21,11 @@ import butterknife.OnClick;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
-import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.TableMode;
-import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +38,7 @@ import retrofit2.Response;
  * @ Email: 572919350@qq.com
  */
 
-public class LeadActivity extends Activity {
+public class LeadActivity extends Activity implements Callback<Bean<TableBean>> {
 
     @Bind(R.id.right)
     Button right;
@@ -47,15 +50,20 @@ public class LeadActivity extends Activity {
     ProgressBar leadProgress;
     @Bind(R.id.lead_isVip)
     TextView leadIsVip;
+    @Bind(R.id.activity_lead)
+    LinearLayout activityLead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lead);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         if (MyApplication.mode == Constant.CUSTOMER) {
             initTableStatus(MyApplication.tableBean.getStatus(), MyApplication.tableBean.getRemark());
         }
+
+        activityLead.setClickable(false);
     }
 
     @OnClick({R.id.right, R.id.deny})
@@ -174,5 +182,73 @@ public class LeadActivity extends Activity {
         intent.putExtra(Constant.INTENT_TABLE_STATUS, status);
         startActivity(intent);
     }
+
+    /**
+     * 初始化台桌信息
+     */
+    private void initTable() {
+        leadIsVip.setText("换桌中,请稍等...");
+        right.setClickable(false);
+        deny.setClickable(false);
+        TableMode mTableMode = new TableMode();
+        mTableMode.tableInit(LeadActivity.this, this);
+    }
+
+    /**
+     * 通知事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void webSocketEventBus(WebSocketEvent event) {
+        switch (event.getType()) {
+            case WebSocketEvent.EXCHANGE_TABLE:
+                /**换桌*/
+                initTable();
+                break;
+        }
+    }
+
+    @Override
+    public void onResponse(Call<Bean<TableBean>> call, Response<Bean<TableBean>> response) {
+        Bean<TableBean> bean = response.body();
+
+        if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+            L.d("数据初始化：Lead="+bean.getResult().toString());
+            activityLead.setClickable(false);
+            leadIsVip.setText(getString(R.string.lead_activity_is_vip));
+            right.setClickable(true);
+            deny.setClickable(true);
+            MyApplication.tableBean = bean.getResult();
+            MyApplication.mode = bean.getResult().getMode();
+            if (bean.getResult().getMode() == Constant.CUSTOMER) {
+                /**消费者模式*/
+                initTableStatus(bean.getResult().getStatus(), bean.getResult().getRemark());
+            }
+        } else {
+            right.setClickable(false);
+            deny.setClickable(false);
+            leadIsVip.setText("换桌失败，点击空白区域重新获取数据...");
+            activityLead.setClickable(true);
+            activityLead.setOnClickListener(listener);
+        }
+    }
+
+    @Override
+    public void onFailure(Call<Bean<TableBean>> call, Throwable t) {
+        leadIsVip.setText("换桌失败，点击空白区域重新获取数据...");
+        right.setClickable(false);
+        deny.setClickable(false);
+        activityLead.setClickable(true);
+        activityLead.setOnClickListener(listener);
+    }
+
+    /**
+     * 换桌失败，重新加载
+     */
+    View.OnClickListener listener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            initTable();
+        }
+    };
 
 }

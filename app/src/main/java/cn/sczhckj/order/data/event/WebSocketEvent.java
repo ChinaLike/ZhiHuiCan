@@ -62,6 +62,11 @@ public class WebSocketEvent {
      */
     public static final int CHECK_VERSION = 12;
     /**
+     * 换桌
+     */
+    public static final int EXCHANGE_TABLE = 13;
+
+    /**
      * 通用Bean
      */
     private PushCommonBean bean;

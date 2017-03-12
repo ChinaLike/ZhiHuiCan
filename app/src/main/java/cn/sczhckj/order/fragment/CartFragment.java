@@ -717,6 +717,10 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 }
                 refreshAppointFood();  //刷新未下单菜品
                 break;
+            case WebSocketEvent.EXCHANGE_TABLE:
+                /**换桌*/
+                finish();
+                break;
         }
     }
 

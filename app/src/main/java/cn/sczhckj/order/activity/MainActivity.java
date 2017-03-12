@@ -494,17 +494,29 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         }
     }
 
+    /**
+     * 台桌设置
+     * @param tableName
+     */
     @Override
     public void table(String tableName) {
         table = tableName;
         this.tableName.setText(tableName);
     }
 
+    /**
+     * 服务员设置
+     * @param waiter
+     */
     @Override
     public void waiter(String waiter) {
         this.waitress.setText(waiter);
     }
 
+    /**
+     * 就餐人数设置
+     * @param number
+     */
     @Override
     public void person(int number) {
         personNumber = number;
@@ -631,12 +643,15 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void webSocketEventBus(WebSocketEvent event) {
-        if (event.getType() == WebSocketEvent.REFRESH_USER) {
-            /**刷新用户*/
-            if (event.getBean().getUser() != null) {
-                MyApplication.tableBean.setUser(event.getBean().getUser());
-                login(event.getBean().getUser());
-            }
+        switch (event.getType()) {
+            case WebSocketEvent.REFRESH_USER:
+                /**刷新用户*/
+                if (event.getBean().getUser() != null) {
+                    MyApplication.tableBean.setUser(event.getBean().getUser());
+                    login(event.getBean().getUser());
+                }
+                break;
+
         }
     }
 

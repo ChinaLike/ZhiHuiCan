@@ -30,6 +30,7 @@ import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
+import cn.sczhckj.order.until.show.L;
 import pl.droidsonroids.gif.GifImageView;
 
 /**
