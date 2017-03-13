@@ -47,7 +47,7 @@ public class VipFavorableAdapter extends RecyclerView.Adapter<VipFavorableAdapte
     public void onBindViewHolder(final VipFavorableHolder holder, int position) {
         final CardInfoBean.Card bean = mList.get(position);
         holder.vipName.setText(bean.getName() + ":");
-        holder.vipPrice.setText("" + bean.getPrice());
+        holder.vipPrice.setText("" + bean.getOriginPrice());
         holder.vipFavorablePrice.setText("" + (bean.getOriginPrice() - bean.getPrice()));
         if (bean.getIsLock() == Constant.LOCK) {
             holder.vipChoose.setVisibility(View.VISIBLE);

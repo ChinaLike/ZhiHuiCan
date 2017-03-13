@@ -34,11 +34,20 @@ public class CardInfoBean {
         private Integer id;//ID
         private Integer cardId;//卡片类型
         private String name;//卡片名称
+        private Double discount;//折扣率
         private Double price;//现价
         private Double originPrice;//原价
         private Integer isLock;//是否解锁当前卡片
         private String url;//卡种描述
         private boolean isSelect;
+
+        public Double getDiscount() {
+            return discount;
+        }
+
+        public void setDiscount(Double discount) {
+            this.discount = discount;
+        }
 
         public Integer getId() {
             return id;
@@ -110,10 +119,12 @@ public class CardInfoBean {
                     "id=" + id +
                     ", cardId=" + cardId +
                     ", name='" + name + '\'' +
+                    ", discount=" + discount +
                     ", price=" + price +
                     ", originPrice=" + originPrice +
                     ", isLock=" + isLock +
                     ", url='" + url + '\'' +
+                    ", isSelect=" + isSelect +
                     '}';
         }
     }

@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sczhckj.order.Config;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.Bean;
@@ -194,7 +195,7 @@ public class CardFragment extends BaseFragment implements Callback<Bean<CardInfo
      * @param url
      */
     private void loadingWeb(String url) {
-        cardPresentation.loadUrl(url);
+        cardPresentation.loadUrl(Config.HOST+url);
         cardPresentation.setHorizontalScrollBarEnabled(false);
         cardPresentation.setVerticalScrollBarEnabled(false);
         cardPresentation.getSettings().setJavaScriptEnabled(true);

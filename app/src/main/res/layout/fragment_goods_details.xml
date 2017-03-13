@@ -238,6 +238,7 @@
 
     </LinearLayout>
 
+    <include layout="@layout/item_loading" />
 
     <ImageView
         android:id="@+id/details_back"
@@ -248,7 +249,7 @@
         android:padding="10dp"
         android:src="@drawable/order_btn_back_details" />
 
-    <include layout="@layout/item_loading" />
+
 
 
 </RelativeLayout>
