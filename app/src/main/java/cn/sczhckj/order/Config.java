@@ -15,21 +15,44 @@ public class Config {
     private static final String ADDRESS = "pad/";
 
     /**
-     * IP
-     */
-    public static final String IP = "192.168.0.50";
-
-    /**
      * 主机
      */
-    public static String HOST = "http://" + IP + ":8080/" + ADDRESS;
+    public static String HOST = "http://" + host() + ADDRESS;
     /**
      * 心跳检测
      */
-    public static String URL_HEART_SERVICE = "ws://" + IP + ":8080/" + ADDRESS + "ws/heart?username=";
+    public static String URL_HEART_SERVICE = "ws://" + host() + ADDRESS + "ws/heart?username=";
     /**
      * 指令推送
      */
-    public static String URL_NOTIFICATION_SERVICE = "ws://" + IP + ":8080/" + ADDRESS + "ws/notification?username=";
+    public static String URL_NOTIFICATION_SERVICE = "ws://" + host() + ADDRESS + "ws/notification?username=";
 
+    /**
+     * 获取IP
+     *
+     * @return
+     */
+    public static String ip() {
+        return (String) MyApplication.share.getData("ip", "192.168.0.25");
+    }
+
+    public static String port() {
+        return ":" + MyApplication.share.getData("port", "8080") + "/";
+    }
+
+    public static String host() {
+        return ip() + port();
+    }
+
+    public static void setHOST() {
+        HOST = "http://" + host() + ADDRESS;
+    }
+
+    public static void setUrlHeartService() {
+        URL_HEART_SERVICE = "ws://" + host() + ADDRESS + "ws/heart?username=";
+    }
+
+    public static void setUrlNotificationService() {
+        URL_NOTIFICATION_SERVICE = "ws://" + host() + ADDRESS + "ws/notification?username=";
+    }
 }

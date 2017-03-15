@@ -1,14 +1,12 @@
 package cn.sczhckj.order.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +50,7 @@ import cn.sczhckj.order.mode.impl.FloatButtonImpl;
 import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.overwrite.DraggableFloatingButton;
 import cn.sczhckj.order.overwrite.RoundImageView;
+import cn.sczhckj.order.overwrite.SettingPopupWindow;
 import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AndroidUtils;
 import cn.sczhckj.order.until.AppSystemUntil;
@@ -67,7 +66,7 @@ import retrofit2.Response;
  * @ Email: 572919350@qq.com
  */
 public class MainActivity extends BaseActivity implements OnTableListenner,
-        Callback<Bean<ResponseCommonBean>> {
+        Callback<Bean<ResponseCommonBean>>, View.OnTouchListener, SettingPopupWindow.OnButtonListener {
 
 
     @Bind(R.id.table_number)
@@ -96,6 +95,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     FrameLayout contentArea;
     @Bind(R.id.float_btn)
     DraggableFloatingButton floatBtn;
+    @Bind(R.id.table_parent)
+    LinearLayout tableParent;
     /**
      * 用户ID
      */
@@ -169,6 +170,18 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
      * 服务员模式弹窗
      */
     private FloatButtonImpl mFloatButton;
+    /**
+     * 按键开始时间
+     */
+    private long startTime = 0;
+    /**
+     * 按键结束时间
+     */
+    private long endTime = 0;
+    /**
+     * 设置弹窗
+     */
+    private SettingPopupWindow popupWindow;
 
 
     @Override
@@ -182,6 +195,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         isLogin();
         init();
         disposeIntent();
+
+        tableParent.setOnTouchListener(this);
     }
 
     @Override
@@ -496,6 +511,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     /**
      * 台桌设置
+     *
      * @param tableName
      */
     @Override
@@ -506,6 +522,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     /**
      * 服务员设置
+     *
      * @param waiter
      */
     @Override
@@ -515,6 +532,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
 
     /**
      * 就餐人数设置
+     *
      * @param number
      */
     @Override
@@ -684,4 +702,36 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         }
     }
 
+    /**
+     * 长按弹出设置端口
+     *
+     * @param v
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            startTime = System.currentTimeMillis();
+            endTime = System.currentTimeMillis();
+        }
+        endTime = System.currentTimeMillis();
+        if (endTime - startTime > 10000) {
+            if (popupWindow == null) {
+                popupWindow = new SettingPopupWindow(MainActivity.this);
+            }
+            popupWindow.setOnButtonListener(this);
+            popupWindow.show();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 端口确认
+     */
+    @Override
+    public void affirm() {
+        popupWindow.dismiss();
+    }
 }

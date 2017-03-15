@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.sczhckj.order.Config;
+import cn.sczhckj.order.data.bean.push.HeartBean;
 import cn.sczhckj.order.data.bean.push.PushCommonBean;
 import cn.sczhckj.order.data.constant.OP;
 import cn.sczhckj.order.data.event.WebSocketEvent;
@@ -116,6 +117,7 @@ public class WebSocketService extends Service implements OnWebSocketListenner {
         RestRequest<PushCommonBean> restRequest
                 = JSONRestRequest.Parser.parse(payload, PushCommonBean.class);
         String op = restRequest.getOp();
+        mWebSocketRefresh.sendMessage(op);
         L.d("推送OP=" + op);
         switch (op) {
             case OP.PUSH_LOCK:

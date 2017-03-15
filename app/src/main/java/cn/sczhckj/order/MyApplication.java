@@ -3,7 +3,9 @@ package cn.sczhckj.order;
 import android.app.Application;
 
 import cn.sczhckj.order.data.bean.table.TableBean;
+import cn.sczhckj.order.data.constant.FileConstant;
 import cn.sczhckj.order.manage.ExceptionPush;
+import cn.sczhckj.order.mode.impl.StorageImpl;
 
 /**
  * @describe:
@@ -26,9 +28,12 @@ public class MyApplication extends Application {
      */
     public static int mode = 1;
 
+    public static StorageImpl share;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        share = new StorageImpl(getApplicationContext(), FileConstant.USER);
         /**异常信息收集*/
 //        ExceptionPush.init(this).openCrashHandler(Config.HOST, "p");
 

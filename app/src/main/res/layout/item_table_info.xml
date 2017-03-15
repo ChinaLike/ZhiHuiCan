@@ -18,6 +18,7 @@
             android:background="@color/view_color" />
 
         <LinearLayout
+            android:id="@+id/table_parent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"

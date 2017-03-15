@@ -6,6 +6,7 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.manage.VersionManager;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.overwrite.CommonDialog;
+import cn.sczhckj.order.overwrite.SettingPopupWindow;
 import cn.sczhckj.order.permission.OnPermissionCallback;
 import cn.sczhckj.order.permission.PermissionManager;
 import cn.sczhckj.order.service.WebSocketService;
@@ -48,7 +50,7 @@ import retrofit2.Response;
  * 初始化台桌信息，版本信息
  */
 public class InitActivity extends Activity implements Callback<Bean<VersionBean>>,
-        CommonDialog.OnDialogStatusListener, OnPermissionCallback {
+        CommonDialog.OnDialogStatusListener, OnPermissionCallback, SettingPopupWindow.OnButtonListener {
 
     @Bind(R.id.init_text)
     TextView initText;
@@ -80,7 +82,10 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
      * 服务
      */
     private Intent intent;
-
+    /**
+     * 设置窗口
+     */
+    private SettingPopupWindow popupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,7 +191,6 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         public void onResponse(Call<Bean<TableBean>> call, Response<Bean<TableBean>> response) {
             Bean<TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-                L.d("数据初始化：Init="+bean.getResult().toString());
                 MyApplication.tableBean = bean.getResult();
                 MyApplication.mode = bean.getResult().getMode();
                 initText.setText(getString(R.string.init_activity_loading_success));
@@ -225,10 +229,15 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
     public void webSocketEventBus(WebSocketEvent event) {
         if (WebSocketEvent.INIT_SUCCESS == event.getType() && isTopActivity()) {
             /**初始化成功，当WebSocket连接成功时在获取版本信息*/
-                isAuto = false;
-                getVersion();
+            isAuto = false;
+            getVersion();
         } else if (WebSocketEvent.INIT_FAIL == event.getType()) {
             /**初始化失败*/
+            if (popupWindow == null) {
+                popupWindow = new SettingPopupWindow(InitActivity.this);
+            }
+            popupWindow.setOnButtonListener(this);
+            popupWindow.show();
             initParent.setClickable(true);
             initText.setText(getString(R.string.init_activity_loading_fail));
         } else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
@@ -281,5 +290,11 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
         return cn.getClassName().contains(TAG);
+    }
+
+    @Override
+    public void affirm() {
+        popupWindow.dismiss();
+        onClick();
     }
 }
