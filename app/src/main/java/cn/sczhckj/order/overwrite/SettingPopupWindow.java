@@ -5,8 +5,8 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,7 +57,7 @@ public class SettingPopupWindow extends PopupWindow {
         setFocusable(true);
         setTouchable(true);
         setWidth(w);
-        setHeight(h);
+        setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         setBackgroundDrawable(new ColorDrawable(0));
         settingDefault();
     }
