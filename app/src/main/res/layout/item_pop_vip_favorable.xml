@@ -40,8 +40,7 @@
                 android:id="@+id/vip_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#f54a23"
-                android:textSize="@dimen/text_size_s_m" />
+                android:textColor="#f54a23"/>
         </LinearLayout>
 
 
@@ -88,8 +87,7 @@
                     android:id="@+id/vip_favorable_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#f54a23"
-                    android:textSize="@dimen/text_size_s_m" />
+                    android:textColor="#f54a23" />
             </LinearLayout>
 
 

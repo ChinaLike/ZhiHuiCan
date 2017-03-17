@@ -35,7 +35,7 @@ public class MyApplication extends Application {
         super.onCreate();
         share = new StorageImpl(getApplicationContext(), FileConstant.USER);
         /**异常信息收集*/
-//        ExceptionPush.init(this).openCrashHandler(Config.HOST, "p");
+        ExceptionPush.init(this).openCrashHandler(Config.HOST, "p");
 
     }
 

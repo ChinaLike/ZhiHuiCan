@@ -66,8 +66,8 @@ public class SettingPopupWindow extends PopupWindow {
      * 设置默认参数
      */
     private void settingDefault() {
-        ip.setHint("" + MyApplication.share.getData("ip", "192.168.0.25"));
-        port.setHint("" + MyApplication.share.getData("port", "8080"));
+        ip.setText("" + MyApplication.share.getData("ip", "192.168.0.25"));
+        port.setText("" + MyApplication.share.getData("port", "8080"));
     }
 
     @OnClick(R.id.setting)

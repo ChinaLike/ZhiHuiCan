@@ -47,7 +47,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 初始化台桌信息，版本信息
+ * 1.WebSocket连接
+ * 2.初始化版本信息
+ * 3.初始化台桌信息(获取是否是哪一个模式，服务员还是消费者模式)
  */
 public class InitActivity extends Activity implements Callback<Bean<VersionBean>>,
         CommonDialog.OnDialogStatusListener, OnPermissionCallback, SettingPopupWindow.OnButtonListener {

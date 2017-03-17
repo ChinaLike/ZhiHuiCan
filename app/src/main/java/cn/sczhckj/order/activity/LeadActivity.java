@@ -212,7 +212,6 @@ public class LeadActivity extends Activity implements Callback<Bean<TableBean>> 
         Bean<TableBean> bean = response.body();
 
         if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
-            L.d("数据初始化：Lead="+bean.getResult().toString());
             activityLead.setClickable(false);
             leadIsVip.setText(getString(R.string.lead_activity_is_vip));
             right.setClickable(true);

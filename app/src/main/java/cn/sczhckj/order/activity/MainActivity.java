@@ -55,6 +55,7 @@ import cn.sczhckj.order.service.HeartService;
 import cn.sczhckj.order.until.AndroidUtils;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.DensityUtils;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -538,9 +539,9 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Override
     public void person(int number) {
         personNumber = number;
-        if (MyApplication.tableBean != null && MyApplication.tableBean.getMaximum() != null && MyApplication.tableBean.getMaximum() != 0) {
-            personNumber = MyApplication.tableBean.getMaximum();
-        }
+//        if (MyApplication.tableBean != null && MyApplication.tableBean.getMaximum() != null && MyApplication.tableBean.getMaximum() != 0) {
+//            personNumber = MyApplication.tableBean.getMaximum();
+//        }
         this.tablePersonNum.setText(personNumber + "人");
     }
 
