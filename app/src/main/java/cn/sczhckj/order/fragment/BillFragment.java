@@ -1,8 +1,8 @@
 package cn.sczhckj.order.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -38,7 +38,6 @@ import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.BillMode;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -139,6 +138,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
 
     @Override
     public void init() {
+        buttonStatus(true);
         mBillMode = new BillMode();
         initFavorableLocation();
         initBillAdapter();
@@ -313,6 +313,8 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                //结账成功后按钮不可点击
+                buttonStatus(false);
                 dismissProgress();
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 loadingFail(bean.getMessage());
@@ -337,6 +339,24 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             awards = (int) bean;
             tipMoney.setText("" + bean);
             totalPrice.setText("" + (totalP + (Integer) bean));
+        }
+    }
+
+    /**
+     * 按钮状态
+     * @param isClick   是否可以点击
+     */
+    private void buttonStatus(boolean isClick){
+        shoppingcartButton.setClickable(isClick);
+        shoppingcartButton.setSelected(!isClick);
+        if (isClick) {
+            /**可点击*/
+            shoppingcartButton.setText("结账");
+            shoppingcartButton.setTextColor(ContextCompat.getColor(mContext,R.color.button_text));
+        }else {
+            /**不可点击*/
+            shoppingcartButton.setText("已结账");
+            shoppingcartButton.setTextColor(ContextCompat.getColor(mContext,R.color.text_color_person));
         }
     }
 

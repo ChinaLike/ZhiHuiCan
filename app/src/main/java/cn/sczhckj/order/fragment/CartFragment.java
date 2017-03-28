@@ -260,8 +260,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
 
     /**
      * 设置Button的属性
-     * <p>
-     * //     * @param isClick
      */
     private void buttonAttr() {
         if (disOrderList.size() > 0) {
@@ -405,9 +403,13 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 .setPositive(getContext().getString(R.string.cart_fragment_dialog_positive), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mDialog.dismiss();
-                        password = mDialog.getInputText();
-                        openTable(password);
+                        if (MainActivity.personNumber == 0){
+                            T.showShort(mContext,"人数为 0 人，请设置后开桌");
+                        }else {
+                            mDialog.dismiss();
+                            password = mDialog.getInputText();
+                            openTable(password);
+                        }
                     }
                 })
                 .setNegative(getContext().getString(R.string.cart_fragment_dialog_negative), new View.OnClickListener() {

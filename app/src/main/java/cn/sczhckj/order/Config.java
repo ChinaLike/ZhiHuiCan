@@ -11,8 +11,15 @@ public class Config {
     /**
      * 地址
      */
-//    private static final String ADDRESS = "cn.sczhckj.pad.rest/";
     private static final String ADDRESS = "pad/";
+    /**
+     * 默认IP
+     */
+    public static final String DEFAULT_IP = "192.168.0.88";
+    /**
+     * 默认端口
+     */
+    public static final String DEFAULT_PORT = "8080";
 
     /**
      * 主机
@@ -33,11 +40,11 @@ public class Config {
      * @return
      */
     public static String ip() {
-        return (String) MyApplication.share.getData("ip", "192.168.0.25");
+        return (String) MyApplication.share.getData("ip", DEFAULT_IP);
     }
 
     public static String port() {
-        return ":" + MyApplication.share.getData("port", "8080") + "/";
+        return ":" + MyApplication.share.getData("port", DEFAULT_PORT) + "/";
     }
 
     public static String host() {

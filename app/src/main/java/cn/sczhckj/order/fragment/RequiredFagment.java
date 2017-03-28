@@ -301,7 +301,6 @@ public class RequiredFagment extends BaseFragment implements Callback<Bean<Table
 
         if (bean != null) {
             if (bean.getCode() == ResponseCode.SUCCESS) {
-                L.d("数据初始化：Requied="+bean.getResult().toString());
                 /**设置桌面桌号、服务员、就餐人数*/
                 tableId = bean.getResult().getId();
                 mOnTableListenner.table(bean.getResult().getTableName());
