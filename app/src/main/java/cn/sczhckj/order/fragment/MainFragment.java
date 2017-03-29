@@ -100,7 +100,8 @@ public class MainFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isConsuming()) {
-            if (MyApplication.tableBean.getStatus() == Constant.TABLE_STATUS_BILL) {
+            if (MyApplication.tableBean.getStatus() == Constant.TABLE_STATUS_BILL ||
+                    MyApplication.tableBean.getStatus() == Constant.TABLE_STATUS_BILL_MERGE) {
                 index = 2;
             } else {
                 index = 0;

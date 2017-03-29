@@ -175,7 +175,7 @@ public abstract class BaseFragment extends Fragment {
     private void setIsOpen() {
         int status = MyApplication.tableBean.getStatus();
         if (status == Constant.TABLE_STATUS_OPEN || status == Constant.TABLE_STATUS_FOOD
-                || status == Constant.TABLE_STATUS_BILL) {
+                || status == Constant.TABLE_STATUS_BILL || status == Constant.TABLE_STATUS_BILL_MERGE) {
             isOpen = true;
         }
     }
@@ -324,7 +324,7 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isConsuming() {
         Integer status = MyApplication.tableBean.getStatus();
         if (status == Constant.TABLE_STATUS_OPEN || status == Constant.TABLE_STATUS_FOOD
-                || status == Constant.TABLE_STATUS_BILL) {
+                || status == Constant.TABLE_STATUS_BILL || status == Constant.TABLE_STATUS_BILL_MERGE) {
             warmPromptNumber = MyApplication.tableBean.getFoodCountHint();
             return true;
         } else {

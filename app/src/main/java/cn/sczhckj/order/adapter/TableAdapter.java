@@ -125,7 +125,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         } else if (bean.getStatus() == Constant.TABLE_STATUS_OPEN || bean.getStatus() == Constant.TABLE_STATUS_FOOD) {
             list.add("餐");
             tableTime.setText("" + bean.getTime());
-        } else if (bean.getStatus() == Constant.TABLE_STATUS_BILL) {
+        } else if (bean.getStatus() == Constant.TABLE_STATUS_BILL || bean.getStatus() == Constant.TABLE_STATUS_BILL_MERGE) {
             list.add("帐");
             tableTime.setText("" + bean.getTime());
         } else if (bean.getStatus() == Constant.TABLE_STATUS_SWEEP) {

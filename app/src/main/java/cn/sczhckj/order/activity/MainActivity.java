@@ -245,6 +245,8 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                 initMainFragment();
                 EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_ORDER));
                 break;
+            case Constant.TABLE_STATUS_BILL_MERGE:
+                /**进入结账，并桌情况*/
             case Constant.TABLE_STATUS_BILL:
                 /**进入结账*/
                 initMainFragment();

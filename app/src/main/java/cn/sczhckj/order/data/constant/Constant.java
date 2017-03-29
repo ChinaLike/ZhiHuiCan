@@ -129,6 +129,7 @@ public interface Constant {
     int TABLE_STATUS_FOOD = 6;//已上菜
     int TABLE_STATUS_BILL = 7;//结帐中
     int TABLE_STATUS_SWEEP = 8;//打扫中
+    int TABLE_STATUS_BILL_MERGE = 9;//结账中，并桌情况下
     int TABLE_STATUS_OTHER = -1;//其他
 
     /**

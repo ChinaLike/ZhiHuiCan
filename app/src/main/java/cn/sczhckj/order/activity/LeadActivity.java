@@ -158,6 +158,8 @@ public class LeadActivity extends Activity implements Callback<Bean<TableBean>> 
                 intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_OPEN);
                 startActivity(intent);
                 break;
+            case Constant.TABLE_STATUS_BILL_MERGE:
+                /**结账中，并桌情况下*/
             case Constant.TABLE_STATUS_BILL:
                 /**结帐中*/
                 intent.putExtra(Constant.INTENT_FLAG, Constant.TABLE_STATUS_BILL);
