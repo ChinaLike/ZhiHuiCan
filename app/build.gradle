@@ -15,8 +15,8 @@ android {
         applicationId "cn.sczhckg.order"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 6
-        versionName "0.0.6"
+        versionCode 1
+        versionName "0.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

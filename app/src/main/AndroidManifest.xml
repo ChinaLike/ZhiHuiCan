@@ -23,7 +23,6 @@
             android:name=".activity.InitActivity"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
-            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
             <!--<intent-filter>-->
@@ -42,28 +41,24 @@
             android:name=".activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
-            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
-            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".activity.LeadActivity"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
-            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".activity.LockActivity"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
-            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
@@ -74,14 +69,12 @@
             android:name=".activity.WaitressLoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
-            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".activity.TableActivity"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
-            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
             <!--<intent-filter>-->

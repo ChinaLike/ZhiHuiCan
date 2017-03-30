@@ -2,32 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/init_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/open_bg">
+    android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/init_pro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/boot_page" />
+
 
     <TextView
         android:id="@+id/init_text"
-        android:layout_width="match_parent"
-        android:gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/init_pro"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:padding="5dp"
+        android:gravity="center"
         android:textColor="@color/button_text"
+        android:alpha="0.5"
         android:textSize="@dimen/text_size_s_m" />
 
     <TextView
         android:id="@+id/deviceid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.5"
         android:padding="5dp"
-        android:alpha="0.4"
         android:textColor="@color/white" />
 
 </RelativeLayout>
