@@ -24,6 +24,7 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.overwrite.CommonDialog;
+import cn.sczhckj.order.until.show.T;
 
 /**
  * @describe: 开桌后主界面
@@ -247,10 +248,14 @@ public class MainFragment extends BaseFragment {
                 }
                 break;
             case R.id.main_service:
-                index = 1;
-                if (index != current) {
-                    initServiceFragment();
-                    EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_SERVICE));
+                if (MyApplication.mode == Constant.PRODUCER){
+                    T.showShort(mContext,"服务员模式下暂不支持此功能...");
+                }else {
+                    index = 1;
+                    if (index != current) {
+                        initServiceFragment();
+                        EventBus.getDefault().post(new SwitchViewEvent(SwitchViewEvent.BOTTOM_SERVICE));
+                    }
                 }
                 break;
             case R.id.main_settle_accounts:

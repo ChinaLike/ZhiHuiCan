@@ -20,4 +20,13 @@
         android:layout_marginTop="10dp"
         content:text="努力加载中，稍等哒..." />
 
+    <Button
+        android:id="@+id/temp_fail_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:text="刷新数据"/>
+
 </LinearLayout>

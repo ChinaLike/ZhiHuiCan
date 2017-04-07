@@ -27,6 +27,7 @@ import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.TableMode;
 import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,11 +73,13 @@ public class LeadActivity extends Activity implements Callback<Bean<TableBean>> 
         switch (view.getId()) {
             case R.id.right:
                 /**选择是，即先登录*/
+                // TODO: 2017-04-05 一期暂时不支持会员功能
                 initButton(right, true);
                 initButton(deny, false);
-                intent = new Intent(LeadActivity.this, LoginActivity.class);
-                intent.putExtra(Constant.INTENT_FLAG, Constant.LEAD_TO_LOGIN);
-                startActivity(intent);
+                T.showShort(this,"会员登录功能正在开发中...");
+//                intent = new Intent(LeadActivity.this, LoginActivity.class);
+//                intent.putExtra(Constant.INTENT_FLAG, Constant.LEAD_TO_LOGIN);
+//                startActivity(intent);
                 break;
             case R.id.deny:
                 /**暂时未登录*/

@@ -383,7 +383,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             CartBean cart = new CartBean();
             cart.setId(bean.getId());
             cart.setCateId(bean.getCateId());
-            cart.setNumber(bean.getCount());
+            cart.setCount(bean.getCount());
             cart.setType(bean.getType());
             cart.setPrice(bean.getPrice());
             cart.setOriginPrice(bean.getOriginPrice());
@@ -428,7 +428,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             isCommit = true;
             if (isOpen) {
                 /**已开桌*/
-                T.showShort(mContext, bean.getMessage());
+//                T.showShort(mContext, bean.getMessage());
             } else {
                 /**未开桌*//**设置点菜方式*/
                 MyApplication.tableBean.setOrderType(bean.getResult().getShowType());

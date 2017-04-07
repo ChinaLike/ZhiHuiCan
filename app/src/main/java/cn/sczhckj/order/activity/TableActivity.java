@@ -7,8 +7,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.ProduceMode;
 import cn.sczhckj.order.mode.TableMode;
+import cn.sczhckj.order.overwrite.LoadingPopupWindow;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.T;
 import pl.droidsonroids.gif.GifImageView;
@@ -62,6 +65,8 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     TextView tempText;
     @Bind(R.id.temp_parent)
     LinearLayout tempParent;
+    @Bind(R.id.temp_fail_btn)
+    Button tempFail;
     /**
      * 台桌属性
      */
@@ -102,6 +107,8 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
      * 再次获取初始化信息
      */
     private TableMode mTableMode;
+    /**加载弹窗*/
+    private LoadingPopupWindow mLoadingPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +137,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void init() {
+        mLoadingPopupWindow = new LoadingPopupWindow(this);
         tempParent.setClickable(false);
         mProduceMode = new ProduceMode();
         mTableMode = new TableMode();
@@ -145,6 +153,8 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     private void loading(String str) {
         tempParent.setVisibility(View.VISIBLE);
         tableParent.setVisibility(View.GONE);
+        tempGif.setVisibility(View.VISIBLE);
+        tempFail.setVisibility(View.GONE);
         tempGif.setImageResource(R.drawable.init_loading);
         tempParent.setClickable(false);
         tempText.setText(str);
@@ -156,10 +166,11 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     private void loadingFail(String str) {
         tempParent.setVisibility(View.VISIBLE);
         tableParent.setVisibility(View.GONE);
-        tempGif.setImageResource(R.drawable.init_loading_faild);
+        tempGif.setVisibility(View.GONE);
+        tempFail.setVisibility(View.VISIBLE);
         tempText.setText(str);
         tempParent.setClickable(true);
-        tempParent.setOnClickListener(new View.OnClickListener() {
+        tempFail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initCate();
@@ -383,6 +394,8 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
      * 获取该台桌信息
      */
     private void initTable() {
+        mLoadingPopupWindow.setLoadingText("台桌信息初始化中，请稍等...");
+        mLoadingPopupWindow.show();
         mTableMode.tableInit(TableActivity.this, openInfoCallback);
     }
 
@@ -394,19 +407,29 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         public void onResponse(Call<Bean<cn.sczhckj.order.data.bean.table.TableBean>> call, Response<Bean<cn.sczhckj.order.data.bean.table.TableBean>> response) {
             Bean<cn.sczhckj.order.data.bean.table.TableBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
+                mLoadingPopupWindow.dismiss();
                 MyApplication.tableBean = bean.getResult();
                 intentLead();
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
-                T.showShort(TableActivity.this, bean.getMessage());
+                mLoadingPopupWindow.setLoadingText(bean.getMessage());
             } else {
-                T.showShort(TableActivity.this, getString(R.string.table_activity_open_table_fail));
+                mLoadingPopupWindow.setLoadingText(getString(R.string.table_activity_open_table_fail));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<cn.sczhckj.order.data.bean.table.TableBean>> call, Throwable t) {
-            T.showShort(TableActivity.this, getString(R.string.table_activity_open_table_fail));
+            mLoadingPopupWindow.setLoadingText(getString(R.string.table_activity_open_table_fail));
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //监控/拦截/屏蔽返回键
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 }

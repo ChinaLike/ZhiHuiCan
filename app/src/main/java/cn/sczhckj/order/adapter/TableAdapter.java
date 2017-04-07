@@ -19,6 +19,8 @@ import cn.sczhckj.order.R;
 import cn.sczhckj.order.data.bean.produce.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
+import cn.sczhckj.order.overwrite.CommonDialog;
+import cn.sczhckj.order.until.show.T;
 
 /**
  * @ describe: 台桌适配
@@ -34,9 +36,12 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     private OnItemClickListener onItemClickListener;
 
+    private CommonDialog mDialog;
+
     public TableAdapter(Context mContext, List<TableBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
+        mDialog = new CommonDialog(mContext,CommonDialog.Mode.TEXT);
     }
 
     @Override
@@ -55,14 +60,25 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         } else {
             holder.itemTableParent.setSelected(false);
         }
-        holder.itemTableParent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setBackground(bean);
-                onItemClickListener.onItemClick(v, position, bean);
-            }
-        });
-
+        if (bean.getStatus() == Constant.TABLE_STATUS_DISABLE || bean.getStatus() == Constant.TABLE_STATUS_NO_OPEN){
+            holder.itemTableParent.setClickable(false);
+        }else {
+            holder.itemTableParent.setClickable(true);
+            holder.itemTableParent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setBackground(bean);
+                    onItemClickListener.onItemClick(v, position, bean);
+                }
+            });
+            holder.itemTableParent.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    dialog(bean);
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
@@ -116,7 +132,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         List<String> list = new ArrayList<>();
         tableStatus.setVisibility(View.GONE);
         boolean isYY = false;//是否预约
-        if (bean.getStatus() == Constant.TABLE_STATUS_RESERVE) {
+        if (bean.getStatus() == Constant.TABLE_STATUS_NO_OPEN || bean.getStatus() == Constant.TABLE_STATUS_DISABLE) {
+            list.add("闭");
+            return list;
+        } else if (bean.getStatus() == Constant.TABLE_STATUS_RESERVE) {
             list.add("预");
             isYY = true;
         } else if (bean.getStatus() == Constant.TABLE_STATUS_EMPTY) {
@@ -130,6 +149,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
             tableTime.setText("" + bean.getTime());
         } else if (bean.getStatus() == Constant.TABLE_STATUS_SWEEP) {
             list.add("扫");
+        }
+        if (bean.getConsumeType() == null){
+            return list;
         }
         if (bean.getConsumeType() == Constant.TABLE_TYPE_ALONE) {
             list.add("单");
@@ -168,6 +190,27 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    /**
+     * 台桌详细信息弹窗
+     * @param bean
+     */
+    private void dialog(TableBean bean){
+        if (mDialog == null){
+            mDialog = new CommonDialog(mContext,CommonDialog.Mode.TEXT);
+        }
+        if (bean.getMemo() != null && !"".equals(bean.getMemo())) {
+            mDialog.setTitle("台桌信息")
+                    .setTextContext(bean.getMemo())
+                    .setPositive("确认", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
     }
 
     static class TableViewHolder extends RecyclerView.ViewHolder {

@@ -1,21 +1,14 @@
 package cn.sczhckj.order.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,7 +23,7 @@ import cn.sczhckj.order.data.bean.food.CateBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
 import cn.sczhckj.order.data.bean.table.TableBean;
 import cn.sczhckj.order.data.constant.Constant;
-import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.overwrite.LoadingPopupWindow;
 import pl.droidsonroids.gif.GifImageView;
 
 /**
@@ -45,22 +38,6 @@ public abstract class BaseFragment extends Fragment {
      * 点餐方式，默认单桌点餐
      */
     public static int orderType = Constant.ORDER_TYPE_ALONE;
-
-    protected View popLoadingView;
-
-    private PopupWindow mPopupWindow;
-    /**
-     * 加载中父类
-     */
-    private LinearLayout loadingParent;
-    /**
-     * 加载动画
-     */
-    private GifImageView mGifImageView;
-    /**
-     * 提示语
-     */
-    private TextView mTextView;
 
     public Context mContext;
 
@@ -100,6 +77,10 @@ public abstract class BaseFragment extends Fragment {
     protected static Integer tableId = -1;
 
     protected View view;
+    /**
+     * 加载弹窗
+     */
+    private LoadingPopupWindow mLoadingPopupWindow;
 
     @Nullable
     @Bind(R.id.parent)
@@ -113,6 +94,9 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Bind(R.id.temp_text)
     TextView tempText;
+    @Nullable
+    @Bind(R.id.temp_fail_btn)
+    Button tempFail;
 
 
     @Override
@@ -184,10 +168,11 @@ public abstract class BaseFragment extends Fragment {
      * 显示进度加载框
      */
     protected void showProgress(String loadingText) {
-        loadingParent.setClickable(false);
-        mTextView.setText(loadingText);
-        mGifImageView.setImageResource(R.drawable.loading);
-        mPopupWindow.showAtLocation(popLoadingView, Gravity.CENTER, 0, 0);
+        if (mLoadingPopupWindow != null) {
+            mLoadingPopupWindow.setClickable(false);
+            mLoadingPopupWindow.setLoadingText(loadingText);
+            mLoadingPopupWindow.show();
+        }
 
     }
 
@@ -195,8 +180,8 @@ public abstract class BaseFragment extends Fragment {
      * 隐藏进度加载框
      */
     protected void dismissProgress() {
-        if (mPopupWindow.isShowing()) {
-            mPopupWindow.dismiss();
+        if (mLoadingPopupWindow != null) {
+            mLoadingPopupWindow.dismiss();
         }
     }
 
@@ -204,37 +189,25 @@ public abstract class BaseFragment extends Fragment {
      * 加载失败
      */
     protected void loadingFail(String loadingFailText) {
-        loadingParent.setClickable(true);
-        mTextView.setText(loadingFailText);
-        loadingParent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingFail();
-            }
-        });
+        if (mLoadingPopupWindow != null) {
+            mLoadingPopupWindow.setClickable(true);
+            mLoadingPopupWindow.setLoadingText(loadingFailText);
+            mLoadingPopupWindow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadingFail();
+                }
+            });
+        }
     }
 
     /**
      * 初始化数据提交Pop数据
      */
     protected void initLoadingPop() {
-        popLoadingView = LayoutInflater.from(getContext()).inflate(R.layout.pop_loading, null, false);
-        loadingParent = (LinearLayout) popLoadingView.findViewById(R.id.loading_parent);
-        mTextView = (TextView) popLoadingView.findViewById(R.id.loading_text);
-        mGifImageView = (GifImageView) popLoadingView.findViewById(R.id.loading_gif);
-        mPopupWindow = new PopupWindow(popLoadingView, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
-        mPopupWindow.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_OUTSIDE && !mPopupWindow.isFocusable()) {
-                    //如果焦点不在popupWindow上，且点击了外面，不再往下dispatch事件：
-                    //不做任何响应,不 dismiss popupWindow
-                    return true;
-                }
-                //否则default，往下dispatch事件:关掉popupWindow，
-                return false;
-            }
-        });
+        mLoadingPopupWindow = new LoadingPopupWindow(mContext);
+        mLoadingPopupWindow.setModal(false);
+        mLoadingPopupWindow.setMode(MyApplication.mode);
     }
 
     /**
@@ -291,6 +264,10 @@ public abstract class BaseFragment extends Fragment {
         parent.setVisibility(View.GONE);
         tempParent.setVisibility(View.VISIBLE);
         tempText.setText(text);
+
+        tempGif.setVisibility(View.VISIBLE);
+        tempFail.setVisibility(View.GONE);
+
         tempGif.setImageResource(R.drawable.init_loading);
     }
 
@@ -307,8 +284,9 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void initFailer(String text) {
         tempText.setText(text);
-        tempGif.setImageResource(R.drawable.init_loading_faild);
-        tempParent.setOnClickListener(new View.OnClickListener() {
+        tempGif.setVisibility(View.GONE);
+        tempFail.setVisibility(View.VISIBLE);
+        tempFail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initFail();

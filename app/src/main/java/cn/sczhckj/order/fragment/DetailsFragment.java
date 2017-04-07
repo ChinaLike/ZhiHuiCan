@@ -212,7 +212,7 @@ public class DetailsFragment extends BaseFragment implements Callback<Bean<List<
             public View getView(int position) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_image, null);
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
-                GlideLoading.loadingDishes(mContext, urlList.get(position).getImageUrl(), imageView);
+                GlideLoading.loadingDetails(mContext, urlList.get(position).getImageUrl(), imageView);
                 TextView context = (TextView) view.findViewById(R.id.context);
                 LinearLayout layout = (LinearLayout) view.findViewById(R.id.context_parent);
                 if (urlList.get(position).getRemark() == null || urlList.get(position).getRemark().equals("")) {

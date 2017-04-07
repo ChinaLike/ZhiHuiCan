@@ -34,16 +34,16 @@ public class GlideLoading {
             Glide
                     .with(mContext.getApplicationContext())
                     .load(url)
-                    .placeholder(R.drawable.order_status_loading)
-                    .error(R.drawable.order_status_loadingfaild)
+                    .placeholder(R.drawable.order_status_picloading)
+                    .error(R.drawable.order_status_picloadfaild)
                     .into(imageView);
         } else {
             Glide
                     .with(mContext.getApplicationContext())
                     .load(url)
                     .asBitmap()
-                    .placeholder(R.drawable.order_status_loading)
-                    .error(R.drawable.order_status_loadingfaild)
+                    .placeholder(R.drawable.order_status_picloading)
+                    .error(R.drawable.order_status_picloadfaild)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -52,6 +52,39 @@ public class GlideLoading {
                     });
         }
     }
+
+    /**
+     * 加载菜品详情图片
+     *
+     * @param mContext  上下文
+     * @param url       图片地址
+     * @param imageView 控件
+     */
+    public static void loadingDetails(Context mContext, String url, final ImageView imageView) {
+        if (url == null || "".equals(url)) {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .placeholder(R.drawable.details_status_picloading)
+                    .error(R.drawable.details_status_picloadfaild)
+                    .into(imageView);
+        } else {
+            Glide
+                    .with(mContext.getApplicationContext())
+                    .load(url)
+                    .asBitmap()
+                    .placeholder(R.drawable.details_status_picloading)
+                    .error(R.drawable.details_status_picloadfaild)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+        }
+    }
+
+
 
     /**
      * 加载头像

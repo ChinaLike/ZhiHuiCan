@@ -10,7 +10,7 @@ public class CartBean {
 
     private Integer id;//分类
     private Integer cateId;//一级分类
-    private Integer number;//数量
+    private Integer count;//数量
     private Integer type;//价格类型ID
     private Double price;//执行价格
     private Double originPrice;//原始价格
@@ -31,12 +31,12 @@ public class CartBean {
         this.cateId = cateId;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getCount() {
+        return count;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public Integer getType() {
@@ -68,7 +68,7 @@ public class CartBean {
         return "{" +
                 "id=" + id +
                 ", cateId=" + cateId +
-                ", number=" + number +
+                ", count=" + count +
                 ", type=" + type +
                 ", price=" + price +
                 ", originPrice=" + originPrice +

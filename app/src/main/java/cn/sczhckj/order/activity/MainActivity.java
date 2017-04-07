@@ -473,9 +473,11 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         switch (view.getId()) {
             case R.id.no_login:
                 /**用户登录*/
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.putExtra(Constant.INTENT_FLAG, Constant.MAIN_TO_LOGIN);
-                startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
+                // TODO: 2017-04-05 一期暂时不支持会员功能
+                T.showShort(this,"会员登录功能正在开发中...");
+//                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                intent.putExtra(Constant.INTENT_FLAG, Constant.MAIN_TO_LOGIN);
+//                startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
                 break;
             case R.id.table_person_parent:
                 /**设置台桌人数*/
@@ -541,9 +543,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
     @Override
     public void person(int number) {
         personNumber = number;
-//        if (MyApplication.tableBean != null && MyApplication.tableBean.getMaximum() != null && MyApplication.tableBean.getMaximum() != 0) {
-//            personNumber = MyApplication.tableBean.getMaximum();
-//        }
         this.tablePersonNum.setText(personNumber + "人");
     }
 
