@@ -27,10 +27,10 @@ public class DraggableFloatingButton extends FloatingActionButton {
     private long mDownTime, mUpTime;
 
     // 记录上次移动完的上下左右坐标
-    private int mLastLeft = -1;
-    private int mLastRight = -1;
-    private int mLastTop = -1;
-    private int mLastBottom = -1;
+    private static int mLastLeft = -1;
+    private static int mLastRight = -1;
+    private static int mLastTop = -1;
+    private static int mLastBottom = -1;
 
     public int getLastLeft() {
         return mLastLeft;

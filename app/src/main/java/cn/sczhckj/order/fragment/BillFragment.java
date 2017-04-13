@@ -1,5 +1,7 @@
 package cn.sczhckj.order.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sczhckj.order.MyApplication;
 import cn.sczhckj.order.R;
+import cn.sczhckj.order.activity.TableActivity;
 import cn.sczhckj.order.adapter.SettleAccountsAdapter;
 import cn.sczhckj.order.adapter.TipAdapter;
 import cn.sczhckj.order.data.bean.Bean;
@@ -31,6 +34,7 @@ import cn.sczhckj.order.data.bean.RequestCommonBean;
 import cn.sczhckj.order.data.bean.ResponseCommonBean;
 import cn.sczhckj.order.data.bean.bill.BillBean;
 import cn.sczhckj.order.data.bean.food.FoodBean;
+import cn.sczhckj.order.data.constant.Constant;
 import cn.sczhckj.order.data.event.SwitchViewEvent;
 import cn.sczhckj.order.data.event.WebSocketEvent;
 import cn.sczhckj.order.data.listener.OnItemClickListener;
@@ -316,6 +320,7 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
                 //结账成功后按钮不可点击
                 buttonStatus(false);
                 dismissProgress();
+                finishActivity();
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 loadingFail(bean.getMessage());
             } else {
@@ -357,6 +362,18 @@ public class BillFragment extends BaseFragment implements Callback<Bean<List<Bil
             /**不可点击*/
             shoppingcartButton.setText("已结账");
             shoppingcartButton.setTextColor(ContextCompat.getColor(mContext,R.color.text_color_person));
+        }
+    }
+
+    /**
+     * 关闭界面，返回到台桌界面，只有在服务员模式下有效
+     */
+    private void finishActivity(){
+        if (MyApplication.mode == Constant.PRODUCER) {
+            Intent intent = new Intent(mContext, TableActivity.class);
+            mContext.startActivity(intent);
+            finish();
+            MyApplication.deviceID = "";
         }
     }
 

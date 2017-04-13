@@ -91,6 +91,7 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
         mTagCloud = new TagCloudImpl(mContext);
         mEvalMode = new EvalMode();
         initEvaluateAdapter();
+        buttonStatus(true);
     }
 
     @Override
@@ -182,22 +183,40 @@ public class EvaluateFragment extends BaseFragment implements Callback<Bean<Eval
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 dismissProgress();
-                evaluateFinish.setText(bean.getMessage());
+                buttonStatus(false);
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 loadingFail(bean.getMessage());
-                evaluateFinish.setClickable(true);
+                buttonStatus(true);
             } else {
                 loadingFail(getString(R.string.evaluate_fragment_commit_fail));
-                evaluateFinish.setClickable(true);
+                buttonStatus(true);
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
             loadingFail(getString(R.string.evaluate_fragment_commit_fail));
-            evaluateFinish.setClickable(true);
+            buttonStatus(true);
         }
     };
+
+    /**
+     * 按钮状态
+     * @param isClick   是否可以点击
+     */
+    private void buttonStatus(boolean isClick){
+        evaluateFinish.setClickable(isClick);
+        evaluateFinish.setSelected(!isClick);
+        if (isClick) {
+            /**可点击*/
+            evaluateFinish.setText("评价");
+            evaluateFinish.setTextColor(ContextCompat.getColor(mContext,R.color.button_text));
+        }else {
+            /**不可点击*/
+            evaluateFinish.setText("已评价");
+            evaluateFinish.setTextColor(ContextCompat.getColor(mContext,R.color.text_color_person));
+        }
+    }
 
     @Override
     public void onTagClick(View view, int postion, Object bean) {

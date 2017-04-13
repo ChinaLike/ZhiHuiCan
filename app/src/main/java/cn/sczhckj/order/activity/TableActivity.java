@@ -138,6 +138,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private void init() {
         mLoadingPopupWindow = new LoadingPopupWindow(this);
+        mLoadingPopupWindow.setModal(false);
         tempParent.setClickable(false);
         mProduceMode = new ProduceMode();
         mTableMode = new TableMode();

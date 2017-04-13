@@ -45,6 +45,7 @@ import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
+import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -635,11 +636,9 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 } else if (rBean != null && rBean.getCode() == ResponseCode.FAILURE) {
                     dismissProgress();
                     refundFailDialog(rBean.getMessage());
-//                    T.showShort(mContext, rBean.getMessage());
                 } else {
                     dismissProgress();
                     refundFailDialog(getString(R.string.cart_fragment_return_food_fail));
-//                    T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
                 }
             }
 
@@ -647,7 +646,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
             public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
                 dismissProgress();
                 refundFailDialog(getString(R.string.cart_fragment_return_food_fail));
-//                T.showShort(mContext, getString(R.string.cart_fragment_return_food_fail));
             }
         });
     }

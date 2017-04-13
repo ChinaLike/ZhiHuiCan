@@ -8,10 +8,11 @@
     <string name="init_activity_loading_fail">初始化失败，点击重新初始化...</string>
 
     <!--LeadActivity-->
-    <string name="lead_activity_welcome">欢迎来到本店就餐，点击开桌开始就餐！</string>
+    <!--<string name="lead_activity_welcome">欢迎来到本店就餐，点击开桌开始就餐！</string>-->
+    <string name="lead_activity_welcome">\t\t“大牛合”全称成都大牛合餐饮管理有限公司，我们是一家以经营潮汕鲜牛肉为主，融汇四川本土特色为一体的大型餐饮连锁品牌，致力于把最新鲜最健康最正宗的潮汕鲜牛肉带给大家。吃新鲜，就是在和时间赛跑，3小时从牧场到餐桌，现切现吃；瘦3-肥5-朥3，保留牛肉本身鲜甜的口感。而作为一家致力于发展连锁加盟的新兴品牌，大牛合一直秉承“健康看得见，良心做品质”的经营，期望给予每一位顾客品种丰富、口味独特、营养健康的产品和难忘的用餐体念。</string>
     <string name="lead_activity_is_vip">是否会员</string>
-    <string name="lead_activity_is_yes">是</string>
-    <string name="lead_activity_is_no">否</string>
+    <string name="lead_activity_is_yes">会员</string>
+    <string name="lead_activity_is_no">非会员</string>
 
     <!--LockActivity-->
     <string name="lock_activity_hint">台桌【%s】已经被锁定</string>

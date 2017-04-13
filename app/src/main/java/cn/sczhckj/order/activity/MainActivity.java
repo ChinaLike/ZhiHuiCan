@@ -423,7 +423,6 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
         Glide.with(getApplicationContext()).pauseRequests();
         /**人数清零*/
         personNumber = 0;
-
         stopService(intent);
     }
 

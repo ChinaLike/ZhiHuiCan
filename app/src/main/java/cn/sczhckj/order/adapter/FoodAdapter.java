@@ -99,7 +99,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.DishesHolder> 
     public void onBindViewHolder(final DishesHolder holder, int position) {
         final FoodBean bean = mList.get(position);
         /**菜品缩略图*/
-        GlideLoading.loadingDishes(mContext, bean.getImageUrl(), holder.dishesImage);
+        if (bean.getImageUrl() == null){
+            holder.dishesImage.setImageResource(R.drawable.order_status_nopic);
+        }else {
+            GlideLoading.loadingDishes(mContext, bean.getImageUrl(), holder.dishesImage);
+        }
         /**菜品名字*/
         holder.dishesName.setText(bean.getName());
         /**菜品价格*/

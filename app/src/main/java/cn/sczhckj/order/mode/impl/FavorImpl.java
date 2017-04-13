@@ -140,13 +140,14 @@ public class FavorImpl {
         public void onResponse(Call<Bean<ResponseCommonBean>> call, Response<Bean<ResponseCommonBean>> response) {
             Bean<ResponseCommonBean> bean = response.body();
             if (bean != null) {
-                T.showShort(mContext, bean.getMessage());
+                T.showShort(mContext, "点赞成功，感谢您对我们的支持！");
                 EventBus.getDefault().post(new RefreshFoodEvent(RefreshFoodEvent.FAVOR_FOOD));
             }
         }
 
         @Override
         public void onFailure(Call<Bean<ResponseCommonBean>> call, Throwable t) {
+            T.showShort(mContext, "亲，你操作太快了，请等一下再试！");
         }
     };
 

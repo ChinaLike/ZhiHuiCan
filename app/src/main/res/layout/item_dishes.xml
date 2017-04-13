@@ -6,13 +6,16 @@
     android:layout_height="122dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:paddingLeft="10dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
     <cn.sczhckj.order.overwrite.RoundImageView
         android:id="@+id/dishes_image"
         android:layout_width="@dimen/dishes_width"
         android:layout_height="@dimen/dishes_height"
         android:scaleType="centerInside"
+
         beyole:borderRadius="5dip"
         beyole:imageType="round" />
 
@@ -20,7 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/dishes_height"
         android:layout_marginLeft="10dp"
-        android:layout_weight="1.5"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -140,15 +143,14 @@
                 android:id="@+id/dishes_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingRight="20dp"
-                android:scaleType="fitEnd"
+                android:padding="20dp"
                 android:src="@drawable/open_btn_dishes_reduce" />
 
             <TextView
                 android:id="@+id/dishes_number"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="0"
                 android:textColor="@color/text_color_m" />
 
@@ -156,9 +158,7 @@
                 android:id="@+id/dishes_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:scaleType="fitEnd"
-                android:layout_alignParentRight="true"
-                android:paddingLeft="20dp"
+                android:padding="20dp"
                 android:src="@drawable/open_btn_dishes_add" />
         </LinearLayout>
 

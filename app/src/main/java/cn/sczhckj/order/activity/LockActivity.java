@@ -3,6 +3,7 @@ package cn.sczhckj.order.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -87,5 +88,14 @@ public class LockActivity extends Activity {
         } else {
             floatBtn.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //监控/拦截/屏蔽返回键
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

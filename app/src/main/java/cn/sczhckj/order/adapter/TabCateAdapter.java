@@ -79,10 +79,12 @@ public class TabCateAdapter extends RecyclerView.Adapter<TabCateAdapter.TabViewH
         holder.tabParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                views.get(position).setSelected(true);
-                views.get(current).setSelected(false);
-                current = position;
-                onItemClickListener.onItemClick(holder.tabParent, holder.getLayoutPosition(), mList.get(position));
+                if (current != position) {
+                    views.get(position).setSelected(true);
+                    views.get(current).setSelected(false);
+                    current = position;
+                    onItemClickListener.onItemClick(holder.tabParent, holder.getLayoutPosition(), mList.get(position));
+                }
             }
         });
     }

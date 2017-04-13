@@ -18,9 +18,9 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:background="@drawable/shape_button_full_yellow_login"
+            android:background="@drawable/selector_shape_button_yellow"
             android:padding="25dp"
-            android:text="确认"
+            android:text="评价"
             android:textColor="@color/button_text"
             android:textSize="@dimen/text_size_mediu" />
 

@@ -55,7 +55,6 @@
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
-        android:translationY="-15dp"
         app:backgroundTint="#FF0000"
         android:layout_centerVertical="true" />
 
