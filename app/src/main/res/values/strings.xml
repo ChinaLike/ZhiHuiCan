@@ -119,6 +119,7 @@
     <string name="order_fragment_loading_fail">数据加载失败，点击刷新</string>
     <string name="order_fragment_one_order">单桌点餐</string>
     <string name="order_fragment_more_order">并桌点餐</string>
+    <string name="order_fragment_no_dishes">此分类下暂无菜品</string>
 
     <!--RequireFragment-->
     <string name="require_fragment_loading">数据加载中...</string>

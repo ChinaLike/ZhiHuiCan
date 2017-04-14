@@ -7,7 +7,6 @@
     <include layout="@layout/item_loading" />
 
 
-
     <RelativeLayout
         android:id="@+id/parent"
         android:layout_width="match_parent"
@@ -238,6 +237,12 @@
             android:layout_above="@id/cart_bottom_parent"
             android:background="@color/view_color" />
 
+        <ExpandableListView
+            android:id="@+id/cart_bill_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/cart_bottom_view"
+            android:layout_below="@id/cart_top_view" />
 
         <ImageView
             android:id="@+id/cart_favorable"
@@ -245,13 +250,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/cart_bottom_view"
             android:src="@drawable/both_btn_favorable" />
-
-        <ExpandableListView
-            android:id="@+id/cart_bill_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/cart_bottom_view"
-            android:layout_below="@id/cart_top_view" />
 
     </RelativeLayout>
 </RelativeLayout>

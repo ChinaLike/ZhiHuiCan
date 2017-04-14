@@ -39,7 +39,9 @@ import cn.sczhckj.order.service.WebSocketService;
 import cn.sczhckj.order.until.AndroidVersionUtil;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.FileUntils;
+import cn.sczhckj.order.until.NetUtils;
 import cn.sczhckj.order.until.show.L;
+import cn.sczhckj.order.until.show.T;
 import cn.sczhckj.platform.rest.io.RestRequest;
 import cn.sczhckj.platform.rest.io.json.JSONRestRequest;
 import retrofit2.Call;
@@ -235,13 +237,18 @@ public class InitActivity extends Activity implements Callback<Bean<VersionBean>
             getVersion();
         } else if (WebSocketEvent.INIT_FAIL == event.getType()) {
             /**初始化失败*/
-            if (popupWindow == null) {
-                popupWindow = new SettingPopupWindow(InitActivity.this);
-            }
-            popupWindow.setOnButtonListener(this);
-            popupWindow.show();
             initParent.setClickable(true);
             initText.setText(getString(R.string.init_activity_loading_fail));
+            if (NetUtils.isConnected(this)){
+                //网络已经连接
+                if (popupWindow == null) {
+                    popupWindow = new SettingPopupWindow(InitActivity.this);
+                }
+                popupWindow.setOnButtonListener(this);
+                popupWindow.show();
+            }else {
+                T.showShort(this,"请检查网络是否连接");
+            }
         } else if (WebSocketEvent.TYPE_LOCK == event.getType()) {
             /**锁定界面有关*/
             Intent intent = new Intent(InitActivity.this, LockActivity.class);

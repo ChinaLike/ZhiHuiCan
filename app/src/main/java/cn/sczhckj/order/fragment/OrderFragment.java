@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -45,7 +46,6 @@ import cn.sczhckj.order.mode.impl.FoodRefreshImpl;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.L;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +67,8 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
     RecyclerView dishesShow;
     @Bind(R.id.tab_text)
     TextView tabText;
+    @Bind(R.id.no_dishes)
+    TextView noDishes;
 
     /**
      * 一级分类分类适配器
@@ -314,9 +316,17 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
             Bean<List<FoodBean>> bean = response.body();
             if (bean != null && bean.getCode() == ResponseCode.SUCCESS) {
                 /**菜品请求成功*/
-                /**处理适配数据*/
-                foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
-                mFoodAdapter.notifyDataSetChanged(foodList);
+                if (bean.getResult() == null || bean.getResult().size() == 0){
+                    //没有菜品
+                    noDishes.setVisibility(View.VISIBLE);
+                    dishesShow.setVisibility(View.GONE);
+                }else {
+                    //获取到对应菜品
+                    noDishes.setVisibility(View.GONE);
+                    dishesShow.setVisibility(View.VISIBLE);
+                    foodList = FoodRefreshImpl.getInstance().refreshFood(disOrderList, bean.getResult());
+                    mFoodAdapter.notifyDataSetChanged(foodList);
+                }
             } else if (bean != null && bean.getCode() == ResponseCode.FAILURE) {
                 initFailer(bean.getMessage());
             }
@@ -578,4 +588,11 @@ public class OrderFragment extends BaseFragment implements CatesAdapter.OnItemCl
         }
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
+    }
 }

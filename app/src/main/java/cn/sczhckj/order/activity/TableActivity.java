@@ -34,6 +34,7 @@ import cn.sczhckj.order.data.listener.OnItemClickListener;
 import cn.sczhckj.order.data.response.ResponseCode;
 import cn.sczhckj.order.mode.ProduceMode;
 import cn.sczhckj.order.mode.TableMode;
+import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.overwrite.LoadingPopupWindow;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.show.T;
@@ -107,7 +108,9 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
      * 再次获取初始化信息
      */
     private TableMode mTableMode;
-    /**加载弹窗*/
+    /**
+     * 加载弹窗
+     */
     private LoadingPopupWindow mLoadingPopupWindow;
 
     @Override
@@ -129,11 +132,29 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TableActivity.this, WaitressLoginActivity.class);
-                startActivity(intent);
-                finish();
+                backHint();
             }
         });
+    }
+
+    private void backHint() {
+        final CommonDialog dialog = new CommonDialog(this, CommonDialog.Mode.TEXT);
+        dialog.setTitle("温馨提示")
+                .setTextContext("是否要注销当前登录？")
+                .setPositive("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(TableActivity.this, WaitressLoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegative("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     private void init() {

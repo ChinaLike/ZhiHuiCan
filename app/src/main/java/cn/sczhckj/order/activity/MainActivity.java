@@ -473,7 +473,7 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
             case R.id.no_login:
                 /**用户登录*/
                 // TODO: 2017-04-05 一期暂时不支持会员功能
-                T.showShort(this,"会员登录功能正在开发中...");
+                T.showShort(this, "会员登录功能正在开发中...");
 //                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 //                intent.putExtra(Constant.INTENT_FLAG, Constant.MAIN_TO_LOGIN);
 //                startActivityForResult(intent, Constant.LOGIN_RESULT_CODE);
@@ -487,14 +487,18 @@ public class MainActivity extends BaseActivity implements OnTableListenner,
                             .setPositive(getString(R.string.main_activity_dialog_positive), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    try {
-                                        personCount = Integer.parseInt(mDialog.getInputText());
-                                    } catch (NumberFormatException e) {
-                                        e.printStackTrace();
-                                        personCount = personNumber;
+                                    if (mDialog.getInputText().equals("") || mDialog.getInputText() == null) {
+                                        T.showShort(MainActivity.this, "请输入需要设置的人数");
+                                    } else {
+                                        try {
+                                            personCount = Integer.parseInt(mDialog.getInputText());
+                                        } catch (NumberFormatException e) {
+                                            e.printStackTrace();
+                                            personCount = personNumber;
+                                        }
+                                        initSetPerson(personCount);
+                                        mDialog.dismiss();
                                     }
-                                    initSetPerson(personCount);
-                                    mDialog.dismiss();
                                 }
                             })
                             .setNegative(getString(R.string.main_activity_dialog_negative), new View.OnClickListener() {
