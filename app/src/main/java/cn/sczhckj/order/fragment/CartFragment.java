@@ -45,7 +45,6 @@ import cn.sczhckj.order.overwrite.CommonDialog;
 import cn.sczhckj.order.overwrite.DashlineItemDivider;
 import cn.sczhckj.order.until.AppSystemUntil;
 import cn.sczhckj.order.until.ConvertUtils;
-import cn.sczhckj.order.until.show.L;
 import cn.sczhckj.order.until.show.T;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -310,13 +309,6 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-//        ButterKnife.unbind(this);
-//        EventBus.getDefault().unregister(this);
-    }
-
     /**
      * 下单数据初始化
      *
@@ -404,9 +396,9 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
                 .setPositive(getContext().getString(R.string.cart_fragment_dialog_positive), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (MainActivity.personNumber == 0){
-                            T.showShort(mContext,"人数为 0 人，请设置后开桌");
-                        }else {
+                        if (MainActivity.personNumber == 0) {
+                            T.showShort(mContext, "人数为 0 人，请设置后开桌");
+                        } else {
                             mDialog.dismiss();
                             password = mDialog.getInputText();
                             openTable(password);
@@ -726,6 +718,7 @@ public class CartFragment extends BaseFragment implements Callback<Bean<Response
 
     /**
      * 退菜失败提醒
+     *
      * @param msg
      */
     private void refundFailDialog(String msg) {
