@@ -64,7 +64,11 @@ public class TableBean {
     }
 
     public Integer getStatus() {
-        return status;
+        if (status != null) {
+            return status;
+        } else {
+            return -1;
+        }
     }
 
     public void setStatus(Integer status) {
